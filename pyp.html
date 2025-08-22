@@ -17,7 +17,7 @@
         .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; color: var(--text-primary); }
         .brand-logo img { width: 50px; height: auto; }
         .brand-logo h1 { font-size: 1.5rem; font-weight: 600; margin: 0; }
-        .brand-shimmer { background: linear-gradient(120deg, var(--primary) 20%, #fff 40%, #fff 60%, var(--primary) 80%); background-size: 200% auto; color: transparent; -webkit-background-clip: text; background-clip: text; animation: shimmer 4s linear infinite; }
+        .brand-shimmer { background: linear-gradient(120deg, #ff00c1, #00ffff, #33ff00, #ffc400, #ff00c1); background-size: 400% 400%; color: transparent; -webkit-background-clip: text; background-clip: text; animation: shimmer 8s ease-in-out infinite; }
         .btn { display: inline-block; padding: 12px 30px; border-radius: 10px; border: none; font-size: 1rem; font-weight: 500; cursor: pointer; text-align: center; text-decoration: none; }
         .btn-secondary { background: transparent; border: 2px solid var(--primary); color: var(--primary); padding: 8px 20px; }
         .btn-secondary:hover { background: var(--primary); color: var(--dark); }
@@ -32,7 +32,6 @@
         .pyq-link:hover { transform: scale(1.1); }
         .empty-state { text-align: center; padding: 50px; }
         .empty-state i { font-size: 3rem; color: var(--primary); margin-bottom: 15px; }
-
         @media (max-width: 768px) {
             .page-header { flex-direction: column; gap: 15px; }
             .page-title { font-size: 2rem; }
@@ -46,7 +45,7 @@
 <body>
     <header class="page-header">
         <a href="/studentdashboard.html" class="brand-logo">
-            <img src="logo().jpg" alt="IB STUDIOZ Logo">
+            <img src="logo().png" alt="IB STUDIOZ Logo">
             <h1 class="brand-shimmer">IB STUDIOZ</h1>
         </a>
         <button id="logout-btn" class="btn btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
@@ -62,7 +61,14 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script>
-        const firebaseConfig = { /* PASTE YOUR FIREBASE CONFIG HERE */ };
+        const firebaseConfig = {
+          apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao",
+          authDomain: "student-portal-free.firebaseapp.com",
+          projectId: "student-portal-free",
+          storageBucket: "student-portal-free.appspot.com",
+          messagingSenderId: "272865877510",
+          appId: "1:272865877510:web:0875a2502ae55bbf9ead87"
+        };
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
@@ -74,7 +80,7 @@
                         document.body.style.visibility = 'visible';
                         loadPYQs();
                     } else { window.location.replace('/admindashboard.html'); }
-                });
+                }).catch(() => auth.signOut());
             } else { window.location.replace('/index.html'); }
         });
 
