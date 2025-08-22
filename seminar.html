@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seminars | IB STUDIOZ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #FFC300; --dark: #121212; --text-primary: #ffffff; --text-secondary: rgba(255, 255, 255, 0.7); --card-bg: rgba(20, 20, 20, 0.5); --border-color: rgba(255, 195, 0, 0.2); --shadow-color: rgba(0, 0, 0, 0.3); }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        @keyframes background-pan { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+        body { font-family: "Poppins", sans-serif; background-color: var(--dark); color: var(--text-primary); min-height: 100vh; line-height: 1.6; background-attachment: fixed; visibility: hidden; }
+        .aurora-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(ellipse at 10% 10%, var(--primary) 0%, rgba(255, 195, 0, 0) 40%), radial-gradient(ellipse at 90% 85%, #444 0%, rgba(68, 68, 68, 0) 35%); animation: background-pan 45s linear infinite; opacity: 0.2; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 30px; }
+        .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; color: var(--text-primary); }
+        .brand-logo img { width: 50px; height: auto; }
+        .brand-logo h1 { font-size: 1.5rem; font-weight: 600; margin: 0; }
+        .brand-shimmer { background: linear-gradient(120deg, var(--primary) 20%, #fff 40%, #fff 60%, var(--primary) 80%); background-size: 200% auto; color: transparent; -webkit-background-clip: text; background-clip: text; animation: shimmer 4s linear infinite; }
+        .btn { display: inline-block; padding: 12px 30px; border-radius: 10px; border: none; font-size: 1rem; font-weight: 500; cursor: pointer; text-align: center; text-decoration: none; }
+        .btn-secondary { background: transparent; border: 2px solid var(--primary); color: var(--primary); padding: 8px 20px; }
+        .btn-secondary:hover { background: var(--primary); color: var(--dark); }
+        .page-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: rgba(18, 18, 18, 0.4); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); }
+        .page-title { font-size: 2.5rem; margin-bottom: 30px; text-align: center; background: linear-gradient(90deg, #fff, var(--primary)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .seminar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; }
+        .seminar-card { background: var(--card-bg); border-radius: 15px; overflow: hidden; border: 1px solid var(--border-color); }
+        .video-container { position: relative; padding-top: 56.25%; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .seminar-info { padding: 20px; }
+        .seminar-info h3 { font-size: 1.2rem; margin-bottom: 5px; }
+        .seminar-info p { font-size: 0.9rem; color: var(--text-secondary); }
+        .empty-state { grid-column: 1 / -1; text-align: center; padding: 50px; }
+        .empty-state i { font-size: 3rem; color: var(--primary); margin-bottom: 15px; }
+        
+        @media (max-width: 768px) {
+            .page-header { flex-direction: column; gap: 15px; }
+            .page-title { font-size: 2rem; }
+            .container { padding: 20px; margin: 20px auto; }
+        }
+        @media (max-width: 480px) {
+            .seminar-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="page-header">
+        <a href="/studentdashboard.html" class="brand-logo">
+            <img src="https://i.ibb.co/C2pXg3s/logo.png" alt="IB STUDIOZ Logo">
+            <h1 class="brand-shimmer">IB STUDIOZ</h1>
+        </a>
+        <button id="logout-btn" class="btn btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </header>
+    <div class="container">
+        <h1 class="page-title">Seminars & Webinars</h1>
+        <div id="seminar-grid" class="seminar-grid">
+            <div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading seminars...</p></div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = { /* PASTE YOUR FIREBASE CONFIG HERE */ };
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                db.collection('users').doc(user.uid).get().then(doc => {
+                    if (doc.exists && doc.data().role !== 'admin') {
+                        document.body.style.visibility = 'visible';
+                        loadSeminars();
+                    } else { window.location.replace('/admindashboard.html'); }
+                });
+            } else { window.location.replace('/index.html'); }
+        });
+
+        function loadSeminars() {
+            const grid = document.getElementById('seminar-grid');
+            db.collection('seminars').orderBy('uploadedAt', 'desc').get().then(snapshot => {
+                if (snapshot.empty) {
+                    grid.innerHTML = `<div class="empty-state"><i class="fas fa-video-slash"></i><p>No seminars have been added yet.</p></div>`;
+                    return;
+                }
+                let seminarHTML = '';
+                snapshot.forEach(doc => {
+                    const seminar = doc.data();
+                    seminarHTML += `
+                        <div class="seminar-card">
+                            <div class="video-container">
+                                <iframe src="${seminar.youtubeURL}" title="${seminar.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <div class="seminar-info">
+                                <h3>${seminar.title}</h3>
+                                <p>By: ${seminar.speaker}</p>
+                            </div>
+                        </div>`;
+                });
+                grid.innerHTML = seminarHTML;
+            }).catch(err => {
+                console.error("Error loading seminars:", err);
+                grid.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Could not load seminars.</p></div>`;
+            });
+        }
+        document.getElementById('logout-btn').addEventListener('click', () => auth.signOut());
+    </script>
+</body>
+</html>
