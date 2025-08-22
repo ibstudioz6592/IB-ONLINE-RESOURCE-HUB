@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome | IB STUDIOZ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #FFC300; --dark: #121212; --text-primary: #ffffff; --text-secondary: rgba(255, 255, 255, 0.7); --card-bg: rgba(20, 20, 20, 0.5); --border-color: rgba(255, 195, 0, 0.2); --shadow-color: rgba(0, 0, 0, 0.3); --success: #00b09b; --danger: #ff416c; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        @keyframes background-pan { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+
+        body { font-family: "Poppins", sans-serif; background-color: var(--dark); color: var(--text-primary); min-height: 100vh; line-height: 1.6; background-attachment: fixed; }
+        .aurora-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(ellipse at 10% 10%, var(--primary) 0%, rgba(255, 195, 0, 0) 40%), radial-gradient(ellipse at 90% 85%, #444 0%, rgba(68, 68, 68, 0) 35%); animation: background-pan 45s linear infinite; opacity: 0.2; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 30px; }
+        .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; color: var(--text-primary); }
+        .brand-logo img { width: 50px; height: auto; }
+        .brand-logo h1 { font-size: 1.5rem; font-weight: 600; margin: 0; }
+        .brand-shimmer {
+            background: linear-gradient(120deg, var(--primary) 20%, #fff 40%, #fff 60%, var(--primary) 80%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shimmer 4s linear infinite;
+        }
+        .btn { display: inline-block; padding: 12px 30px; border-radius: 10px; border: none; font-size: 1rem; font-weight: 500; cursor: pointer; text-align: center; transition: all 0.3s ease; text-decoration: none; }
+        .btn-primary { background: var(--primary); color: var(--dark); box-shadow: 0 4px 15px rgba(255, 195, 0, 0.3); }
+        .auth-container { display: flex; justify-content: center; align-items: center; min-height: 90vh; }
+        .auth-card { width: 100%; max-width: 450px; text-align: center; background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 15px; border: 1px solid var(--border-color); padding: 40px; box-shadow: 0 8px 32px 0 var(--shadow-color); }
+        .auth-card .brand-logo { justify-content: center; margin-bottom: 5px; }
+        .auth-subtitle { color: var(--text-secondary); margin-bottom: 30px; font-size: 1rem; }
+        #authForm h2 { margin-bottom: 25px; font-weight: 600; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { text-align: left; display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-secondary); }
+        input { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border-color); background-color: rgba(0, 0, 0, 0.2); color: var(--text-primary); font-size: 1rem; transition: box-shadow 0.3s ease; }
+        input:focus { outline: none; box-shadow: 0 0 0 3px var(--primary); border-color: var(--primary); }
+        .auth-card .btn { width: 100%; margin-top: 10px; }
+        .toggle-auth { margin-top: 25px; color: var(--text-secondary); }
+        .toggle-auth a { color: var(--primary); font-weight: 600; text-decoration: none; cursor: pointer; }
+        .message { min-height: 20px; margin-bottom: 15px; font-weight: 500; font-size: 0.9rem; }
+        .message.error { color: var(--danger); } .message.success { color: var(--success); }
+        .spinner-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .spinner { width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: var(--primary); animation: spin 1s ease-in-out infinite; }
+        
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 480px) {
+            .auth-card { padding: 25px; }
+            .brand-logo img { width: 40px; }
+            .brand-logo h1 { font-size: 1.3rem; }
+            .container { padding: 15px; margin: 15px auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="aurora-background"></div>
+    <div class="container auth-container">
+        <div class="auth-card">
+            <div class="brand-logo">
+                <img src="https://i.ibb.co/C2pXg3s/logo.png" alt="IB STUDIOZ Logo">
+                <h1 class="brand-shimmer">IB STUDIOZ</h1>
+            </div>
+            <p class="auth-subtitle">Online Resources Hub</p>
+            <form id="authForm" novalidate>
+                <h2 id="form-title">Login</h2>
+                <div class="form-group" id="name-group" style="display: none;">
+                    <label for="name"><i class="fas fa-user"></i> Name</label>
+                    <input type="text" id="name" placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="admissionNo"><i class="fas fa-id-card"></i> Admission No</label>
+                    <input type="text" id="admissionNo" placeholder="e.g., 717821F123" required>
+                </div>
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="password" placeholder="Minimum 6 characters" required>
+                </div>
+                <div id="message-area" class="message"></div>
+                <button type="submit" class="btn btn-primary" id="submit-btn">Login</button>
+            </form>
+            <p class="toggle-auth"><span id="toggle-text">Don't have an account?</span> <a id="toggle-link">Register Now</a></p>
+        </div>
+    </div>
+    <div id="spinner" class="spinner-overlay" style="display: none;"><div class="spinner"></div></div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao",
+          authDomain: "student-portal-free.firebaseapp.com",
+          projectId: "student-portal-free",
+          storageBucket: "student-portal-free.appspot.com",
+          messagingSenderId: "272865877510",
+          appId: "1:272865877510:web:0875a2502ae55bbf9ead87"
+        };
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const authForm = document.getElementById('authForm'), messageArea = document.getElementById('message-area'), spinner = document.getElementById('spinner'), toggleLink = document.getElementById('toggle-link');
+        let isLogin = true;
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                spinner.style.display = 'flex';
+                db.collection('users').doc(user.uid).get().then(doc => {
+                    if (doc.exists) {
+                        const path = doc.data().role === 'admin' ? '/admindashboard.html' : '/studentdashboard.html';
+                        window.location.replace(path);
+                    } else { auth.signOut(); spinner.style.display = 'none'; }
+                });
+            }
+        });
+        toggleLink.addEventListener('click', () => {
+            isLogin = !isLogin; authForm.reset(); messageArea.textContent = '';
+            document.getElementById('form-title').innerText = isLogin ? 'Login' : 'Register';
+            document.getElementById('name-group').style.display = isLogin ? 'none' : 'block';
+            document.getElementById('submit-btn').innerText = isLogin ? 'Login' : 'Register';
+            document.getElementById('toggle-text').innerText = isLogin ? "Don't have an account?" : 'Already have an account?';
+            document.getElementById('toggle-link').innerText = isLogin ? 'Register Now' : 'Login';
+        });
+        authForm.addEventListener('submit', (e) => {
+            e.preventDefault(); spinner.style.display = 'flex';
+            const admissionNo = document.getElementById('admissionNo').value.trim();
+            const password = document.getElementById('password').value;
+            const email = `${admissionNo}@college.edu`;
+            if (isLogin) {
+                auth.signInWithEmailAndPassword(email, password).catch(handleAuthError);
+            } else {
+                const name = document.getElementById('name').value.trim();
+                if (!name) { handleAuthError({ message: "Name is required for registration." }); return; }
+                auth.createUserWithEmailAndPassword(email, password)
+                    .then(userCredential => db.collection('users').doc(userCredential.user.uid).set({ name: name, admissionNo: admissionNo, role: 'student' }))
+                    .then(() => {
+                        spinner.style.display = 'none'; messageArea.className = 'message success';
+                        messageArea.textContent = 'Registration successful! Please login.'; toggleLink.click();
+                    }).catch(handleAuthError);
+            }
+        });
+        function handleAuthError(error) {
+            console.error("Auth Error:", error);
+            messageArea.textContent = error.message; messageArea.className = 'message error';
+            spinner.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
