@@ -89,7 +89,17 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script>
-        const firebaseConfig = { /* PASTE YOUR FIREBASE CONFIG HERE */ };
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao",
+            authDomain: "student-portal-free.firebaseapp.com",
+            projectId: "student-portal-free",
+            storageBucket: "student-portal-free.appspot.com",
+            messagingSenderId: "272865877510",
+            appId: "1:272865877510:web:0875a2502ae55bbf9ead87"
+        };
+
+        // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
