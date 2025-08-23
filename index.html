@@ -20,16 +20,9 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
-        /* --- KEYFRAME ANIMATIONS --- */
         @keyframes background-pan { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         @keyframes spin { to { transform: rotate(360deg); } }
-        
-        /* --- NEW, MORE VIBRANT "AURORA" SHIMMER EFFECT --- */
-        @keyframes aurora-shimmer {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        @keyframes aurora-shimmer { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
         body { 
             font-family: "Poppins", sans-serif; 
@@ -50,8 +43,6 @@
         .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; color: var(--text-primary); }
         .brand-logo img { width: 50px; height: auto; }
         .brand-logo h1 { font-size: 1.5rem; font-weight: 600; margin: 0; }
-
-        /* --- UPDATED BRANDING CLASS --- */
         .brand-title-animated {
             font-size: 1.8rem;
             font-weight: 700;
@@ -63,14 +54,9 @@
             animation: aurora-shimmer 8s ease-in-out infinite;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
         }
-
         .btn { display: inline-block; padding: 12px 30px; border-radius: 10px; border: none; font-size: 1rem; font-weight: 500; cursor: pointer; text-align: center; transition: all 0.3s ease; text-decoration: none; }
         .btn-primary { background: var(--primary); color: var(--dark); box-shadow: 0 4px 15px rgba(255, 195, 0, 0.3); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 195, 0, 0.5); }
-        .btn-secondary { background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); }
-        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
-        .btn-small { padding: 8px 15px; font-size: 0.9rem; }
-        
         .auth-container { display: flex; justify-content: center; align-items: center; min-height: 90vh; }
         .auth-card { width: 100%; max-width: 450px; text-align: center; background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 15px; border: 1px solid var(--border-color); padding: 40px; box-shadow: 0 8px 32px 0 var(--shadow-color); }
         .auth-card .brand-logo { justify-content: center; margin-bottom: 5px; }
@@ -87,78 +73,16 @@
         .message.error { color: var(--danger); } .message.success { color: var(--success); }
         .spinner-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; }
         .spinner { width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: var(--primary); animation: spin 1s ease-in-out infinite; }
-        
-        /* Forgot Password Link */
-        .forgot-password { 
-            text-align: right; 
-            margin-top: -10px; 
-            margin-bottom: 20px; 
-        }
-        .forgot-password a { 
-            color: var(--primary); 
-            font-size: 0.9rem; 
-            text-decoration: none; 
-            cursor: pointer;
-        }
-        .forgot-password a:hover { 
-            text-decoration: underline; 
-        }
-        
-        /* Modal Styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        .modal {
-            background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            border-radius: 15px;
-            border: 1px solid var(--border-color);
-            width: 90%;
-            max-width: 450px;
-            padding: 30px;
-            box-shadow: 0 8px 32px 0 var(--shadow-color);
-            transform: translateY(-50px);
-            transition: transform 0.3s ease;
-        }
-        .modal-overlay.active .modal {
-            transform: translateY(0);
-        }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        .modal-close {
-            background: none;
-            border: none;
-            color: var(--text-primary);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        
-        /* --- RESPONSIVE DESIGN --- */
+        .forgot-password { text-align: right; margin-top: -10px; margin-bottom: 20px; }
+        .forgot-password a { color: var(--primary); font-size: 0.9rem; text-decoration: none; cursor: pointer; }
+        .forgot-password a:hover { text-decoration: underline; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal { background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 15px; border: 1px solid var(--border-color); width: 90%; max-width: 450px; padding: 30px; box-shadow: 0 8px 32px 0 var(--shadow-color); transform: translateY(-50px); transition: transform 0.3s ease; }
+        .modal-overlay.active .modal { transform: translateY(0); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-title { font-size: 1.5rem; font-weight: 600; color: var(--text-primary); }
+        .modal-close { background: none; border: none; color: var(--text-primary); font-size: 1.5rem; cursor: pointer; }
         @media (max-width: 480px) {
             .auth-card { padding: 25px; }
             .brand-logo img { width: 40px; }
@@ -166,20 +90,8 @@
             .container { padding: 15px; margin: 15px auto; }
             .modal { padding: 20px; }
         }
-
-        .email-display {
-            background: rgba(255, 195, 0, 0.1);
-            border: 1px solid var(--primary);
-            border-radius: 8px;
-            padding: 12px;
-            margin: 15px 0;
-            font-size: 0.9rem;
-        }
-        
-        .email-display i {
-            color: var(--primary);
-            margin-right: 8px;
-        }
+        .email-display { background: rgba(255, 195, 0, 0.1); border: 1px solid var(--primary); border-radius: 8px; padding: 12px; margin: 15px 0; font-size: 0.9rem; }
+        .email-display i { color: var(--primary); margin-right: 8px; }
     </style>
 </head>
 <body>
@@ -267,18 +179,11 @@
               toggleLink = document.getElementById('toggle-link');
         let isLogin = true;
 
-        // Configure Firebase to use custom email templates
-        auth.useDeviceLanguage();
-        
-        // Set custom action code settings for email branding
         const actionCodeSettings = {
-            url: 'https://student-portal-free.firebaseapp.com', // Change to your actual domain
+            url: 'https://student-portal-free.firebaseapp.com',
             handleCodeInApp: false,
-            // Customize the email template
-            dynamicLinkDomain: 'student-portal-free.page.link' // Optional: if you use Firebase Dynamic Links
         };
 
-        // AUTH GUARD: Checks if user is already logged in and redirects them
         auth.onAuthStateChanged(user => {
             if (user) {
                 spinner.style.display = 'flex';
@@ -287,7 +192,6 @@
                         const path = doc.data().role === 'admin' ? '/admindashboard.html' : '/studentdashboard.html';
                         window.location.replace(path);
                     } else {
-                        // User is in auth but not DB, log them out to be safe
                         auth.signOut();
                         spinner.style.display = 'none';
                     }
@@ -295,7 +199,6 @@
             }
         });
 
-        // Toggles between Login and Register views
         toggleLink.addEventListener('click', () => {
             isLogin = !isLogin; 
             authForm.reset(); 
@@ -308,7 +211,6 @@
             document.getElementById('toggle-link').innerText = isLogin ? 'Register Now' : 'Login';
         });
 
-        // Handles form submission for both Login and Register
         authForm.addEventListener('submit', (e) => {
             e.preventDefault();
             spinner.style.display = 'flex';
@@ -316,30 +218,51 @@
             const password = document.getElementById('password').value;
 
             if (isLogin) {
-                // For login, use the admission number as email
-                const email = `${admissionNo}@college.edu`;
-                auth.signInWithEmailAndPassword(email, password)
-                    .then(userCredential => {
-                        // The onAuthStateChanged listener above will handle redirection
+                // ======================================================================
+                // START OF LOGIN LOGIC FIX
+                // ======================================================================
+                if (!admissionNo || !password) {
+                    return handleAuthError({ message: "Admission Number and Password are required." });
+                }
+
+                // Step 1: Query Firestore to find the user by admission number
+                db.collection('users')
+                    .where('admissionNo', '==', admissionNo)
+                    .limit(1)
+                    .get()
+                    .then(querySnapshot => {
+                        if (querySnapshot.empty) {
+                            // No user found with that admission number
+                            throw new Error("Invalid credentials. Please check your Admission No.");
+                        }
+
+                        // Step 2: Get the real email from the document
+                        const userData = querySnapshot.docs[0].data();
+                        const realEmail = userData.email;
+
+                        // Step 3: Use the real email to sign in
+                        return auth.signInWithEmailAndPassword(realEmail, password);
                     })
-                    .catch(handleAuthError);
+                    .then(userCredential => {
+                        // Success! The onAuthStateChanged listener will handle the redirect.
+                        console.log('Login successful');
+                    })
+                    .catch(handleAuthError); // Catch errors from either the query or the sign-in
+
+                // ======================================================================
+                // END OF LOGIN LOGIC FIX
+                // ======================================================================
             } else {
+                // Registration logic (remains the same, it was correct)
                 const name = document.getElementById('name').value.trim();
                 const email = document.getElementById('email').value.trim();
                 
-                if (!name) { 
-                    handleAuthError({ message: "Name is required for registration." }); 
-                    return; 
-                }
-                if (!email) { 
-                    handleAuthError({ message: "Email is required for registration." }); 
-                    return; 
+                if (!name || !email || !admissionNo || !password) { 
+                    return handleAuthError({ message: "All fields are required for registration." });
                 }
                 
-                // Create user with the actual email they provided
                 auth.createUserWithEmailAndPassword(email, password)
                     .then(userCredential => {
-                        // Store user data with the actual email
                         return db.collection('users').doc(userCredential.user.uid).set({ 
                             name: name, 
                             admissionNo: admissionNo, 
@@ -358,12 +281,16 @@
 
         function handleAuthError(error) {
             console.error("Auth Error:", error);
-            messageArea.textContent = error.message;
+            if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+                messageArea.textContent = "Invalid credentials. Please check your Admission No and Password.";
+            } else {
+                messageArea.textContent = error.message;
+            }
             messageArea.className = 'message error';
             spinner.style.display = 'none';
         }
         
-        // Forgot Password Implementation
+        // --- Forgot Password Implementation (no changes needed here) ---
         const forgotPasswordLink = document.getElementById('forgot-password-link');
         const forgotPasswordModal = document.getElementById('forgot-password-modal');
         const modalClose = document.getElementById('modal-close');
@@ -375,7 +302,6 @@
         
         let userEmailForReset = '';
         
-        // Open modal when Forgot Password is clicked
         forgotPasswordLink.addEventListener('click', () => {
             forgotPasswordModal.classList.add('active');
             resetMessage.textContent = '';
@@ -383,12 +309,10 @@
             emailResult.style.display = 'none';
         });
         
-        // Close modal
         modalClose.addEventListener('click', () => {
             forgotPasswordModal.classList.remove('active');
         });
         
-        // Find user account by admission number
         findEmailBtn.addEventListener('click', () => {
             const admissionNo = document.getElementById('reset-admission').value.trim();
             if (!admissionNo) {
@@ -399,63 +323,44 @@
             
             spinner.style.display = 'flex';
             
-            // Search for user by admission number in Firestore
             db.collection('users')
                 .where('admissionNo', '==', admissionNo)
+                .limit(1) 
                 .get()
                 .then((querySnapshot) => {
                     spinner.style.display = 'none';
-                    
                     if (querySnapshot.empty) {
-                        resetMessage.textContent = 'No account found with this admission number';
-                        resetMessage.className = 'message error';
-                        return;
+                        throw new Error('No account found with this admission number.');
                     }
                     
-                    // Get the user data
                     const userData = querySnapshot.docs[0].data();
                     userEmailForReset = userData.email;
                     
-                    // Show the email (partially masked for privacy)
                     const emailParts = userEmailForReset.split('@');
-                    const maskedEmail = emailParts[0].substring(0, 3) + '***' + 
-                                       '@' + emailParts[1];
+                    const maskedEmail = emailParts[0].substring(0, 3) + '***@' + emailParts[1];
                     registeredEmailSpan.textContent = maskedEmail;
                     
-                    // Show the result section
                     emailResult.style.display = 'block';
                     resetMessage.textContent = 'Account found!';
                     resetMessage.className = 'message success';
                 })
                 .catch((error) => {
                     spinner.style.display = 'none';
-                    resetMessage.textContent = 'Error finding account: ' + error.message;
+                    resetMessage.textContent = error.message;
                     resetMessage.className = 'message error';
-                    console.error("Error querying users:", error);
                 });
         });
         
-        // Send password reset email
         sendResetBtn.addEventListener('click', () => {
-            if (!userEmailForReset) {
-                resetMessage.textContent = 'Please find your account first';
-                resetMessage.className = 'message error';
-                return;
-            }
-            
+            if (!userEmailForReset) return;
             spinner.style.display = 'flex';
             
-            // Use Firebase's built-in password reset with the actual email
             auth.sendPasswordResetEmail(userEmailForReset, actionCodeSettings)
                 .then(() => {
                     spinner.style.display = 'none';
                     resetMessage.textContent = 'Password reset email sent! Check your inbox.';
                     resetMessage.className = 'message success';
-                    
-                    // Close modal after 3 seconds
-                    setTimeout(() => {
-                        forgotPasswordModal.classList.remove('active');
-                    }, 3000);
+                    setTimeout(() => forgotPasswordModal.classList.remove('active'), 3000);
                 })
                 .catch(error => {
                     spinner.style.display = 'none';
@@ -463,13 +368,6 @@
                     resetMessage.className = 'message error';
                 });
         });
-
-        // Customize the password reset email template in Firebase Console:
-        // 1. Go to Authentication > Templates in Firebase Console
-        // 2. Customize the "Password reset" email template with:
-        //    - Subject: Reset your IB ONLINE RESOURCES HUB password
-        //    - Message body: Include your branding and custom message
-        //    - Action link: Customize the link appearance if needed
     </script>
 </body>
 </html>
