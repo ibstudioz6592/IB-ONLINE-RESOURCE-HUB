@@ -19,7 +19,7 @@
             --danger: #ff416c; 
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
+        
         /* --- KEYFRAME ANIMATIONS --- */
         @keyframes background-pan { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -53,7 +53,7 @@
 
         /* --- UPDATED BRANDING CLASS --- */
         .brand-title-animated {
-            font-size: 1.8rem; /* Made slightly larger */
+            font-size: 1.8rem;
             font-weight: 700;
             background: linear-gradient(120deg, #ff00c1, #00ffff, #33ff00, #ffc400, #ff00c1);
             background-size: 400% 400%;
@@ -67,6 +67,10 @@
         .btn { display: inline-block; padding: 12px 30px; border-radius: 10px; border: none; font-size: 1rem; font-weight: 500; cursor: pointer; text-align: center; transition: all 0.3s ease; text-decoration: none; }
         .btn-primary { background: var(--primary); color: var(--dark); box-shadow: 0 4px 15px rgba(255, 195, 0, 0.3); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 195, 0, 0.5); }
+        .btn-secondary { background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
+        .btn-small { padding: 8px 15px; font-size: 0.9rem; }
+        
         .auth-container { display: flex; justify-content: center; align-items: center; min-height: 90vh; }
         .auth-card { width: 100%; max-width: 450px; text-align: center; background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 15px; border: 1px solid var(--border-color); padding: 40px; box-shadow: 0 8px 32px 0 var(--shadow-color); }
         .auth-card .brand-logo { justify-content: center; margin-bottom: 5px; }
@@ -84,12 +88,97 @@
         .spinner-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; }
         .spinner { width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: var(--primary); animation: spin 1s ease-in-out infinite; }
         
+        /* Forgot Password Link */
+        .forgot-password { 
+            text-align: right; 
+            margin-top: -10px; 
+            margin-bottom: 20px; 
+        }
+        .forgot-password a { 
+            color: var(--primary); 
+            font-size: 0.9rem; 
+            text-decoration: none; 
+            cursor: pointer;
+        }
+        .forgot-password a:hover { 
+            text-decoration: underline; 
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            width: 90%;
+            max-width: 450px;
+            padding: 30px;
+            box-shadow: 0 8px 32px 0 var(--shadow-color);
+            transform: translateY(-50px);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
         /* --- RESPONSIVE DESIGN --- */
         @media (max-width: 480px) {
             .auth-card { padding: 25px; }
             .brand-logo img { width: 40px; }
             .brand-title-animated { font-size: 1.5rem; }
             .container { padding: 15px; margin: 15px auto; }
+            .modal { padding: 20px; }
+        }
+
+        .email-display {
+            background: rgba(255, 195, 0, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+        
+        .email-display i {
+            color: var(--primary);
+            margin-right: 8px;
         }
     </style>
 </head>
@@ -108,6 +197,10 @@
                     <label for="name"><i class="fas fa-user"></i> Name</label>
                     <input type="text" id="name" placeholder="Enter your full name">
                 </div>
+                <div class="form-group" id="email-group" style="display: none;">
+                    <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email address">
+                </div>
                 <div class="form-group">
                     <label for="admissionNo"><i class="fas fa-id-card"></i> Admission No</label>
                     <input type="text" id="admissionNo" placeholder="e.g., 717821F123" required>
@@ -116,31 +209,74 @@
                     <label for="password"><i class="fas fa-lock"></i> Password</label>
                     <input type="password" id="password" placeholder="Minimum 6 characters" required>
                 </div>
+                <div class="forgot-password">
+                    <a id="forgot-password-link">Forgot Password?</a>
+                </div>
                 <div id="message-area" class="message"></div>
                 <button type="submit" class="btn btn-primary" id="submit-btn">Login</button>
             </form>
             <p class="toggle-auth"><span id="toggle-text">Don't have an account?</span> <a id="toggle-link">Register Now</a></p>
         </div>
     </div>
+    
+    <!-- Forgot Password Modal -->
+    <div class="modal-overlay" id="forgot-password-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Reset Password</h3>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="reset-admission"><i class="fas fa-id-card"></i> Admission Number</label>
+                <input type="text" id="reset-admission" placeholder="Enter your admission number">
+            </div>
+            <div id="reset-message" class="message"></div>
+            <button class="btn btn-primary" id="find-email-btn">Find My Account</button>
+            
+            <div id="email-result" style="display: none;">
+                <div class="email-display">
+                    <i class="fas fa-envelope"></i>
+                    Password reset link will be sent to: <span id="registered-email"></span>
+                </div>
+                <button class="btn btn-primary" id="send-reset-btn">Send Reset Link</button>
+            </div>
+        </div>
+    </div>
+    
     <div id="spinner" class="spinner-overlay" style="display: none;"><div class="spinner"></div></div>
-
+    
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script>
         const firebaseConfig = {
-          apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao",
-          authDomain: "student-portal-free.firebaseapp.com",
-          projectId: "student-portal-free",
-          storageBucket: "student-portal-free.appspot.com",
-          messagingSenderId: "272865877510",
-          appId: "1:272865877510:web:0875a2502ae55bbf9ead87"
+            apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao",
+            authDomain: "student-portal-free.firebaseapp.com",
+            projectId: "student-portal-free",
+            storageBucket: "student-portal-free.appspot.com",
+            messagingSenderId: "272865877510",
+            appId: "1:272865877510:web:0875a2502ae55bbf9ead87"
         };
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        const authForm = document.getElementById('authForm'), messageArea = document.getElementById('message-area'), spinner = document.getElementById('spinner'), toggleLink = document.getElementById('toggle-link');
+        const authForm = document.getElementById('authForm'),
+              messageArea = document.getElementById('message-area'),
+              spinner = document.getElementById('spinner'),
+              toggleLink = document.getElementById('toggle-link');
         let isLogin = true;
+
+        // Configure Firebase to use custom email templates
+        auth.useDeviceLanguage();
+        
+        // Set custom action code settings for email branding
+        const actionCodeSettings = {
+            url: 'https://student-portal-free.firebaseapp.com', // Change to your actual domain
+            handleCodeInApp: false,
+            // Customize the email template
+            dynamicLinkDomain: 'student-portal-free.page.link' // Optional: if you use Firebase Dynamic Links
+        };
 
         // AUTH GUARD: Checks if user is already logged in and redirects them
         auth.onAuthStateChanged(user => {
@@ -150,10 +286,10 @@
                     if (doc.exists) {
                         const path = doc.data().role === 'admin' ? '/admindashboard.html' : '/studentdashboard.html';
                         window.location.replace(path);
-                    } else { 
+                    } else {
                         // User is in auth but not DB, log them out to be safe
-                        auth.signOut(); 
-                        spinner.style.display = 'none'; 
+                        auth.signOut();
+                        spinner.style.display = 'none';
                     }
                 });
             }
@@ -161,9 +297,12 @@
 
         // Toggles between Login and Register views
         toggleLink.addEventListener('click', () => {
-            isLogin = !isLogin; authForm.reset(); messageArea.textContent = '';
+            isLogin = !isLogin; 
+            authForm.reset(); 
+            messageArea.textContent = '';
             document.getElementById('form-title').innerText = isLogin ? 'Login' : 'Register';
             document.getElementById('name-group').style.display = isLogin ? 'none' : 'block';
+            document.getElementById('email-group').style.display = isLogin ? 'none' : 'block';
             document.getElementById('submit-btn').innerText = isLogin ? 'Login' : 'Register';
             document.getElementById('toggle-text').innerText = isLogin ? "Don't have an account?" : 'Already have an account?';
             document.getElementById('toggle-link').innerText = isLogin ? 'Register Now' : 'Login';
@@ -171,13 +310,14 @@
 
         // Handles form submission for both Login and Register
         authForm.addEventListener('submit', (e) => {
-            e.preventDefault(); 
+            e.preventDefault();
             spinner.style.display = 'flex';
             const admissionNo = document.getElementById('admissionNo').value.trim();
             const password = document.getElementById('password').value;
-            const email = `${admissionNo}@college.edu`;
 
             if (isLogin) {
+                // For login, use the admission number as email
+                const email = `${admissionNo}@college.edu`;
                 auth.signInWithEmailAndPassword(email, password)
                     .then(userCredential => {
                         // The onAuthStateChanged listener above will handle redirection
@@ -185,13 +325,32 @@
                     .catch(handleAuthError);
             } else {
                 const name = document.getElementById('name').value.trim();
-                if (!name) { handleAuthError({ message: "Name is required for registration." }); return; }
+                const email = document.getElementById('email').value.trim();
+                
+                if (!name) { 
+                    handleAuthError({ message: "Name is required for registration." }); 
+                    return; 
+                }
+                if (!email) { 
+                    handleAuthError({ message: "Email is required for registration." }); 
+                    return; 
+                }
+                
+                // Create user with the actual email they provided
                 auth.createUserWithEmailAndPassword(email, password)
-                    .then(userCredential => db.collection('users').doc(userCredential.user.uid).set({ name: name, admissionNo: admissionNo, role: 'student' }))
+                    .then(userCredential => {
+                        // Store user data with the actual email
+                        return db.collection('users').doc(userCredential.user.uid).set({ 
+                            name: name, 
+                            admissionNo: admissionNo, 
+                            email: email,
+                            role: 'student' 
+                        });
+                    })
                     .then(() => {
-                        spinner.style.display = 'none'; 
+                        spinner.style.display = 'none';
                         messageArea.className = 'message success';
-                        messageArea.textContent = 'Registration successful! Please login.'; 
+                        messageArea.textContent = 'Registration successful! Please login.';
                         toggleLink.click();
                     }).catch(handleAuthError);
             }
@@ -199,10 +358,119 @@
 
         function handleAuthError(error) {
             console.error("Auth Error:", error);
-            messageArea.textContent = error.message; 
+            messageArea.textContent = error.message;
             messageArea.className = 'message error';
             spinner.style.display = 'none';
         }
+        
+        // Forgot Password Implementation
+        const forgotPasswordLink = document.getElementById('forgot-password-link');
+        const forgotPasswordModal = document.getElementById('forgot-password-modal');
+        const modalClose = document.getElementById('modal-close');
+        const findEmailBtn = document.getElementById('find-email-btn');
+        const sendResetBtn = document.getElementById('send-reset-btn');
+        const resetMessage = document.getElementById('reset-message');
+        const emailResult = document.getElementById('email-result');
+        const registeredEmailSpan = document.getElementById('registered-email');
+        
+        let userEmailForReset = '';
+        
+        // Open modal when Forgot Password is clicked
+        forgotPasswordLink.addEventListener('click', () => {
+            forgotPasswordModal.classList.add('active');
+            resetMessage.textContent = '';
+            document.getElementById('reset-admission').value = '';
+            emailResult.style.display = 'none';
+        });
+        
+        // Close modal
+        modalClose.addEventListener('click', () => {
+            forgotPasswordModal.classList.remove('active');
+        });
+        
+        // Find user account by admission number
+        findEmailBtn.addEventListener('click', () => {
+            const admissionNo = document.getElementById('reset-admission').value.trim();
+            if (!admissionNo) {
+                resetMessage.textContent = 'Please enter your admission number';
+                resetMessage.className = 'message error';
+                return;
+            }
+            
+            spinner.style.display = 'flex';
+            
+            // Search for user by admission number in Firestore
+            db.collection('users')
+                .where('admissionNo', '==', admissionNo)
+                .get()
+                .then((querySnapshot) => {
+                    spinner.style.display = 'none';
+                    
+                    if (querySnapshot.empty) {
+                        resetMessage.textContent = 'No account found with this admission number';
+                        resetMessage.className = 'message error';
+                        return;
+                    }
+                    
+                    // Get the user data
+                    const userData = querySnapshot.docs[0].data();
+                    userEmailForReset = userData.email;
+                    
+                    // Show the email (partially masked for privacy)
+                    const emailParts = userEmailForReset.split('@');
+                    const maskedEmail = emailParts[0].substring(0, 3) + '***' + 
+                                       '@' + emailParts[1];
+                    registeredEmailSpan.textContent = maskedEmail;
+                    
+                    // Show the result section
+                    emailResult.style.display = 'block';
+                    resetMessage.textContent = 'Account found!';
+                    resetMessage.className = 'message success';
+                })
+                .catch((error) => {
+                    spinner.style.display = 'none';
+                    resetMessage.textContent = 'Error finding account: ' + error.message;
+                    resetMessage.className = 'message error';
+                    console.error("Error querying users:", error);
+                });
+        });
+        
+        // Send password reset email
+        sendResetBtn.addEventListener('click', () => {
+            if (!userEmailForReset) {
+                resetMessage.textContent = 'Please find your account first';
+                resetMessage.className = 'message error';
+                return;
+            }
+            
+            spinner.style.display = 'flex';
+            
+            // Use Firebase's built-in password reset with the actual email
+            auth.sendPasswordResetEmail(userEmailForReset, actionCodeSettings)
+                .then(() => {
+                    spinner.style.display = 'none';
+                    resetMessage.textContent = 'Password reset email sent! Check your inbox.';
+                    resetMessage.className = 'message success';
+                    
+                    // Close modal after 3 seconds
+                    setTimeout(() => {
+                        forgotPasswordModal.classList.remove('active');
+                    }, 3000);
+                })
+                .catch(error => {
+                    spinner.style.display = 'none';
+                    resetMessage.textContent = error.message;
+                    resetMessage.className = 'message error';
+                });
+        });
+
+        // Customize the password reset email template in Firebase Console:
+        // 1. Go to Authentication > Templates in Firebase Console
+        // 2. Customize the "Password reset" email template with:
+        //    - Subject: Reset your IB ONLINE RESOURCES HUB password
+        //    - Message body: Include your branding and custom message
+        //    - Action link: Customize the link appearance if needed
     </script>
 </body>
 </html>
+       
