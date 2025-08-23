@@ -4,152 +4,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome | IB STUDIOZ</title>
-    <!-- Google Fonts -->
+    
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23FFC300' d='M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z' /%3E%3Cg fill='%23121212'%3E%3Cpath d='M28,25 h10 v50 h-10 Z' /%3E%3Cpath d='M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z' /%3E%3C/g%3E%3C/svg%3E">
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- CSS STYLES --- */
         :root {
-            --primary: #FFC300;
-            --dark: #121212;
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.7);
-            --card-bg: rgba(20, 20, 20, 0.5);
-            --border-color: rgba(255, 195, 0, 0.2);
-            --shadow-color: rgba(0, 0, 0, 0.3);
-            --success: #00b09b;
-            --danger: #ff416c;
+            --primary: #FFC300; --dark: #121212; --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7); --card-bg: rgba(20, 20, 20, 0.6);
+            --border-color: rgba(255, 195, 0, 0.2); --shadow-color: rgba(0, 0, 0, 0.3);
+            --success: #00b09b; --danger: #ff416c;
+            --glow-1: #ff00c1; --glow-2: #00ffff; --glow-3: #ffc400; --glow-4: #33ff00;
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* --- KEYFRAME ANIMATIONS --- */
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* --- ENHANCED BRANDING ANIMATION --- */
-        @keyframes brand-glow-pulse {
-            0%, 100% {
-                text-shadow: 0 0 5px rgba(255,255,255,0.5), 0 0 10px rgba(255,255,255,0.5), 0 0 15px rgba(255, 195, 0, 0.7);
-                background-position: 0% 50%;
-            }
-            50% {
-                text-shadow: 0 0 10px rgba(255,255,255,0.7), 0 0 20px rgba(255, 195, 0, 0.7), 0 0 30px rgba(255, 195, 0, 0.7);
-                background-position: 100% 50%;
-            }
-        }
-
-        body {
-            font-family: "Poppins", sans-serif;
-            background-color: var(--dark);
-            color: var(--text-primary);
-            min-height: 100vh;
-            line-height: 1.6;
-            background-attachment: fixed;
-        }
-
-        .aurora-background {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background: radial-gradient(ellipse at 10% 10%, var(--primary) 0%, rgba(255, 195, 0, 0) 40%), radial-gradient(ellipse at 90% 85%, #444 0%, rgba(68, 68, 68, 0) 35%);
-            animation: background-pan 45s linear infinite;
-            opacity: 0.2;
-        }
-
-        .container { max-width: 1200px; margin: 30px auto; padding: 30px; }
-        .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; color: var(--text-primary); }
-        .brand-logo img { width: 50px; height: auto; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         
-        /* --- ENHANCED BRAND TITLE STYLE --- */
-        .brand-title-animated {
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            background: linear-gradient(120deg, #ff00c1, #00ffff, #33ff00, #ffc400, #ff00c1);
-            background-size: 400% 400%;
-            color: transparent;
-            -webkit-background-clip: text;
-            background-clip: text;
-            animation: brand-glow-pulse 4s ease-in-out infinite; /* Applying the new animation */
+        /* --- FINAL SPLASH SCREEN STYLES --- */
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark);
+            z-index: 9999; display: flex; flex-direction: column; justify-content: center;
+            align-items: center; transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
         }
+        #splash-screen.fade-out { opacity: 0; visibility: hidden; }
+        
+        @keyframes fade-in-scale-up {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .splash-logo { /* STABLE LOGO (NO SPIN) */
+            width: 80px; height: auto; margin-bottom: 25px;
+            animation: fade-in-scale-up 1s ease-out forwards;
+        }
+        .typing-wrapper { text-align: center; }
+        .splash-title-typing {
+            font-family: monospace;
+            font-size: 1.8rem; font-weight: 500; color: var(--text-primary);
+            overflow: hidden; border-right: .15em solid var(--primary);
+            white-space: nowrap; letter-spacing: .1em;
+            animation: typing 2.5s steps(10, end), blink-cursor .75s step-end infinite;
+        }
+        @keyframes typing { from { width: 0 } to { width: 100% } }
+        @keyframes blink-cursor { from, to { border-color: transparent } 50% { border-color: var(--primary); } }
 
-        /* --- ENHANCED BUTTON --- */
-        .btn {
-            display: inline-block; padding: 12px 30px; border-radius: 10px; border: none;
-            font-size: 1rem; font-weight: 500; cursor: pointer; text-align: center;
-            transition: all 0.3s ease; text-decoration: none; width: 100%;
+        @keyframes multi-color-glow {
+            0%, 100% { text-shadow: 0 0 5px #fff3, 0 0 15px var(--glow-1), 0 0 25px var(--glow-1); }
+            25% { text-shadow: 0 0 5px #fff3, 0 0 15px var(--glow-2), 0 0 25px var(--glow-2); }
+            50% { text-shadow: 0 0 5px #fff3, 0 0 15px var(--glow-3), 0 0 25px var(--glow-3); }
+            75% { text-shadow: 0 0 5px #fff3, 0 0 15px var(--glow-4), 0 0 25px var(--glow-4); }
         }
-        .btn-primary {
-            background: linear-gradient(45deg, #FFC300, #FFD033); color: var(--dark);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); transform: translateY(0);
-        }
-        .btn-primary:hover {
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); transform: translateY(-2px);
-        }
-
-        .auth-container { display: flex; justify-content: center; align-items: center; min-height: 90vh; }
-        .auth-card {
-            width: 100%; max-width: 450px; text-align: center; background: var(--card-bg);
-            backdrop-filter: blur(15px); border-radius: 15px; border: 1px solid var(--border-color);
-            padding: 40px; box-shadow: 0 8px 32px 0 var(--shadow-color);
-        }
-        .auth-card .brand-logo { justify-content: center; margin-bottom: 5px; }
+        
+        body { font-family: "Poppins", sans-serif; background-color: var(--dark); color: var(--text-primary); min-height: 100vh; line-height: 1.6; background-attachment: fixed; }
+        .aurora-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(ellipse at 10% 10%, var(--primary) 0%, #ffc30000 40%), radial-gradient(ellipse at 90% 85%, #444 0%, #4400 35%); animation: background-pan 45s linear infinite; opacity: 0.2; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 30px; }
+        .brand-logo { display: flex; align-items: center; justify-content: center; gap: 12px; text-decoration: none; color: var(--text-primary); margin-bottom: 5px; }
+        .header-logo-svg { width: 50px; height: auto; flex-shrink: 0; }
+        .brand-title { font-size: 1.8rem; font-weight: 600; color: var(--text-primary); animation: multi-color-glow 6s ease-in-out infinite; }
+        .btn { display: inline-block; padding: 12px 30px; border-radius: 10px; border: none; font-size: 1rem; font-weight: 500; cursor: pointer; text-align: center; transition: all 0.3s ease; text-decoration: none; width: 100%; }
+        .btn-primary { background: linear-gradient(45deg, #FFC300, #FFD033); color: var(--dark); box-shadow: 0 4px 15px #00000033; transform: translateY(0); }
+        .btn-primary:hover { box-shadow: 0 6px 20px #0000004d; transform: translateY(-2px); }
+        .auth-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .auth-card { width: 100%; max-width: 450px; text-align: center; background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 15px; border: 1px solid var(--border-color); padding: 40px; box-shadow: 0 8px 32px 0 var(--shadow-color); }
         .auth-subtitle { color: var(--text-secondary); margin-bottom: 30px; font-size: 1rem; }
-
-        /* --- ENHANCED FORM & INPUTS --- */
         .form-group label { text-align: left; display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-secondary); }
-        input {
-            width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border-color);
-            background-color: rgba(0, 0, 0, 0.2); color: var(--text-primary); font-size: 1rem;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        input:focus {
-            outline: none; border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(255, 195, 0, 0.2);
-        }
+        input { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border-color); background-color: #00000033; color: var(--text-primary); font-size: 1rem; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 15px #ffc30033; }
         .password-wrapper { position: relative; display: flex; align-items: center; }
         #togglePassword { position: absolute; right: 15px; cursor: pointer; color: var(--text-secondary); }
-
-        /* --- SMOOTH TRANSITION FOR FORM FIELDS --- */
-        .form-group {
-            max-height: 100px; opacity: 1; overflow: hidden;
-            transition: max-height 0.5s ease-out, opacity 0.4s ease-out, margin-bottom 0.5s ease-out;
-            margin-bottom: 20px;
-        }
+        .form-group { max-height: 100px; opacity: 1; overflow: hidden; transition: max-height 0.5s ease-out, opacity 0.4s ease-out, margin-bottom 0.5s ease-out; margin-bottom: 20px; }
         #name-group, #admissionNo-group { max-height: 0; opacity: 0; margin-bottom: 0; }
         #name-group.active, #admissionNo-group.active { max-height: 100px; opacity: 1; margin-bottom: 20px; }
-
         .toggle-auth { margin-top: 25px; color: var(--text-secondary); }
         .toggle-auth a { color: var(--primary); font-weight: 600; text-decoration: none; cursor: pointer; }
         .message { min-height: 20px; margin-bottom: 15px; font-weight: 500; font-size: 0.9rem; }
         .message.error { color: var(--danger); } .message.success { color: var(--success); }
-        .spinner-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-        .spinner { width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: var(--primary); animation: spin 1s ease-in-out infinite; }
+        .spinner-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000b3; z-index: 1000; display:flex; justify-content:center; align-items:center; }
         .forgot-password { text-align: right; margin-top: -10px; margin-bottom: 20px; }
         .forgot-password a { color: var(--primary); font-size: 0.9rem; text-decoration: none; cursor: pointer; }
-        
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000b3; display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal { background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 15px; border: 1px solid var(--border-color); width: 90%; max-width: 450px; padding: 30px; box-shadow: 0 8px 32px 0 var(--shadow-color); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .modal-close { background: none; border: none; color: var(--text-primary); font-size: 1.5rem; cursor: pointer; }
+        @media (max-width: 768px) { .container { padding: 15px; } .auth-card { padding: 25px; } .brand-title { font-size: 1.6rem; } .header-logo-svg { width: 45px; } .splash-title-typing { font-size: 1.5rem; } }
     </style>
 </head>
 <body>
+    
+    <div id="splash-screen">
+        <svg class="splash-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#FFC300" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" />
+            <g fill="#121212"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g>
+        </svg>
+        <div class="typing-wrapper">
+            <h2 id="splash-title" class="splash-title-typing">IB STUDIOZ</h2>
+        </div>
+    </div>
+
     <div class="aurora-background"></div>
+    <!-- LOGIN PAGE HTML - RESTORED -->
     <div class="container auth-container">
         <div class="auth-card">
             <div class="brand-logo">
-                <img src="logo().jpg" alt="IB STUDIOZ Logo">
-                <h1 class="brand-title-animated">IB STUDIOZ</h1>
+                <h1 class="brand-title">IB STUDIOZ</h1>
+                <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#FFC300" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" />
+                    <g fill="#121212"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g>
+                </svg>
             </div>
             <p class="auth-subtitle">Online Resources Hub</p>
+
             <form id="authForm" novalidate>
                 <h2 id="form-title">Login</h2>
                 <div class="form-group" id="name-group"><label for="name"><i class="fas fa-user"></i> Name</label><input type="text" id="name" placeholder="Enter your full name"></div>
@@ -157,10 +121,7 @@
                 <div class="form-group" id="admissionNo-group"><label for="admissionNo"><i class="fas fa-id-card"></i> Admission No</label><input type="text" id="admissionNo" placeholder="e.g., 717821F123"></div>
                 <div class="form-group" id="password-group">
                     <label for="password"><i class="fas fa-lock"></i> Password</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="password" placeholder="Minimum 6 characters" required>
-                        <i class="fas fa-eye" id="togglePassword"></i>
-                    </div>
+                    <div class="password-wrapper"><input type="password" id="password" placeholder="Minimum 6 characters" required><i class="fas fa-eye" id="togglePassword"></i></div>
                 </div>
                 <div class="forgot-password"><a id="forgot-password-link">Forgot Password?</a></div>
                 <div id="message-area" class="message" aria-live="polite"></div>
@@ -174,24 +135,20 @@
         <div class="modal">
             <div class="modal-header"><h3 class="modal-title">Reset Password</h3><button class="modal-close" id="modal-close">&times;</button></div>
             <p style="color: var(--text-secondary); margin-bottom: 20px;">Enter your registered email address to receive a password reset link.</p>
-            <div class="form-group">
-                <label for="reset-email"><i class="fas fa-envelope"></i> Email Address</label>
-                <input type="email" id="reset-email" placeholder="Enter your email address">
-            </div>
+            <div class="form-group"><label for="reset-email"><i class="fas fa-envelope"></i> Email Address</label><input type="email" id="reset-email" placeholder="Enter your email address"></div>
             <div id="reset-message" class="message"></div>
             <button class="btn btn-primary" id="send-reset-link-btn">Send Reset Link</button>
         </div>
     </div>
 
-    <div id="spinner" class="spinner-overlay" style="display: none;"><div class="spinner"></div></div>
-
-    <!-- Firebase SDKs -->
+    <div id="spinner" class="spinner-overlay" style="display: none;"><svg class="splash-logo" style="width: 80px; animation: spin 2s linear infinite;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="#FFC300" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" /><g fill="#121212"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g></svg></div>
+    
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     
     <script>
-        // --- JAVASCRIPT LOGIC ---
+        // --- COMPLETE & UNABRIDGED JAVASCRIPT ---
         const firebaseConfig = {
             apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao", authDomain: "student-portal-free.firebaseapp.com",
             projectId: "student-portal-free", storageBucket: "student-portal-free.appspot.com",
@@ -200,7 +157,7 @@
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-
+        
         const authForm = document.getElementById('authForm'), messageArea = document.getElementById('message-area'),
               spinner = document.getElementById('spinner'), toggleLink = document.getElementById('toggle-link'),
               nameGroup = document.getElementById('name-group'), admissionNoGroup = document.getElementById('admissionNo-group'),
@@ -209,20 +166,42 @@
         let isLogin = true;
         const actionCodeSettings = { url: 'https://student-portal-free.firebaseapp.com/', handleCodeInApp: false };
 
+        function handleAppReady() {
+            const splash = document.getElementById('splash-screen');
+            const splashTitle = document.getElementById('splash-title');
+            
+            const animationEndPromise = new Promise(resolve => {
+                splashTitle.addEventListener('animationend', resolve, { once: true });
+            });
+            const authReadyPromise = new Promise(resolve => {
+                const unsubscribe = auth.onAuthStateChanged(user => {
+                    resolve(user);
+                    unsubscribe();
+                });
+            });
+
+            Promise.all([animationEndPromise, authReadyPromise]).then(([_, user]) => {
+                if (user) {
+                    spinner.style.display = 'flex';
+                    db.collection('users').doc(user.uid).get().then(doc => {
+                        if (doc.exists) {
+                            window.location.replace(doc.data().role === 'admin' ? '/admindashboard.html' : '/studentdashboard.html');
+                        } else {
+                            auth.signOut();
+                            spinner.style.display = 'none';
+                        }
+                    });
+                }
+                setTimeout(() => {
+                    splash.classList.add('fade-out');
+                }, 500);
+            });
+        }
+        window.addEventListener('load', handleAppReady);
+
         function showMessage(text, type) { messageArea.textContent = text; messageArea.className = `message ${type}`; }
         function clearMessage() { messageArea.textContent = ''; }
-
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                spinner.style.display = 'flex';
-                db.collection('users').doc(user.uid).get().then(doc => {
-                    if (doc.exists) {
-                        window.location.replace(doc.data().role === 'admin' ? '/admindashboard.html' : '/studentdashboard.html');
-                    } else { auth.signOut(); spinner.style.display = 'none'; }
-                });
-            }
-        });
-
+        
         toggleLink.addEventListener('click', () => {
             isLogin = !isLogin; authForm.reset(); clearMessage();
             document.getElementById('form-title').innerText = isLogin ? 'Login' : 'Register';
@@ -276,21 +255,30 @@
               modalClose = document.getElementById('modal-close'), sendResetLinkBtn = document.getElementById('send-reset-link-btn'),
               resetMessageArea = document.getElementById('reset-message'), resetEmailInput = document.getElementById('reset-email');
         
-        forgotPasswordLink.addEventListener('click', () => { forgotPasswordModal.classList.add('active'); resetMessageArea.textContent = ''; resetEmailInput.value = ''; });
+        forgotPasswordLink.addEventListener('click', () => {
+            forgotPasswordModal.classList.add('active'); resetMessageArea.textContent = ''; resetEmailInput.value = '';
+        });
         modalClose.addEventListener('click', () => { forgotPasswordModal.classList.remove('active'); });
+        
         sendResetLinkBtn.addEventListener('click', () => {
             const email = resetEmailInput.value.trim();
-            if (!email) { resetMessageArea.textContent = 'Please enter your email address.'; resetMessageArea.className = 'message error'; return; }
+            if (!email) {
+                resetMessageArea.textContent = 'Please enter your email address.'; resetMessageArea.className = 'message error'; return;
+            }
             spinner.style.display = 'flex';
             auth.sendPasswordResetEmail(email, actionCodeSettings)
                 .then(() => {
-                    spinner.style.display = 'none'; resetMessageArea.textContent = 'Password reset email sent! Check your inbox.';
-                    resetMessageArea.className = 'message success'; setTimeout(() => forgotPasswordModal.classList.remove('active'), 3000);
+                    spinner.style.display = 'none';
+                    resetMessageArea.textContent = 'Password reset email sent! Check your inbox.'; resetMessageArea.className = 'message success';
+                    setTimeout(() => forgotPasswordModal.classList.remove('active'), 3000);
                 })
                 .catch((error) => {
                     spinner.style.display = 'none';
-                    if(error.code === 'auth/user-not-found' || error.code === 'auth/invalid-email') resetMessageArea.textContent = 'No account found with this email address.';
-                    else resetMessageArea.textContent = "Failed to send reset email. Please try again.";
+                    if(error.code === 'auth/user-not-found' || error.code === 'auth/invalid-email') {
+                        resetMessageArea.textContent = 'No account found with this email address.';
+                    } else {
+                        resetMessageArea.textContent = "Failed to send reset email. Please try again.";
+                    }
                     resetMessageArea.className = 'message error';
                 });
         });
