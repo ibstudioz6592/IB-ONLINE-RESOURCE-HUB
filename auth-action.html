@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Action | IB STUDIOZ</title>
+    <!-- Re-use all the same styles from your index.html -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #FFC300; --dark: #121212; --text-primary: #ffffff; --text-secondary: rgba(255, 255, 255, 0.7); --card-bg: rgba(20, 20, 20, 0.5); --border-color: rgba(255, 195, 0, 0.2); --shadow-color: rgba(0, 0, 0, 0.3); --success: #00b09b; --danger: #ff416c; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        body { font-family: "Poppins", sans-serif; background-color: var(--dark); color: var(--text-primary); min-height: 100vh; line-height: 1.6; background-attachment: fixed; }
+        .aurora-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(ellipse at 10% 10%, var(--primary) 0%, rgba(255, 195, 0, 0) 40%), radial-gradient(ellipse at 90% 85%, #444 0%, rgba(68, 68, 68, 0) 35%); animation: background-pan 45s linear infinite; opacity: 0.2; }
+        .container { display: flex; justify-content: center; align-items: center; min-height: 90vh; max-width: 1200px; margin: 30px auto; padding: 30px; }
+        .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; color: var(--text-primary); }
+        .brand-logo img { width: 50px; height: auto; }
+        .brand-title-animated { font-size: 1.8rem; font-weight: 700; background: linear-gradient(120deg, #ff00c1, #00ffff, #33ff00, #ffc400, #ff00c1); background-size: 400% 400%; color: transparent; -webkit-background-clip: text; background-clip: text; animation: aurora-shimmer 8s ease-in-out infinite; text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); }
+        .btn { display: inline-block; padding: 12px 30px; border-radius: 10px; border: none; font-size: 1rem; font-weight: 500; cursor: pointer; text-align: center; transition: all 0.3s ease; text-decoration: none; }
+        .btn-primary { background: var(--primary); color: var(--dark); }
+        .auth-card { width: 100%; max-width: 450px; text-align: center; background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 15px; border: 1px solid var(--border-color); padding: 40px; box-shadow: 0 8px 32px 0 var(--shadow-color); }
+        .auth-card .brand-logo { justify-content: center; margin-bottom: 5px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { text-align: left; display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-secondary); }
+        input { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border-color); background-color: rgba(0, 0, 0, 0.2); color: var(--text-primary); font-size: 1rem; }
+        .message { min-height: 20px; margin-bottom: 15px; font-weight: 500; font-size: 0.9rem; }
+        .message.error { color: var(--danger); } .message.success { color: var(--success); }
+        .spinner-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .spinner { width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: var(--primary); animation: spin 1s ease-in-out infinite; }
+        .login-link { margin-top: 20px; }
+        .login-link a { color: var(--primary); font-weight: 600; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="aurora-background"></div>
+    <div class="container">
+        <div class="auth-card">
+            <div class="brand-logo"><img src="logo().jpg" alt="IB STUDIOZ Logo"><h1 class="brand-title-animated">IB STUDIOZ</h1></div>
+            
+            <div id="action-container">
+                <h2 id="form-title">Loading...</h2>
+                <div id="message-area" class="message"></div>
+
+                <!-- Password Reset Form (initially hidden) -->
+                <form id="reset-password-form" style="display:none;">
+                    <div class="form-group">
+                        <label for="new-password"><i class="fas fa-lock"></i> New Password</label>
+                        <input type="password" id="new-password" placeholder="Minimum 6 characters" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save New Password</button>
+                </form>
+                <div id="success-container" style="display:none;">
+                    <p class="login-link">You can now proceed to the login page.</p>
+                    <a href="/" class="btn btn-primary">Go to Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="spinner" class="spinner-overlay"><div class="spinner"></div></div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao",
+        authDomain: "student-portal-free.firebaseapp.com",
+        projectId: "student-portal-free",
+        storageBucket: "student-portal-free.appspot.com",
+        messagingSenderId: "272865877510",
+        appId: "1:272865877510:web:0875a2502ae55bbf9ead87"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    const spinner = document.getElementById('spinner');
+    const formTitle = document.getElementById('form-title');
+    const messageArea = document.getElementById('message-area');
+    const resetPasswordForm = document.getElementById('reset-password-form');
+    const newPasswordInput = document.getElementById('new-password');
+    const successContainer = document.getElementById('success-container');
+
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const mode = getQueryParam('mode');
+        const actionCode = getQueryParam('oobCode');
+
+        if (!actionCode) {
+            formTitle.textContent = "Invalid Link";
+            messageArea.textContent = "This link is missing required information. Please return to the login page and try again.";
+            messageArea.className = 'message error';
+            spinner.style.display = 'none';
+            return;
+        }
+
+        if (mode === 'resetPassword') {
+            handleResetPassword(actionCode);
+        } else {
+            formTitle.textContent = "Unknown Action";
+            messageArea.textContent = "The requested action is not recognized.";
+            messageArea.className = 'message error';
+            spinner.style.display = 'none';
+        }
+    });
+
+    function handleResetPassword(code) {
+        auth.verifyPasswordResetCode(code).then(email => {
+            formTitle.textContent = "Reset Your Password";
+            messageArea.textContent = `Create a new password for ${email}.`;
+            messageArea.className = 'message';
+            resetPasswordForm.style.display = 'block';
+            spinner.style.display = 'none';
+
+            resetPasswordForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                spinner.style.display = 'flex';
+                const newPassword = newPasswordInput.value;
+
+                auth.confirmPasswordReset(code, newPassword).then(() => {
+                    spinner.style.display = 'none';
+                    formTitle.textContent = "Success!";
+                    messageArea.textContent = "Your password has been updated.";
+                    messageArea.className = 'message success';
+                    resetPasswordForm.style.display = 'none';
+                    successContainer.style.display = 'block';
+                }).catch(handleError);
+            });
+        }).catch(handleError);
+    }
+
+    function handleError(error) {
+        spinner.style.display = 'none';
+        formTitle.textContent = "Error";
+        resetPasswordForm.style.display = 'none';
+        
+        if (error.code === 'auth/expired-action-code') {
+            messageArea.textContent = "This password reset link has expired. Please request a new one from the login page.";
+        } else if (error.code === 'auth/invalid-action-code') {
+            messageArea.textContent = "This link is invalid. It may have already been used. Please request a new one.";
+        } else {
+            messageArea.textContent = "An unexpected error occurred. Please try again.";
+        }
+        messageArea.className = 'message error';
+    }
+</script>
+</body>
+</html>
