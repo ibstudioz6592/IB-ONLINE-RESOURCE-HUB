@@ -39,7 +39,6 @@
         .modal { background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 15px; border: 1px solid var(--border-color); width: 90%; max-width: 450px; padding: 30px; box-shadow: 0 8px 32px 0 var(--shadow-color); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .modal-close { background: none; border: none; color: var(--text-primary); font-size: 1.5rem; cursor: pointer; }
-        .email-display { background: rgba(255, 195, 0, 0.1); border: 1px solid var(--primary); border-radius: 8px; padding: 12px; margin: 15px 0; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -50,10 +49,12 @@
             <p class="auth-subtitle">Online Resources Hub</p>
             <form id="authForm" novalidate>
                 <h2 id="form-title">Login</h2>
+                <!-- Fields for both Login and Register -->
                 <div class="form-group" id="name-group" style="display: none;"><label for="name"><i class="fas fa-user"></i> Name</label><input type="text" id="name" placeholder="Enter your full name"></div>
-                <div class="form-group" id="email-group" style="display: none;"><label for="email"><i class="fas fa-envelope"></i> Email Address</label><input type="email" id="email" placeholder="Enter your email address"></div>
-                <div class="form-group"><label for="admissionNo"><i class="fas fa-id-card"></i> Admission No</label><input type="text" id="admissionNo" placeholder="e.g., 717821F123" required></div>
+                <div class="form-group" id="email-group"><label for="email"><i class="fas fa-envelope"></i> Email Address</label><input type="email" id="email" placeholder="Enter your email address" required></div>
+                <div class="form-group" id="admissionNo-group" style="display: none;"><label for="admissionNo"><i class="fas fa-id-card"></i> Admission No</label><input type="text" id="admissionNo" placeholder="e.g., 717821F123"></div>
                 <div class="form-group"><label for="password"><i class="fas fa-lock"></i> Password</label><input type="password" id="password" placeholder="Minimum 6 characters" required></div>
+                
                 <div class="forgot-password"><a id="forgot-password-link">Forgot Password?</a></div>
                 <div id="message-area" class="message"></div>
                 <button type="submit" class="btn btn-primary" id="submit-btn">Login</button>
@@ -61,18 +62,21 @@
             <p class="toggle-auth"><span id="toggle-text">Don't have an account?</span> <a id="toggle-link">Register Now</a></p>
         </div>
     </div>
+    
+    <!-- *** MODIFIED PASSWORD RESET MODAL *** -->
     <div class="modal-overlay" id="forgot-password-modal">
         <div class="modal">
             <div class="modal-header"><h3 class="modal-title">Reset Password</h3><button class="modal-close" id="modal-close">&times;</button></div>
-            <div class="form-group"><label for="reset-admission"><i class="fas fa-id-card"></i> Admission Number</label><input type="text" id="reset-admission" placeholder="Enter your admission number"></div>
-            <div id="reset-message" class="message"></div>
-            <button class="btn btn-primary" id="find-email-btn">Find My Account</button>
-            <div id="email-result" style="display: none;">
-                <div class="email-display"><i class="fas fa-envelope"></i>Password reset link will be sent to: <span id="registered-email"></span></div>
-                <button class="btn btn-primary" id="send-reset-btn">Send Reset Link</button>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">Enter your registered email address to receive a password reset link.</p>
+            <div class="form-group">
+                <label for="reset-email"><i class="fas fa-envelope"></i> Email Address</label>
+                <input type="email" id="reset-email" placeholder="Enter your email address">
             </div>
+            <div id="reset-message" class="message"></div>
+            <button class="btn btn-primary" id="send-reset-link-btn">Send Reset Link</button>
         </div>
     </div>
+
     <div id="spinner" class="spinner-overlay" style="display: none;"><div class="spinner"></div></div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -98,13 +102,11 @@
     const toggleLink = document.getElementById('toggle-link');
     let isLogin = true;
 
-    // This setting tells Firebase where to redirect the user after they click the password reset link in their email.
     const actionCodeSettings = {
         url: 'https://student-portal-free.firebaseapp.com/',
         handleCodeInApp: false
     };
 
-    // Observer for authentication state changes
     auth.onAuthStateChanged(user => {
         if (user) {
             spinner.style.display = 'flex';
@@ -116,58 +118,48 @@
                     auth.signOut();
                     spinner.style.display = 'none';
                 }
-            }).catch(() => {
-                auth.signOut();
-                spinner.style.display = 'none';
             });
         }
     });
 
-    // Toggle between Login and Register forms
     toggleLink.addEventListener('click', () => {
         isLogin = !isLogin;
         authForm.reset();
         messageArea.textContent = '';
         document.getElementById('form-title').innerText = isLogin ? 'Login' : 'Register';
+        // Toggle field visibility
         document.getElementById('name-group').style.display = isLogin ? 'none' : 'block';
-        document.getElementById('email-group').style.display = isLogin ? 'none' : 'block';
+        document.getElementById('admissionNo-group').style.display = isLogin ? 'none' : 'block';
+        document.querySelector('.forgot-password').style.display = isLogin ? 'block' : 'none';
+
         document.getElementById('submit-btn').innerText = isLogin ? 'Login' : 'Register';
         document.getElementById('toggle-text').innerText = isLogin ? "Don't have an account?" : 'Already have an account?';
         document.getElementById('toggle-link').innerText = isLogin ? 'Register Now' : 'Login';
-        document.querySelector('.forgot-password').style.display = isLogin ? 'block' : 'none';
     });
 
-    // Handle form submission for both Login and Registration
+    // *** SIMPLIFIED LOGIN & REGISTER LOGIC ***
     authForm.addEventListener('submit', (e) => {
         e.preventDefault();
         spinner.style.display = 'flex';
-        const admissionNo = document.getElementById('admissionNo').value.trim();
+        const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
 
         if (isLogin) {
-            // Login Logic
-            if (!admissionNo || !password) {
-                return handleAuthError({ message: "All fields are required." });
+            // LOGIN with email and password
+            if (!email || !password) {
+                return handleAuthError({ message: "Email and Password are required." });
             }
-            db.collection('users').where('admissionNo', '==', admissionNo).limit(1).get()
-                .then(querySnapshot => {
-                    if (querySnapshot.empty) {
-                        throw new Error("Invalid credentials.");
-                    }
-                    const userEmail = querySnapshot.docs[0].data().email;
-                    return auth.signInWithEmailAndPassword(userEmail, password);
-                })
+            auth.signInWithEmailAndPassword(email, password)
                 .catch(handleAuthError);
         } else {
-            // Registration Logic
+            // REGISTER
             const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
+            const admissionNo = document.getElementById('admissionNo').value.trim();
             if (!name || !email || !admissionNo || !password) {
                 return handleAuthError({ message: "All fields are required." });
             }
             auth.createUserWithEmailAndPassword(email, password)
                 .then(userCredential => {
-                    // Store user details in Firestore
                     return db.collection('users').doc(userCredential.user.uid).set({
                         name: name,
                         email: email,
@@ -179,18 +171,16 @@
                     spinner.style.display = 'none';
                     messageArea.className = 'message success';
                     messageArea.textContent = 'Registration successful! Please login.';
-                    toggleLink.click(); // Switch to login view
+                    toggleLink.click();
                 })
                 .catch(handleAuthError);
         }
     });
 
-    // *** CORRECTED *** Centralized Error Handling Function
     function handleAuthError(error) {
         console.error("Auth Error:", error);
-        // Firebase now uses 'auth/invalid-credential' for both wrong password and user not found to prevent email enumeration.
-        if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
-            messageArea.textContent = "Invalid credentials. Please check Admission No and Password.";
+        if (error.code === 'auth/invalid-credential') {
+            messageArea.textContent = "Invalid credentials. Please check your email and password.";
         } else if (error.code === 'auth/email-already-in-use') {
             messageArea.textContent = 'An account with this email address already exists.';
         } else {
@@ -199,65 +189,37 @@
         messageArea.className = 'message error';
         spinner.style.display = 'none';
     }
-
-    // --- Password Reset Modal Logic ---
+    
+    // --- SIMPLIFIED Password Reset Modal Logic ---
     const forgotPasswordLink = document.getElementById('forgot-password-link');
     const forgotPasswordModal = document.getElementById('forgot-password-modal');
     const modalClose = document.getElementById('modal-close');
-    const findEmailBtn = document.getElementById('find-email-btn');
-    const sendResetBtn = document.getElementById('send-reset-btn');
+    const sendResetLinkBtn = document.getElementById('send-reset-link-btn');
     const resetMessageArea = document.getElementById('reset-message');
-    let userEmailForReset = '';
+    const resetEmailInput = document.getElementById('reset-email');
 
     forgotPasswordLink.addEventListener('click', () => {
         forgotPasswordModal.classList.add('active');
         resetMessageArea.textContent = '';
-        document.getElementById('reset-admission').value = '';
-        document.getElementById('email-result').style.display = 'none';
+        resetEmailInput.value = '';
     });
 
     modalClose.addEventListener('click', () => {
         forgotPasswordModal.classList.remove('active');
     });
 
-    findEmailBtn.addEventListener('click', () => {
-        const admissionNo = document.getElementById('reset-admission').value.trim();
-        if (!admissionNo) {
-            resetMessageArea.textContent = 'Please enter an admission number.';
+    sendResetLinkBtn.addEventListener('click', () => {
+        const email = resetEmailInput.value.trim();
+        if (!email) {
+            resetMessageArea.textContent = 'Please enter your email address.';
             resetMessageArea.className = 'message error';
             return;
         }
         spinner.style.display = 'flex';
-        db.collection('users').where('admissionNo', '==', admissionNo).limit(1).get()
-            .then((querySnapshot) => {
-                spinner.style.display = 'none';
-                if (querySnapshot.empty) {
-                    throw new Error('No account found with this admission number.');
-                }
-                const userData = querySnapshot.docs[0].data();
-                userEmailForReset = userData.email;
-                const emailParts = userData.email.split('@');
-                const maskedEmail = emailParts[0].substring(0, 3) + '***@' + emailParts[1];
-                document.getElementById('registered-email').textContent = maskedEmail;
-                document.getElementById('email-result').style.display = 'block';
-                resetMessageArea.textContent = 'Account found!';
-                resetMessageArea.className = 'message success';
-            })
-            .catch((error) => {
-                spinner.style.display = 'none';
-                resetMessageArea.textContent = error.message;
-                resetMessageArea.className = 'message error';
-                document.getElementById('email-result').style.display = 'none';
-            });
-    });
-
-    sendResetBtn.addEventListener('click', () => {
-        if (!userEmailForReset) return;
-        spinner.style.display = 'flex';
-        auth.sendPasswordResetEmail(userEmailForReset, actionCodeSettings)
+        auth.sendPasswordResetEmail(email, actionCodeSettings)
             .then(() => {
                 spinner.style.display = 'none';
-                resetMessageArea.textContent = 'Password reset email sent successfully!';
+                resetMessageArea.textContent = 'Password reset email sent successfully! Please check your inbox.';
                 resetMessageArea.className = 'message success';
                 setTimeout(() => {
                     forgotPasswordModal.classList.remove('active');
@@ -266,7 +228,12 @@
             .catch((error) => {
                 spinner.style.display = 'none';
                 console.error("Password Reset Error:", error);
-                resetMessageArea.textContent = "Failed to send reset email. Please try again.";
+                // Provide a more helpful error
+                if(error.code === 'auth/user-not-found' || error.code === 'auth/invalid-email'){
+                   resetMessageArea.textContent = 'No account found with this email address.';
+                } else {
+                   resetMessageArea.textContent = "Failed to send reset email. Please try again.";
+                }
                 resetMessageArea.className = 'message error';
             });
     });
