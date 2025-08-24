@@ -296,7 +296,7 @@
                   emailInput = document.getElementById('email'), passwordInput = document.getElementById('password'),
                   togglePassword = document.getElementById('togglePassword');
             let isLogin = true;
-
+            
             // --- FIX #1: Added the missing typewriterEffect function ---
             function typewriterEffect(element, text, speed = 150) {
                 return new Promise(resolve => {
@@ -314,37 +314,38 @@
                     type();
                 });
             }
-            
-            // --- FIX #2: Updated handleSuccessfulLogin to include login stats update ---
+
+            // --- FIX #2: Updated handleSuccessfulLogin to include login stats update AND redirection ---
             function handleSuccessfulLogin(user) {
                 spinner.style.display = 'flex';
                 const userDocRef = db.collection('users').doc(user.uid);
                 
-                // This transaction safely updates stats and then gets the user role for redirection.
+                // This transaction safely gets the role AND updates login stats.
                 return db.runTransaction(transaction => {
                     return transaction.get(userDocRef).then(doc => {
                         if (!doc.exists) {
-                             // This handles a rare case where auth exists but firestore doc doesn't
-                            throw "User data not found in database.";
+                            throw "User data not found in database."; // This will be caught by the .catch() below
                         }
                         
-                        // Update stats
+                        // Update stats in the transaction
                         transaction.update(userDocRef, {
                             lastLoginAt: firebase.firestore.FieldValue.serverTimestamp(),
                             loginCount: firebase.firestore.FieldValue.increment(1)
                         });
 
-                        return doc.data().role; // Pass the role to the next .then()
+                        return doc.data().role; // Return the user's role for the next step
                     });
                 }).then(role => {
+                    // This block runs ONLY if the transaction was successful
                     window.location.replace(role === 'admin' ? '/admindashboard.html' : '/studentdashboard.html');
                 }).catch(err => {
+                    // This catches errors from the transaction (e.g., permission denied, user not found)
                     console.error("Login process error:", err);
                     auth.signOut();
-                    handleAuthError({ message: "Error during login process." });
+                    handleAuthError({ message: "Error during login process. Please try again." });
                 });
             }
-
+            
             function handleAppReady() {
                 const animationPromise = typewriterEffect(splashTitle, "IB STUDIOZ");
                 const minTimePromise = new Promise(resolve => setTimeout(resolve, 2200));
@@ -376,8 +377,8 @@
                 document.getElementById('toggle-text').innerText = isLogin ? "Don't have an account?" : 'Already have an account?';
                 document.getElementById('toggle-link').innerText = isLogin ? 'Register Now' : 'Login';
             });
-
-            // --- FIX #3: Updated the form submit listener to use the new logic ---
+            
+            // --- FIX #3: Updated form submission to include full user data on registration ---
             authForm.addEventListener('submit', (e) => {
                 e.preventDefault(); 
                 spinner.style.display = 'flex';
@@ -390,7 +391,7 @@
                     auth.signInWithEmailAndPassword(email, password)
                         .then(userCredential => handleSuccessfulLogin(userCredential.user))
                         .catch(handleAuthError);
-                } else {
+                } else { // Register logic
                     const name = document.getElementById('name').value.trim();
                     const admissionNo = document.getElementById('admissionNo').value.trim();
                     if (!name || !email || !admissionNo || !password) return handleAuthError({ message: "All fields are required." });
@@ -398,7 +399,7 @@
                     
                     auth.createUserWithEmailAndPassword(email, password)
                         .then(cred => {
-                            // Create user document with ALL the required fields from the start
+                            // Create the user document WITH ALL the required fields from the start
                             return db.collection('users').doc(cred.user.uid).set({
                                 name: name,
                                 email: email,
@@ -439,7 +440,6 @@
                 this.classList.toggle('fa-eye-slash'); this.classList.toggle('fa-eye', !isPassword);
             });
 
-            // --- All password reset logic is unchanged and correct ---
             const forgotPasswordLink = document.getElementById('forgot-password-link'),
                   forgotPasswordModal = document.getElementById('forgot-password-modal'),
                   modalClose = document.getElementById('modal-close'),
@@ -459,7 +459,11 @@
                 auth.sendPasswordResetEmail(email)
                     .then(() => {
                         resetMessageArea.textContent = 'Password reset email sent! Check your inbox.'; resetMessageArea.className = 'message success';
-                        setTimeout(() => forgotPasswordModal.classList.remove('active'), 3500);
+                        setTimeout(() => {
+                            forgotPasswordModal.classList.remove('active');
+                            resetMessageArea.textContent = ''; 
+                            resetEmailInput.value = '';
+                        }, 3500);
                     })
                     .catch(() => {
                         resetMessageArea.textContent = 'Failed to send. No account found with this email.';
