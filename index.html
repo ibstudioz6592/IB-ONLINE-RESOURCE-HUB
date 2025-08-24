@@ -7,6 +7,7 @@
     
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23FFD700' d='M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z' /%3E%3Cg fill='%230A0A0A'%3E%3Cpath d='M28,25 h10 v50 h-10 Z' /%3E%3Cpath d='M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z' /%3E%3C/g%3E%3C/svg%3E">
 
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -296,36 +297,55 @@
                   togglePassword = document.getElementById('togglePassword');
             let isLogin = true;
 
-            function typewriterEffect(element, text, speed = 150) { /* ... (This function is unchanged) ... */ }
+            // --- FIX #1: Added the missing typewriterEffect function ---
+            function typewriterEffect(element, text, speed = 150) {
+                return new Promise(resolve => {
+                    let i = 0;
+                    element.innerHTML = "";
+                    const type = () => {
+                        if (i < text.length) {
+                            element.innerHTML += text.charAt(i); i++;
+                            setTimeout(type, speed);
+                        } else {
+                            element.style.borderRight = '.15em solid var(--primary-glow)';
+                            resolve();
+                        }
+                    };
+                    type();
+                });
+            }
             
-            // --- UPDATED: Centralized login success handler with STATS UPDATE ---
+            // --- FIX #2: Updated handleSuccessfulLogin to include login stats update ---
             function handleSuccessfulLogin(user) {
                 spinner.style.display = 'flex';
                 const userDocRef = db.collection('users').doc(user.uid);
+                
+                // This transaction safely updates stats and then gets the user role for redirection.
+                return db.runTransaction(transaction => {
+                    return transaction.get(userDocRef).then(doc => {
+                        if (!doc.exists) {
+                             // This handles a rare case where auth exists but firestore doc doesn't
+                            throw "User data not found in database.";
+                        }
+                        
+                        // Update stats
+                        transaction.update(userDocRef, {
+                            lastLoginAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            loginCount: firebase.firestore.FieldValue.increment(1)
+                        });
 
-                // Update last login time and increment login count
-                userDocRef.update({
-                    lastLoginAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    loginCount: firebase.firestore.FieldValue.increment(1)
-                })
-                .then(() => userDocRef.get()) // Then get the user's role
-                .then(doc => {
-                    if (doc.exists) {
-                        window.location.replace(doc.data().role === 'admin' ? '/admindashboard.html' : '/studentdashboard.html');
-                    } else {
-                        auth.signOut();
-                        handleAuthError({ message: "User data not found." });
-                    }
-                }).catch((err) => {
-                    // This catch can handle errors from either update() or get()
-                    console.error("Error during login data update:", err);
+                        return doc.data().role; // Pass the role to the next .then()
+                    });
+                }).then(role => {
+                    window.location.replace(role === 'admin' ? '/admindashboard.html' : '/studentdashboard.html');
+                }).catch(err => {
+                    console.error("Login process error:", err);
                     auth.signOut();
-                    handleAuthError({ message: "Error fetching user data." });
+                    handleAuthError({ message: "Error during login process." });
                 });
             }
 
-            // --- UPDATED: Splash screen now uses the new login handler ---
-             function handleAppReady() {
+            function handleAppReady() {
                 const animationPromise = typewriterEffect(splashTitle, "IB STUDIOZ");
                 const minTimePromise = new Promise(resolve => setTimeout(resolve, 2200));
                 const authReadyPromise = new Promise(resolve => {
@@ -334,7 +354,6 @@
 
                 Promise.all([animationPromise, minTimePromise, authReadyPromise]).then(([_, __, user]) => {
                     if (user) {
-                        // If user is already logged in, we still want to update their stats and redirect
                         handleSuccessfulLogin(user);
                     } else {
                         splashScreen.classList.add('fade-out');
@@ -343,12 +362,22 @@
             }
             handleAppReady();
 
-            function showMessage(text, type) { /* ... (This function is unchanged) ... */ }
-            function clearMessage() { /* ... (This function is unchanged) ... */ }
+            function showMessage(text, type) { messageArea.textContent = text; messageArea.className = `message ${type}`; }
+            function clearMessage() { messageArea.textContent = ''; }
             
-            toggleLink.addEventListener('click', (e) => { /* ... (This function is unchanged) ... */ });
+            toggleLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                isLogin = !isLogin; authForm.reset(); clearMessage();
+                document.getElementById('form-title').innerText = isLogin ? 'Login' : 'Register';
+                nameWrapper.classList.toggle('hidden', isLogin);
+                admissionWrapper.classList.toggle('hidden', isLogin);
+                document.querySelector('.forgot-password').style.display = isLogin ? 'block' : 'none';
+                document.getElementById('submit-btn').innerText = isLogin ? 'Login' : 'Register';
+                document.getElementById('toggle-text').innerText = isLogin ? "Don't have an account?" : 'Already have an account?';
+                document.getElementById('toggle-link').innerText = isLogin ? 'Register Now' : 'Login';
+            });
 
-            // --- UPDATED: Auth form submit now uses the new handlers ---
+            // --- FIX #3: Updated the form submit listener to use the new logic ---
             authForm.addEventListener('submit', (e) => {
                 e.preventDefault(); 
                 spinner.style.display = 'flex';
@@ -369,7 +398,7 @@
                     
                     auth.createUserWithEmailAndPassword(email, password)
                         .then(cred => {
-                            // --- NEW: Create user document WITH ALL required fields ---
+                            // Create user document with ALL the required fields from the start
                             return db.collection('users').doc(cred.user.uid).set({
                                 name: name,
                                 email: email,
@@ -383,15 +412,63 @@
                         .then(() => {
                             spinner.style.display = 'none';
                             showMessage('Registration successful! Please login.', 'success');
-                            toggleLink.click(); // Switch to the login view
+                            toggleLink.click();
                         })
                         .catch(handleAuthError);
                 }
             });
 
-            function handleAuthError(error) { /* ... (This function is unchanged) ... */ }
-            togglePassword.addEventListener('click', function () { /* ... (This function is unchanged) ... */ });
-            // --- All password reset logic is also unchanged ---
+            function handleAuthError(error) {
+                console.error("Auth Error:", error);
+                let message = "An unexpected error occurred.";
+                const code = error.code;
+                if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found' || code === 'auth/invalid-email') {
+                    message = "Invalid credentials. Please check your email and password.";
+                } else if (code === 'auth/email-already-in-use') {
+                    message = 'An account with this email address already exists.';
+                } else if (error.message) {
+                    message = error.message;
+                }
+                showMessage(message, 'error');
+                spinner.style.display = 'none';
+            }
+
+            togglePassword.addEventListener('click', function () {
+                const isPassword = passwordInput.getAttribute('type') === 'password';
+                passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+                this.classList.toggle('fa-eye-slash'); this.classList.toggle('fa-eye', !isPassword);
+            });
+
+            // --- All password reset logic is unchanged and correct ---
+            const forgotPasswordLink = document.getElementById('forgot-password-link'),
+                  forgotPasswordModal = document.getElementById('forgot-password-modal'),
+                  modalClose = document.getElementById('modal-close'),
+                  sendResetLinkBtn = document.getElementById('send-reset-link-btn'),
+                  resetMessageArea = document.getElementById('reset-message'),
+                  resetEmailInput = document.getElementById('reset-email');
+            
+            forgotPasswordLink.addEventListener('click', (e) => { e.preventDefault(); forgotPasswordModal.classList.add('active'); });
+            modalClose.addEventListener('click', () => { forgotPasswordModal.classList.remove('active'); resetMessageArea.textContent = ''; resetEmailInput.value = ''; });
+            
+            sendResetLinkBtn.addEventListener('click', () => {
+                const email = resetEmailInput.value.trim();
+                if (!email) {
+                    resetMessageArea.textContent = 'Please enter your email address.'; resetMessageArea.className = 'message error'; return;
+                }
+                spinner.style.display = 'flex';
+                auth.sendPasswordResetEmail(email)
+                    .then(() => {
+                        resetMessageArea.textContent = 'Password reset email sent! Check your inbox.'; resetMessageArea.className = 'message success';
+                        setTimeout(() => forgotPasswordModal.classList.remove('active'), 3500);
+                    })
+                    .catch(() => {
+                        resetMessageArea.textContent = 'Failed to send. No account found with this email.';
+                        resetMessageArea.className = 'message error';
+                    })
+                    .finally(() => {
+                         spinner.style.display = 'none';
+                    });
+            });
         });
     </script>
 </body>
