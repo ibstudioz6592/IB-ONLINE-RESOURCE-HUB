@@ -24,33 +24,19 @@
         body {
             font-family: 'Inter', sans-serif; background-color: var(--dark-bg);
             color: var(--text-primary); line-height: 1.6;
+            opacity: 0;
+            animation: page-fade-in 0.4s ease-out forwards;
+        }
+        @keyframes page-fade-in { 
+            to { opacity: 1; } 
         }
 
-        /* --- FINAL LOADER --- */
-        #fast-loader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--dark-bg);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 10002; transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
-        }
-        .loader-content { position: relative; display: flex; justify-content: center; align-items: center; }
-        .loader-logo { width: 80px; height: 80px; position: absolute; animation: spin 2s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        
-        #page-content {
-            visibility: hidden; opacity: 0;
-            transition: opacity 0.4s ease-in, visibility 0.4s ease-in;
-        }
-        #page-content.visible { visibility: visible; opacity: 1; }
-        
         .background-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
         .aurora-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 10% 20%, var(--primary-glow) 0%, transparent 25%), radial-gradient(circle at 80% 30%, var(--secondary-glow) 0%, transparent 30%), radial-gradient(circle at 50% 80%, var(--primary-glow) 0%, transparent 25%); animation: aurora-morph 40s linear infinite alternate; filter: blur(120px); opacity: 0.2; }
         @keyframes aurora-morph { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1.8); } }
         .noise-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>'); opacity: 0.015; }
-
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         .hidden { display: none !important; }
-
         .page-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; margin: 20px; background: rgba(16,16,16,0.6); backdrop-filter: blur(20px); border-radius: 15px; border: 1px solid var(--border-color); }
         .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; }
         .header-logo-svg { width: 45px; height: auto; }
@@ -60,7 +46,6 @@
         .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 10px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; }
         .btn-secondary:hover { background: var(--primary-glow); color: var(--dark-bg); border-color: var(--primary-glow); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
         .btn-secondary .fas { margin-right: 8px; }
-
         .welcome-card-pro { background: var(--card-bg); border-radius: 15px; border: 1px solid var(--border-color); padding: 40px; margin-bottom: 60px; text-align: left; position: relative; overflow: hidden; transition: transform 0.4s ease; }
         @media (hover: hover) { .welcome-card-pro { transform-style: preserve-3d; } }
         .welcome-card-pro::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 15px; background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(255,215,0,0.15) 0%, transparent 25%); opacity: 0; transition: opacity 0.4s ease; }
@@ -68,13 +53,8 @@
         .welcome-card-pro h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.2; margin-bottom: 10px; }
         #user-name { color: var(--primary-glow); }
         .welcome-card-pro p { font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; }
-        
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 50px; }
-        .nav-card { background: var(--card-bg); border-radius: 15px; border: 1px solid var(--border-color); padding: 30px 25px; text-decoration: none; box-shadow: 0 8px 32px 0 rgba(0,0,0,0.3); cursor: pointer; will-change: transform, border-color; transition: transform 0.3s ease, border-color 0.3s ease; animation: card-fade-in 0.5s ease-out forwards; }
-        @keyframes card-fade-in { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        .nav-card:nth-child(1) { animation-delay: 0.1s; } .nav-card:nth-child(2) { animation-delay: 0.2s; }
-        .nav-card:nth-child(3) { animation-delay: 0.3s; } .nav-card:nth-child(4) { animation-delay: 0.4s; }
-        .nav-card:nth-child(5) { animation-delay: 0.5s; }
+        .nav-card { background: var(--card-bg); border-radius: 15px; border: 1px solid var(--border-color); padding: 30px 25px; text-decoration: none; box-shadow: 0 8px 32px 0 rgba(0,0,0,0.3); cursor: pointer; will-change: transform, border-color; transition: transform 0.3s ease, border-color 0.3s ease; }
         .nav-card:hover { transform: translateY(-8px); border-color: var(--card-color, var(--primary-glow)); }
         .nav-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
         .nav-card-icon { font-size: 2.2rem; color: var(--card-color, var(--primary-glow)); transition: transform 0.3s ease; }
@@ -83,15 +63,12 @@
         .nav-card:hover .nav-card-arrow { opacity: 1; transform: translateX(0); }
         .nav-card h3 { font-size: 1.3rem; margin-bottom: 8px; color: var(--text-primary); text-align: left; }
         .nav-card p { color: var(--text-secondary); font-size: 0.9rem; text-align: left; }
-        
         .calculator-container { background: var(--card-bg); border-radius: 15px; padding: 30px; border: 1px solid var(--border-color); }
         #chatbot-toggle { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; border-radius: 50%; background: var(--primary-glow); border: none; cursor: pointer; z-index: 1000; box-shadow: 0 0 20px var(--primary-glow); display: flex; justify-content: center; align-items: center; font-size: 1.8rem; color: var(--dark-bg); transition: transform 0.3s ease; }
         #chatbot-toggle:hover { transform: scale(1.1); }
         #chatbot-container { position: fixed; bottom: 100px; right: 30px; width: 90%; max-width: 400px; height: 500px; background: rgba(16,16,16,0.6); backdrop-filter: blur(20px); border-radius: 15px; border: 1px solid var(--border-color); z-index: 999; box-shadow: 0 10px 40px var(--shadow-color); display: flex; flex-direction: column; transform: translateY(20px) scale(0.95); opacity: 0; visibility: hidden; transition: all 0.3s ease-out; }
         #chatbot-container.active { transform: translateY(0) scale(1); opacity: 1; visibility: visible; }
-        
         .calculator-header { text-align: center; margin-bottom: 30px; } .calculator-form .grid { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 15px; align-items: flex-end; margin-bottom: 20px; } .form-group { display: flex; flex-direction: column; } .form-group label { margin-bottom: 5px; font-size: 0.9rem; color: var(--text-secondary); } .form-input, .form-select { width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-family: 'Inter', sans-serif; } .btn-primary { background: var(--primary-glow); color: var(--dark-bg); border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; } .btn-primary:hover { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); } .courses-list .course-item { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 15px; align-items: center; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-bottom: 10px; } .btn-danger { background: #EF4444; color: white; padding: 5px 10px; font-size: 0.8rem; } .results-area { text-align: center; margin-top: 30px; font-size: 1.5rem; } .cgpa-section { border-top: 1px solid var(--border-color); padding-top: 20px; margin-top: 30px; } .chatbot-header { padding: 15px; border-bottom: 1px solid var(--border-color); font-weight: 600; text-align: center; } .chatbot-messages { flex-grow: 1; padding: 15px; overflow-y: auto; } .chat-message { max-width: 80%; padding: 10px 15px; border-radius: 15px; margin-bottom: 10px; line-height: 1.4; } .user-message { background: var(--primary-glow); color: var(--dark-bg); margin-left: auto; border-bottom-right-radius: 3px; } .bot-message { background: rgba(0,0,0,0.4); color: var(--text-primary); margin-right: auto; border-bottom-left-radius: 3px; } .chatbot-input { display: flex; padding: 15px; border-top: 1px solid var(--border-color); } #chatbot-input-field { flex-grow: 1; background: rgba(0,0,0,0.4); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; color: var(--text-primary); } #chatbot-send-btn { background: none; border: none; font-size: 1.5rem; color: var(--primary-glow); cursor: pointer; margin-left: 10px; }
-
         @media (max-width: 768px) {
             .page-header { flex-direction: column; gap: 20px; margin: 15px; }
             .welcome-card-pro { padding: 30px 25px; }
@@ -101,18 +78,9 @@
     </style>
 </head>
 <body>
-    <div id="fast-loader">
-        <div class="loader-content">
-             <svg class="loader-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <path fill="#FFD700" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" />
-                <g fill="#0A0A0A"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g>
-            </svg>
-        </div>
-    </div>
-    
     <div class="background-container"><div class="aurora-layer"></div><div class="noise-layer"></div></div>
     
-    <main id="page-content" style="visibility: hidden; opacity: 0;">
+    <main>
         <header class="page-header">
             <a href="/studentdashboard.html" class="brand-logo">
                 <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" /><g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g></svg>
@@ -159,8 +127,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const loader = document.getElementById('fast-loader');
-            const content = document.getElementById('page-content');
             const userNameEl = document.getElementById('user-name');
             const welcomeCard = document.getElementById('welcome-card');
             
@@ -171,45 +137,20 @@
             
             auth.onAuthStateChanged(user => {
                 if (user) {
-                   initializePage(user);
+                   db.collection('users').doc(user.uid).get().then(doc => {
+                        if (doc.exists && doc.data().role !== 'admin') {
+                            const firstName = doc.data().name.split(' ')[0];
+                            userNameEl.textContent = firstName;
+                        } else {
+                            window.location.replace(doc.exists ? '/admindashboard.html' : '/index.html');
+                        }
+                   });
                 } else {
                     window.location.replace('/index.html');
                 }
             });
-
-            async function fetchUserData(user) {
-                const userDoc = await db.collection('users').doc(user.uid).get();
-                if (userDoc.exists && userDoc.data().role !== 'admin') {
-                    const firstName = userDoc.data().name.split(' ')[0];
-                    userNameEl.textContent = firstName;
-                    return true;
-                } else {
-                    // Redirect if user is admin or doc doesn't exist, then reject the promise
-                    window.location.replace(userDoc.exists ? '/admindashboard.html' : '/index.html');
-                    return Promise.reject('Invalid user role or data.');
-                }
-            }
             
-            async function initializePage(user) {
-                // The two promises that must be completed
-                const dataPromise = fetchUserData(user);
-                const minTimePromise = new Promise(resolve => setTimeout(resolve, 300)); // Minimum 0.3s wait
-
-                try {
-                    // Wait for both to finish
-                    await Promise.all([dataPromise, minTimePromise]);
-
-                    // Only then, reveal the page
-                    loader.style.opacity = '0';
-                    loader.style.visibility = 'hidden';
-                    content.classList.add('visible');
-                } catch (error) {
-                    console.error(error); // Log error if fetchUserData fails (e.g., admin user)
-                    // The redirect inside fetchUserData will handle navigation
-                }
-            }
-            
-            // --- Welcome Card 3D/Glow Effect ---
+            // Welcome Card 3D/Glow Effect
             welcomeCard.addEventListener('mousemove', (e) => {
                 const { left, top, width, height } = welcomeCard.getBoundingClientRect();
                 const x = e.clientX - left; const y = e.clientY - top;
@@ -223,7 +164,7 @@
                 welcomeCard.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
             });
 
-            // --- All other UI and logic can remain as is ---
+            // All other UI and logic
             const logoutBtn = document.getElementById('logout-btn');
             const dashboardSection = document.getElementById('dashboard-section');
             const gpaCalculatorSection = document.getElementById('gpa-calculator-section');
