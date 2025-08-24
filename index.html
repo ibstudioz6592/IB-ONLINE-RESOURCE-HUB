@@ -32,13 +32,13 @@
         body {
             font-family: 'Inter', sans-serif; background-color: var(--dark-bg);
             color: var(--text-primary); line-height: 1.6; 
-            overflow-y: auto; /* Allow scrolling on short devices */
+            overflow-y: auto;
         }
 
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark-bg);
             z-index: 9999; display: flex; flex-direction: column; justify-content: center;
-            align-items: center; transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+            align-items: center; transition: opacity 0.2s ease-out, visibility 0.2s ease-out; /* FASTER */
         }
         #splash-screen.fade-out { opacity: 0; visibility: hidden; }
         .splash-logo { width: 80px; height: auto; margin-bottom: 25px; }
@@ -69,7 +69,7 @@
         
         .auth-container { 
             display: flex; justify-content: center; align-items: center; min-height: 100vh; 
-            padding: 20px; opacity: 0; animation: page-fade-in 1s ease-out forwards;
+            padding: 20px; opacity: 0; animation: page-fade-in 0.2s ease-out forwards; /* FASTER */
         }
         @keyframes page-fade-in { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
@@ -84,7 +84,7 @@
             -webkit-background-clip: text; background-clip: text; color: transparent;
             animation: rgb-text-flow 6s linear infinite;
         }
-        .brand-title::before { /* The new ambient glow effect */
+        .brand-title::before {
             content: 'IB STUDIOZ';
             position: absolute; top: 0; left: 0; z-index: -1;
             background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff);
@@ -178,11 +178,10 @@
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .modal-close { background: none; border: none; color: var(--text-primary); font-size: 1.5rem; cursor: pointer; }
 
-        /* --- RESPONSIVE FIXES FOR FLAWLESS FIT --- */
-        @media (max-height: 800px) and (min-width: 481px) { /* Laptops with short height */
+        @media (max-height: 800px) and (min-width: 481px) {
             .auth-container { align-items: flex-start; padding-top: 5vh; padding-bottom: 5vh; }
         }
-        @media (max-width: 480px) { /* Mobile devices */
+        @media (max-width: 480px) {
             .auth-container { align-items: flex-start; padding-top: 5vh; padding-bottom: 5vh; }
             .auth-card { padding: 30px 25px; }
             .brand-title { font-size: 1.8rem; }
@@ -280,7 +279,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     
     <script>
-        // --- FINALIZED JAVASCRIPT LOGIC ---
         const firebaseConfig = {
             apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao", authDomain: "student-portal-free.firebaseapp.com",
             projectId: "student-portal-free", storageBucket: "student-portal-free.appspot.com",
@@ -314,21 +312,33 @@
             });
         }
 
+        // --- NEW: Reusable function to redirect user ---
+        function handleSuccessfulLogin(user) {
+            spinner.style.display = 'flex';
+            db.collection('users').doc(user.uid).get().then(doc => {
+                if (doc.exists) {
+                    window.location.replace(doc.data().role === 'admin' ? '/admindashboard.html' : '/studentdashboard.html');
+                } else {
+                    // This case is unlikely if login is successful, but good for safety
+                    auth.signOut();
+                    handleAuthError({ message: "User data not found." });
+                }
+            }).catch(() => {
+                auth.signOut();
+                handleAuthError({ message: "Error fetching user data." });
+            });
+        }
+
         function handleAppReady() {
             const animationPromise = typewriterEffect(splashTitle, "IB STUDIOZ");
-            const minTimePromise = new Promise(resolve => setTimeout(resolve, 3000));
+            const minTimePromise = new Promise(resolve => setTimeout(resolve, 2500)); // slightly shorter
             const authReadyPromise = new Promise(resolve => {
                 const unsubscribe = auth.onAuthStateChanged(user => { unsubscribe(); resolve(user); });
             });
 
             Promise.all([animationPromise, minTimePromise, authReadyPromise]).then(([_, __, user]) => {
                 if (user) {
-                    spinner.style.display = 'flex';
-                    db.collection('users').doc(user.uid).get().then(doc => {
-                        if (doc.exists) {
-                            window.location.replace(doc.data().role === 'admin' ? '/admindashboard.html' : '/studentdashboard.html');
-                        } else { auth.signOut(); spinner.style.display = 'none'; splashScreen.classList.add('fade-out'); }
-                    }).catch(() => { auth.signOut(); spinner.style.display = 'none'; splashScreen.classList.add('fade-out'); });
+                    handleSuccessfulLogin(user); // Use the new function
                 } else {
                     splashScreen.classList.add('fade-out');
                 }
@@ -356,7 +366,10 @@
             const email = emailInput.value.trim(), password = passwordInput.value;
             if (isLogin) {
                 if (!email || !password) return handleAuthError({ message: "Email and Password are required." });
-                auth.signInWithEmailAndPassword(email, password).catch(handleAuthError);
+                // --- MODIFIED: Added .then() for immediate redirect ---
+                auth.signInWithEmailAndPassword(email, password)
+                    .then(userCredential => handleSuccessfulLogin(userCredential.user)) // On success, redirect
+                    .catch(handleAuthError); // On failure, show error
             } else {
                 const name = document.getElementById('name').value.trim();
                 const admissionNo = document.getElementById('admissionNo').value.trim();
@@ -376,6 +389,8 @@
                 message = "Invalid credentials. Please check your email and password.";
             } else if (error.code === 'auth/email-already-in-use') {
                 message = 'An account with this email address already exists.';
+            } else if (error.message) { // Handle custom messages
+                message = error.message;
             }
             showMessage(message, 'error');
             spinner.style.display = 'none';
