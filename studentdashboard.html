@@ -4,109 +4,338 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | IB STUDIOZ</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23FFD700' d='M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z' /%3E%3Cg fill='%230A0A0A'%3E%3Cpath d='M28,25 h10 v50 h-10 Z' /%3E%3Cpath d='M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z' /%3E%3C/g%E3C/svg%3E">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        :root { --primary: #FFC300; --dark: #121212; --text-primary: #ffffff; --text-secondary: rgba(255, 255, 255, 0.7); --card-bg: rgba(20, 20, 20, 0.5); --border-color: rgba(255, 195, 0, 0.2); --shadow-color: rgba(0, 0, 0, 0.3); }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        @keyframes background-pan { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
-        body { font-family: "Poppins", sans-serif; background-color: var(--dark); color: var(--text-primary); min-height: 100vh; line-height: 1.6; background-attachment: fixed; visibility: hidden; }
-        .aurora-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(ellipse at 10% 10%, var(--primary) 0%, rgba(255, 195, 0, 0) 40%), radial-gradient(ellipse at 90% 85%, #444 0%, rgba(68, 68, 68, 0) 35%); animation: background-pan 45s linear infinite; opacity: 0.2; }
-        .container { max-width: 1200px; margin: 30px auto; padding: 30px; }
-        .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; color: var(--text-primary); }
-        .brand-logo img { width: 50px; height: auto; }
-        .brand-logo h1 { font-size: 1.5rem; font-weight: 600; margin: 0; }
-        .brand-shimmer {
-            background: linear-gradient(120deg, var(--primary) 20%, #fff 40%, #fff 60%, var(--primary) 80%);
-            background-size: 200% auto;
-            color: transparent;
-            -webkit-background-clip: text;
-            background-clip: text;
-            animation: shimmer 4s linear infinite;
+        :root {
+            --primary-glow: #FFD700; --secondary-glow: #00A2FF; --dark-bg: #0A0A0A;
+            --text-primary: #F0F0F0; --text-secondary: #A0A0A0; --card-bg: rgba(16, 16, 16, 0.6);
+            --border-color: rgba(255, 215, 0, 0.2); --shadow-color: rgba(0, 0, 0, 0.5);
         }
-        .card { background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 15px; border: 1px solid var(--border-color); padding: 25px; box-shadow: 0 8px 32px 0 var(--shadow-color); transition: transform 0.3s ease; }
-        .card:hover { transform: translateY(-5px); }
-        .btn { display: inline-block; padding: 12px 30px; border-radius: 10px; border: none; font-size: 1rem; font-weight: 500; cursor: pointer; text-align: center; text-decoration: none; }
-        .btn-secondary { background: transparent; border: 2px solid var(--primary); color: var(--primary); padding: 8px 20px; }
-        .btn-secondary:hover { background: var(--primary); color: var(--dark); }
-        .page-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: rgba(18, 18, 18, 0.4); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); }
-        .welcome-header { text-align: center; margin: 40px 0; }
-        .welcome-header h1 { font-size: 2.5rem; background: linear-gradient(90deg, #fff, var(--primary)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .welcome-header p { font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; margin: 10px auto 0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif; background-color: var(--dark-bg);
+            color: var(--text-primary); line-height: 1.6; visibility: hidden; opacity: 0;
+            animation: page-fade-in 0.5s ease-out forwards;
+        }
+        @keyframes page-fade-in { to { opacity: 1; } }
+
+        .background-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
+        .aurora-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 10% 20%, var(--primary-glow) 0%, transparent 25%), radial-gradient(circle at 80% 30%, var(--secondary-glow) 0%, transparent 30%), radial-gradient(circle at 50% 80%, var(--primary-glow) 0%, transparent 25%);
+            animation: aurora-morph 40s linear infinite alternate; filter: blur(120px); opacity: 0.2;
+        }
+        @keyframes aurora-morph { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1.8); } }
+        .noise-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>'); opacity: 0.015; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .hidden { display: none !important; }
+
+        /* --- HEADER & RGB TITLE --- */
+        .page-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; margin: 20px; background: var(--card-bg); backdrop-filter: blur(20px); border-radius: 15px; border: 1px solid var(--border-color); }
+        .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; }
+        .header-logo-svg { width: 45px; height: auto; }
+        .brand-title { position: relative; font-size: 1.5rem; font-weight: 700; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: rgb-text-flow 6s linear infinite; }
+        .brand-title::before { content: 'IB STUDIOZ'; position: absolute; top: 0; left: 0; z-index: -1; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; filter: blur(15px) opacity(0.8); animation: rgb-text-flow 6s linear infinite; }
+        @keyframes rgb-text-flow { to { background-position: 400% 0; } }
+        .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 10px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; }
+        .btn-secondary:hover { background: var(--primary-glow); color: var(--dark-bg); border-color: var(--primary-glow); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+        .btn-secondary .fas { margin-right: 8px; }
+
+        /* --- WELCOME & DASHBOARD --- */
+        .welcome-header { text-align: center; margin: 60px 0; }
+        .welcome-header h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; background: linear-gradient(45deg, var(--text-primary) 50%, var(--primary-glow) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 10px; }
+        #user-name { color: var(--primary-glow); }
+        .welcome-header p { font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto; }
+
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-bottom: 50px; }
-        .nav-card { text-decoration: none; color: var(--text-primary); text-align: center; padding: 30px 20px; border-left: 5px solid var(--card-color, var(--primary)); }
-        .nav-card-icon { font-size: 2.5rem; margin-bottom: 15px; color: var(--card-color, var(--primary)); }
-        .nav-card h3 { font-size: 1.3rem; margin-bottom: 8px; }
+        .nav-card { background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 15px; border: 1px solid var(--border-color); border-left: 5px solid var(--card-color, var(--primary-glow)); padding: 30px 20px; text-align: center; text-decoration: none; box-shadow: 0 8px 32px 0 var(--shadow-color); transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; }
+        .nav-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px var(--shadow-color), 0 0 30px var(--card-color, var(--primary-glow)); }
+        .nav-card-icon { font-size: 2.5rem; margin-bottom: 15px; color: var(--card-color, var(--primary-glow)); }
+        .nav-card h3 { font-size: 1.3rem; margin-bottom: 8px; color: var(--text-primary); }
         .nav-card p { color: var(--text-secondary); font-size: 0.9rem; }
         
-        /* --- RESPONSIVE DESIGN --- */
+        /* --- GPA CALCULATOR SECTION --- */
+        .calculator-container { background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 15px; padding: 30px; border: 1px solid var(--border-color); }
+        .calculator-header { text-align: center; margin-bottom: 30px; }
+        .calculator-form .grid { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 15px; align-items: flex-end; margin-bottom: 20px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { margin-bottom: 5px; font-size: 0.9rem; color: var(--text-secondary); }
+        .form-input, .form-select { width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-family: 'Inter', sans-serif; }
+        .btn-primary { background: var(--primary-glow); color: var(--dark-bg); border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .btn-primary:hover { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+        .courses-list .course-item { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 15px; align-items: center; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-bottom: 10px; }
+        .btn-danger { background: #EF4444; color: white; padding: 5px 10px; font-size: 0.8rem; }
+        .results-area { text-align: center; margin-top: 30px; font-size: 1.5rem; }
+        .cgpa-section { border-top: 1px solid var(--border-color); padding-top: 20px; margin-top: 30px; }
+
+        /* --- CHATBOT STYLES --- */
+        #chatbot-toggle { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; border-radius: 50%; background: var(--primary-glow); border: none; cursor: pointer; z-index: 1000; box-shadow: 0 0 20px var(--primary-glow); display: flex; justify-content: center; align-items: center; font-size: 1.8rem; color: var(--dark-bg); transition: transform 0.3s ease; }
+        #chatbot-toggle:hover { transform: scale(1.1); }
+        #chatbot-container { position: fixed; bottom: 100px; right: 30px; width: 90%; max-width: 400px; height: 500px; background: var(--card-bg); backdrop-filter: blur(20px); border-radius: 15px; border: 1px solid var(--border-color); z-index: 999; box-shadow: 0 10px 40px var(--shadow-color); display: flex; flex-direction: column; transform: translateY(20px) scale(0.95); opacity: 0; visibility: hidden; transition: all 0.3s ease-out; }
+        #chatbot-container.active { transform: translateY(0) scale(1); opacity: 1; visibility: visible; }
+        .chatbot-header { padding: 15px; border-bottom: 1px solid var(--border-color); font-weight: 600; text-align: center; }
+        .chatbot-messages { flex-grow: 1; padding: 15px; overflow-y: auto; }
+        .chat-message { max-width: 80%; padding: 10px 15px; border-radius: 15px; margin-bottom: 10px; line-height: 1.4; }
+        .user-message { background: var(--primary-glow); color: var(--dark-bg); margin-left: auto; border-bottom-right-radius: 3px; }
+        .bot-message { background: rgba(0,0,0,0.4); color: var(--text-primary); margin-right: auto; border-bottom-left-radius: 3px; }
+        .chatbot-input { display: flex; padding: 15px; border-top: 1px solid var(--border-color); }
+        #chatbot-input-field { flex-grow: 1; background: rgba(0,0,0,0.4); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; color: var(--text-primary); }
+        #chatbot-send-btn { background: none; border: none; font-size: 1.5rem; color: var(--primary-glow); cursor: pointer; margin-left: 10px; }
+
         @media (max-width: 768px) {
-            .page-header { flex-direction: column; gap: 15px; }
-            .welcome-header h1 { font-size: 2rem; }
-            .container { padding: 20px; margin: 20px auto; }
-        }
-        @media (max-width: 480px) {
-            .dashboard-grid { grid-template-columns: 1fr; }
-            .welcome-header h1 { font-size: 1.8rem; }
-            .brand-logo img { width: 40px; }
-            .brand-logo h1 { font-size: 1.3rem; }
+            .page-header { flex-direction: column; gap: 20px; margin: 15px; }
+            .welcome-header { margin: 40px 0; }
+            .calculator-form .grid, .courses-list .course-item { grid-template-columns: 1fr; }
+            #chatbot-container { bottom: 80px; right: 15px; width: calc(100% - 30px); }
         }
     </style>
 </head>
 <body>
+    <div class="background-container">
+        <div class="aurora-layer"></div>
+        <div class="noise-layer"></div>
+    </div>
+
     <header class="page-header">
         <a href="/studentdashboard.html" class="brand-logo">
-            <img src="logo().jpg" alt="IB STUDIOZ Logo">
-            <h1 class="brand-shimmer">IB STUDIOZ</h1>
+            <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" />
+                <g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g>
+            </svg>
+            <h1 class="brand-title">IB STUDIOZ</h1>
         </a>
-        <button id="logout-btn" class="btn btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        <button id="logout-btn" class="btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
     </header>
+
     <div class="container">
-        <div class="welcome-header">
-            <h1>Welcome back, <span id="user-name"></span>!</h1>
-            <p>Your central hub for all academic resources. What would you like to do today?</p>
-        </div>
-        <section class="dashboard-grid">
-            <a href="/materials.html" class="card nav-card" style="--card-color: #2575fc;"><div class="nav-card-icon"><i class="fas fa-book-open"></i></div><h3>Study Materials</h3><p>Access notes, e-books, and slides.</p></a>
-            <a href="/pyq.html" class="card nav-card" style="--card-color: #00b09b;"><div class="nav-card-icon"><i class="fas fa-file-alt"></i></div><h3>PYQs & Question Banks</h3><p>Prepare for exams with past papers.</p></a>
-            <a href="/seminar.html" class="card nav-card" style="--card-color: #A18CD1;"><div class="nav-card-icon"><i class="fab fa-youtube"></i></div><h3>Seminars</h3><p>Watch recorded talks and presentations.</p></a>
-            <a href="/quiz.html" class="card nav-card" style="--card-color: #ffb347;"><div class="nav-card-icon"><i class="fas fa-question-circle"></i></div><h3>Quizzes</h3><p>Test your knowledge and skills.</p></a>
+        <!-- Dashboard Section -->
+        <section id="dashboard-section">
+            <div class="welcome-header">
+                <h1>Welcome back, <span id="user-name">Student</span>!</h1>
+                <p>Your central hub for all academic resources. What would you like to do today?</p>
+            </div>
+            <div class="dashboard-grid">
+                <a href="/materials.html" class="nav-card" style="--card-color: #2575fc;"><div class="nav-card-icon"><i class="fas fa-book-open"></i></div><h3>Study Materials</h3><p>Access notes, e-books, and slides.</p></a>
+                <a href="/pyq.html" class="nav-card" style="--card-color: #00b09b;"><div class="nav-card-icon"><i class="fas fa-file-alt"></i></div><h3>PYQs & Question Banks</h3><p>Prepare for exams with past papers.</p></a>
+                <a href="/seminar.html" class="nav-card" style="--card-color: #A18CD1;"><div class="nav-card-icon"><i class="fab fa-youtube"></i></div><h3>Seminars</h3><p>Watch recorded talks and presentations.</p></a>
+                <a href="/quiz.html" class="nav-card" style="--card-color: #ffb347;"><div class="nav-card-icon"><i class="fas fa-question-circle"></i></div><h3>Quizzes</h3><p>Test your knowledge and skills.</p></a>
+                <div id="gpa-card" class="nav-card" style="--card-color: #6dd5ed;"><div class="nav-card-icon"><i class="fas fa-calculator"></i></div><h3>GPA/CGPA Calculator</h3><p>Calculate your academic performance.</p></div>
+            </div>
         </section>
+
+        <!-- GPA Calculator Section -->
+        <section id="gpa-calculator-section" class="hidden">
+            <div class="calculator-container">
+                <div class="calculator-header"><h1>GPA / CGPA Calculator</h1></div>
+                <div class="calculator-form">
+                    <div class="grid">
+                        <div class="form-group"><label for="course-name">Course Name (Optional)</label><input type="text" id="course-name" class="form-input" placeholder="e.g., Data Structures"></div>
+                        <div class="form-group"><label for="credits">Credits</label><input type="number" id="credits" class="form-input" placeholder="e.g., 4" min="1"></div>
+                        <div class="form-group"><label for="grade">Grade</label><select id="grade" class="form-select"><option value="10">S</option><option value="9">A</option><option value="8">B</option><option value="7">C</option><option value="6">D</option><option value="0">U/E</option></select></div>
+                        <button id="add-course-btn" class="btn-primary">Add</button>
+                    </div>
+                </div>
+                <div class="courses-list" id="courses-list"></div>
+                <div class="results-area"><h2 id="gpa-result">SGPA: 0.00</h2></div>
+                <div class="cgpa-section">
+                    <div class="calculator-header"><h3>CGPA Calculator</h3></div>
+                    <div class="grid">
+                        <div class="form-group"><label for="prev-credits">Total Previous Credits</label><input type="number" id="prev-credits" class="form-input" placeholder="e.g., 120"></div>
+                        <div class="form-group"><label for="prev-gpa">Current CGPA</label><input type="number" id="prev-gpa" class="form-input" placeholder="e.g., 8.5"></div>
+                    </div>
+                    <div class="results-area"><h2 id="cgpa-result">Overall CGPA: 0.00</h2></div>
+                </div>
+                <button id="back-to-dashboard-btn" class="btn-secondary" style="margin-top: 30px;"><i class="fas fa-arrow-left"></i> Back to Dashboard</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Chatbot Elements -->
+    <button id="chatbot-toggle"><i class="fas fa-robot"></i></button>
+    <div id="chatbot-container">
+        <div class="chatbot-header">IB STUDIOZ Assistant</div>
+        <div class="chatbot-messages" id="chatbot-messages">
+            <div class="chat-message bot-message">Hello! How can I help you today? You can ask me about study materials, PYQs, or the GPA calculator.</div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatbot-input-field" placeholder="Ask something...">
+            <button id="chatbot-send-btn"><i class="fas fa-paper-plane"></i></button>
+        </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script>
-        const firebaseConfig = {
-          apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao",
-          authDomain: "student-portal-free.firebaseapp.com",
-          projectId: "student-portal-free",
-          storageBucket: "student-portal-free.appspot.com",
-          messagingSenderId: "272865877510",
-          appId: "1:272865877510:web:0875a2502ae55bbf9ead87"
-        };
+        const firebaseConfig = { apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao", authDomain: "student-portal-free.firebaseapp.com", projectId: "student-portal-free", storageBucket: "student-portal-free.appspot.com", messagingSenderId: "272865877510", appId: "1:272865877510:web:0875a2502ae55bbf9ead87" };
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
+        
+        // --- Core Elements ---
         const userNameEl = document.getElementById('user-name');
+        const logoutBtn = document.getElementById('logout-btn');
+        const dashboardSection = document.getElementById('dashboard-section');
+        const gpaCalculatorSection = document.getElementById('gpa-calculator-section');
+        const gpaCard = document.getElementById('gpa-card');
+        const backToDashboardBtn = document.getElementById('back-to-dashboard-btn');
 
+        // --- Auth Logic ---
         auth.onAuthStateChanged(user => {
             if (user) {
                 db.collection('users').doc(user.uid).get().then(doc => {
-                    if (doc.exists && doc.data().role !== 'admin') {
-                        userNameEl.textContent = doc.data().name;
-                        document.body.style.visibility = 'visible';
-                    } else {
-                        window.location.replace('/admindashboard.html');
-                    }
+                    if (doc.exists) {
+                        if (doc.data().role === 'admin') { window.location.replace('/admindashboard.html'); }
+                        else {
+                            const firstName = doc.data().name.split(' ')[0];
+                            userNameEl.textContent = firstName;
+                            document.body.style.visibility = 'visible';
+                        }
+                    } else { auth.signOut(); }
                 }).catch(() => { auth.signOut(); });
-            } else {
-                window.location.replace('/index.html');
+            } else { window.location.replace('/index.html'); }
+        });
+        logoutBtn.addEventListener('click', () => auth.signOut());
+
+        // --- Navigation Logic ---
+        gpaCard.addEventListener('click', () => {
+            dashboardSection.classList.add('hidden');
+            gpaCalculatorSection.classList.remove('hidden');
+        });
+        backToDashboardBtn.addEventListener('click', () => {
+            gpaCalculatorSection.classList.add('hidden');
+            dashboardSection.classList.remove('hidden');
+        });
+
+        // --- GPA Calculator Logic ---
+        const addCourseBtn = document.getElementById('add-course-btn');
+        const coursesListEl = document.getElementById('courses-list');
+        const gpaResultEl = document.getElementById('gpa-result');
+        const cgpaResultEl = document.getElementById('cgpa-result');
+        let courses = [];
+        const gradePoints = { S: 10, A: 9, B: 8, C: 7, D: 6, U: 0, E: 0 };
+
+        function renderCourses() {
+            coursesListEl.innerHTML = '';
+            courses.forEach((course, index) => {
+                const courseEl = document.createElement('div');
+                courseEl.className = 'course-item';
+                courseEl.innerHTML = `
+                    <span>${course.name || 'Course'}</span>
+                    <span>Credits: ${course.credits}</span>
+                    <span>Grade: ${Object.keys(gradePoints).find(key => gradePoints[key] == course.grade)}</span>
+                    <button class="btn-danger" data-index="${index}">Remove</button>
+                `;
+                coursesListEl.appendChild(courseEl);
+            });
+            calculateResults();
+        }
+
+        addCourseBtn.addEventListener('click', () => {
+            const name = document.getElementById('course-name').value;
+            const credits = parseFloat(document.getElementById('credits').value);
+            const grade = parseInt(document.getElementById('grade').value);
+            if (!credits || credits <= 0) { alert('Please enter valid credits.'); return; }
+            courses.push({ name, credits, grade });
+            renderCourses();
+            document.getElementById('calculator-form').reset();
+        });
+
+        coursesListEl.addEventListener('click', e => {
+            if (e.target.classList.contains('btn-danger')) {
+                const index = parseInt(e.target.dataset.index);
+                courses.splice(index, 1);
+                renderCourses();
             }
         });
-        document.getElementById('logout-btn').addEventListener('click', () => auth.signOut());
+
+        function calculateResults() {
+            let totalCredits = 0;
+            let totalPoints = 0;
+            courses.forEach(course => {
+                totalCredits += course.credits;
+                totalPoints += course.credits * course.grade;
+            });
+            const sgpa = totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : 0;
+            gpaResultEl.textContent = `SGPA: ${sgpa}`;
+
+            const prevCredits = parseFloat(document.getElementById('prev-credits').value) || 0;
+            const prevGpa = parseFloat(document.getElementById('prev-gpa').value) || 0;
+
+            if (prevCredits > 0 && prevGpa > 0) {
+                const totalOverallCredits = prevCredits + totalCredits;
+                const totalOverallPoints = (prevCredits * prevGpa) + totalPoints;
+                const cgpa = totalOverallCredits > 0 ? (totalOverallPoints / totalOverallCredits).toFixed(2) : 0;
+                cgpaResultEl.textContent = `Overall CGPA: ${cgpa}`;
+            } else {
+                cgpaResultEl.textContent = `Overall CGPA: ${sgpa}`;
+            }
+        }
+        document.getElementById('prev-credits').addEventListener('input', calculateResults);
+        document.getElementById('prev-gpa').addEventListener('input', calculateResults);
+
+        // --- Chatbot Logic ---
+        const chatbotToggle = document.getElementById('chatbot-toggle');
+        const chatbotContainer = document.getElementById('chatbot-container');
+        const chatbotMessages = document.getElementById('chatbot-messages');
+        const chatbotInput = document.getElementById('chatbot-input-field');
+        const chatbotSendBtn = document.getElementById('chatbot-send-btn');
+
+        chatbotToggle.addEventListener('click', () => chatbotContainer.classList.toggle('active'));
+
+        const botResponses = {
+            "default": "I'm sorry, I don't understand that. You can ask me about 'materials', 'pyq', 'seminars', 'quiz', or 'gpa'.",
+            "greeting": "Hello there! How can I assist you with your studies today?",
+            "materials": "You can find all study materials like notes and e-books by clicking the 'Study Materials' card on the dashboard.",
+            "pyq": "Past Year Questions and Question Banks are available in the 'PYQs & Question Banks' section. Good luck with your preparation!",
+            "seminars": "All recorded seminars and presentations are in the 'Seminars' section. Happy learning!",
+            "quiz": "Ready to test your knowledge? Head over to the 'Quizzes' section on the dashboard.",
+            "gpa": "You can calculate your SGPA and CGPA using the 'GPA/CGPA Calculator' on the dashboard. Just add your courses and grades!",
+            "help": "I can help you find information about Study Materials, PYQs, Seminars, Quizzes, and the GPA Calculator. Just ask!"
+        };
+
+        function getBotResponse(userInput) {
+            const input = userInput.toLowerCase();
+            if (input.includes("hello") || input.includes("hi")) return botResponses.greeting;
+            if (input.includes("material")) return botResponses.materials;
+            if (input.includes("pyq") || input.includes("past year") || input.includes("question")) return botResponses.pyq;
+            if (input.includes("seminar")) return botResponses.seminars;
+            if (input.includes("quiz")) return botResponses.quiz;
+            if (input.includes("gpa") || input.includes("cgpa") || input.includes("calculate")) return botResponses.gpa;
+            if (input.includes("help")) return botResponses.help;
+            return botResponses.default;
+        }
+
+        function addMessage(text, sender) {
+            const messageEl = document.createElement('div');
+            messageEl.className = `chat-message ${sender}-message`;
+            messageEl.textContent = text;
+            chatbotMessages.appendChild(messageEl);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+        
+        function handleUserInput() {
+            const userInput = chatbotInput.value.trim();
+            if (!userInput) return;
+            addMessage(userInput, 'user');
+            chatbotInput.value = '';
+            setTimeout(() => {
+                const response = getBotResponse(userInput);
+                addMessage(response, 'bot');
+            }, 500);
+        }
+        chatbotSendBtn.addEventListener('click', handleUserInput);
+        chatbotInput.addEventListener('keypress', e => { if (e.key === 'Enter') handleUserInput(); });
     </script>
 </body>
 </html>
