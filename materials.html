@@ -26,34 +26,45 @@
             color: var(--text-primary); line-height: 1.6;
         }
 
-        /* --- NEW: Post-Login Loader --- */
-        #post-login-loader {
+        /* --- NEW: Ultra-Fast Timed Loader --- */
+        #fast-loader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: var(--dark-bg);
             display: flex; justify-content: center; align-items: center;
-            z-index: 10001; transition: opacity 0.3s ease-out;
+            z-index: 10002; transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
         }
-        .loader-logo-container {
-            position: relative; display: flex;
-            justify-content: center; align-items: center;
+        .loader-content {
+            position: relative; display: flex; justify-content: center;
+            align-items: center; flex-direction: column;
         }
-        .loader-logo { width: 80px; height: auto; z-index: 2; }
-        .loader-circle {
-            position: absolute; width: 80px; height: 80px;
-            border: 5px solid white; border-radius: 50%;
-            animation: expand-and-fade 0.2s ease-out forwards;
+        .loader-logo {
+            width: 80px; height: 80px; position: absolute;
         }
-        @keyframes expand-and-fade {
-            from { transform: scale(1); opacity: 1; }
-            to { transform: scale(2); opacity: 0; }
+        .loader-progress-ring {
+            position: absolute; transform: rotate(-90deg);
+        }
+        .progress-ring-track {
+            fill: transparent; stroke: rgba(255, 255, 255, 0.1); stroke-width: 4;
+        }
+        .progress-ring-bar {
+            fill: transparent; stroke: white; stroke-width: 4; stroke-linecap: round;
+            stroke-dasharray: 339.3 339.3; stroke-dashoffset: 339.3;
+            animation: draw-circle 0.5s ease-out forwards;
+        }
+        @keyframes draw-circle {
+            to { stroke-dashoffset: 0; }
+        }
+        #loader-timer {
+            margin-top: 150px; font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem; color: var(--text-secondary);
         }
 
-        /* --- NEW: Main Content Visibility --- */
-        #main-content {
+        /* --- Page Content Visibility --- */
+        #page-content {
             visibility: hidden; opacity: 0;
-            transition: opacity 0.3s ease-in;
+            transition: opacity 0.4s ease-in, visibility 0.4s ease-in;
         }
-        #main-content.visible {
+        #page-content.visible {
             visibility: visible; opacity: 1;
         }
         
@@ -121,11 +132,18 @@
     </style>
 </head>
 <body>
-    <!-- NEW: Post-Login Loader -->
-    <div id="post-login-loader">
-        <div class="loader-logo-container">
-            <svg class="loader-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" /><g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g></svg>
-            <div class="loader-circle"></div>
+    <!-- NEW: Ultra-Fast Timed Loader -->
+    <div id="fast-loader">
+        <div class="loader-content">
+            <svg class="loader-progress-ring" width="120" height="120">
+                <circle class="progress-ring-track" cx="60" cy="60" r="54" />
+                <circle class="progress-ring-bar" cx="60" cy="60" r="54" />
+            </svg>
+            <svg class="loader-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#FFD700" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" />
+                <g fill="#0A0A0A"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g>
+            </svg>
+            <span id="loader-timer">0.0s</span>
         </div>
     </div>
     
@@ -134,8 +152,8 @@
         <div class="noise-layer"></div>
     </div>
 
-    <!-- NEW: Wrapped content in a main-content div -->
-    <div id="main-content">
+    <!-- UPDATED: Wrapped content in a main tag with the correct ID -->
+    <main id="page-content" style="visibility: hidden; opacity: 0;">
         <header class="page-header">
             <a href="/studentdashboard.html" class="brand-logo">
                 <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" /><g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g></svg>
@@ -151,46 +169,30 @@
             </div>
             
             <div id="materials-grid" class="materials-grid">
-                <!-- Skeleton Loader will be shown here initially -->
+                <!-- Skeleton Loader will be shown here -->
             </div>
         </div>
-    </div>
+    </main>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
+    <!-- This script is for the main page logic (Firebase, etc.) -->
     <script>
-        const firebaseConfig = {
-          apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao",
-          authDomain: "student-portal-free.firebaseapp.com",
-          projectId: "student-portal-free",
-          storageBucket: "student-portal-free.appspot.com",
-          messagingSenderId: "272865877510",
-          appId: "1:272865877510:web:0875a2502ae55bbf9ead87"
-        };
-        const app = firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        // --- NEW: Loader and content visibility logic ---
-        window.addEventListener('load', () => {
-            const loader = document.getElementById('post-login-loader');
-            const content = document.getElementById('main-content');
-
-            setTimeout(() => {
-                if (loader) {
-                    loader.style.opacity = '0';
-                    setTimeout(() => {
-                        loader.style.display = 'none';
-                    }, 300);
-                }
-                if (content) {
-                    content.classList.add('visible');
-                }
-            }, 200); // Must match animation duration (0.2s)
-        });
-        
         document.addEventListener('DOMContentLoaded', () => {
+            const firebaseConfig = {
+              apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao",
+              authDomain: "student-portal-free.firebaseapp.com",
+              projectId: "student-portal-free",
+              storageBucket: "student-portal-free.appspot.com",
+              messagingSenderId: "272865877510",
+              appId: "1:272865877510:web:0875a2502ae55bbf9ead87"
+            };
+            const app = firebase.initializeApp(firebaseConfig);
+            const auth = firebase.auth();
+            const db = firebase.firestore();
+            
             const grid = document.getElementById('materials-grid');
 
             auth.onAuthStateChanged(user => {
@@ -214,9 +216,7 @@
                 for (let i = 0; i < 6; i++) {
                     skeletons += `
                         <div class="skeleton">
-                            <div class="skeleton-header">
-                                <div class="skeleton-icon"></div>
-                            </div>
+                            <div class="skeleton-header"><div class="skeleton-icon"></div></div>
                             <div class="skeleton-line"></div>
                             <div class="skeleton-line short"></div>
                         </div>`;
@@ -264,6 +264,38 @@
                 e.preventDefault();
                 auth.signOut();
             });
+        });
+    </script>
+
+    <!-- NEW: This script is ONLY for the new timed loader -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LOADER_DURATION = 500; // 0.5 seconds
+            const loader = document.getElementById('fast-loader');
+            const content = document.getElementById('page-content');
+            const timerElement = document.getElementById('loader-timer');
+            
+            const startTime = Date.now();
+
+            const timerInterval = setInterval(() => {
+                const elapsedTime = Date.now() - startTime;
+                if (elapsedTime < LOADER_DURATION) {
+                    timerElement.textContent = (elapsedTime / 1000).toFixed(1) + 's';
+                } else {
+                    timerElement.textContent = (LOADER_DURATION / 1000).toFixed(1) + 's';
+                    clearInterval(timerInterval);
+                }
+            }, 50);
+
+            setTimeout(() => {
+                if (loader) {
+                    loader.style.opacity = '0';
+                    loader.style.visibility = 'hidden';
+                }
+                if (content) {
+                    content.classList.add('visible');
+                }
+            }, LOADER_DURATION);
         });
     </script>
 </body>
