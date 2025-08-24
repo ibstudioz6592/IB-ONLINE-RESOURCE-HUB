@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome | IB STUDIOZ</title>
+    <title>Upload Content | Admin Panel</title>
     
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23FFD700' d='M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z' /%3E%3Cg fill='%230A0A0A'%3E%3Cpath d='M28,25 h10 v50 h-10 Z' /%3E%3Cpath d='M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z' /%3E%3C/g%3E%3C/svg%3E">
+    <!-- ADDED: Favicon from your index.html page -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23FFD700' d='M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z' /%3E%3Cg fill='%230A0A0A'%3E%3Cpath d='M28,25 h10 v50 h-10 Z' /%3E%3Cpath d='M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z' /%3E%3C/g%E3C/svg%3E">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,420 +16,227 @@
 
     <style>
         :root {
-            --primary-glow: #FFD700;
-            --secondary-glow: #00A2FF;
-            --dark-bg: #0A0A0A;
-            --text-primary: #F0F0F0;
-            --text-secondary: #A0A0A0;
-            --card-bg: rgba(16, 16, 16, 0.6);
-            --border-color: rgba(255, 215, 0, 0.2);
-            --shadow-color: rgba(0, 0, 0, 0.5);
-            --success: #10B981;
-            --danger: #EF4444;
+            --primary-glow: #FFD700; --secondary-glow: #00A2FF; --dark-bg: #0A0A0A;
+            --text-primary: #F0F0F0; --text-secondary: #A0A0A0; --card-bg: rgba(22, 22, 22, 0.8);
+            --border-color: rgba(255, 215, 0, 0.2); --shadow-color: rgba(0, 0, 0, 0.5);
+            --success: #2ecc71; --danger: #e74c3c;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
+        html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', sans-serif; background-color: var(--dark-bg);
-            color: var(--text-primary); line-height: 1.6; 
-            overflow-y: auto;
+            color: var(--text-primary); line-height: 1.6;
+            opacity: 0;
+            animation: page-fade-in 0.5s ease-out forwards;
         }
-
-        #splash-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark-bg);
-            z-index: 9999; display: flex; flex-direction: column; justify-content: center;
-            align-items: center; transition: opacity 0.2s ease-out, visibility 0.2s ease-out; /* FASTER */
-        }
-        #splash-screen.fade-out { opacity: 0; visibility: hidden; }
-        .splash-logo { width: 80px; height: auto; margin-bottom: 25px; }
-        .splash-title-typing {
-            font-family: 'Courier New', Courier, monospace; font-size: 1.8rem; font-weight: 500;
-            height: 1.5em; border-right: .15em solid var(--primary-glow);
-            white-space: nowrap; letter-spacing: .1em; color: var(--text-primary);
-            animation: blink-cursor .75s step-end infinite;
-        }
-        @keyframes blink-cursor { from, to { border-color: transparent } 50% { border-color: var(--primary-glow); } }
+        @keyframes page-fade-in { to { opacity: 1; } }
 
         .background-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
-        .aurora-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: 
-                radial-gradient(circle at 10% 20%, var(--primary-glow) 0%, transparent 25%),
-                radial-gradient(circle at 80% 30%, var(--secondary-glow) 0%, transparent 30%),
-                radial-gradient(circle at 50% 80%, var(--primary-glow) 0%, transparent 25%);
-            animation: aurora-morph 40s linear infinite alternate;
-            filter: blur(120px); opacity: 0.2;
-        }
+        .aurora-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 10% 20%, var(--primary-glow) 0%, transparent 25%), radial-gradient(circle at 80% 30%, var(--secondary-glow) 0%, transparent 30%), radial-gradient(circle at 50% 80%, var(--primary-glow) 0%, transparent 25%); animation: aurora-morph 40s linear infinite alternate; filter: blur(120px); opacity: 0.2; }
         @keyframes aurora-morph { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1.8); } }
-        .noise-layer {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>');
-            opacity: 0.015;
-        }
-        
-        .auth-container { 
-            display: flex; justify-content: center; align-items: center; min-height: 100vh; 
-            padding: 20px; opacity: 0; animation: page-fade-in 0.2s ease-out forwards; /* FASTER */
-        }
-        @keyframes page-fade-in { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        .noise-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>'); opacity: 0.015; }
 
-        /* --- SPECTACULAR RGB TITLE WITH AMBIENT GLOW --- */
-        .brand-logo { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 5px; }
+        .container { max-width: 800px; margin: 30px auto; padding: 20px; }
+        
+        .page-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; margin: 20px; background: rgba(16,16,16,0.6); backdrop-filter: blur(20px); border-radius: 15px; border: 1px solid var(--border-color); }
+        .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; }
         .header-logo-svg { width: 45px; height: auto; }
-        .brand-title {
-            position: relative;
-            font-size: clamp(1.8rem, 5vw, 2.3rem); font-weight: 700;
-            background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff);
-            background-size: 400% 100%;
-            -webkit-background-clip: text; background-clip: text; color: transparent;
-            animation: rgb-text-flow 6s linear infinite;
-        }
-        .brand-title::before {
-            content: 'IB STUDIOZ';
-            position: absolute; top: 0; left: 0; z-index: -1;
-            background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff);
-            background-size: 400% 100%;
-            -webkit-background-clip: text; background-clip: text; color: transparent;
-            filter: blur(15px) opacity(0.8);
-            animation: rgb-text-flow 6s linear infinite;
-        }
-        @keyframes rgb-text-flow {
-            to { background-position: 400% 0; }
-        }
-
-        .auth-subtitle {
-            margin-bottom: 35px; color: var(--text-secondary); font-size: 0.9rem;
-            font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
-        }
+        .brand-title { position: relative; font-size: 1.5rem; font-weight: 700; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: rgb-text-flow 6s linear infinite; }
+        .brand-title::before { content: 'IB STUDIOZ'; position: absolute; top: 0; left: 0; z-index: -1; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; filter: blur(20px) opacity(0.9); transform: scale(1.1); animation: rgb-text-flow 6s linear infinite; }
+        @keyframes rgb-text-flow { to { background-position: 400% 0; } }
         
-        .auth-card {
-            width: 100%; max-width: 420px; background: var(--card-bg); backdrop-filter: blur(25px);
-            border-radius: 20px; padding: 40px; text-align: center;
-            box-shadow: 0 15px 40px var(--shadow-color); position: relative;
-            border: 1px solid var(--border-color);
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-        }
-        @media (hover: hover) {
-            .auth-card:hover { transform: scale(1.02); box-shadow: 0 20px 50px var(--shadow-color), 0 0 30px rgba(255,215,0,0.4); }
-        }
-        
-        #form-title { font-size: 1.6rem; font-weight: 600; margin-bottom: 20px; }
-        .form-group { position: relative; margin-bottom: 35px; }
-        .form-input {
-            width: 100%; padding: 12px 12px 8px 45px; background-color: transparent; border: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2); color: var(--text-primary);
-            font-size: 1rem; font-family: 'Inter', sans-serif; transition: border-color 0.3s ease;
-        }
-        .form-input:focus { outline: none; border-bottom-color: var(--primary-glow); }
-        .form-label {
-            position: absolute; left: 45px; top: 12px; color: var(--text-secondary);
-            pointer-events: none; transform-origin: left; transition: all 0.3s ease;
-        }
-        .form-input:focus ~ .form-label,
-        .form-input:not(:placeholder-shown) ~ .form-label {
-            transform: translateY(-20px) scale(0.8); color: var(--primary-glow);
-        }
-        .form-icon { position: absolute; left: 15px; top: 14px; color: var(--text-secondary); transition: color 0.3s ease; }
-        .form-input:focus ~ .form-icon { color: var(--primary-glow); }
-        #togglePassword { position: absolute; right: 10px; top: 14px; cursor: pointer; color: var(--text-secondary); }
-        .form-group-wrapper {
-            max-height: 100px; opacity: 1; overflow: hidden;
-            transition: max-height 0.5s ease-out, opacity 0.4s ease-out, margin-bottom 0.5s ease-out;
-            margin-bottom: 35px;
-        }
-        .form-group-wrapper.hidden { max-height: 0; opacity: 0; margin-bottom: 0; }
-        
-        .btn-primary {
-            width: 100%; display: inline-block; padding: 14px 30px; border-radius: 10px; border: none;
-            font-size: 1rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--dark-bg);
-            background: var(--primary-glow);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.4);
-            cursor: pointer; transform: translateY(0); transition: all 0.3s ease;
-        }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 4px 25px rgba(255, 215, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.4); }
-        .btn-primary:active { transform: translateY(-1px); }
+        .btn { padding: 10px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; border: none; }
+        .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); }
+        .btn-secondary:hover { background: var(--primary-glow); color: var(--dark-bg); border-color: var(--primary-glow); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+        .btn-secondary .fas { margin-right: 8px; }
+        .btn-primary { background: var(--primary-glow); color: var(--dark-bg); font-weight: 600; width: 100%; }
+        .btn-primary:hover { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+        .btn-primary:disabled { background: var(--text-secondary); cursor: not-allowed; }
+        .btn-primary .spinner { display: none; width: 18px; height: 18px; border: 2px solid var(--dark-bg); border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto; }
+        .btn-primary.loading .spinner { display: block; }
+        .btn-primary.loading .btn-text { display: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        .forgot-password { text-align: right; margin-top: -20px; margin-bottom: 25px; }
-        .toggle-auth { margin-bottom: 25px; color: var(--text-secondary); }
-        .stylish-link {
-            position: relative; color: var(--text-secondary); text-decoration: none;
-            font-size: 0.9rem; font-weight: 500; transition: color 0.3s ease; padding-bottom: 3px;
-        }
-        .stylish-link::after {
-            content: ''; position: absolute; width: 100%; height: 1px;
-            bottom: 0; left: 0; background-color: var(--primary-glow);
-            transform: scaleX(0); transform-origin: center; transition: transform 0.3s ease;
-        }
-        .stylish-link:hover { color: var(--primary-glow); }
-        .stylish-link:hover::after { transform: scaleX(1); }
-        #toggle-link { font-weight: 600; font-size: 0.95rem; }
-
-        .message { min-height: 20px; margin-bottom: 15px; font-weight: 500; font-size: 0.9rem; }
-        .message.error { color: var(--danger); } .message.success { color: var(--success); }
+        .page-title { text-align: center; font-size: 2.2rem; margin-bottom: 30px; font-weight: 700; color: var(--text-primary); }
+        .upload-form { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 15px; padding: 40px; border: 1px solid var(--border-color); }
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; margin-bottom: 10px; font-weight: 500; color: var(--text-secondary); }
+        .form-group label .fas, .form-group label .fab { margin-right: 10px; color: var(--primary-glow); }
+        input, select, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background-color: rgba(0,0,0,0.3); color: var(--text-primary); font-family: 'Inter', sans-serif; font-size: 1rem; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary-glow); box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+        .checkbox-group { display: flex; align-items: center; gap: 12px; }
+        .checkbox-group input { width: auto; }
+        .message { text-align: center; padding: 15px; border-radius: 8px; margin-top: 20px; display: none; font-weight: 500; }
+        .message.success { background-color: rgba(46, 204, 113, 0.15); border: 1px solid var(--success); color: var(--success); }
+        .message.error { background-color: rgba(231, 76, 60, 0.15); border: 1px solid var(--danger); color: var(--danger); }
         
-        .spinner-overlay, .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(10,10,10,0.7); backdrop-filter: blur(5px);
-            display:flex; justify-content:center; align-items:center; z-index: 10000;
-        }
-        .modal-overlay { z-index: 2000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 15px; width: 90%; max-width: 450px; padding: 30px; box-shadow: 0 8px 32px 0 var(--shadow-color); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .modal-close { background: none; border: none; color: var(--text-primary); font-size: 1.5rem; cursor: pointer; }
-
-        @media (max-height: 800px) and (min-width: 481px) {
-            .auth-container { align-items: flex-start; padding-top: 5vh; padding-bottom: 5vh; }
-        }
-        @media (max-width: 480px) {
-            .auth-container { align-items: flex-start; padding-top: 5vh; padding-bottom: 5vh; }
-            .auth-card { padding: 30px 25px; }
-            .brand-title { font-size: 1.8rem; }
-            .header-logo-svg { width: 40px; }
-            #form-title { font-size: 1.5rem; }
-            .splash-title-typing { font-size: 1.5rem; }
+        @media (max-width: 768px) {
+            .page-header { flex-direction: column; gap: 20px; margin: 15px; }
+            .container { margin: 20px; padding: 0; }
+            .upload-form { padding: 30px; }
         }
     </style>
 </head>
 <body>
-    <div id="splash-screen">
-        <svg class="splash-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" />
-            <g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g>
-        </svg>
-        <h2 class="splash-title-typing" id="splash-title"></h2>
-    </div>
-
-    <div class="background-container">
-        <div class="aurora-layer"></div>
-        <div class="noise-layer"></div>
-    </div>
+    <div class="background-container"><div class="aurora-layer"></div><div class="noise-layer"></div></div>
     
-    <div class="auth-container" id="auth-container">
-        <div class="auth-card" id="auth-card">
-            <div class="brand-logo">
-                <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" />
-                    <g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g>
-                </svg>
-                <h1 class="brand-title">IB STUDIOZ</h1>
-            </div>
-            <p class="auth-subtitle">Online Resources Hub</p>
+    <header class="page-header">
+        <a href="/admindashboard.html" class="brand-logo">
+            <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" /><g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g></svg>
+            <h1 class="brand-title">IB STUDIOZ</h1>
+        </a>
+        <button id="logout-btn" class="btn btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </header>
 
-            <form id="authForm" novalidate>
-                <h2 id="form-title">Login</h2>
-                
-                <div class="form-group-wrapper hidden" id="name-wrapper">
-                    <div class="form-group">
-                        <input type="text" id="name" class="form-input" placeholder=" ">
-                        <label for="name" class="form-label">Full Name</label>
-                        <i class="fas fa-user form-icon"></i>
-                    </div>
-                </div>
-                <div class="form-group-wrapper">
-                    <div class="form-group">
-                        <input type="email" id="email" class="form-input" placeholder=" " required>
-                        <label for="email" class="form-label">Email Address</label>
-                        <i class="fas fa-envelope form-icon"></i>
-                    </div>
-                </div>
-                <div class="form-group-wrapper hidden" id="admission-wrapper">
-                    <div class="form-group">
-                        <input type="text" id="admissionNo" class="form-input" placeholder=" ">
-                        <label for="admissionNo" class="form-label">Admission No</label>
-                        <i class="fas fa-id-card form-icon"></i>
-                    </div>
-                </div>
-                <div class="form-group-wrapper">
-                    <div class="form-group">
-                        <input type="password" id="password" class="form-input" placeholder=" " required>
-                        <label for="password" class="form-label">Password</label>
-                        <i class="fas fa-lock form-icon"></i>
-                        <i class="fas fa-eye" id="togglePassword"></i>
-                    </div>
-                </div>
-
-                <div class="forgot-password"><a href="#" id="forgot-password-link" class="stylish-link">Forgot Password?</a></div>
-                <div id="message-area" class="message" aria-live="polite"></div>
-                
-                <p class="toggle-auth"><span id="toggle-text">Don't have an account?</span> <a href="#" id="toggle-link" class="stylish-link">Register Now</a></p>
-                <button type="submit" class="btn btn-primary" id="submit-btn">Login</button>
-            </form>
-        </div>
-    </div>
-    
-    <div class="modal-overlay" id="forgot-password-modal">
-        <div class="modal">
-             <div class="modal-header"><h3 class="modal-title">Reset Password</h3><button class="modal-close" id="modal-close">&times;</button></div>
-            <p style="color: var(--text-secondary); margin-bottom: 20px;">Enter your registered email to receive a password reset link.</p>
+    <main class="container">
+        <h1 class="page-title">Upload New Content</h1>
+        <form id="upload-form" class="upload-form" novalidate>
             <div class="form-group">
-                 <input type="email" id="reset-email" class="form-input" placeholder=" " required>
-                 <label for="reset-email" class="form-label">Email Address</label>
-                 <i class="fas fa-envelope form-icon"></i>
+                <label for="contentType"><i class="fas fa-list"></i> Type of Content</label>
+                <select id="contentType" required>
+                    <option value="" disabled selected>-- Select a type --</option>
+                    <option value="materials">Study Material</option>
+                    <option value="pyqs">PYQ / Question Bank</option>
+                    <option value="seminars">Seminar (YouTube)</option>
+                    <option value="quizzes">Quiz (Google Form)</option>
+                </select>
             </div>
-            <div id="reset-message" class="message"></div>
-            <button class="btn btn-primary" id="send-reset-link-btn">Send Reset Link</button>
-        </div>
-    </div>
+            <div class="form-group">
+                <label for="title"><i class="fas fa-heading"></i> Title</label>
+                <input type="text" id="title" placeholder="e.g., Unit 1 Notes" required>
+            </div>
+            <div class="form-group">
+                <label for="details" id="details-label"><i class="fas fa-info-circle"></i> Details</label>
+                <input type="text" id="details" placeholder="e.g., CS301 or Dr. Jane Doe" required>
+            </div>
+            <div class="form-group">
+                <label for="url" id="url-label"><i class="fas fa-link"></i> URL</label>
+                <input type="url" id="url" placeholder="Paste the full URL here" required>
+            </div>
+            <div class="form-group" id="year-group" style="display:none;">
+                <label for="year"><i class="fas fa-calendar-alt"></i> Year (for PYQs)</label>
+                <input type="number" id="year" placeholder="e.g., 2024">
+            </div>
+            <div class="form-group checkbox-group" id="paid-group" style="display:none;">
+                <input type="checkbox" id="isPaid">
+                <label for="isPaid">This is a Premium / Paid resource</label>
+            </div>
+            <button type="submit" id="submit-btn" class="btn btn-primary">
+                <span class="btn-text">Upload Content</span>
+                <div class="spinner"></div>
+            </button>
+            <div id="form-message" class="message"></div>
+        </form>
+         <a href="/admindashboard.html" class="btn btn-secondary" style="width: 100%; text-align: center; margin-top: 20px;"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+    </main>
 
-    <div id="spinner" class="spinner-overlay" style="display: none;"><svg style="width: 60px; animation: spin 1.5s linear infinite;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" /><g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g></svg></div>
-    
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao", authDomain: "student-portal-free.firebaseapp.com",
-            projectId: "student-portal-free", storageBucket: "student-portal-free.appspot.com",
-            messagingSenderId: "272865877510", appId: "1:272865877510:web:0875a2502ae55bbf9ead87"
-        };
-        const app = firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        
-        const splashScreen = document.getElementById('splash-screen');
-        const splashTitle = document.getElementById('splash-title');
-        const authForm = document.getElementById('authForm'), messageArea = document.getElementById('message-area'),
-              spinner = document.getElementById('spinner'), toggleLink = document.getElementById('toggle-link'),
-              nameWrapper = document.getElementById('name-wrapper'),
-              admissionWrapper = document.getElementById('admission-wrapper'),
-              emailInput = document.getElementById('email'), passwordInput = document.getElementById('password'),
-              togglePassword = document.getElementById('togglePassword');
-        let isLogin = true;
+        document.addEventListener('DOMContentLoaded', () => {
+            const firebaseConfig = { apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao", authDomain: "student-portal-free.firebaseapp.com", projectId: "student-portal-free", storageBucket: "student-portal-free.appspot.com", messagingSenderId: "272865877510", appId: "1:272865877510:web:0875a2502ae55bbf9ead87" };
+            firebase.initializeApp(firebaseConfig);
+            const auth = firebase.auth();
+            const db = firebase.firestore();
 
-        function typewriterEffect(element, text, speed = 150) {
-            return new Promise(resolve => {
-                let i = 0;
-                element.innerHTML = "";
-                function type() {
-                    if (i < text.length) {
-                        element.innerHTML += text.charAt(i); i++;
-                        setTimeout(type, speed);
-                    } else { resolve(); }
+            auth.onAuthStateChanged(user => {
+                if (!user) {
+                    window.location.replace('/index.html');
+                    return;
                 }
-                type();
-            });
-        }
-
-        // --- NEW: Reusable function to redirect user ---
-        function handleSuccessfulLogin(user) {
-            spinner.style.display = 'flex';
-            db.collection('users').doc(user.uid).get().then(doc => {
-                if (doc.exists) {
-                    window.location.replace(doc.data().role === 'admin' ? '/admindashboard.html' : '/studentdashboard.html');
-                } else {
-                    // This case is unlikely if login is successful, but good for safety
-                    auth.signOut();
-                    handleAuthError({ message: "User data not found." });
-                }
-            }).catch(() => {
-                auth.signOut();
-                handleAuthError({ message: "Error fetching user data." });
-            });
-        }
-
-        function handleAppReady() {
-            const animationPromise = typewriterEffect(splashTitle, "IB STUDIOZ");
-            const minTimePromise = new Promise(resolve => setTimeout(resolve, 2500)); // slightly shorter
-            const authReadyPromise = new Promise(resolve => {
-                const unsubscribe = auth.onAuthStateChanged(user => { unsubscribe(); resolve(user); });
-            });
-
-            Promise.all([animationPromise, minTimePromise, authReadyPromise]).then(([_, __, user]) => {
-                if (user) {
-                    handleSuccessfulLogin(user); // Use the new function
-                } else {
-                    splashScreen.classList.add('fade-out');
-                }
-            });
-        }
-        document.addEventListener('DOMContentLoaded', handleAppReady);
-
-        function showMessage(text, type) { messageArea.textContent = text; messageArea.className = `message ${type}`; }
-        function clearMessage() { messageArea.textContent = ''; }
-        
-        toggleLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            isLogin = !isLogin; authForm.reset(); clearMessage();
-            document.getElementById('form-title').innerText = isLogin ? 'Login' : 'Register';
-            nameWrapper.classList.toggle('hidden', isLogin);
-            admissionWrapper.classList.toggle('hidden', isLogin);
-            document.querySelector('.forgot-password').style.display = isLogin ? 'block' : 'none';
-            document.getElementById('submit-btn').innerText = isLogin ? 'Login' : 'Register';
-            document.getElementById('toggle-text').innerText = isLogin ? "Don't have an account?" : 'Already have an account?';
-            document.getElementById('toggle-link').innerText = isLogin ? 'Register Now' : 'Login';
-        });
-
-        authForm.addEventListener('submit', (e) => {
-            e.preventDefault(); spinner.style.display = 'flex';
-            const email = emailInput.value.trim(), password = passwordInput.value;
-            if (isLogin) {
-                if (!email || !password) return handleAuthError({ message: "Email and Password are required." });
-                // --- MODIFIED: Added .then() for immediate redirect ---
-                auth.signInWithEmailAndPassword(email, password)
-                    .then(userCredential => handleSuccessfulLogin(userCredential.user)) // On success, redirect
-                    .catch(handleAuthError); // On failure, show error
-            } else {
-                const name = document.getElementById('name').value.trim();
-                const admissionNo = document.getElementById('admissionNo').value.trim();
-                if (!name || !email || !admissionNo || !password) return handleAuthError({ message: "All fields are required." });
-                if (password.length < 6) return handleAuthError({ message: "Password must be at least 6 characters." });
-                auth.createUserWithEmailAndPassword(email, password)
-                    .then(cred => db.collection('users').doc(cred.user.uid).set({ name, email, admissionNo, role: 'student' }))
-                    .then(() => { spinner.style.display = 'none'; showMessage('Registration successful! Please login.', 'success'); toggleLink.click(); })
-                    .catch(handleAuthError);
-            }
-        });
-
-        function handleAuthError(error) {
-            console.error("Auth Error:", error);
-            let message = "An unexpected error occurred.";
-            if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found' || error.code === 'auth/invalid-email') {
-                message = "Invalid credentials. Please check your email and password.";
-            } else if (error.code === 'auth/email-already-in-use') {
-                message = 'An account with this email address already exists.';
-            } else if (error.message) { // Handle custom messages
-                message = error.message;
-            }
-            showMessage(message, 'error');
-            spinner.style.display = 'none';
-        }
-
-        togglePassword.addEventListener('click', function () {
-            const isPassword = passwordInput.getAttribute('type') === 'password';
-            passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
-            this.classList.toggle('fa-eye-slash'); this.classList.toggle('fa-eye', !isPassword);
-        });
-
-        const forgotPasswordLink = document.getElementById('forgot-password-link'),
-              forgotPasswordModal = document.getElementById('forgot-password-modal'),
-              modalClose = document.getElementById('modal-close'),
-              sendResetLinkBtn = document.getElementById('send-reset-link-btn'),
-              resetMessageArea = document.getElementById('reset-message'),
-              resetEmailInput = document.getElementById('reset-email');
-        
-        forgotPasswordLink.addEventListener('click', (e) => { e.preventDefault(); forgotPasswordModal.classList.add('active'); });
-        modalClose.addEventListener('click', () => { forgotPasswordModal.classList.remove('active'); });
-        
-        sendResetLinkBtn.addEventListener('click', () => {
-            const email = resetEmailInput.value.trim();
-            if (!email) {
-                resetMessageArea.textContent = 'Please enter your email address.'; resetMessageArea.className = 'message error'; return;
-            }
-            spinner.style.display = 'flex';
-            auth.sendPasswordResetEmail(email)
-                .then(() => {
-                    spinner.style.display = 'none';
-                    resetMessageArea.textContent = 'Password reset email sent! Check your inbox.'; resetMessageArea.className = 'message success';
-                    setTimeout(() => forgotPasswordModal.classList.remove('active'), 3000);
-                })
-                .catch((error) => {
-                    spinner.style.display = 'none';
-                    resetMessageArea.textContent = 'Failed to send. No account found with this email.';
-                    resetMessageArea.className = 'message error';
+                db.collection('users').doc(user.uid).get().then(doc => {
+                    if (!doc.exists || doc.data().role !== 'admin') {
+                        window.location.replace('/studentdashboard.html');
+                    }
                 });
+            });
+
+            const contentTypeSelect = document.getElementById('contentType');
+            const yearGroup = document.getElementById('year-group');
+            const paidGroup = document.getElementById('paid-group');
+            const detailsLabel = document.getElementById('details-label');
+            const urlLabel = document.getElementById('url-label');
+            
+            contentTypeSelect.addEventListener('change', () => {
+                const type = contentTypeSelect.value;
+                yearGroup.style.display = type === 'pyqs' ? 'block' : 'none';
+                paidGroup.style.display = type === 'materials' ? 'flex' : 'none';
+                
+                if (type === 'seminars') {
+                    detailsLabel.innerHTML = '<i class="fas fa-user-tie"></i> Speaker Name';
+                    urlLabel.innerHTML = '<i class="fab fa-youtube"></i> YouTube Embed URL';
+                } else if (type === 'quizzes') {
+                    detailsLabel.innerHTML = '<i class="fas fa-tag"></i> Quiz Topic';
+                    urlLabel.innerHTML = '<i class="fab fa-google-drive"></i> Google Form Embed URL';
+                } else {
+                    detailsLabel.innerHTML = '<i class="fas fa-info-circle"></i> Course Code';
+                    urlLabel.innerHTML = '<i class="fas fa-link"></i> Download URL';
+                }
+            });
+
+            const uploadForm = document.getElementById('upload-form');
+            const messageEl = document.getElementById('form-message');
+            const submitBtn = document.getElementById('submit-btn');
+
+            uploadForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                submitBtn.disabled = true;
+                submitBtn.classList.add('loading');
+                messageEl.style.display = 'none';
+
+                const collectionName = contentTypeSelect.value;
+                if (!collectionName) {
+                    alert('Please select a content type.');
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('loading');
+                    return;
+                }
+                
+                const data = {
+                    title: document.getElementById('title').value.trim(),
+                    uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                switch(collectionName) {
+                    case 'materials':
+                        data.courseCode = document.getElementById('details').value.trim();
+                        data.downloadURL = document.getElementById('url').value.trim();
+                        data.isPaid = document.getElementById('isPaid').checked;
+                        break;
+                    case 'pyqs':
+                        data.courseCode = document.getElementById('details').value.trim();
+                        data.downloadURL = document.getElementById('url').value.trim();
+                        data.year = Number(document.getElementById('year').value) || null;
+                        break;
+                    case 'seminars':
+                        data.speaker = document.getElementById('details').value.trim();
+                        data.youtubeURL = document.getElementById('url').value.trim();
+                        break;
+                    case 'quizzes':
+                        data.topic = document.getElementById('details').value.trim();
+                        data.googleFormURL = document.getElementById('url').value.trim();
+                        break;
+                }
+                
+                db.collection(collectionName).add(data).then(() => {
+                    messageEl.textContent = 'Content uploaded successfully!';
+                    messageEl.className = 'message success';
+                    messageEl.style.display = 'block';
+                    uploadForm.reset();
+                    contentTypeSelect.dispatchEvent(new Event('change'));
+                    setTimeout(() => { messageEl.style.display = 'none'; }, 4000);
+                }).catch(err => {
+                    messageEl.textContent = 'Error: ' + err.message;
+                    messageEl.className = 'message error';
+                    messageEl.style.display = 'block';
+                }).finally(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('loading');
+                });
+            });
+            
+            document.getElementById('logout-btn').addEventListener('click', () => auth.signOut());
         });
     </script>
 </body>
