@@ -8,7 +8,7 @@
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23FFD700' d='M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z' /%3E%3Cg fill='%230A0A0A'%3E%3Cpath d='M28,25 h10 v50 h-10 Z' /%3E%3Cpath d='M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z' /%3E%3C/g%3E%3C/svg%3E">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -32,10 +32,9 @@
         body {
             font-family: 'Inter', sans-serif; background-color: var(--dark-bg);
             color: var(--text-primary); line-height: 1.6; 
-            overflow: hidden; /* Prevent scrollbars during animations */
+            overflow-y: auto; /* Allow scrolling on short devices */
         }
 
-        /* --- PERFECTED SPLASH SCREEN --- */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark-bg);
             z-index: 9999; display: flex; flex-direction: column; justify-content: center;
@@ -45,14 +44,12 @@
         .splash-logo { width: 80px; height: auto; margin-bottom: 25px; }
         .splash-title-typing {
             font-family: 'Courier New', Courier, monospace; font-size: 1.8rem; font-weight: 500;
-            height: 1.5em; /* Set a fixed height to prevent layout shift */
-            border-right: .15em solid var(--primary-glow);
+            height: 1.5em; border-right: .15em solid var(--primary-glow);
             white-space: nowrap; letter-spacing: .1em; color: var(--text-primary);
             animation: blink-cursor .75s step-end infinite;
         }
         @keyframes blink-cursor { from, to { border-color: transparent } 50% { border-color: var(--primary-glow); } }
 
-        /* --- ADVANCED DYNAMIC BACKGROUND --- */
         .background-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
         .aurora-layer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -70,28 +67,34 @@
             opacity: 0.015;
         }
         
-        /* --- FLAWLESSLY RESPONSIVE LAYOUT --- */
         .auth-container { 
             display: flex; justify-content: center; align-items: center; min-height: 100vh; 
             padding: 20px; opacity: 0; animation: page-fade-in 1s ease-out forwards;
         }
         @keyframes page-fade-in { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
-        /* --- SPECTACULAR RGB TITLE EFFECT --- */
+        /* --- SPECTACULAR RGB TITLE WITH AMBIENT GLOW --- */
         .brand-logo { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 5px; }
         .header-logo-svg { width: 45px; height: auto; }
         .brand-title {
-            font-size: clamp(1.8rem, 5vw, 2.3rem); /* Fluid font size */
-            font-weight: 700;
+            position: relative;
+            font-size: clamp(1.8rem, 5vw, 2.3rem); font-weight: 700;
             background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff);
             background-size: 400% 100%;
             -webkit-background-clip: text; background-clip: text; color: transparent;
-            animation: rgb-text-glow 6s linear infinite;
+            animation: rgb-text-flow 6s linear infinite;
         }
-        @keyframes rgb-text-glow {
-            0% { background-position: 0% 50%; text-shadow: 0 0 20px rgba(255,0,255,0.5); }
-            50% { background-position: 200% 50%; text-shadow: 0 0 20px rgba(0,255,234,0.5); }
-            100% { background-position: 400% 50%; text-shadow: 0 0 20px rgba(255,0,255,0.5); }
+        .brand-title::before { /* The new ambient glow effect */
+            content: 'IB STUDIOZ';
+            position: absolute; top: 0; left: 0; z-index: -1;
+            background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff);
+            background-size: 400% 100%;
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            filter: blur(15px) opacity(0.8);
+            animation: rgb-text-flow 6s linear infinite;
+        }
+        @keyframes rgb-text-flow {
+            to { background-position: 400% 0; }
         }
 
         .auth-subtitle {
@@ -147,8 +150,6 @@
         .btn-primary:active { transform: translateY(-1px); }
 
         .forgot-password { text-align: right; margin-top: -20px; margin-bottom: 25px; }
-        
-        /* --- SOLVED: REPOSITIONED TOGGLE LINK --- */
         .toggle-auth { margin-bottom: 25px; color: var(--text-secondary); }
         .stylish-link {
             position: relative; color: var(--text-secondary); text-decoration: none;
@@ -166,14 +167,23 @@
         .message { min-height: 20px; margin-bottom: 15px; font-weight: 500; font-size: 0.9rem; }
         .message.error { color: var(--danger); } .message.success { color: var(--success); }
         
-        .spinner-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,10,10,0.7); backdrop-filter: blur(5px); z-index: 10000; display:flex; justify-content:center; align-items:center; }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,10,10,0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
+        .spinner-overlay, .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(10,10,10,0.7); backdrop-filter: blur(5px);
+            display:flex; justify-content:center; align-items:center; z-index: 10000;
+        }
+        .modal-overlay { z-index: 2000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 15px; width: 90%; max-width: 450px; padding: 30px; box-shadow: 0 8px 32px 0 var(--shadow-color); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .modal-close { background: none; border: none; color: var(--text-primary); font-size: 1.5rem; cursor: pointer; }
 
-        @media (max-width: 480px) {
+        /* --- RESPONSIVE FIXES FOR FLAWLESS FIT --- */
+        @media (max-height: 800px) and (min-width: 481px) { /* Laptops with short height */
+            .auth-container { align-items: flex-start; padding-top: 5vh; padding-bottom: 5vh; }
+        }
+        @media (max-width: 480px) { /* Mobile devices */
+            .auth-container { align-items: flex-start; padding-top: 5vh; padding-bottom: 5vh; }
             .auth-card { padding: 30px 25px; }
             .brand-title { font-size: 1.8rem; }
             .header-logo-svg { width: 40px; }
@@ -243,7 +253,6 @@
                 <div class="forgot-password"><a href="#" id="forgot-password-link" class="stylish-link">Forgot Password?</a></div>
                 <div id="message-area" class="message" aria-live="polite"></div>
                 
-                <!-- SOLVED: Toggle link is now before the button -->
                 <p class="toggle-auth"><span id="toggle-text">Don't have an account?</span> <a href="#" id="toggle-link" class="stylish-link">Register Now</a></p>
                 <button type="submit" class="btn btn-primary" id="submit-btn">Login</button>
             </form>
@@ -291,34 +300,25 @@
               togglePassword = document.getElementById('togglePassword');
         let isLogin = true;
 
-        // --- NEW JAVASCRIPT-DRIVEN TYPEWRITER EFFECT ---
         function typewriterEffect(element, text, speed = 150) {
             return new Promise(resolve => {
                 let i = 0;
-                element.innerHTML = ""; // Clear existing text
+                element.innerHTML = "";
                 function type() {
                     if (i < text.length) {
-                        element.innerHTML += text.charAt(i);
-                        i++;
+                        element.innerHTML += text.charAt(i); i++;
                         setTimeout(type, speed);
-                    } else {
-                        // Typing finished, resolve the promise.
-                        resolve();
-                    }
+                    } else { resolve(); }
                 }
                 type();
             });
         }
 
-        // --- PERFECTED HYBRID SPLASH SCREEN LOGIC ---
         function handleAppReady() {
             const animationPromise = typewriterEffect(splashTitle, "IB STUDIOZ");
-            const minTimePromise = new Promise(resolve => setTimeout(resolve, 3000)); // Min display time
+            const minTimePromise = new Promise(resolve => setTimeout(resolve, 3000));
             const authReadyPromise = new Promise(resolve => {
-                const unsubscribe = auth.onAuthStateChanged(user => {
-                    unsubscribe();
-                    resolve(user);
-                });
+                const unsubscribe = auth.onAuthStateChanged(user => { unsubscribe(); resolve(user); });
             });
 
             Promise.all([animationPromise, minTimePromise, authReadyPromise]).then(([_, __, user]) => {
@@ -327,16 +327,8 @@
                     db.collection('users').doc(user.uid).get().then(doc => {
                         if (doc.exists) {
                             window.location.replace(doc.data().role === 'admin' ? '/admindashboard.html' : '/studentdashboard.html');
-                        } else {
-                            auth.signOut();
-                            spinner.style.display = 'none';
-                            splashScreen.classList.add('fade-out');
-                        }
-                    }).catch(() => {
-                        auth.signOut();
-                        spinner.style.display = 'none';
-                        splashScreen.classList.add('fade-out');
-                    });
+                        } else { auth.signOut(); spinner.style.display = 'none'; splashScreen.classList.add('fade-out'); }
+                    }).catch(() => { auth.signOut(); spinner.style.display = 'none'; splashScreen.classList.add('fade-out'); });
                 } else {
                     splashScreen.classList.add('fade-out');
                 }
@@ -392,8 +384,7 @@
         togglePassword.addEventListener('click', function () {
             const isPassword = passwordInput.getAttribute('type') === 'password';
             passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
-            this.classList.toggle('fa-eye-slash');
-            this.classList.toggle('fa-eye', !isPassword);
+            this.classList.toggle('fa-eye-slash'); this.classList.toggle('fa-eye', !isPassword);
         });
 
         const forgotPasswordLink = document.getElementById('forgot-password-link'),
