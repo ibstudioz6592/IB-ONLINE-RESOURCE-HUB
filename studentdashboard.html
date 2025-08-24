@@ -16,18 +16,33 @@
     <style>
         :root {
             --primary-glow: #FFD700; --secondary-glow: #00A2FF; --dark-bg: #0A0A0A;
-            --text-primary: #F0F0F0; --text-secondary: #A0A0A0; --card-bg: rgba(22, 22, 22, 0.8); /* High-performance solid glass effect */
+            --text-primary: #F0F0F0; --text-secondary: #A0A0A0; --card-bg: rgba(22, 22, 22, 0.8);
             --border-color: rgba(255, 215, 0, 0.2); --shadow-color: rgba(0, 0, 0, 0.5);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', sans-serif; background-color: var(--dark-bg);
-            color: var(--text-primary); line-height: 1.6; visibility: hidden; opacity: 0;
-            animation: page-fade-in 0.5s ease-out forwards;
+            color: var(--text-primary); line-height: 1.6;
         }
-        @keyframes page-fade-in { to { opacity: 1; } }
 
+        /* --- FINAL LOADER --- */
+        #fast-loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--dark-bg);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 10002; transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
+        }
+        .loader-content { position: relative; display: flex; justify-content: center; align-items: center; }
+        .loader-logo { width: 80px; height: 80px; position: absolute; animation: spin 2s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
+        #page-content {
+            visibility: hidden; opacity: 0;
+            transition: opacity 0.4s ease-in, visibility 0.4s ease-in;
+        }
+        #page-content.visible { visibility: visible; opacity: 1; }
+        
         .background-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
         .aurora-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 10% 20%, var(--primary-glow) 0%, transparent 25%), radial-gradient(circle at 80% 30%, var(--secondary-glow) 0%, transparent 30%), radial-gradient(circle at 50% 80%, var(--primary-glow) 0%, transparent 25%); animation: aurora-morph 40s linear infinite alternate; filter: blur(120px); opacity: 0.2; }
         @keyframes aurora-morph { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1.8); } }
@@ -36,25 +51,17 @@
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         .hidden { display: none !important; }
 
-        /* --- HEADER & SPECTACULAR RGB TITLE --- */
         .page-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; margin: 20px; background: rgba(16,16,16,0.6); backdrop-filter: blur(20px); border-radius: 15px; border: 1px solid var(--border-color); }
         .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; }
         .header-logo-svg { width: 45px; height: auto; }
         .brand-title { position: relative; font-size: 1.5rem; font-weight: 700; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: rgb-text-flow 6s linear infinite; }
-        .brand-title::before { /* NEW Colorful Aura Effect */ content: 'IB STUDIOZ'; position: absolute; top: 0; left: 0; z-index: -1; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; filter: blur(20px) opacity(0.9); transform: scale(1.1); animation: rgb-text-flow 6s linear infinite; }
+        .brand-title::before { content: 'IB STUDIOZ'; position: absolute; top: 0; left: 0; z-index: -1; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; filter: blur(20px) opacity(0.9); transform: scale(1.1); animation: rgb-text-flow 6s linear infinite; }
         @keyframes rgb-text-flow { to { background-position: 400% 0; } }
         .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 10px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; }
         .btn-secondary:hover { background: var(--primary-glow); color: var(--dark-bg); border-color: var(--primary-glow); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
         .btn-secondary .fas { margin-right: 8px; }
 
-        /* --- NEW PROFESSIONAL WELCOME CARD --- */
-        .welcome-card-pro {
-            background: var(--card-bg);
-            border-radius: 15px; border: 1px solid var(--border-color);
-            padding: 40px; margin-bottom: 60px; text-align: left;
-            position: relative; overflow: hidden;
-            transition: transform 0.4s ease;
-        }
+        .welcome-card-pro { background: var(--card-bg); border-radius: 15px; border: 1px solid var(--border-color); padding: 40px; margin-bottom: 60px; text-align: left; position: relative; overflow: hidden; transition: transform 0.4s ease; }
         @media (hover: hover) { .welcome-card-pro { transform-style: preserve-3d; } }
         .welcome-card-pro::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 15px; background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(255,215,0,0.15) 0%, transparent 25%); opacity: 0; transition: opacity 0.4s ease; }
         .welcome-card-pro:hover::before { opacity: 1; }
@@ -62,15 +69,8 @@
         #user-name { color: var(--primary-glow); }
         .welcome-card-pro p { font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; }
         
-        /* --- HIGH-PERFORMANCE DASHBOARD GRID --- */
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 50px; }
-        .nav-card {
-            background: var(--card-bg); border-radius: 15px; border: 1px solid var(--border-color);
-            padding: 30px 25px; text-decoration: none; box-shadow: 0 8px 32px 0 rgba(0,0,0,0.3);
-            cursor: pointer; opacity: 0; will-change: transform, border-color; /* Performance hint */
-            transition: transform 0.3s ease, border-color 0.3s ease;
-            animation: card-fade-in 0.5s ease-out forwards;
-        }
+        .nav-card { background: var(--card-bg); border-radius: 15px; border: 1px solid var(--border-color); padding: 30px 25px; text-decoration: none; box-shadow: 0 8px 32px 0 rgba(0,0,0,0.3); cursor: pointer; will-change: transform, border-color; transition: transform 0.3s ease, border-color 0.3s ease; animation: card-fade-in 0.5s ease-out forwards; }
         @keyframes card-fade-in { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
         .nav-card:nth-child(1) { animation-delay: 0.1s; } .nav-card:nth-child(2) { animation-delay: 0.2s; }
         .nav-card:nth-child(3) { animation-delay: 0.3s; } .nav-card:nth-child(4) { animation-delay: 0.4s; }
@@ -101,86 +101,120 @@
     </style>
 </head>
 <body>
-    <div class="background-container">
-        <div class="aurora-layer"></div>
-        <div class="noise-layer"></div>
+    <div id="fast-loader">
+        <div class="loader-content">
+             <svg class="loader-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#FFD700" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" />
+                <g fill="#0A0A0A"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g>
+            </svg>
+        </div>
     </div>
+    
+    <div class="background-container"><div class="aurora-layer"></div><div class="noise-layer"></div></div>
+    
+    <main id="page-content" style="visibility: hidden; opacity: 0;">
+        <header class="page-header">
+            <a href="/studentdashboard.html" class="brand-logo">
+                <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" /><g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g></svg>
+                <h1 class="brand-title">IB STUDIOZ</h1>
+            </a>
+            <button id="logout-btn" class="btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </header>
 
-    <header class="page-header">
-        <a href="/studentdashboard.html" class="brand-logo">
-            <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" /><g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g></svg>
-            <h1 class="brand-title">IB STUDIOZ</h1>
-        </a>
-        <button id="logout-btn" class="btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
-    </header>
+        <div class="container">
+            <section id="dashboard-section">
+                <div class="welcome-card-pro" id="welcome-card">
+                    <h1>Welcome Back, <span id="user-name">Student</span>!</h1>
+                    <p>Your journey to excellence continues here. Explore resources, track your progress, and stay ahead.</p>
+                </div>
+                <div class="dashboard-grid">
+                    <a href="/materials.html" class="nav-card" style="--card-color: #2575fc;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fas fa-book-open"></i></div><span class="nav-card-arrow">→</span></div><h3>Study Materials</h3><p>Access notes, e-books, and slides.</p></a>
+                    <a href="/pyq.html" class="nav-card" style="--card-color: #00b09b;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fas fa-file-alt"></i></div><span class="nav-card-arrow">→</span></div><h3>PYQs & Question Banks</h3><p>Prepare for exams with past papers.</p></a>
+                    <a href="/seminar.html" class="nav-card" style="--card-color: #A18CD1;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fab fa-youtube"></i></div><span class="nav-card-arrow">→</span></div><h3>Seminars</h3><p>Watch recorded talks and presentations.</p></a>
+                    <a href="/quiz.html" class="nav-card" style="--card-color: #ffb347;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fas fa-question-circle"></i></div><span class="nav-card-arrow">→</span></div><h3>Quizzes</h3><p>Test your knowledge and skills.</p></a>
+                    <div id="gpa-card" class="nav-card" style="--card-color: #6dd5ed;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fas fa-calculator"></i></div><span class="nav-card-arrow">→</span></div><h3>GPA/CGPA Calculator</h3><p>Calculate your academic performance.</p></div>
+                </div>
+            </section>
 
-    <div class="container">
-        <section id="dashboard-section">
-            <div class="welcome-card-pro" id="welcome-card">
-                <h1>Welcome Back, <span id="user-name">Student</span>!</h1>
-                <p>Your journey to excellence continues here. Explore resources, track your progress, and stay ahead.</p>
-            </div>
-            <div class="dashboard-grid">
-                <a href="/materials.html" class="nav-card" style="--card-color: #2575fc;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fas fa-book-open"></i></div><span class="nav-card-arrow">→</span></div><h3>Study Materials</h3><p>Access notes, e-books, and slides.</p></a>
-                <a href="/pyq.html" class="nav-card" style="--card-color: #00b09b;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fas fa-file-alt"></i></div><span class="nav-card-arrow">→</span></div><h3>PYQs & Question Banks</h3><p>Prepare for exams with past papers.</p></a>
-                <a href="/seminar.html" class="nav-card" style="--card-color: #A18CD1;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fab fa-youtube"></i></div><span class="nav-card-arrow">→</span></div><h3>Seminars</h3><p>Watch recorded talks and presentations.</p></a>
-                <a href="/quiz.html" class="nav-card" style="--card-color: #ffb347;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fas fa-question-circle"></i></div><span class="nav-card-arrow">→</span></div><h3>Quizzes</h3><p>Test your knowledge and skills.</p></a>
-                <div id="gpa-card" class="nav-card" style="--card-color: #6dd5ed;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fas fa-calculator"></i></div><span class="nav-card-arrow">→</span></div><h3>GPA/CGPA Calculator</h3><p>Calculate your academic performance.</p></div>
-            </div>
-        </section>
+            <section id="gpa-calculator-section" class="hidden">
+                 <div class="calculator-container">
+                    <div class="calculator-header"><h1>GPA / CGPA Calculator</h1></div>
+                    <div class="calculator-form"><div class="grid"><div class="form-group"><label>Course Name (Optional)</label><input type="text" id="course-name" class="form-input" placeholder="e.g., Data Structures"></div><div class="form-group"><label>Credits</label><input type="number" id="credits" class="form-input" placeholder="e.g., 4" min="1"></div><div class="form-group"><label>Grade</label><select id="grade" class="form-select"><option value="10">S</option><option value="9">A</option><option value="8">B</option><option value="7">C</option><option value="6">D</option><option value="0">U/E</option></select></div><button id="add-course-btn" class="btn-primary">Add</button></div></div>
+                    <div class="courses-list" id="courses-list"></div><div class="results-area"><h2 id="gpa-result">SGPA: 0.00</h2></div>
+                    <div class="cgpa-section"><div class="calculator-header"><h3>CGPA Calculator</h3></div><div class="grid"><div class="form-group"><label>Total Previous Credits</label><input type="number" id="prev-credits" class="form-input" placeholder="e.g., 120"></div><div class="form-group"><label>Current CGPA</label><input type="number" id="prev-gpa" class="form-input" placeholder="e.g., 8.5"></div></div><div class="results-area"><h2 id="cgpa-result">Overall CGPA: 0.00</h2></div></div>
+                    <button id="back-to-dashboard-btn" class="btn-secondary" style="margin-top: 30px;"><i class="fas fa-arrow-left"></i> Back to Dashboard</button>
+                </div>
+            </section>
+        </div>
 
-        <section id="gpa-calculator-section" class="hidden">
-            <div class="calculator-container">
-                <div class="calculator-header"><h1>GPA / CGPA Calculator</h1></div>
-                <div class="calculator-form"><div class="grid"><div class="form-group"><label>Course Name (Optional)</label><input type="text" id="course-name" class="form-input" placeholder="e.g., Data Structures"></div><div class="form-group"><label>Credits</label><input type="number" id="credits" class="form-input" placeholder="e.g., 4" min="1"></div><div class="form-group"><label>Grade</label><select id="grade" class="form-select"><option value="10">S</option><option value="9">A</option><option value="8">B</option><option value="7">C</option><option value="6">D</option><option value="0">U/E</option></select></div><button id="add-course-btn" class="btn-primary">Add</button></div></div>
-                <div class="courses-list" id="courses-list"></div><div class="results-area"><h2 id="gpa-result">SGPA: 0.00</h2></div>
-                <div class="cgpa-section"><div class="calculator-header"><h3>CGPA Calculator</h3></div><div class="grid"><div class="form-group"><label>Total Previous Credits</label><input type="number" id="prev-credits" class="form-input" placeholder="e.g., 120"></div><div class="form-group"><label>Current CGPA</label><input type="number" id="prev-gpa" class="form-input" placeholder="e.g., 8.5"></div></div><div class="results-area"><h2 id="cgpa-result">Overall CGPA: 0.00</h2></div></div>
-                <button id="back-to-dashboard-btn" class="btn-secondary" style="margin-top: 30px;"><i class="fas fa-arrow-left"></i> Back to Dashboard</button>
-            </div>
-        </section>
-    </div>
-
-    <button id="chatbot-toggle"><i class="fas fa-robot"></i></button>
-    <div id="chatbot-container">
-        <div class="chatbot-header">IB STUDIOZ Assistant</div><div class="chatbot-messages" id="chatbot-messages"><div class="chat-message bot-message">Hello! How can I help you today? You can ask me about study materials, PYQs, or the GPA calculator.</div></div>
-        <div class="chatbot-input"><input type="text" id="chatbot-input-field" placeholder="Ask something..."><button id="chatbot-send-btn"><i class="fas fa-paper-plane"></i></button></div>
-    </div>
+        <button id="chatbot-toggle"><i class="fas fa-robot"></i></button>
+        <div id="chatbot-container">
+            <div class="chatbot-header">IB STUDIOZ Assistant</div><div class="chatbot-messages" id="chatbot-messages"><div class="chat-message bot-message">Hello! How can I help you today? You can ask me about study materials, PYQs, or the GPA calculator.</div></div>
+            <div class="chatbot-input"><input type="text" id="chatbot-input-field" placeholder="Ask something..."><button id="chatbot-send-btn"><i class="fas fa-paper-plane"></i></button></div>
+        </div>
+    </main>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao", authDomain: "student-portal-free.firebaseapp.com", projectId: "student-portal-free", storageBucket: "student-portal-free.appspot.com", messagingSenderId: "272865877510", appId: "1:272865877510:web:0875a2502ae55bbf9ead87" };
-        const app = firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        
         document.addEventListener('DOMContentLoaded', () => {
+            const loader = document.getElementById('fast-loader');
+            const content = document.getElementById('page-content');
             const userNameEl = document.getElementById('user-name');
             const welcomeCard = document.getElementById('welcome-card');
-
-            // --- Authentication and Core Logic ---
+            
+            const firebaseConfig = { apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao", authDomain: "student-portal-free.firebaseapp.com", projectId: "student-portal-free", storageBucket: "student-portal-free.appspot.com", messagingSenderId: "272865877510", appId: "1:272865877510:web:0875a2502ae55bbf9ead87" };
+            firebase.initializeApp(firebaseConfig);
+            const auth = firebase.auth();
+            const db = firebase.firestore();
+            
             auth.onAuthStateChanged(user => {
                 if (user) {
-                    db.collection('users').doc(user.uid).get().then(doc => {
-                        if (doc.exists && doc.data().role !== 'admin') {
-                            const firstName = doc.data().name.split(' ')[0];
-                            userNameEl.textContent = firstName;
-                            document.body.style.visibility = 'visible';
-                        } else { window.location.replace(doc.data().role === 'admin' ? '/admindashboard.html' : '/index.html'); }
-                    }).catch(() => auth.signOut());
-                } else { window.location.replace('/index.html'); }
+                   initializePage(user);
+                } else {
+                    window.location.replace('/index.html');
+                }
             });
+
+            async function fetchUserData(user) {
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                if (userDoc.exists && userDoc.data().role !== 'admin') {
+                    const firstName = userDoc.data().name.split(' ')[0];
+                    userNameEl.textContent = firstName;
+                    return true;
+                } else {
+                    // Redirect if user is admin or doc doesn't exist, then reject the promise
+                    window.location.replace(userDoc.exists ? '/admindashboard.html' : '/index.html');
+                    return Promise.reject('Invalid user role or data.');
+                }
+            }
+            
+            async function initializePage(user) {
+                // The two promises that must be completed
+                const dataPromise = fetchUserData(user);
+                const minTimePromise = new Promise(resolve => setTimeout(resolve, 300)); // Minimum 0.3s wait
+
+                try {
+                    // Wait for both to finish
+                    await Promise.all([dataPromise, minTimePromise]);
+
+                    // Only then, reveal the page
+                    loader.style.opacity = '0';
+                    loader.style.visibility = 'hidden';
+                    content.classList.add('visible');
+                } catch (error) {
+                    console.error(error); // Log error if fetchUserData fails (e.g., admin user)
+                    // The redirect inside fetchUserData will handle navigation
+                }
+            }
             
             // --- Welcome Card 3D/Glow Effect ---
             welcomeCard.addEventListener('mousemove', (e) => {
                 const { left, top, width, height } = welcomeCard.getBoundingClientRect();
-                const x = e.clientX - left;
-                const y = e.clientY - top;
-                const mouseX = (x / width) * 100;
-                const mouseY = (y / height) * 100;
-                const rotateX = (mouseY - 50) / -5;
-                const rotateY = (mouseX - 50) / 5;
+                const x = e.clientX - left; const y = e.clientY - top;
+                const mouseX = (x / width) * 100; const mouseY = (y / height) * 100;
+                const rotateX = (mouseY - 50) / -5; const rotateY = (mouseX - 50) / 5;
                 welcomeCard.style.setProperty('--mouse-x', `${mouseX}%`);
                 welcomeCard.style.setProperty('--mouse-y', `${mouseY}%`);
                 welcomeCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
@@ -189,7 +223,7 @@
                 welcomeCard.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
             });
 
-            // --- All other UI and logic can remain as is, since it's already optimized ---
+            // --- All other UI and logic can remain as is ---
             const logoutBtn = document.getElementById('logout-btn');
             const dashboardSection = document.getElementById('dashboard-section');
             const gpaCalculatorSection = document.getElementById('gpa-calculator-section');
@@ -206,18 +240,15 @@
             const chatbotSendBtn = document.getElementById('chatbot-send-btn');
             let courses = [];
             const gradePoints = { S: 10, A: 9, B: 8, C: 7, D: 6, U: 0, E: 0 };
-
             logoutBtn.addEventListener('click', () => auth.signOut());
             gpaCard.addEventListener('click', () => { dashboardSection.classList.add('hidden'); gpaCalculatorSection.classList.remove('hidden'); });
             backToDashboardBtn.addEventListener('click', () => { gpaCalculatorSection.classList.add('hidden'); dashboardSection.classList.remove('hidden'); });
-            
             const renderCourses = () => { coursesListEl.innerHTML = ''; courses.forEach((course, index) => { const courseEl = document.createElement('div'); courseEl.className = 'course-item'; courseEl.innerHTML = `<span>${course.name || 'Course'}</span><span>Credits: ${course.credits}</span><span>Grade: ${Object.keys(gradePoints).find(key => gradePoints[key] == course.grade)}</span><button class="btn-danger" data-index="${index}">X</button>`; coursesListEl.appendChild(courseEl); }); calculateResults(); };
             const calculateResults = () => { let totalCredits = courses.reduce((sum, course) => sum + course.credits, 0); let totalPoints = courses.reduce((sum, course) => sum + (course.credits * course.grade), 0); const sgpa = totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : '0.00'; gpaResultEl.textContent = `SGPA: ${sgpa}`; const prevCredits = parseFloat(document.getElementById('prev-credits').value) || 0; const prevGpa = parseFloat(document.getElementById('prev-gpa').value) || 0; if (prevCredits > 0 && prevGpa > 0) { const totalOverallCredits = prevCredits + totalCredits; const totalOverallPoints = (prevCredits * prevGpa) + totalPoints; const cgpa = totalOverallCredits > 0 ? (totalOverallPoints / totalOverallCredits).toFixed(2) : '0.00'; cgpaResultEl.textContent = `Overall CGPA: ${cgpa}`; } else { cgpaResultEl.textContent = `Overall CGPA: ${sgpa}`; } };
             addCourseBtn.addEventListener('click', () => { const credits = parseFloat(document.getElementById('credits').value); if (!credits || credits <= 0) { alert('Please enter valid credits.'); return; } courses.push({ name: document.getElementById('course-name').value, credits, grade: parseInt(document.getElementById('grade').value) }); renderCourses(); document.getElementById('course-name').value = ''; document.getElementById('credits').value = ''; });
             coursesListEl.addEventListener('click', e => { if (e.target.classList.contains('btn-danger')) { courses.splice(parseInt(e.target.dataset.index), 1); renderCourses(); } });
             document.getElementById('prev-credits').addEventListener('input', calculateResults);
             document.getElementById('prev-gpa').addEventListener('input', calculateResults);
-
             const botResponses = { "default": "I'm sorry, I can't answer that. You can ask me about 'materials', 'pyq', or 'gpa'.", "greeting": "Hello! How can I assist you?", "materials": "Click the 'Study Materials' card to find all notes and e-books.", "pyq": "'PYQs & Question Banks' section has all past papers. Good luck!", "gpa": "Use the 'GPA/CGPA Calculator' to track your academic performance." };
             const getBotResponse = userInput => { const input = userInput.toLowerCase(); if (input.includes("hello") || input.includes("hi")) return botResponses.greeting; if (input.includes("material")) return botResponses.materials; if (input.includes("pyq")) return botResponses.pyq; if (input.includes("gpa")) return botResponses.gpa; return botResponses.default; };
             const addMessage = (text, sender) => { const messageEl = document.createElement('div'); messageEl.className = `chat-message ${sender}-message`; messageEl.textContent = text; chatbotMessages.appendChild(messageEl); chatbotMessages.scrollTop = chatbotMessages.scrollHeight; };
