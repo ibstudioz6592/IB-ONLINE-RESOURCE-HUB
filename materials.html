@@ -184,7 +184,7 @@
             <button id="modal-close-btn" class="modal-close">&times;</button>
             <div class="modal-header">
                 <h2 id="modal-title"></h2>
-                <p><strong>Course Code:</strong> <span id="modal-courseCode"></span></p>
+                <p><strong>Course:</strong> <span id="modal-courseCode"></span></p>
                 <p id="modal-description"></p>
             </div>
             <div class="modal-body">
@@ -253,7 +253,6 @@
 
             function handleDepartmentChange() {
                 const selectedBranch = departmentSelect.value;
-                // Reset and disable semester and course dropdowns
                 semesterSelect.innerHTML = '<option value="">-- Choose a Semester --</option>';
                 courseSelect.innerHTML = '<option value="">-- Choose a Course --</option>';
                 semesterSelect.disabled = true;
@@ -275,7 +274,6 @@
             function handleSemesterChange() {
                 const department = departmentSelect.value;
                 const semester = semesterSelect.value;
-                // Reset and disable course dropdown
                 courseSelect.innerHTML = '<option value="">-- Choose a Course --</option>';
                 courseSelect.disabled = true;
                 grid.innerHTML = `<div class="empty-state"><i class="fas fa-book-open"></i><p>Please select a course to view materials.</p></div>`;
@@ -317,6 +315,19 @@
 
             async function loadMaterials(department, semester, courseCode) {
                 grid.innerHTML = `<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading materials...</p></div>`;
+                
+                // --- NEW: Find the full course name from academicData ---
+                let courseName = '';
+                try {
+                    const subjects = academicData.branches[department].semesters[semester];
+                    const currentSubject = subjects.find(sub => sub.code === courseCode);
+                    if (currentSubject) {
+                        courseName = currentSubject.name;
+                    }
+                } catch (e) {
+                    console.warn("Could not find subject details in academicData:", e);
+                }
+
                 try {
                     const snapshot = await db.collection('materials')
                                            .where('department', '==', department)
@@ -346,6 +357,9 @@
                         const isPremium = material.isPaid || false;
                         const placeholderImg = 'https://via.placeholder.com/400x180.png?text=No+Preview';
                         const thumbnailSrc = (material.thumbnailURL && material.thumbnailURL.trim() !== '') ? material.thumbnailURL : placeholderImg;
+                        
+                        // --- UPDATED: Create a display name with both code and name ---
+                        const courseDisplayName = courseName ? `${material.courseCode} - ${courseName}` : material.courseCode;
 
                         card.innerHTML = `
                             <div class="card-thumbnail">
@@ -354,7 +368,7 @@
                             <div class="card-content-wrapper">
                                 <div class="material-info">
                                     <h3 class="material-title">${material.title}</h3>
-                                    <p class="material-meta">Course: ${material.courseCode}</p>
+                                    <p class="material-meta">Course: ${courseDisplayName}</p>
                                 </div>
                                 <div class="material-footer">
                                     <span class="tag ${isPremium ? 'tag-premium' : 'tag-free'}">${isPremium ? 'Premium' : 'Free'}</span>
@@ -370,7 +384,8 @@
                             }
                             
                             document.getElementById('modal-title').textContent = card.dataset.title;
-                            document.getElementById('modal-courseCode').textContent = card.dataset.courseCode;
+                            // --- UPDATED: Use the display name in the modal as well ---
+                            document.getElementById('modal-courseCode').textContent = courseDisplayName;
                             document.getElementById('modal-description').textContent = card.dataset.description;
                             document.getElementById('modal-download-btn').href = card.dataset.downloadUrl;
                             document.getElementById('modal-embed-preview').src = card.dataset.embedUrl;
