@@ -41,13 +41,11 @@
         .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; }
         .header-logo-svg { width: 45px; height: auto; }
         .brand-title { position: relative; font-size: 1.5rem; font-weight: 700; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: rgb-text-flow 6s linear infinite; }
-        .brand-title::before { content: 'IB STUDIOZ'; position: absolute; top: 0; left: 0; z-index: -1; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; filter: blur(20px) opacity(0.9); transform: scale(1.1); animation: rgb-text-flow 6s linear infinite; }
         @keyframes rgb-text-flow { to { background-position: 400% 0; } }
         
         .btn { padding: 10px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; border: none; }
         .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); }
         .btn-secondary:hover { background: var(--primary-glow); color: var(--dark-bg); border-color: var(--primary-glow); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
-        .btn-secondary .fas { margin-right: 8px; }
         .btn-primary { background: var(--primary-glow); color: var(--dark-bg); font-weight: 600; width: 100%; }
         .btn-primary:hover { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
         .btn-primary:disabled { background: var(--text-secondary); cursor: not-allowed; }
@@ -63,17 +61,61 @@
         .form-group label .fas, .form-group label .fab { margin-right: 10px; color: var(--primary-glow); }
         input, select, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background-color: rgba(0,0,0,0.3); color: var(--text-primary); font-family: 'Inter', sans-serif; font-size: 1rem; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary-glow); box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
-        select:disabled { background-color: rgba(0,0,0,0.5); cursor: not-allowed; }
         .checkbox-group { display: flex; align-items: center; gap: 12px; }
         .checkbox-group input { width: auto; }
         .message { text-align: center; padding: 15px; border-radius: 8px; margin-top: 20px; display: none; font-weight: 500; }
         .message.success { background-color: rgba(46, 204, 113, 0.15); border: 1px solid var(--success); color: var(--success); }
         .message.error { background-color: rgba(231, 76, 60, 0.15); border: 1px solid var(--danger); color: var(--danger); }
         
-        @media (max-width: 768px) {
-            .page-header { flex-direction: column; gap: 20px; margin: 15px; }
-            .container { margin: 20px; padding: 0; }
-            .upload-form { padding: 30px; }
+        /* --- Styles for new course selector button --- */
+        .course-selector-bar {
+            background-color: rgba(0,0,0,0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #selected-course-display { color: var(--text-secondary); }
+        #selected-course-display strong { color: var(--text-primary); }
+        #open-filter-modal-btn { width: auto; font-size: 0.9rem; padding: 8px 15px; }
+        
+        /* --- MODAL STYLES --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-content { background: var(--dark-bg); padding: 30px; border-radius: 15px; border: 1px solid var(--border-color); width: 90%; max-width: 900px; max-height: 90vh; display: flex; flex-direction: column; position: relative; transform: scale(0.95); transition: transform 0.3s ease; }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-close { position: absolute; top: 15px; right: 20px; background: none; border: none; color: var(--text-primary); font-size: 2rem; cursor: pointer; z-index: 10; }
+        .modal-header { text-align: center; margin-bottom: 20px; }
+        
+        /* --- RESPONSIVE FILTER MODAL STYLES --- */
+        .filter-columns-container { overflow: hidden; width: 100%; }
+        .filter-columns { display: flex; width: 300%; transition: transform 0.4s ease-in-out; }
+        .filter-column { width: 100%; padding: 0 10px; display: flex; flex-direction: column; }
+        .filter-column-header { display: flex; align-items: center; margin-bottom: 15px; }
+        .filter-column-header h3 { font-size: 1.2rem; color: var(--primary-glow); flex-grow: 1; }
+        .filter-back-btn { background: none; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 5px 10px; border-radius: 8px; cursor: pointer; margin-right: 10px; }
+        .filter-column-list { height: 50vh; overflow-y: auto; padding-right: 10px; }
+        .filter-column-list::-webkit-scrollbar { width: 6px; }
+        .filter-column-list::-webkit-scrollbar-track { background: transparent; }
+        .filter-column-list::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+        .filter-item { padding: 12px 15px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; transition: background-color 0.2s ease; font-size: 0.95rem; }
+        .filter-item:hover { background-color: rgba(255, 255, 255, 0.05); }
+        .filter-item.selected { background-color: var(--primary-glow); color: var(--dark-bg); font-weight: 600; }
+        .filter-column.disabled { opacity: 0.3; pointer-events: none; }
+        
+        .filter-columns.show-semesters { transform: translateX(-33.333%); }
+        .filter-columns.show-courses { transform: translateX(-66.666%); }
+
+        @media (min-width: 768px) {
+            .page-header { flex-direction: row; }
+            .upload-form { padding: 40px; }
+            .filter-columns-container { overflow: visible; }
+            .filter-columns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; width: 100%; transform: none !important; }
+            .filter-column { width: auto; border-right: 1px solid var(--border-color); padding: 0 20px; }
+            .filter-column:last-child { border-right: none; }
+            .filter-back-btn { display: none; }
         }
     </style>
 </head>
@@ -106,19 +148,14 @@
                 <input type="text" id="title" placeholder="e.g., Unit 1 Notes" required>
             </div>
             
-            <!-- THIS CONTAINER HOLDS ALL FIELDS SPECIFIC TO 'STUDY MATERIALS' -->
+            <!-- CONTAINER FOR ALL 'MATERIALS' SPECIFIC FIELDS -->
             <div id="materials-fields" style="display:none;">
                 <div class="form-group">
-                    <label for="department"><i class="fas fa-university"></i> Department</label>
-                    <select id="department" required></select>
-                </div>
-                 <div class="form-group">
-                    <label for="semester"><i class="fas fa-graduation-cap"></i> Semester</label>
-                    <select id="semester" required disabled></select>
-                </div>
-                 <div class="form-group">
-                    <label for="course"><i class="fas fa-book"></i> Course</label>
-                    <select id="course" required disabled></select>
+                    <label for="course-selector"><i class="fas fa-book-open"></i> Course for this Material</label>
+                    <div class="course-selector-bar">
+                        <span id="selected-course-display">No course selected</span>
+                        <button type="button" id="open-filter-modal-btn" class="btn">Select</button>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="thumbnailURL"><i class="fas fa-image"></i> Thumbnail Image URL</label>
@@ -155,13 +192,49 @@
         </form>
          <a href="/admindashboard.html" class="btn btn-secondary" style="width: 100%; text-align: center; margin-top: 20px;"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
     </main>
+    
+    <!-- FILTER SELECTION MODAL -->
+    <div id="filter-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="filter-modal-close-btn" class="modal-close">&times;</button>
+            <div class="modal-header">
+                <h2>Select the Course</h2>
+                <p class="modal-description">Choose the department, semester, and course for this material.</p>
+            </div>
+            <div class="filter-columns-container">
+                <div class="filter-columns">
+                    <div id="department-col" class="filter-column">
+                        <div class="filter-column-header">
+                           <h3><i class="fas fa-university"></i> Department</h3>
+                        </div>
+                        <div class="filter-column-list"></div>
+                    </div>
+                    <div id="semester-col" class="filter-column disabled">
+                        <div class="filter-column-header">
+                           <button type="button" class="filter-back-btn" data-target="department"><i class="fas fa-arrow-left"></i></button>
+                           <h3><i class="fas fa-graduation-cap"></i> Semester</h3>
+                        </div>
+                        <div class="filter-column-list"></div>
+                    </div>
+                    <div id="course-col" class="filter-column disabled">
+                         <div class="filter-column-header">
+                           <button type="button" class="filter-back-btn" data-target="semester"><i class="fas fa-arrow-left"></i></button>
+                           <h3><i class="fas fa-book"></i> Course</h3>
+                        </div>
+                        <div class="filter-column-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script>
         const academicData = {
-            branches: {"CSE":{"name":"Computer Science","color":"var(--cse-color)","icon":"fas fa-laptop-code","semesters":{"1":[{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus With MATLAB","credits":4},{"code":"U23PHY103B","name":"Engineering Physics","credits":3},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23BEE106A","name":"Basic Electrical and Electronics Engineering","credits":3},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1},{"code":"U23PHL110","name":"Engineering Physics Lab","credits":1},{"code":"U23BEEL113","name":"Basic Electrical and Electronics Engineering Lab","credits":1},{"code":"U23PPL112","name":"Python Programming Lab","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202B","name":"Discrete Mathematics","credits":4},{"code":"U23CHE204B","name":"Chemistry For Computer Science","credits":3},{"code":"U23CPR205B","name":"Programming In C","credits":3},{"code":"U23EGR207","name":"Engineering Graphics","credits":3},{"code":"U23EC203","name":"Digital Principles And System Design","credits":3},{"code":"U23CHL211","name":"Chemistry Lab","credits":1},{"code":"U23CPL212","name":"C programming Lab","credits":1},{"code":"U23TAM201","name":"Tamils And Technology","credits":1}],"3":[{"code":"U23MAT301D","name":"Probability and Statistics","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming","credits":3},{"code":"U23CS304","name":"Operating Systems","credits":3},{"code":"U23CS305","name":"Computer Information and Ethics","credits":3},{"code":"U23CS306","name":"Data Structures Lab","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Lab","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1},{"code":"Noc24-mg72","name":"NPTEL:design Thinking-A Primer","credits":1}],"4":[{"code":"U23MAT401B","name":"Numerical Methods","credits":4},{"code":"U23CS401","name":"Design And Analysis of Algorithms","credits":3},{"code":"U23CS402","name":"Software Engineering","credits":3},{"code":"U23CS403","name":"DataBase Management Systems","credits":3},{"code":"U23CS404","name":"Embedded System Design ","credits":3},{"code":"U23CS405","name":"Software Development Lab","credits":1},{"code":"U23CS403","name":"Database Management Systems Lab","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CS502","name":"Artificial Intelligence","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":" U23CS947 / U23CS903","name":"Professional Elective ","credits":3},{"code":"U23CS505","name":"Computer Networks Laboratory","credits":2},{"code":"U23CS506","name":"Artificial Intelligence and Machine Learning Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude -III","credits":1}],"6":[],"7":[],"8":[]}},
+             branches: {"CSE":{"name":"Computer Science","color":"var(--cse-color)","icon":"fas fa-laptop-code","semesters":{"1":[{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus With MATLAB","credits":4},{"code":"U23PHY103B","name":"Engineering Physics","credits":3},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23BEE106A","name":"Basic Electrical and Electronics Engineering","credits":3},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1},{"code":"U23PHL110","name":"Engineering Physics Lab","credits":1},{"code":"U23BEEL113","name":"Basic Electrical and Electronics Engineering Lab","credits":1},{"code":"U23PPL112","name":"Python Programming Lab","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202B","name":"Discrete Mathematics","credits":4},{"code":"U23CHE204B","name":"Chemistry For Computer Science","credits":3},{"code":"U23CPR205B","name":"Programming In C","credits":3},{"code":"U23EGR207","name":"Engineering Graphics","credits":3},{"code":"U23EC203","name":"Digital Principles And System Design","credits":3},{"code":"U23CHL211","name":"Chemistry Lab","credits":1},{"code":"U23CPL212","name":"C programming Lab","credits":1},{"code":"U23TAM201","name":"Tamils And Technology","credits":1}],"3":[{"code":"U23MAT301D","name":"Probability and Statistics","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming","credits":3},{"code":"U23CS304","name":"Operating Systems","credits":3},{"code":"U23CS305","name":"Computer Information and Ethics","credits":3},{"code":"U23CS306","name":"Data Structures Lab","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Lab","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1},{"code":"Noc24-mg72","name":"NPTEL:design Thinking-A Primer","credits":1}],"4":[{"code":"U23MAT401B","name":"Numerical Methods","credits":4},{"code":"U23CS401","name":"Design And Analysis of Algorithms","credits":3},{"code":"U23CS402","name":"Software Engineering","credits":3},{"code":"U23CS403","name":"DataBase Management Systems","credits":3},{"code":"U23CS404","name":"Embedded System Design ","credits":3},{"code":"U23CS405","name":"Software Development Lab","credits":1},{"code":"U23CS403","name":"Database Management Systems Lab","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CS502","name":"Artificial Intelligence","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":" U23CS947 / U23CS903","name":"Professional Elective ","credits":3},{"code":"U23CS505","name":"Computer Networks Laboratory","credits":2},{"code":"U23CS506","name":"Artificial Intelligence and Machine Learning Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude -III","credits":1}],"6":[],"7":[],"8":[]}},
             "IT":{"name":"Info. Technology","color":"var(--it-color)","icon":"fas fa-network-wired","semesters":{"1":[{"code":"U23IT101","name":"Programming Fundamentals","credits":4},{"code":"U23IT102","name":"Discrete Mathematics","credits":4},{"code":"U23IT103","name":"Digital Systems","credits":3},{"code":"U23IT104","name":"Computer Organization","credits":3},{"code":"U23IT105","name":"Communication Skills","credits":2},{"code":"U23IT106","name":"Programming Lab","credits":1},{"code":"U23IT107","name":"Digital Systems Lab","credits":1}],"2":[{"code":"U23IT201","name":"Data Structures","credits":4},{"code":"U23IT202","name":"Database Systems","credits":4},{"code":"U23IT203","name":"Operating Systems","credits":3},{"code":"U23IT204","name":"Computer Networks","credits":3},{"code":"U23IT205","name":"Web Technologies","credits":3},{"code":"U23IT206","name":"Data Structures Lab","credits":1},{"code":"U23IT207","name":"Web Technologies Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
             "ECE":{"name":"Electronics & Comm","color":"var(--ece-color)","icon":"fas fa-satellite-dish","semesters":{"1":[{"code":"U23EC101","name":"Basic Electronics","credits":4},{"code":"U23EC102","name":"Circuit Theory","credits":4},{"code":"U23EC103","name":"Engineering Mathematics","credits":4},{"code":"U23EC104","name":"Programming in C","credits":3},{"code":"U23EC105","name":"Communication Skills","credits":2},{"code":"U23EC106","name":"Electronics Lab","credits":1},{"code":"U23EC107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EC201","name":"Analog Electronics","credits":4},{"code":"U23EC202","name":"Digital Electronics","credits":4},{"code":"U23EC203","name":"Signals and Systems","credits":4},{"code":"U23EC204","name":"Electromagnetic Theory","credits":3},{"code":"U23EC205","name":"Data Structures","credits":3},{"code":"U23EC206","name":"Analog Electronics Lab","credits":1},{"code":"U23EC207","name":"Digital Electronics Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
             "EEE":{"name":"Electrical & Electronics","color":"var(--eee-color)","icon":"fas fa-bolt","semesters":{"1":[{"code":"U23EE101","name":"Basic Electrical Engineering","credits":4},{"code":"U23EE102","name":"Engineering Mathematics","credits":4},{"code":"U23EE103","name":"Electronics Engineering","credits":3},{"code":"U23EE104","name":"Programming in C","credits":3},{"code":"U23EE105","name":"Communication Skills","credits":2},{"code":"U23EE106","name":"Electrical Lab","credits":1},{"code":"U23EE107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EE201","name":"Circuit Theory","credits":4},{"code":"U23EE202","name":"Electromagnetic Theory","credits":4},{"code":"U23EE203","name":"Digital Electronics","credits":4},{"code":"U23EE204","name":"Electrical Machines","credits":3},{"code":"U23EE205","name":"Data Structures","credits":3},{"code":"U23EE206","name":"Circuit Theory Lab","credits":1},{"code":"U23EE207","name":"Digital Electronics Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
@@ -176,37 +249,48 @@
             "EFE":{"name":"Electrical & Computer","color":"var(--efe-color)","icon":"fas fa-microchip","semesters":{"1":[{"code":"U23EF101","name":"Circuit Theory","credits":4},{"code":"U23EF102","name":"Programming Fundamentals","credits":4},{"code":"U23EF103","name":"Digital Electronics","credits":3},{"code":"U23EF104","name":"Engineering Mathematics","credits":3},{"code":"U23EF105","name":"Communication Skills","credits":2},{"code":"U23EF106","name":"Circuit Theory Lab","credits":1},{"code":"U23EF107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EF201","name":"Signals and Systems","credits":4},{"code":"U23EF202","name":"Data Structures","credits":4},{"code":"U23EF203","name":"Analog Electronics","credits":4},{"code":"U23EF204","name":"Electromagnetic Theory","credits":3},{"code":"U23EF205","name":"Computer Organization","credits":3},{"code":"U23EF206","name":"Analog Electronics Lab","credits":1},{"code":"U23EF207","name":"Data Structures Lab","credits":1}]}},
             "EXE":{"name":"Electronics & Computer","color":"var(--exe-color)","icon":"fas fa-desktop","semesters":{"1":[{"code":"U23EX101","name":"Basic Electronics","credits":4},{"code":"U23EX102","name":"Programming Fundamentals","credits":4},{"code":"U23EX103","name":"Digital Logic Design","credits":3},{"code":"U23EX104","name":"Engineering Mathematics","credits":3},{"code":"U23EX105","name":"Communication Skills","credits":2},{"code":"U23EX106","name":"Electronics Lab","credits":1},{"code":"U23EX107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EX201","name":"Data Structures","credits":4},{"code":"U23EX202","name":"Analog Electronics","credits":4},{"code":"U23EX203","name":"Computer Organization","credits":4},{"code":"U23EX204","name":"Signals and Systems","credits":3},{"code":"U23EX205","name":"Database Systems","credits":3},{"code":"U23EX206","name":"Analog Electronics Lab","credits":1},{"code":"U23EX207","name":"Data Structures Lab","credits":1}]}}}
         };
-
+        
         document.addEventListener('DOMContentLoaded', () => {
+            // Firebase setup
             const firebaseConfig = { apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao", authDomain: "student-portal-free.firebaseapp.com", projectId: "student-portal-free", storageBucket: "student-portal-free.appspot.com", messagingSenderId: "272865877510", appId: "1:272865877510:web:0875a2502ae55bbf9ead87" };
             firebase.initializeApp(firebaseConfig);
             const auth = firebase.auth();
             const db = firebase.firestore();
 
+            // Admin authentication check
             auth.onAuthStateChanged(user => {
-                if (!user) {
-                    window.location.replace('/index.html');
-                    return;
-                }
+                if (!user) { window.location.replace('/index.html'); return; }
                 db.collection('users').doc(user.uid).get().then(doc => {
                     if (!doc.exists || doc.data().role !== 'admin') {
                         window.location.replace('/studentdashboard.html');
                     } else {
-                        initializeAdminForm(); // User is an admin, set up the form
+                        initializeAdminForm();
                     }
                 });
             });
 
-            // --- FORM ELEMENTS ---
+            // --- ALL FORM AND MODAL ELEMENTS ---
             const contentTypeSelect = document.getElementById('contentType');
             const yearGroup = document.getElementById('year-group');
             const detailsGroup = document.getElementById('details-group');
             const detailsLabel = document.getElementById('details-label');
             const urlLabel = document.getElementById('url-label');
             const materialsFields = document.getElementById('materials-fields');
-            const departmentSelect = document.getElementById('department');
-            const semesterSelect = document.getElementById('semester');
-            const courseSelect = document.getElementById('course');
+            
+            // Modal elements
+            const filterModal = document.getElementById('filter-modal');
+            const openFilterBtn = document.getElementById('open-filter-modal-btn');
+            const closeFilterBtn = document.getElementById('filter-modal-close-btn');
+            const filterColumns = document.querySelector('.filter-columns');
+            const deptCol = document.getElementById('department-col');
+            const semCol = document.getElementById('semester-col');
+            const courseCol = document.getElementById('course-col');
+            const selectionDisplay = document.getElementById('selected-course-display');
+
+            // --- STATE MANAGEMENT ---
+            let selectedDept = { code: null, name: null };
+            let selectedSem = { code: null, name: null };
+            let selectedCourse = { code: null, name: null };
             
             function initializeAdminForm() {
                 populateDepartments();
@@ -215,12 +299,25 @@
             
             function setupEventListeners() {
                 contentTypeSelect.addEventListener('change', handleContentTypeChange);
-                departmentSelect.addEventListener('change', handleDepartmentChange);
-                semesterSelect.addEventListener('change', handleSemesterChange);
+                openFilterBtn.addEventListener('click', () => {
+                    filterColumns.classList.remove('show-semesters', 'show-courses');
+                    filterModal.classList.add('active');
+                });
+                closeFilterBtn.addEventListener('click', () => filterModal.classList.remove('active'));
+                filterModal.addEventListener('click', e => e.target === filterModal && filterModal.classList.remove('active'));
 
-                const uploadForm = document.getElementById('upload-form');
-                uploadForm.addEventListener('submit', handleFormSubmit);
+                deptCol.addEventListener('click', handleDeptSelection);
+                semCol.addEventListener('click', handleSemSelection);
+                courseCol.addEventListener('click', handleCourseSelection);
 
+                document.querySelectorAll('.filter-back-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        if (btn.dataset.target === 'department') filterColumns.classList.remove('show-semesters', 'show-courses');
+                        else if (btn.dataset.target === 'semester') filterColumns.classList.remove('show-courses');
+                    });
+                });
+
+                document.getElementById('upload-form').addEventListener('submit', handleFormSubmit);
                 document.getElementById('logout-btn').addEventListener('click', () => auth.signOut());
             }
             
@@ -246,66 +343,95 @@
                 }
             }
 
-            // --- DYNAMIC DROPDOWN LOGIC ---
+            // --- MODAL POPULATION & SELECTION LOGIC ---
             function populateDepartments() {
-                departmentSelect.innerHTML = '<option value="" disabled selected>-- Select a Department --</option>';
+                const deptList = deptCol.querySelector('.filter-column-list');
+                deptList.innerHTML = '';
                 Object.keys(academicData.branches).forEach(branchCode => {
                     const branch = academicData.branches[branchCode];
-                    const option = new Option(branch.name, branchCode);
-                    departmentSelect.add(option);
+                    const item = document.createElement('div');
+                    item.className = 'filter-item'; item.textContent = branch.name;
+                    item.dataset.code = branchCode; item.dataset.name = branch.name;
+                    deptList.appendChild(item);
                 });
             }
 
-            function handleDepartmentChange() {
-                const deptCode = departmentSelect.value;
-                semesterSelect.innerHTML = '<option value="" disabled selected>-- Select a Semester --</option>';
-                courseSelect.innerHTML = '<option value="" disabled selected>-- Select a Course --</option>';
-                courseSelect.disabled = true;
+            function populateSemesters() {
+                const semList = semCol.querySelector('.filter-column-list');
+                semList.innerHTML = '';
+                const branchData = academicData.branches[selectedDept.code];
+                Object.keys(branchData.semesters).forEach(sem => {
+                    const item = document.createElement('div');
+                    item.className = 'filter-item'; item.textContent = `Semester ${sem}`;
+                    item.dataset.code = sem;
+                    semList.appendChild(item);
+                });
+                semCol.classList.remove('disabled');
+            }
 
-                if (deptCode) {
-                    const branchData = academicData.branches[deptCode];
-                    Object.keys(branchData.semesters).forEach(sem => {
-                        const option = new Option(`Semester ${sem}`, sem);
-                        semesterSelect.add(option);
+            function populateCourses() {
+                const courseList = courseCol.querySelector('.filter-column-list');
+                courseList.innerHTML = '';
+                const subjects = academicData.branches[selectedDept.code].semesters[selectedSem.code];
+                if (subjects && subjects.length > 0) {
+                    subjects.forEach(subject => {
+                        const item = document.createElement('div');
+                        item.className = 'filter-item'; item.textContent = `${subject.code} - ${subject.name}`;
+                        item.dataset.code = subject.code; item.dataset.name = subject.name;
+                        courseList.appendChild(item);
                     });
-                    semesterSelect.disabled = false;
+                } else {
+                    courseList.innerHTML = '<p style="padding: 12px 15px;">No courses found.</p>';
                 }
+                courseCol.classList.remove('disabled');
             }
 
-            function handleSemesterChange() {
-                const deptCode = departmentSelect.value;
-                const semCode = semesterSelect.value;
-                courseSelect.innerHTML = '<option value="" disabled selected>-- Select a Course --</option>';
-                
-                if (deptCode && semCode) {
-                    const subjects = academicData.branches[deptCode].semesters[semCode];
-                    if (subjects && subjects.length > 0) {
-                        subjects.forEach(subject => {
-                            const option = new Option(`${subject.code} - ${subject.name}`, subject.code);
-                            courseSelect.add(option);
-                        });
-                        courseSelect.disabled = false;
-                    } else {
-                        courseSelect.disabled = true;
-                    }
-                }
+            function handleDeptSelection(e) {
+                if (!e.target.classList.contains('filter-item')) return;
+                selectedDept = { code: e.target.dataset.code, name: e.target.dataset.name };
+                updateSelectedUI(deptCol, e.target);
+                semCol.querySelector('.filter-column-list').innerHTML = '';
+                courseCol.querySelector('.filter-column-list').innerHTML = '';
+                semCol.classList.add('disabled'); courseCol.classList.add('disabled');
+                populateSemesters();
+                filterColumns.classList.add('show-semesters');
             }
-            
+
+            function handleSemSelection(e) {
+                if (!e.target.classList.contains('filter-item')) return;
+                selectedSem = { code: e.target.dataset.code, name: e.target.textContent };
+                updateSelectedUI(semCol, e.target);
+                courseCol.querySelector('.filter-column-list').innerHTML = '';
+                courseCol.classList.add('disabled');
+                populateCourses();
+                filterColumns.classList.add('show-courses');
+            }
+
+            function handleCourseSelection(e) {
+                if (!e.target.classList.contains('filter-item')) return;
+                selectedCourse = { code: e.target.dataset.code, name: e.target.dataset.name };
+                updateSelectedUI(courseCol, e.target);
+                filterModal.classList.remove('active');
+                selectionDisplay.innerHTML = `<strong>${selectedCourse.code}</strong> - ${selectedCourse.name}`;
+            }
+
+            function updateSelectedUI(column, selectedElement) {
+                [...column.querySelectorAll('.filter-item')].forEach(item => item.classList.remove('selected'));
+                selectedElement.classList.add('selected');
+            }
+
             // --- FORM SUBMISSION ---
             function handleFormSubmit(e) {
                 e.preventDefault();
                 const submitBtn = document.getElementById('submit-btn');
                 const messageEl = document.getElementById('form-message');
-
-                submitBtn.disabled = true;
-                submitBtn.classList.add('loading');
+                submitBtn.disabled = true; submitBtn.classList.add('loading');
                 messageEl.style.display = 'none';
 
                 const collectionName = contentTypeSelect.value;
                 if (!collectionName) {
                     alert('Please select a content type.');
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('loading');
+                    submitBtn.disabled = false; submitBtn.classList.remove('loading');
                     return;
                 }
                 
@@ -316,17 +442,16 @@
                 
                 switch(collectionName) {
                     case 'materials':
-                        data.department = departmentSelect.value;
-                        data.semester = semesterSelect.value;
-                        data.courseCode = courseSelect.value;
+                        data.department = selectedDept.code;
+                        data.semester = selectedSem.code;
+                        data.courseCode = selectedCourse.code;
                         data.downloadURL = document.getElementById('url').value.trim();
                         data.isPaid = document.getElementById('isPaid').checked;
                         data.thumbnailURL = document.getElementById('thumbnailURL').value.trim();
                         data.description = document.getElementById('description').value.trim();
                         if (!data.department || !data.semester || !data.courseCode) {
-                           alert('Please select Department, Semester, and Course.');
-                           submitBtn.disabled = false;
-                           submitBtn.classList.remove('loading');
+                           alert('Please select a course for the material using the "Select" button.');
+                           submitBtn.disabled = false; submitBtn.classList.remove('loading');
                            return;
                         }
                         break;
@@ -347,28 +472,26 @@
                 
                 db.collection(collectionName).add(data).then(() => {
                     messageEl.textContent = 'Content uploaded successfully!';
-                    messageEl.className = 'message success';
-                    messageEl.style.display = 'block';
+                    messageEl.className = 'message success'; messageEl.style.display = 'block';
                     document.getElementById('upload-form').reset();
-                    handleContentTypeChange(); // Reset conditional fields
-                    resetMaterialSelects(); // Reset the new dropdowns
+                    handleContentTypeChange();
+                    resetMaterialSelection();
                     setTimeout(() => { messageEl.style.display = 'none'; }, 4000);
                 }).catch(err => {
                     messageEl.textContent = 'Error: ' + err.message;
-                    messageEl.className = 'message error';
-                    messageEl.style.display = 'block';
+                    messageEl.className = 'message error'; messageEl.style.display = 'block';
                 }).finally(() => {
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('loading');
+                    submitBtn.disabled = false; submitBtn.classList.remove('loading');
                 });
             }
 
-            function resetMaterialSelects() {
-                departmentSelect.selectedIndex = 0;
-                semesterSelect.innerHTML = '<option value="" disabled selected>-- Select a Semester --</option>';
-                semesterSelect.disabled = true;
-                courseSelect.innerHTML = '<option value="" disabled selected>-- Select a Course --</option>';
-                courseSelect.disabled = true;
+            function resetMaterialSelection() {
+                selectedDept = { code: null, name: null };
+                selectedSem = { code: null, name: null };
+                selectedCourse = { code: null, name: null };
+                selectionDisplay.textContent = 'No course selected';
+                // You might also want to reset the visual 'selected' state in the modal here
+                [...document.querySelectorAll('.filter-item.selected')].forEach(item => item.classList.remove('selected'));
             }
         });
     </script>
