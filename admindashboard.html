@@ -4,109 +4,225 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | IB STUDIOZ</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root { --primary: #FFC300; --dark: #121212; --text-primary: #ffffff; --text-secondary: rgba(255, 255, 255, 0.7); --card-bg: rgba(20, 20, 20, 0.5); --border-color: rgba(255, 195, 0, 0.2); --shadow-color: rgba(0, 0, 0, 0.3); }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        @keyframes background-pan { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
-        body { font-family: "Poppins", sans-serif; background-color: var(--dark); color: var(--text-primary); min-height: 100vh; line-height: 1.6; background-attachment: fixed; visibility: hidden; }
-        .aurora-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(ellipse at 10% 10%, var(--primary) 0%, rgba(255, 195, 0, 0) 40%), radial-gradient(ellipse at 90% 85%, #444 0%, rgba(68, 68, 68, 0) 35%); animation: background-pan 45s linear infinite; opacity: 0.2; }
-        .container { max-width: 1200px; margin: 30px auto; padding: 30px; }
-        .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; color: var(--text-primary); }
-        .brand-logo img { width: 50px; height: auto; }
-        .brand-logo h1 { font-size: 1.5rem; font-weight: 600; margin: 0; }
-        .brand-shimmer {
-            background: linear-gradient(120deg, var(--primary) 20%, #fff 40%, #fff 60%, var(--primary) 80%);
-            background-size: 200% auto;
-            color: transparent;
-            -webkit-background-clip: text;
-            background-clip: text;
-            animation: shimmer 4s linear infinite;
-        }
-        .card { background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 15px; border: 1px solid var(--border-color); padding: 25px; box-shadow: 0 8px 32px 0 var(--shadow-color); transition: transform 0.3s ease; }
-        .card:hover { transform: translateY(-5px); }
-        .btn { display: inline-block; padding: 12px 30px; border-radius: 10px; border: none; font-size: 1rem; font-weight: 500; cursor: pointer; text-align: center; text-decoration: none; }
-        .btn-secondary { background: transparent; border: 2px solid var(--primary); color: var(--primary); padding: 8px 20px; }
-        .btn-secondary:hover { background: var(--primary); color: var(--dark); }
-        .page-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: rgba(18, 18, 18, 0.4); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); }
-        .welcome-header { text-align: center; margin: 40px 0; }
-        .welcome-header h1 { font-size: 2.5rem; background: linear-gradient(90deg, #fff, var(--primary)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .welcome-header p { font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; margin: 10px auto 0; }
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-bottom: 50px; }
-        .nav-card { text-decoration: none; color: var(--text-primary); text-align: center; padding: 30px 20px; border-left: 5px solid var(--card-color, var(--primary)); }
-        .nav-card-icon { font-size: 2.5rem; margin-bottom: 15px; color: var(--card-color, var(--primary)); }
-        .nav-card h3 { font-size: 1.3rem; margin-bottom: 8px; }
-        .nav-card p { color: var(--text-secondary); font-size: 0.9rem; }
+    
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23FFD700' d='M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z' /%3E%3Cg fill='%230A0A0A'%3E%3Cpath d='M28,25 h10 v50 h-10 Z' /%3E%3Cpath d='M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z' /%3E%3C/g%E3C/svg%3E">
 
-        /* --- RESPONSIVE DESIGN --- */
-        @media (max-width: 768px) {
-            .page-header { flex-direction: column; gap: 15px; }
-            .welcome-header h1 { font-size: 2rem; }
-            .container { padding: 20px; margin: 20px auto; }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-glow: #FFD700; --secondary-glow: #00A2FF; --dark-bg: #0A0A0A;
+            --text-primary: #F0F0F0; --text-secondary: #A0A0A0; --card-bg: rgba(22, 22, 22, 0.8);
+            --border-color: rgba(255, 215, 0, 0.2); --shadow-color: rgba(0, 0, 0, 0.5);
         }
-        @media (max-width: 480px) {
-            .dashboard-grid { grid-template-columns: 1fr; }
-            .welcome-header h1 { font-size: 1.8rem; }
-            .brand-logo img { width: 40px; }
-            .brand-logo h1 { font-size: 1.3rem; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif; background-color: var(--dark-bg);
+            color: var(--text-primary); line-height: 1.6; visibility: hidden; opacity: 0;
+            animation: page-fade-in 0.5s ease-out forwards;
+        }
+        @keyframes page-fade-in { to { opacity: 1; } }
+
+        .background-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
+        .aurora-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 10% 20%, var(--primary-glow) 0%, transparent 25%), radial-gradient(circle at 80% 30%, var(--secondary-glow) 0%, transparent 30%), radial-gradient(circle at 50% 80%, var(--primary-glow) 0%, transparent 25%); animation: aurora-morph 40s linear infinite alternate; filter: blur(120px); opacity: 0.2; }
+        @keyframes aurora-morph { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1.8); } }
+        .noise-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>'); opacity: 0.015; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .hidden { display: none !important; }
+
+        /* --- HEADER & SPECTACULAR RGB TITLE --- */
+        .page-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; margin: 20px; background: rgba(16,16,16,0.6); backdrop-filter: blur(20px); border-radius: 15px; border: 1px solid var(--border-color); }
+        .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; }
+        .header-logo-svg { width: 45px; height: auto; }
+        .brand-title { position: relative; font-size: 1.5rem; font-weight: 700; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: rgb-text-flow 6s linear infinite; }
+        .brand-title::before { content: 'IB STUDIOZ'; position: absolute; top: 0; left: 0; z-index: -1; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; filter: blur(20px) opacity(0.9); transform: scale(1.1); animation: rgb-text-flow 6s linear infinite; }
+        @keyframes rgb-text-flow { to { background-position: 400% 0; } }
+        .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 10px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; }
+        .btn-secondary:hover { background: var(--primary-glow); color: var(--dark-bg); border-color: var(--primary-glow); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+        .btn-secondary .fas { margin-right: 8px; }
+
+        /* --- PROFESSIONAL WELCOME HEADER --- */
+        .welcome-header-pro { padding: 40px 0; margin-bottom: 40px; text-align: left; border-left: 4px solid; border-image: linear-gradient(to bottom, var(--primary-glow), var(--secondary-glow)) 1; padding-left: 30px; }
+        .welcome-header-pro h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.2; margin-bottom: 10px; }
+        #admin-name { color: var(--primary-glow); }
+        .welcome-header-pro p { font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; }
+        
+        /* --- HIGH-PERFORMANCE DASHBOARD GRID --- */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 50px; }
+        .nav-card { background: var(--card-bg); border-radius: 15px; border: 1px solid var(--border-color); padding: 30px 25px; text-decoration: none; box-shadow: 0 8px 32px 0 rgba(0,0,0,0.3); transition: transform 0.3s ease, border-color 0.3s ease; cursor: pointer; opacity: 0; animation: card-fade-in 0.5s ease-out forwards; }
+        @keyframes card-fade-in { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .nav-card:nth-child(1) { animation-delay: 0.1s; } .nav-card:nth-child(2) { animation-delay: 0.2s; } .nav-card:nth-child(3) { animation-delay: 0.3s; }
+        .nav-card:hover { transform: translateY(-8px); border-color: var(--card-color, var(--primary-glow)); }
+        .nav-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+        .nav-card-icon { font-size: 2.2rem; color: var(--card-color, var(--primary-glow)); transition: transform 0.3s ease; }
+        .nav-card:hover .nav-card-icon { transform: scale(1.1); }
+        .nav-card-arrow { font-size: 1.5rem; color: var(--text-secondary); opacity: 0; transform: translateX(-10px); transition: all 0.3s ease; }
+        .nav-card:hover .nav-card-arrow { opacity: 1; transform: translateX(0); }
+        .nav-card h3 { font-size: 1.3rem; margin-bottom: 8px; color: var(--text-primary); text-align: left; }
+        .nav-card p { color: var(--text-secondary); font-size: 0.9rem; text-align: left; }
+        
+        /* --- MANAGE USERS MODAL --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,10,10,0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 15px; width: 90%; max-width: 800px; padding: 30px; box-shadow: 0 8px 32px 0 var(--shadow-color); transform: scale(0.95); transition: transform 0.3s ease; }
+        .modal-overlay.active .modal { transform: scale(1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+        .modal-header h2 { font-size: 1.5rem; }
+        .modal-close { background: none; border: none; color: var(--text-primary); font-size: 1.8rem; cursor: pointer; }
+        .users-list { max-height: 60vh; overflow-y: auto; }
+        .user-item { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 15px; align-items: center; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .user-item span { overflow-wrap: break-word; }
+        .btn-danger { background: #c0392b; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; transition: background 0.3s ease; }
+        .btn-danger:hover { background: #e74c3c; }
+
+        @media (max-width: 768px) {
+            .page-header { flex-direction: column; gap: 20px; margin: 15px; }
+            .welcome-header-pro { padding-left: 20px; margin-bottom: 30px; }
+            .user-item { grid-template-columns: 1fr; text-align: center; }
         }
     </style>
 </head>
 <body>
+    <div class="background-container">
+        <div class="aurora-layer"></div>
+        <div class="noise-layer"></div>
+    </div>
+
     <header class="page-header">
         <a href="/admindashboard.html" class="brand-logo">
-            <img src="logo().jpg" alt="IB STUDIOZ Logo">
-            <h1 class="brand-shimmer">IB STUDIOZ</h1>
+            <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" /><g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g></svg>
+            <h1 class="brand-title">IB STUDIOZ</h1>
         </a>
-        <button id="logout-btn" class="btn btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        <button id="logout-btn" class="btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
     </header>
+
     <div class="container">
-        <div class="welcome-header">
+        <div class="welcome-header-pro">
             <h1>Admin Control Panel</h1>
-            <p>Welcome, <span id="admin-name"></span>. Manage your platform resources here.</p>
+            <p>Welcome, <span id="admin-name">Admin</span>. Manage your platform resources and users with precision.</p>
         </div>
         <section class="dashboard-grid">
-            <a href="/upload.html" class="card nav-card" style="--card-color: #2575fc;"><div class="nav-card-icon"><i class="fas fa-upload"></i></div><h3>Upload Materials</h3><p>Add notes, PYQs, seminar links.</p></a>
-            <a href="#" class="card nav-card" style="--card-color: #00b09b;"><div class="nav-card-icon"><i class="fas fa-users-cog"></i></div><h3>Manage Users</h3><p>View and manage student accounts.</p></a>
-            <a href="#" class="card nav-card" style="--card-color: #A18CD1;"><div class="nav-card-icon"><i class="fas fa-chart-bar"></i></div><h3>View Analytics</h3><p>Check resource usage stats.</p></a>
+            <a href="/upload.html" class="nav-card" style="--card-color: #2575fc;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fas fa-upload"></i></div><span class="nav-card-arrow">→</span></div><h3>Upload Materials</h3><p>Add notes, PYQs, and seminar links.</p></a>
+            <div id="manage-users-card" class="nav-card" style="--card-color: #00b09b;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fas fa-users-cog"></i></div><span class="nav-card-arrow">→</span></div><h3>Manage Users</h3><p>View, modify, or remove student accounts.</p></div>
+            <a href="#" class="nav-card" style="--card-color: #A18CD1;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fas fa-chart-bar"></i></div><span class="nav-card-arrow">→</span></div><h3>View Analytics</h3><p>Check resource usage and platform stats.</p></a>
         </section>
+    </div>
+
+    <!-- Manage Users Modal -->
+    <div id="users-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Manage Student Users</h2>
+                <button id="modal-close-btn" class="modal-close">&times;</button>
+            </div>
+            <div class="users-list" id="users-list-container">
+                <!-- User items will be dynamically inserted here -->
+            </div>
+        </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script>
-        const firebaseConfig = {
-          apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao",
-          authDomain: "student-portal-free.firebaseapp.com",
-          projectId: "student-portal-free",
-          storageBucket: "student-portal-free.appspot.com",
-          messagingSenderId: "272865877510",
-          appId: "1:272865877510:web:0875a2502ae55bbf9ead87"
-        };
+        const firebaseConfig = { apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao", authDomain: "student-portal-free.firebaseapp.com", projectId: "student-portal-free", storageBucket: "student-portal-free.appspot.com", messagingSenderId: "272865877510", appId: "1:272865877510:web:0875a2502ae55bbf9ead87" };
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        const adminNameEl = document.getElementById('admin-name');
         
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                db.collection('users').doc(user.uid).get().then(doc => {
-                    if (doc.exists && doc.data().role === 'admin') {
-                        adminNameEl.textContent = doc.data().name;
-                        document.body.style.visibility = 'visible';
-                    } else {
-                        alert("Access Denied. You are not an admin.");
-                        window.location.replace('/studentdashboard.html');
+        document.addEventListener('DOMContentLoaded', () => {
+            const adminNameEl = document.getElementById('admin-name');
+            const logoutBtn = document.getElementById('logout-btn');
+            const manageUsersCard = document.getElementById('manage-users-card');
+            const usersModal = document.getElementById('users-modal');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+            const usersListContainer = document.getElementById('users-list-container');
+
+            // --- Authentication and Core Logic ---
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    db.collection('users').doc(user.uid).get().then(doc => {
+                        if (doc.exists && doc.data().role === 'admin') {
+                            const firstName = doc.data().name.split(' ')[0];
+                            adminNameEl.textContent = firstName;
+                            document.body.style.visibility = 'visible';
+                        } else {
+                            // Non-admin user trying to access, redirect them
+                            window.location.replace('/studentdashboard.html');
+                        }
+                    }).catch(() => auth.signOut());
+                } else {
+                    window.location.replace('/index.html');
+                }
+            });
+            logoutBtn.addEventListener('click', () => auth.signOut());
+
+            // --- Manage Users Modal Logic ---
+            const openModal = () => usersModal.classList.add('active');
+            const closeModal = () => usersModal.classList.remove('active');
+
+            manageUsersCard.addEventListener('click', () => {
+                loadUsers();
+                openModal();
+            });
+            modalCloseBtn.addEventListener('click', closeModal);
+            usersModal.addEventListener('click', (e) => {
+                if (e.target === usersModal) closeModal(); // Close if clicking on the overlay
+            });
+
+            async function loadUsers() {
+                usersListContainer.innerHTML = '<h3>Loading...</h3>';
+                try {
+                    const snapshot = await db.collection('users').where('role', '==', 'student').get();
+                    if (snapshot.empty) {
+                        usersListContainer.innerHTML = '<p>No student users found.</p>';
+                        return;
                     }
-                }).catch(() => { auth.signOut(); });
-            } else {
-                window.location.replace('/index.html');
+
+                    usersListContainer.innerHTML = ''; // Clear loading text
+                    snapshot.forEach(doc => {
+                        const user = doc.data();
+                        const userEl = document.createElement('div');
+                        userEl.className = 'user-item';
+                        userEl.innerHTML = `
+                            <span><strong>${user.name}</strong></span>
+                            <span>${user.email}</span>
+                            <span>${user.admissionNo}</span>
+                            <button class="btn-danger" data-uid="${doc.id}">Delete</button>
+                        `;
+                        usersListContainer.appendChild(userEl);
+                    });
+                } catch (error) {
+                    console.error("Error loading users:", error);
+                    usersListContainer.innerHTML = '<p>Error loading users. Please try again.</p>';
+                }
             }
+
+            // --- User Deletion Logic (Event Delegation) ---
+            usersListContainer.addEventListener('click', async (e) => {
+                if (e.target.classList.contains('btn-danger')) {
+                    const uidToDelete = e.target.dataset.uid;
+                    if (confirm(`Are you sure you want to delete this user? This action cannot be undone.`)) {
+                        try {
+                            // Note: Deleting from Firestore does NOT delete from Firebase Auth.
+                            // For a full solution, you would need a Cloud Function to handle Auth deletion.
+                            await db.collection('users').doc(uidToDelete).delete();
+                            alert('User deleted from Firestore successfully.');
+                            loadUsers(); // Refresh the list
+                        } catch (error) {
+                            console.error("Error deleting user:", error);
+                            alert('Failed to delete user.');
+                        }
+                    }
+                }
+            });
         });
-        document.getElementById('logout-btn').addEventListener('click', () => auth.signOut());
     </script>
 </body>
 </html>
