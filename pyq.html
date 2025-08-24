@@ -24,23 +24,12 @@
         body {
             font-family: 'Inter', sans-serif; background-color: var(--dark-bg);
             color: var(--text-primary); line-height: 1.6;
+            opacity: 0;
+            animation: page-fade-in 0.4s ease-out forwards;
         }
-
-        #fast-loader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--dark-bg);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 10002; transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
+        @keyframes page-fade-in { 
+            to { opacity: 1; } 
         }
-        .loader-content { position: relative; display: flex; justify-content: center; align-items: center; }
-        .loader-logo { width: 80px; height: 80px; position: absolute; animation: spin 2s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        
-        #page-content {
-            visibility: hidden; opacity: 0;
-            transition: opacity 0.4s ease-in, visibility 0.4s ease-in;
-        }
-        #page-content.visible { visibility: visible; opacity: 1; }
         
         .background-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
         .aurora-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 10% 20%, var(--primary-glow) 0%, transparent 25%), radial-gradient(circle at 80% 30%, var(--secondary-glow) 0%, transparent 30%), radial-gradient(circle at 50% 80%, var(--primary-glow) 0%, transparent 25%); animation: aurora-morph 40s linear infinite alternate; filter: blur(120px); opacity: 0.2; }
@@ -82,18 +71,9 @@
     </style>
 </head>
 <body>
-    <div id="fast-loader">
-        <div class="loader-content">
-            <svg class="loader-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <path fill="#FFD700" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" />
-                <g fill="#0A0A0A"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g>
-            </svg>
-        </div>
-    </div>
-    
     <div class="background-container"><div class="aurora-layer"></div><div class="noise-layer"></div></div>
 
-    <main id="page-content" style="visibility: hidden; opacity: 0;">
+    <main>
         <header class="page-header">
             <a href="/studentdashboard.html" class="brand-logo">
                 <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" /><g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g></svg>
@@ -106,7 +86,9 @@
                 <h1>PYQs & Question Banks</h1>
                 <p>Access a comprehensive archive of past question papers to sharpen your preparation.</p>
             </div>
-            <ul id="pyq-list" class="pyq-list"></ul>
+            <ul id="pyq-list" class="pyq-list">
+                <!-- Skeletons will be injected here by JS -->
+            </ul>
         </div>
     </main>
 
@@ -116,8 +98,6 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const loader = document.getElementById('fast-loader');
-            const content = document.getElementById('page-content');
             const pyqList = document.getElementById('pyq-list');
 
             const firebaseConfig = { apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao", authDomain: "student-portal-free.firebaseapp.com", projectId: "student-portal-free", storageBucket: "student-portal-free.appspot.com", messagingSenderId: "272865877510", appId: "1:272865877510:web:0875a2502ae55bbf9ead87" };
@@ -129,7 +109,7 @@
                 if (user) {
                     db.collection('users').doc(user.uid).get().then(doc => {
                         if (doc.exists && doc.data().role !== 'admin') {
-                            initializePage();
+                            loadPYQs();
                         } else {
                             window.location.replace(doc.exists ? '/admindashboard.html' : '/index.html');
                         }
@@ -148,6 +128,7 @@
             }
 
             async function loadPYQs() {
+                showSkeletonLoader();
                 try {
                     const snapshot = await db.collection('pyqs').orderBy('year', 'desc').get();
                     let pyqHTML = '';
@@ -164,18 +145,6 @@
                     console.error("Error loading PYQs:", err);
                     pyqList.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Could not load PYQs.</p></div>`;
                 }
-            }
-            
-            async function initializePage() {
-                showSkeletonLoader();
-                const dataPromise = loadPYQs();
-                const minTimePromise = new Promise(resolve => setTimeout(resolve, 300));
-
-                await Promise.all([dataPromise, minTimePromise]);
-
-                loader.style.opacity = '0';
-                loader.style.visibility = 'hidden';
-                content.classList.add('visible');
             }
             
             document.getElementById('logout-btn').addEventListener('click', (e) => {
