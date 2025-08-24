@@ -4,112 +4,274 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PYQs & Question Banks | IB STUDIOZ</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Standard Favicon -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23FFD700' d='M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z' /%3E%3Cg fill='%230A0A0A'%3E%3Cpath d='M28,25 h10 v50 h-10 Z' /%3E%3Cpath d='M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z' /%3E%3C/g%3E%3C/svg%3E">
+
+    <!-- Standard Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        :root { --primary: #FFC300; --dark: #121212; --text-primary: #ffffff; --text-secondary: rgba(255, 255, 255, 0.7); --card-bg: rgba(20, 20, 20, 0.5); --border-color: rgba(255, 195, 0, 0.2); --shadow-color: rgba(0, 0, 0, 0.3); }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        @keyframes background-pan { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
-        body { font-family: "Poppins", sans-serif; background-color: var(--dark); color: var(--text-primary); min-height: 100vh; line-height: 1.6; background-attachment: fixed; visibility: hidden; }
-        .aurora-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(ellipse at 10% 10%, var(--primary) 0%, rgba(255, 195, 0, 0) 40%), radial-gradient(ellipse at 90% 85%, #444 0%, rgba(68, 68, 68, 0) 35%); animation: background-pan 45s linear infinite; opacity: 0.2; }
-        .container { max-width: 1200px; margin: 30px auto; padding: 30px; }
-        .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; color: var(--text-primary); }
-        .brand-logo img { width: 50px; height: auto; }
-        .brand-logo h1 { font-size: 1.5rem; font-weight: 600; margin: 0; }
-        .brand-shimmer { background: linear-gradient(120deg, #ff00c1, #00ffff, #33ff00, #ffc400, #ff00c1); background-size: 400% 400%; color: transparent; -webkit-background-clip: text; background-clip: text; animation: shimmer 8s ease-in-out infinite; }
-        .btn { display: inline-block; padding: 12px 30px; border-radius: 10px; border: none; font-size: 1rem; font-weight: 500; cursor: pointer; text-align: center; text-decoration: none; }
-        .btn-secondary { background: transparent; border: 2px solid var(--primary); color: var(--primary); padding: 8px 20px; }
-        .btn-secondary:hover { background: var(--primary); color: var(--dark); }
-        .page-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: rgba(18, 18, 18, 0.4); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); }
-        .page-title { font-size: 2.5rem; margin-bottom: 30px; text-align: center; background: linear-gradient(90deg, #fff, var(--primary)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .pyq-list { list-style: none; padding: 0; }
-        .pyq-item { display: flex; align-items: center; justify-content: space-between; background: var(--card-bg); padding: 20px; border-radius: 12px; margin-bottom: 15px; border-left: 5px solid var(--primary); transition: transform 0.2s ease; }
-        .pyq-item:hover { transform: translateY(-3px); }
-        .pyq-info h3 { margin-bottom: 5px; }
-        .pyq-info p { color: var(--text-secondary); font-size: 0.9rem; }
-        .pyq-link { color: var(--primary); font-size: 1.5rem; text-decoration: none; transition: transform 0.2s; }
-        .pyq-link:hover { transform: scale(1.1); }
-        .empty-state { text-align: center; padding: 50px; }
-        .empty-state i { font-size: 3rem; color: var(--primary); margin-bottom: 15px; }
-        @media (max-width: 768px) {
-            .page-header { flex-direction: column; gap: 15px; }
-            .page-title { font-size: 2rem; }
-            .container { padding: 20px; margin: 20px auto; }
+        /* Standard Color Palette */
+        :root {
+            --primary-glow: #FFD700; --secondary-glow: #00A2FF; --dark-bg: #0A0A0A;
+            --text-primary: #F0F0F0; --text-secondary: #A0A0A0; --card-bg: rgba(22, 22, 22, 0.8);
+            --border-color: rgba(255, 215, 0, 0.2); --shadow-color: rgba(0, 0, 0, 0.5);
         }
-        @media (max-width: 480px) {
-            .pyq-item { flex-direction: column; align-items: flex-start; gap: 15px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif; background-color: var(--dark-bg);
+            color: var(--text-primary); line-height: 1.6;
+        }
+
+        /* --- Ultra-Fast Timed Loader --- */
+        #fast-loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--dark-bg);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 10002; transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
+        }
+        .loader-content {
+            position: relative; display: flex; justify-content: center;
+            align-items: center; flex-direction: column;
+        }
+        .loader-logo {
+            width: 80px; height: 80px; position: absolute;
+        }
+        .loader-progress-ring {
+            position: absolute; transform: rotate(-90deg);
+        }
+        .progress-ring-track {
+            fill: transparent; stroke: rgba(255, 255, 255, 0.1); stroke-width: 4;
+        }
+        .progress-ring-bar {
+            fill: transparent; stroke: white; stroke-width: 4; stroke-linecap: round;
+            stroke-dasharray: 339.3 339.3; stroke-dashoffset: 339.3;
+            animation: draw-circle 0.5s ease-out forwards;
+        }
+        @keyframes draw-circle { to { stroke-dashoffset: 0; } }
+        #loader-timer {
+            margin-top: 150px; font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem; color: var(--text-secondary);
+        }
+
+        /* --- Page Content Visibility --- */
+        #page-content {
+            visibility: hidden; opacity: 0;
+            transition: opacity 0.4s ease-in, visibility 0.4s ease-in;
+        }
+        #page-content.visible {
+            visibility: visible; opacity: 1;
+        }
+        
+        /* Standard Background */
+        .background-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
+        .aurora-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 10% 20%, var(--primary-glow) 0%, transparent 25%), radial-gradient(circle at 80% 30%, var(--secondary-glow) 0%, transparent 30%), radial-gradient(circle at 50% 80%, var(--primary-glow) 0%, transparent 25%); animation: aurora-morph 40s linear infinite alternate; filter: blur(120px); opacity: 0.2; }
+        @keyframes aurora-morph { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1.8); } }
+        .noise-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>'); opacity: 0.015; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        /* Standard Header */
+        .page-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; margin: 20px; background: rgba(16,16,16,0.6); backdrop-filter: blur(20px); border-radius: 15px; border: 1px solid var(--border-color); }
+        .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; }
+        .header-logo-svg { width: 45px; height: auto; }
+        .brand-title { position: relative; font-size: 1.5rem; font-weight: 700; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: rgb-text-flow 6s linear infinite; }
+        .brand-title::before { content: 'IB STUDIOZ'; position: absolute; top: 0; left: 0; z-index: -1; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; filter: blur(20px) opacity(0.9); transform: scale(1.1); animation: rgb-text-flow 6s linear infinite; }
+        @keyframes rgb-text-flow { to { background-position: 400% 0; } }
+        .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 10px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
+        .btn-secondary:hover { background: var(--primary-glow); color: var(--dark-bg); border-color: var(--primary-glow); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+        .btn-secondary .fas { margin-right: 8px; }
+        
+        /* Standard Page Title */
+        .page-title-header { padding: 40px 0; margin-bottom: 40px; border-left: 4px solid; border-image: linear-gradient(to bottom, var(--primary-glow), var(--secondary-glow)) 1; padding-left: 30px; }
+        .page-title-header h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.2; margin-bottom: 10px; }
+        .page-title-header p { font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; }
+        
+        /* --- Refined PYQ List Styling --- */
+        .pyq-list { list-style: none; padding: 0; }
+        .pyq-item { display: flex; align-items: center; justify-content: space-between; background: var(--card-bg); padding: 25px; border-radius: 12px; margin-bottom: 15px; border-left: 4px solid var(--primary-glow); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .pyq-item:hover { transform: translateY(-5px); box-shadow: 0 10px 20px var(--shadow-color); }
+        .pyq-info h3 { margin-bottom: 5px; font-size: 1.2rem; color: var(--text-primary); }
+        .pyq-info p { color: var(--text-secondary); font-size: 0.9rem; }
+        .pyq-link { color: var(--text-secondary); font-size: 1.8rem; text-decoration: none; transition: color 0.3s, transform 0.3s; }
+        .pyq-link:hover { color: var(--primary-glow); transform: scale(1.1); }
+        
+        .empty-state { grid-column: 1 / -1; text-align: center; padding: 50px; background: var(--card-bg); border-radius: 15px; border: 1px solid var(--border-color); }
+        .empty-state i { font-size: 3rem; color: var(--primary-glow); margin-bottom: 20px; display: block; }
+        .empty-state p { font-size: 1.1rem; color: var(--text-secondary); }
+
+        /* --- NEW: Skeleton Loader for PYQs --- */
+        .skeleton-pyq { display: flex; align-items: center; justify-content: space-between; background: var(--card-bg); padding: 25px; border-radius: 12px; margin-bottom: 15px; position: relative; overflow: hidden; }
+        .skeleton-pyq::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 100% { transform: translateX(100%); } }
+        .skeleton-text .line { height: 20px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 10px; }
+        .skeleton-text .line.short { width: 60%; height: 16px; }
+        .skeleton-icon { width: 30px; height: 30px; background: rgba(255,255,255,0.1); border-radius: 50%; }
+
+        @media (max-width: 768px) {
+            .page-header { flex-direction: column; gap: 20px; margin: 15px; }
+            .page-title-header { padding-left: 20px; margin-bottom: 30px; }
         }
     </style>
 </head>
 <body>
-    <header class="page-header">
-        <a href="/studentdashboard.html" class="brand-logo">
-            <img src="logo().jpg" alt="IB STUDIOZ Logo">
-            <h1 class="brand-shimmer">IB STUDIOZ</h1>
-        </a>
-        <button id="logout-btn" class="btn btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
-    </header>
-    <div class="container">
-        <h1 class="page-title">Previous Year Questions</h1>
-        <ul id="pyq-list" class="pyq-list">
-            <div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading question papers...</p></div>
-        </ul>
+    <!-- Ultra-Fast Timed Loader -->
+    <div id="fast-loader">
+        <div class="loader-content">
+            <svg class="loader-progress-ring" width="120" height="120">
+                <circle class="progress-ring-track" cx="60" cy="60" r="54" />
+                <circle class="progress-ring-bar" cx="60" cy="60" r="54" />
+            </svg>
+            <svg class="loader-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#FFD700" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" />
+                <g fill="#0A0A0A"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g>
+            </svg>
+            <span id="loader-timer">0.0s</span>
+        </div>
     </div>
+    
+    <div class="background-container">
+        <div class="aurora-layer"></div>
+        <div class="noise-layer"></div>
+    </div>
+
+    <!-- Main Page Content Wrapper -->
+    <main id="page-content" style="visibility: hidden; opacity: 0;">
+        <header class="page-header">
+            <a href="/studentdashboard.html" class="brand-logo">
+                <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" /><g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g></svg>
+                <h1 class="brand-title">IB STUDIOZ</h1>
+            </a>
+            <a href="#" id="logout-btn" class="btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </header>
+
+        <div class="container">
+            <div class="page-title-header">
+                <h1>PYQs & Question Banks</h1>
+                <p>Access a comprehensive archive of past question papers to sharpen your preparation.</p>
+            </div>
+            
+            <ul id="pyq-list" class="pyq-list">
+                <!-- Skeleton loader will be injected here -->
+            </ul>
+        </div>
+    </main>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
+    <!-- Main page logic -->
     <script>
-        const firebaseConfig = {
-          apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao",
-          authDomain: "student-portal-free.firebaseapp.com",
-          projectId: "student-portal-free",
-          storageBucket: "student-portal-free.appspot.com",
-          messagingSenderId: "272865877510",
-          appId: "1:272865877510:web:0875a2502ae55bbf9ead87"
-        };
-        const app = firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+        document.addEventListener('DOMContentLoaded', () => {
+            const firebaseConfig = {
+              apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao",
+              authDomain: "student-portal-free.firebaseapp.com",
+              projectId: "student-portal-free",
+              storageBucket: "student-portal-free.appspot.com",
+              messagingSenderId: "272865877510",
+              appId: "1:272865877510:web:0875a2502ae55bbf9ead87"
+            };
+            const app = firebase.initializeApp(firebaseConfig);
+            const auth = firebase.auth();
+            const db = firebase.firestore();
 
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                db.collection('users').doc(user.uid).get().then(doc => {
-                    if (doc.exists && doc.data().role !== 'admin') {
-                        document.body.style.visibility = 'visible';
-                        loadPYQs();
-                    } else { window.location.replace('/admindashboard.html'); }
-                }).catch(() => auth.signOut());
-            } else { window.location.replace('/index.html'); }
-        });
-
-        function loadPYQs() {
-            const list = document.getElementById('pyq-list');
-            db.collection('pyqs').orderBy('year', 'desc').get().then(snapshot => {
-                if (snapshot.empty) {
-                    list.innerHTML = `<div class="empty-state"><i class="fas fa-box-open"></i><p>No question papers have been uploaded yet.</p></div>`;
-                    return;
-                }
-                let pyqHTML = '';
-                snapshot.forEach(doc => {
-                    const pyq = doc.data();
-                    pyqHTML += `
-                        <li class="pyq-item">
-                            <div class="pyq-info">
-                                <h3>${pyq.title}</h3>
-                                <p>Course: ${pyq.courseCode} | Year: ${pyq.year}</p>
-                            </div>
-                            <a href="${pyq.downloadURL}" target="_blank" class="pyq-link" title="Download"><i class="fas fa-cloud-download-alt"></i></a>
-                        </li>`;
-                });
-                list.innerHTML = pyqHTML;
-            }).catch(err => {
-                console.error("Error loading PYQs:", err);
-                list.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Could not load PYQs.</p></div>`;
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    db.collection('users').doc(user.uid).get().then(doc => {
+                        if (doc.exists && doc.data().role !== 'admin') {
+                            loadPYQs();
+                        } else { window.location.replace('/admindashboard.html'); }
+                    }).catch(() => auth.signOut());
+                } else { window.location.replace('/index.html'); }
             });
-        }
-        document.getElementById('logout-btn').addEventListener('click', () => auth.signOut());
+            
+            const pyqList = document.getElementById('pyq-list');
+
+            function showSkeletonLoader() {
+                let skeletons = '';
+                for (let i = 0; i < 5; i++) {
+                    skeletons += `
+                        <li class="skeleton-pyq">
+                            <div class="skeleton-text" style="flex-grow: 1; margin-right: 20px;">
+                                <div class="line"></div>
+                                <div class="line short"></div>
+                            </div>
+                            <div class="skeleton-icon"></div>
+                        </li>`;
+                }
+                pyqList.innerHTML = skeletons;
+            }
+
+            async function loadPYQs() {
+                showSkeletonLoader();
+                try {
+                    const snapshot = await db.collection('pyqs').orderBy('year', 'desc').get();
+                    if (snapshot.empty) {
+                        pyqList.innerHTML = `<div class="empty-state"><i class="fas fa-box-open"></i><p>No question papers have been uploaded yet.</p></div>`;
+                        return;
+                    }
+                    let pyqHTML = '';
+                    snapshot.forEach(doc => {
+                        const pyq = doc.data();
+                        pyqHTML += `
+                            <li class="pyq-item">
+                                <div class="pyq-info">
+                                    <h3>${pyq.title}</h3>
+                                    <p>Course: ${pyq.courseCode} | Year: ${pyq.year}</p>
+                                </div>
+                                <a href="${pyq.downloadURL}" target="_blank" class="pyq-link" title="Download"><i class="fas fa-cloud-download-alt"></i></a>
+                            </li>`;
+                    });
+                    pyqList.innerHTML = pyqHTML;
+                } catch (err) {
+                    console.error("Error loading PYQs:", err);
+                    pyqList.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Could not load PYQs.</p></div>`;
+                }
+            }
+            document.getElementById('logout-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                auth.signOut();
+            });
+        });
+    </script>
+
+    <!-- Script for the timed loader -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LOADER_DURATION = 500; // 0.5 seconds
+            const loader = document.getElementById('fast-loader');
+            const content = document.getElementById('page-content');
+            const timerElement = document.getElementById('loader-timer');
+            
+            const startTime = Date.now();
+
+            const timerInterval = setInterval(() => {
+                const elapsedTime = Date.now() - startTime;
+                if (elapsedTime < LOADER_DURATION) {
+                    timerElement.textContent = (elapsedTime / 1000).toFixed(1) + 's';
+                } else {
+                    timerElement.textContent = (LOADER_DURATION / 1000).toFixed(1) + 's';
+                    clearInterval(timerInterval);
+                }
+            }, 50);
+
+            setTimeout(() => {
+                if (loader) {
+                    loader.style.opacity = '0';
+                    loader.style.visibility = 'hidden';
+                }
+                if (content) {
+                    content.classList.add('visible');
+                }
+            }, LOADER_DURATION);
+        });
     </script>
 </body>
 </html>
