@@ -14,71 +14,138 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
+        /* --- Base & Background Styles (same as before) --- */
         :root {
             --primary-glow: #FFD700; --secondary-glow: #00A2FF; --dark-bg: #0A0A0A;
             --text-primary: #F0F0F0; --text-secondary: #A0A0A0; --card-bg: rgba(22, 22, 22, 0.8);
             --border-color: rgba(255, 215, 0, 0.2); --shadow-color: rgba(0, 0, 0, 0.5);
+            --primary-glow-transparent: rgba(255, 215, 0, 0.15);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', sans-serif; background-color: var(--dark-bg);
             color: var(--text-primary); line-height: 1.6;
-            opacity: 0;
-            animation: page-fade-in 0.4s ease-out forwards;
+            opacity: 0; animation: page-fade-in 0.4s ease-out forwards;
         }
-        @keyframes page-fade-in { 
-            to { opacity: 1; } 
-        }
-        
+        @keyframes page-fade-in { to { opacity: 1; } }
         .background-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
         .aurora-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 10% 20%, var(--primary-glow) 0%, transparent 25%), radial-gradient(circle at 80% 30%, var(--secondary-glow) 0%, transparent 30%), radial-gradient(circle at 50% 80%, var(--primary-glow) 0%, transparent 25%); animation: aurora-morph 40s linear infinite alternate; filter: blur(120px); opacity: 0.2; }
         @keyframes aurora-morph { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1.8); } }
-        .noise-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>'); opacity: 0.015; }
+        .noise-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.015; }
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        /* --- Header Styles (same as before) --- */
         .page-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; margin: 20px; background: rgba(16,16,16,0.6); backdrop-filter: blur(20px); border-radius: 15px; border: 1px solid var(--border-color); }
         .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; }
         .header-logo-svg { width: 45px; height: auto; }
         .brand-title { position: relative; font-size: 1.5rem; font-weight: 700; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: rgb-text-flow 6s linear infinite; }
         .brand-title::before { content: 'IB STUDIOZ'; position: absolute; top: 0; left: 0; z-index: -1; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; filter: blur(20px) opacity(0.9); transform: scale(1.1); animation: rgb-text-flow 6s linear infinite; }
         @keyframes rgb-text-flow { to { background-position: 400% 0; } }
-        .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 10px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
+        .btn, .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 10px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
         .btn-secondary:hover { background: var(--primary-glow); color: var(--dark-bg); border-color: var(--primary-glow); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
         .btn-secondary .fas { margin-right: 8px; }
+        .btn-primary { background: var(--primary-glow); color: var(--dark-bg); font-weight: 600; width: 100%; text-align: center; }
+        .btn-primary:hover { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+        
+        /* --- Page Title Styles (same as before) --- */
         .page-title-header { padding: 40px 0; margin-bottom: 40px; border-left: 4px solid; border-image: linear-gradient(to bottom, var(--primary-glow), var(--secondary-glow)) 1; padding-left: 30px; }
         .page-title-header h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.2; margin-bottom: 10px; }
         .page-title-header p { font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; }
-        .materials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
-        .material-card { background: var(--card-bg); border-radius: 15px; border: 1px solid var(--border-color); padding: 30px 25px; text-decoration: none; box-shadow: 0 8px 32px 0 var(--shadow-color); transition: transform 0.3s ease, border-color 0.3s ease; display: flex; flex-direction: column; }
-        .material-card:hover { transform: translateY(-8px); border-color: var(--primary-glow); }
-        .material-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
-        .material-icon { font-size: 2.2rem; color: var(--primary-glow); transition: transform 0.3s ease; }
-        .material-card:hover .material-icon { transform: scale(1.1); }
-        .material-card-arrow { font-size: 1.5rem; color: var(--text-secondary); opacity: 0; transform: translateX(-10px); transition: all 0.3s ease; }
-        .material-card:hover .material-card-arrow { opacity: 1; transform: translateX(0); }
-        .material-info { flex-grow: 1; }
-        .material-title { font-size: 1.3rem; margin-bottom: 8px; color: var(--text-primary); }
-        .material-meta { font-size: 0.9rem; color: var(--text-secondary); }
-        .material-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px; }
+
+        /* --- UPDATED: Grid and Card Styling --- */
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .material-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .material-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 25px var(--primary-glow-transparent);
+        }
+
+        .card-thumbnail img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .card-body {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .card-meta {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .card-footer {
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         .tag { padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
         .tag-free { background-color: rgba(16, 185, 129, 0.2); color: #10B981; }
         .tag-premium { background-color: rgba(255, 179, 71, 0.2); color: #ffb347; }
-        .material-action-icon { font-size: 1.5rem; color: var(--text-secondary); }
-        .material-card:hover .material-action-icon { color: var(--primary-glow); }
-        .empty-state { grid-column: 1 / -1; text-align: center; padding: 50px; background: var(--card-bg); border-radius: 15px; border: 1px solid var(--border-color); }
+        
+        .empty-state, .skeleton-grid { grid-column: 1 / -1; }
+        .empty-state { text-align: center; padding: 50px; background: var(--card-bg); border-radius: 15px; border: 1px solid var(--border-color); }
         .empty-state i { font-size: 3rem; color: var(--primary-glow); margin-bottom: 20px; display: block; }
-        .empty-state p { font-size: 1.1rem; color: var(--text-secondary); }
-        .skeleton { background: rgba(255,255,255,0.05); border-radius: 15px; padding: 30px 25px; position: relative; overflow: hidden; }
-        .skeleton::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); animation: shimmer 1.5s infinite; }
-        @keyframes shimmer { 100% { transform: translateX(100%); } }
-        .skeleton-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .skeleton-icon { width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 8px; }
-        .skeleton-line { height: 20px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 10px; }
-        .skeleton-line.short { width: 60%; }
-        @media (max-width: 768px) {
-            .page-header { flex-direction: column; gap: 20px; margin: 15px; }
-            .page-title-header { padding-left: 20px; margin-bottom: 30px; }
+        
+        /* --- NEW: Modal (Popup) Styling --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 1000; opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease;
         }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            background: var(--dark-bg); padding: 30px; border-radius: 15px;
+            border: 1px solid var(--border-color); width: 90%; max-width: 900px;
+            max-height: 90vh; display: flex; flex-direction: column; position: relative;
+            transform: scale(0.95); transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-close {
+            position: absolute; top: 15px; right: 20px; background: none; border: none;
+            color: var(--text-primary); font-size: 2rem; cursor: pointer;
+        }
+        .modal-header { margin-bottom: 20px; }
+        #modal-title { font-size: 1.8rem; margin-bottom: 5px; }
+        #modal-courseCode, #modal-description { color: var(--text-secondary); }
+        #modal-description { margin-top: 10px; }
+        .modal-body { flex-grow: 1; overflow-y: auto; margin-bottom: 20px;}
+        #modal-embed-preview { border-radius: 8px; }
     </style>
 </head>
 <body>
@@ -95,13 +162,31 @@
         <div class="container">
             <div class="page-title-header">
                 <h1>Study Materials</h1>
-                <p>Your central hub for course notes, e-books, and essential learning resources.</p>
+                <p>Your central hub for course notes, e-books, and essential learning resources with previews.</p>
             </div>
             <div id="materials-grid" class="materials-grid">
-                <!-- Skeletons will be injected here by JS -->
+                <!-- Skeletons or material cards will be injected here by JS -->
             </div>
         </div>
     </main>
+
+    <!-- MODAL FOR DETAILS VIEW -->
+    <div id="details-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="modal-close-btn" class="modal-close">&times;</button>
+            <div class="modal-header">
+                <h2 id="modal-title"></h2>
+                <p><strong>Course Code:</strong> <span id="modal-courseCode"></span></p>
+                <p id="modal-description"></p>
+            </div>
+            <div class="modal-body">
+                <iframe id="modal-embed-preview" src="" width="100%" height="500" frameborder="0"></iframe>
+            </div>
+            <a id="modal-download-btn" href="#" target="_blank" class="btn btn-primary">
+                <i class="fas fa-download"></i> Download File
+            </a>
+        </div>
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -110,7 +195,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const grid = document.getElementById('materials-grid');
-            
+            const modal = document.getElementById('details-modal');
+            const closeBtn = document.getElementById('modal-close-btn');
+
             const firebaseConfig = { apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao", authDomain: "student-portal-free.firebaseapp.com", projectId: "student-portal-free", storageBucket: "student-portal-free.appspot.com", messagingSenderId: "272865877510", appId: "1:272865877510:web:0875a2502ae55bbf9ead87" };
             firebase.initializeApp(firebaseConfig);
             const auth = firebase.auth();
@@ -118,47 +205,108 @@
 
             auth.onAuthStateChanged(user => {
                 if (user) {
-                    db.collection('users').doc(user.uid).get().then(doc => {
-                        if (doc.exists && doc.data().role !== 'admin') {
-                            loadMaterials();
-                        } else {
-                            window.location.replace(doc.exists ? '/admindashboard.html' : '/index.html');
-                        }
-                    }).catch(() => auth.signOut());
+                    loadMaterials();
                 } else {
                     window.location.replace('/index.html');
                 }
             });
-
+            
             function showSkeletonLoader() {
                 let skeletons = '';
                 for (let i = 0; i < 6; i++) {
-                    skeletons += `<div class="skeleton"><div class="skeleton-header"><div class="skeleton-icon"></div></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>`;
+                    skeletons += `
+                        <div class="material-card" style="background: rgba(255,255,255,0.05);">
+                            <div class="card-thumbnail" style="background: rgba(255,255,255,0.1); height: 200px;"></div>
+                            <div class="card-body">
+                                <div style="height: 24px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 10px;"></div>
+                                <div style="height: 16px; background: rgba(255,255,255,0.1); border-radius: 4px; width: 60%;"></div>
+                            </div>
+                        </div>`;
                 }
                 grid.innerHTML = skeletons;
+            }
+
+            function getGoogleDriveEmbedUrl(shareUrl) {
+                if (!shareUrl) return '';
+                const fileIdMatch = shareUrl.match(/d\/([a-zA-Z0-9_-]{25,})/);
+                if (fileIdMatch && fileIdMatch[1]) {
+                    return `https://drive.google.com/file/d/${fileIdMatch[1]}/preview`;
+                }
+                return shareUrl;
             }
 
             async function loadMaterials() {
                 showSkeletonLoader();
                 try {
                     const snapshot = await db.collection('materials').orderBy('uploadedAt', 'desc').get();
-                    let materialsHTML = '';
+                    
                     if (snapshot.empty) {
-                        materialsHTML = `<div class="empty-state"><i class="fas fa-box-open"></i><p>No study materials have been uploaded yet.</p></div>`;
-                    } else {
-                        snapshot.forEach(doc => {
-                            const material = doc.data();
-                            const isPremium = material.isPaid || false;
-                            materialsHTML += `<a href="${isPremium ? '#' : material.downloadURL}" class="material-card" ${isPremium ? 'onclick="alert(\'This is a premium resource! Please contact the admin for access.\')"' : 'target="_blank" rel="noopener noreferrer"'}><div class="material-card-header"><div class="material-icon"><i class="fas fa-book-open"></i></div><span class="material-card-arrow">→</span></div><div class="material-info"><h3 class="material-title">${material.title}</h3><p class="material-meta">Course: ${material.courseCode}</p></div><div class="material-footer"><span class="tag ${isPremium ? 'tag-premium' : 'tag-free'}">${isPremium ? 'Premium' : 'Free'}</span><i class="fas ${isPremium ? 'fa-lock' : 'fa-download'} material-action-icon"></i></div></a>`;
-                        });
+                        grid.innerHTML = `<div class="empty-state"><i class="fas fa-box-open"></i><p>No study materials have been uploaded yet.</p></div>`;
+                        return;
                     }
-                    grid.innerHTML = materialsHTML;
+
+                    grid.innerHTML = ''; // Clear skeletons
+                    snapshot.forEach(doc => {
+                        const material = doc.data();
+                        const card = document.createElement('div');
+                        card.className = 'material-card';
+
+                        // Store data in dataset for the modal
+                        card.dataset.title = material.title || 'No Title';
+                        card.dataset.courseCode = material.courseCode || 'N/A';
+                        card.dataset.description = material.description || 'No description available.';
+                        card.dataset.downloadUrl = material.downloadURL;
+                        card.dataset.embedUrl = getGoogleDriveEmbedUrl(material.downloadURL);
+                        card.dataset.isPaid = material.isPaid || false;
+
+                        card.innerHTML = `
+                            <div class="card-thumbnail">
+                                <img src="${material.thumbnailURL || 'https://via.placeholder.com/400x250.png?text=No+Preview'}" alt="${material.title} preview">
+                            </div>
+                            <div class="card-body">
+                                <h3 class="card-title">${material.title}</h3>
+                                <p class="card-meta">Course: ${material.courseCode}</p>
+                                <div class="card-footer">
+                                    <span class="tag ${material.isPaid ? 'tag-premium' : 'tag-free'}">${material.isPaid ? 'Premium' : 'Free'}</span>
+                                    <i class="fas ${material.isPaid ? 'fa-lock' : 'fa-eye'}"></i>
+                                </div>
+                            </div>
+                        `;
+
+                        card.addEventListener('click', () => {
+                            if (card.dataset.isPaid === 'true') {
+                                alert('This is a premium resource! Please contact the admin for access.');
+                                return;
+                            }
+                            
+                            document.getElementById('modal-title').textContent = card.dataset.title;
+                            document.getElementById('modal-courseCode').textContent = card.dataset.courseCode;
+                            document.getElementById('modal-description').textContent = card.dataset.description;
+                            document.getElementById('modal-download-btn').href = card.dataset.downloadUrl;
+                            document.getElementById('modal-embed-preview').src = card.dataset.embedUrl;
+                            modal.classList.add('active');
+                        });
+                        grid.appendChild(card);
+                    });
+
                 } catch (err) {
                     console.error("Error loading materials:", err);
                     grid.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Could not load materials. Please try again later.</p></div>`;
                 }
             }
             
+            const closeModal = () => {
+                modal.classList.remove('active');
+                document.getElementById('modal-embed-preview').src = ''; // Stop background loading
+            };
+
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
             document.getElementById('logout-btn').addEventListener('click', (e) => {
                 e.preventDefault();
                 auth.signOut();
@@ -166,4 +314,4 @@
         });
     </script>
 </body>
-</html>
+</html>```
