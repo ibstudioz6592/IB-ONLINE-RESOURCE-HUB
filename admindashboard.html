@@ -17,16 +17,57 @@
         :root {
             --primary-glow: #FFD700; --secondary-glow: #00A2FF; --dark-bg: #0A0A0A;
             --text-primary: #F0F0F0; --text-secondary: #A0A0A0; --card-bg: rgba(22, 22, 22, 0.8);
-            --border-color: rgba(255, 215, 0, 0.2); --shadow-color: rgba(0, 0, 0, 0.5);
+            --border-color: rgba(2, 215, 0, 0.2); --shadow-color: rgba(0, 0, 0, 0.5);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', sans-serif; background-color: var(--dark-bg);
-            color: var(--text-primary); line-height: 1.6; visibility: hidden; opacity: 0;
-            animation: page-fade-in 0.5s ease-out forwards;
+            color: var(--text-primary); line-height: 1.6;
+            /* REMOVED: Old fade-in animation */
         }
-        @keyframes page-fade-in { to { opacity: 1; } }
+
+        /* --- NEW: Ultra-Fast Timed Loader --- */
+        #fast-loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--dark-bg);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 10002; transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
+        }
+        .loader-content {
+            position: relative; display: flex; justify-content: center;
+            align-items: center; flex-direction: column;
+        }
+        .loader-logo {
+            width: 80px; height: 80px; position: absolute;
+        }
+        .loader-progress-ring {
+            position: absolute; transform: rotate(-90deg);
+        }
+        .progress-ring-track {
+            fill: transparent; stroke: rgba(255, 255, 255, 0.1); stroke-width: 4;
+        }
+        .progress-ring-bar {
+            fill: transparent; stroke: white; stroke-width: 4; stroke-linecap: round;
+            stroke-dasharray: 339.3 339.3; stroke-dashoffset: 339.3;
+            animation: draw-circle 0.5s ease-out forwards;
+        }
+        @keyframes draw-circle {
+            to { stroke-dashoffset: 0; }
+        }
+        #loader-timer {
+            margin-top: 150px; font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem; color: var(--text-secondary);
+        }
+
+        /* --- Page Content Visibility --- */
+        #page-content {
+            visibility: hidden; opacity: 0;
+            transition: opacity 0.4s ease-in, visibility 0.4s ease-in;
+        }
+        #page-content.visible {
+            visibility: visible; opacity: 1;
+        }
 
         .background-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
         .aurora-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 10% 20%, var(--primary-glow) 0%, transparent 25%), radial-gradient(circle at 80% 30%, var(--secondary-glow) 0%, transparent 30%), radial-gradient(circle at 50% 80%, var(--primary-glow) 0%, transparent 25%); animation: aurora-morph 40s linear infinite alternate; filter: blur(120px); opacity: 0.2; }
@@ -36,7 +77,6 @@
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         .hidden { display: none !important; }
 
-        /* --- HEADER & SPECTACULAR RGB TITLE --- */
         .page-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; margin: 20px; background: rgba(16,16,16,0.6); backdrop-filter: blur(20px); border-radius: 15px; border: 1px solid var(--border-color); }
         .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; }
         .header-logo-svg { width: 45px; height: auto; }
@@ -47,13 +87,11 @@
         .btn-secondary:hover { background: var(--primary-glow); color: var(--dark-bg); border-color: var(--primary-glow); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
         .btn-secondary .fas { margin-right: 8px; }
 
-        /* --- PROFESSIONAL WELCOME HEADER --- */
         .welcome-header-pro { padding: 40px 0; margin-bottom: 40px; text-align: left; border-left: 4px solid; border-image: linear-gradient(to bottom, var(--primary-glow), var(--secondary-glow)) 1; padding-left: 30px; }
         .welcome-header-pro h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.2; margin-bottom: 10px; }
         #admin-name { color: var(--primary-glow); }
         .welcome-header-pro p { font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; }
         
-        /* --- HIGH-PERFORMANCE DASHBOARD GRID --- */
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 50px; }
         .nav-card { background: var(--card-bg); border-radius: 15px; border: 1px solid var(--border-color); padding: 30px 25px; text-decoration: none; box-shadow: 0 8px 32px 0 rgba(0,0,0,0.3); transition: transform 0.3s ease, border-color 0.3s ease; cursor: pointer; opacity: 0; animation: card-fade-in 0.5s ease-out forwards; }
         @keyframes card-fade-in { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
@@ -67,7 +105,6 @@
         .nav-card h3 { font-size: 1.3rem; margin-bottom: 8px; color: var(--text-primary); text-align: left; }
         .nav-card p { color: var(--text-secondary); font-size: 0.9rem; text-align: left; }
         
-        /* --- MANAGE USERS MODAL --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,10,10,0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 15px; width: 90%; max-width: 800px; padding: 30px; box-shadow: 0 8px 32px 0 var(--shadow-color); transform: scale(0.95); transition: transform 0.3s ease; }
@@ -89,54 +126,73 @@
     </style>
 </head>
 <body>
+    <!-- NEW: Ultra-Fast Timed Loader -->
+    <div id="fast-loader">
+        <div class="loader-content">
+            <svg class="loader-progress-ring" width="120" height="120">
+                <circle class="progress-ring-track" cx="60" cy="60" r="54" />
+                <circle class="progress-ring-bar" cx="60" cy="60" r="54" />
+            </svg>
+            <svg class="loader-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#FFD700" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" />
+                <g fill="#0A0A0A"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g>
+            </svg>
+            <span id="loader-timer">0.0s</span>
+        </div>
+    </div>
+
     <div class="background-container">
         <div class="aurora-layer"></div>
         <div class="noise-layer"></div>
     </div>
 
-    <header class="page-header">
-        <a href="/admindashboard.html" class="brand-logo">
-            <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" /><g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g></svg>
-            <h1 class="brand-title">IB STUDIOZ</h1>
-        </a>
-        <button id="logout-btn" class="btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
-    </header>
+    <!-- UPDATED: Wrapped all content in the page-content main tag -->
+    <main id="page-content" style="visibility: hidden; opacity: 0;">
+        <header class="page-header">
+            <a href="/admindashboard.html" class="brand-logo">
+                <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" /><g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g></svg>
+                <h1 class="brand-title">IB STUDIOZ</h1>
+            </a>
+            <button id="logout-btn" class="btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </header>
 
-    <div class="container">
-        <div class="welcome-header-pro">
-            <h1>Admin Control Panel</h1>
-            <p>Welcome, <span id="admin-name">Admin</span>. Manage your platform resources and users with precision.</p>
+        <div class="container">
+            <div class="welcome-header-pro">
+                <h1>Admin Control Panel</h1>
+                <p>Welcome, <span id="admin-name">Admin</span>. Manage your platform resources and users with precision.</p>
+            </div>
+            <section class="dashboard-grid">
+                <a href="/upload.html" class="nav-card" style="--card-color: #2575fc;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fas fa-upload"></i></div><span class="nav-card-arrow">→</span></div><h3>Upload Materials</h3><p>Add notes, PYQs, and seminar links.</p></a>
+                <div id="manage-users-card" class="nav-card" style="--card-color: #00b09b;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fas fa-users-cog"></i></div><span class="nav-card-arrow">→</span></div><h3>Manage Users</h3><p>View, modify, or remove student accounts.</p></div>
+                <a href="#" class="nav-card" style="--card-color: #A18CD1;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fas fa-chart-bar"></i></div><span class="nav-card-arrow">→</span></div><h3>View Analytics</h3><p>Check resource usage and platform stats.</p></a>
+            </section>
         </div>
-        <section class="dashboard-grid">
-            <a href="/upload.html" class="nav-card" style="--card-color: #2575fc;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fas fa-upload"></i></div><span class="nav-card-arrow">→</span></div><h3>Upload Materials</h3><p>Add notes, PYQs, and seminar links.</p></a>
-            <div id="manage-users-card" class="nav-card" style="--card-color: #00b09b;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fas fa-users-cog"></i></div><span class="nav-card-arrow">→</span></div><h3>Manage Users</h3><p>View, modify, or remove student accounts.</p></div>
-            <a href="#" class="nav-card" style="--card-color: #A18CD1;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fas fa-chart-bar"></i></div><span class="nav-card-arrow">→</span></div><h3>View Analytics</h3><p>Check resource usage and platform stats.</p></a>
-        </section>
-    </div>
 
-    <!-- Manage Users Modal -->
-    <div id="users-modal" class="modal-overlay">
-        <div class="modal">
-            <div class="modal-header">
-                <h2>Manage Student Users</h2>
-                <button id="modal-close-btn" class="modal-close">&times;</button>
-            </div>
-            <div class="users-list" id="users-list-container">
-                <!-- User items will be dynamically inserted here -->
+        <div id="users-modal" class="modal-overlay">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2>Manage Student Users</h2>
+                    <button id="modal-close-btn" class="modal-close">&times;</button>
+                </div>
+                <div class="users-list" id="users-list-container">
+                    <!-- User items will be dynamically inserted here -->
+                </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
+    <!-- Main page logic -->
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao", authDomain: "student-portal-free.firebaseapp.com", projectId: "student-portal-free", storageBucket: "student-portal-free.appspot.com", messagingSenderId: "272865877510", appId: "1:272865877510:web:0875a2502ae55bbf9ead87" };
-        const app = firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        
         document.addEventListener('DOMContentLoaded', () => {
+            const firebaseConfig = { apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao", authDomain: "student-portal-free.firebaseapp.com", projectId: "student-portal-free", storageBucket: "student-portal-free.appspot.com", messagingSenderId: "272865877510", appId: "1:272865877510:web:0875a2502ae55bbf9ead87" };
+            const app = firebase.initializeApp(firebaseConfig);
+            const auth = firebase.auth();
+            const db = firebase.firestore();
+            
             const adminNameEl = document.getElementById('admin-name');
             const logoutBtn = document.getElementById('logout-btn');
             const manageUsersCard = document.getElementById('manage-users-card');
@@ -144,16 +200,14 @@
             const modalCloseBtn = document.getElementById('modal-close-btn');
             const usersListContainer = document.getElementById('users-list-container');
 
-            // --- Authentication and Core Logic ---
             auth.onAuthStateChanged(user => {
                 if (user) {
                     db.collection('users').doc(user.uid).get().then(doc => {
                         if (doc.exists && doc.data().role === 'admin') {
                             const firstName = doc.data().name.split(' ')[0];
                             adminNameEl.textContent = firstName;
-                            document.body.style.visibility = 'visible';
+                            // REMOVED: document.body.style.visibility = 'visible';
                         } else {
-                            // Non-admin user trying to access, redirect them
                             window.location.replace('/studentdashboard.html');
                         }
                     }).catch(() => auth.signOut());
@@ -163,7 +217,6 @@
             });
             logoutBtn.addEventListener('click', () => auth.signOut());
 
-            // --- Manage Users Modal Logic ---
             const openModal = () => usersModal.classList.add('active');
             const closeModal = () => usersModal.classList.remove('active');
 
@@ -173,7 +226,7 @@
             });
             modalCloseBtn.addEventListener('click', closeModal);
             usersModal.addEventListener('click', (e) => {
-                if (e.target === usersModal) closeModal(); // Close if clicking on the overlay
+                if (e.target === usersModal) closeModal();
             });
 
             async function loadUsers() {
@@ -184,8 +237,7 @@
                         usersListContainer.innerHTML = '<p>No student users found.</p>';
                         return;
                     }
-
-                    usersListContainer.innerHTML = ''; // Clear loading text
+                    usersListContainer.innerHTML = '';
                     snapshot.forEach(doc => {
                         const user = doc.data();
                         const userEl = document.createElement('div');
@@ -204,17 +256,14 @@
                 }
             }
 
-            // --- User Deletion Logic (Event Delegation) ---
             usersListContainer.addEventListener('click', async (e) => {
                 if (e.target.classList.contains('btn-danger')) {
                     const uidToDelete = e.target.dataset.uid;
                     if (confirm(`Are you sure you want to delete this user? This action cannot be undone.`)) {
                         try {
-                            // Note: Deleting from Firestore does NOT delete from Firebase Auth.
-                            // For a full solution, you would need a Cloud Function to handle Auth deletion.
                             await db.collection('users').doc(uidToDelete).delete();
                             alert('User deleted from Firestore successfully.');
-                            loadUsers(); // Refresh the list
+                            loadUsers();
                         } catch (error) {
                             console.error("Error deleting user:", error);
                             alert('Failed to delete user.');
@@ -222,6 +271,38 @@
                     }
                 }
             });
+        });
+    </script>
+    
+    <!-- NEW: Script for the timed loader -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const LOADER_DURATION = 500; // 0.5 seconds
+            const loader = document.getElementById('fast-loader');
+            const content = document.getElementById('page-content');
+            const timerElement = document.getElementById('loader-timer');
+            
+            const startTime = Date.now();
+
+            const timerInterval = setInterval(() => {
+                const elapsedTime = Date.now() - startTime;
+                if (elapsedTime < LOADER_DURATION) {
+                    timerElement.textContent = (elapsedTime / 1000).toFixed(1) + 's';
+                } else {
+                    timerElement.textContent = (LOADER_DURATION / 1000).toFixed(1) + 's';
+                    clearInterval(timerInterval);
+                }
+            }, 50);
+
+            setTimeout(() => {
+                if (loader) {
+                    loader.style.opacity = '0';
+                    loader.style.visibility = 'hidden';
+                }
+                if (content) {
+                    content.classList.add('visible');
+                }
+            }, LOADER_DURATION);
         });
     </script>
 </body>
