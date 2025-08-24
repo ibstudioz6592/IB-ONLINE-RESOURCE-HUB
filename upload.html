@@ -4,50 +4,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Content | Admin Panel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- NEW: Favicon matching the IB Studioz Logo -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23FFD700' d='M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z' /%3E%3Cg fill='%230A0A0A'%3E%3Cpath d='M28,25 h10 v50 h-10 Z' /%3E%3Cpath d='M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z' /%3E%3C/g%E3C/svg%3E">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- UPDATED: Font to match admindashboard.html -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        :root { --primary: #FFC300; --dark: #121212; --text-primary: #ffffff; --text-secondary: rgba(255, 255, 255, 0.7); --card-bg: rgba(20, 20, 20, 0.5); --border-color: rgba(255, 195, 0, 0.2); --success: #00b09b; --danger: #ff416c; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
-        body { font-family: "Poppins", sans-serif; background-color: var(--dark); color: var(--text-primary); min-height: 100vh; line-height: 1.6; background-attachment: fixed; visibility: hidden; }
-        .aurora-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
-        .container { max-width: 800px; margin: 30px auto; padding: 30px; }
-        .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; color: var(--text-primary); }
-        .brand-logo img { width: 50px; height: auto; }
-        .brand-logo h1 { font-size: 1.5rem; font-weight: 600; margin: 0; }
-        .brand-shimmer { background: linear-gradient(120deg, var(--primary) 20%, #fff 40%, #fff 60%, var(--primary) 80%); background-size: 200% auto; color: transparent; -webkit-background-clip: text; background-clip: text; animation: shimmer 4s linear infinite; }
-        .btn { display: inline-block; padding: 12px 30px; border-radius: 10px; border: none; font-size: 1rem; font-weight: 500; cursor: pointer; text-align: center; text-decoration: none; }
-        .btn-primary { background: var(--primary); color: var(--dark); }
-        .btn-secondary { background: transparent; border: 2px solid var(--primary); color: var(--primary); padding: 8px 20px; }
-        .page-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: rgba(18, 18, 18, 0.4); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); }
-        .page-title { font-size: 2.5rem; margin-bottom: 30px; text-align: center; background: linear-gradient(90deg, #fff, var(--primary)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .upload-form { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 15px; padding: 30px; border: 1px solid var(--border-color); }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
-        input, select, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background-color: rgba(0,0,0,0.2); color: var(--text-primary); font-size: 1rem; }
-        .checkbox-group { display: flex; align-items: center; gap: 10px; }
+        /* UPDATED: Styles to match admindashboard.html */
+        :root {
+            --primary-glow: #FFD700; --secondary-glow: #00A2FF; --dark-bg: #0A0A0A;
+            --text-primary: #F0F0F0; --text-secondary: #A0A0A0; --card-bg: rgba(22, 22, 22, 0.8);
+            --border-color: rgba(255, 215, 0, 0.2); --shadow-color: rgba(0, 0, 0, 0.5);
+            --success: #2ecc71; --danger: #e74c3c;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif; background-color: var(--dark-bg);
+            color: var(--text-primary); line-height: 1.6;
+            opacity: 0;
+            animation: page-fade-in 0.5s ease-out forwards;
+        }
+        @keyframes page-fade-in { to { opacity: 1; } }
+
+        .background-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
+        .aurora-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 10% 20%, var(--primary-glow) 0%, transparent 25%), radial-gradient(circle at 80% 30%, var(--secondary-glow) 0%, transparent 30%), radial-gradient(circle at 50% 80%, var(--primary-glow) 0%, transparent 25%); animation: aurora-morph 40s linear infinite alternate; filter: blur(120px); opacity: 0.2; }
+        @keyframes aurora-morph { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1.8); } }
+        .noise-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>'); opacity: 0.015; }
+
+        .container { max-width: 800px; margin: 30px auto; padding: 20px; }
+        
+        .page-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; margin: 20px; background: rgba(16,16,16,0.6); backdrop-filter: blur(20px); border-radius: 15px; border: 1px solid var(--border-color); }
+        .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; }
+        .header-logo-svg { width: 45px; height: auto; }
+        .brand-title { position: relative; font-size: 1.5rem; font-weight: 700; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: rgb-text-flow 6s linear infinite; }
+        .brand-title::before { content: 'IB STUDIOZ'; position: absolute; top: 0; left: 0; z-index: -1; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; filter: blur(20px) opacity(0.9); transform: scale(1.1); animation: rgb-text-flow 6s linear infinite; }
+        @keyframes rgb-text-flow { to { background-position: 400% 0; } }
+        
+        .btn { padding: 10px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; border: none; }
+        .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); }
+        .btn-secondary:hover { background: var(--primary-glow); color: var(--dark-bg); border-color: var(--primary-glow); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+        .btn-secondary .fas { margin-right: 8px; }
+        .btn-primary { background: var(--primary-glow); color: var(--dark-bg); font-weight: 600; width: 100%; }
+        .btn-primary:hover { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+        .btn-primary:disabled { background: var(--text-secondary); cursor: not-allowed; }
+        .btn-primary .spinner { display: none; width: 18px; height: 18px; border: 2px solid var(--dark-bg); border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto; }
+        .btn-primary.loading .spinner { display: block; }
+        .btn-primary.loading .btn-text { display: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .page-title { text-align: center; font-size: 2.2rem; margin-bottom: 30px; font-weight: 700; color: var(--text-primary); }
+        .upload-form { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 15px; padding: 40px; border: 1px solid var(--border-color); }
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; margin-bottom: 10px; font-weight: 500; color: var(--text-secondary); }
+        .form-group label .fas, .form-group label .fab { margin-right: 10px; color: var(--primary-glow); }
+        input, select, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background-color: rgba(0,0,0,0.3); color: var(--text-primary); font-family: 'Inter', sans-serif; font-size: 1rem; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary-glow); box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+        .checkbox-group { display: flex; align-items: center; gap: 12px; }
         .checkbox-group input { width: auto; }
-        .message { text-align: center; padding: 15px; border-radius: 8px; margin-top: 20px; display: none; }
-        .message.success { background-color: rgba(0, 176, 155, 0.2); color: var(--success); }
-        .message.error { background-color: rgba(255, 65, 108, 0.2); color: var(--danger); }
+        .message { text-align: center; padding: 15px; border-radius: 8px; margin-top: 20px; display: none; font-weight: 500; }
+        .message.success { background-color: rgba(46, 204, 113, 0.15); border: 1px solid var(--success); color: var(--success); }
+        .message.error { background-color: rgba(231, 76, 60, 0.15); border: 1px solid var(--danger); color: var(--danger); }
         
         @media (max-width: 768px) {
-            .page-header { flex-direction: column; gap: 15px; }
-            .page-title { font-size: 2rem; }
-            .container { padding: 20px; margin: 20px auto; }
+            .page-header { flex-direction: column; gap: 20px; margin: 15px; }
+            .container { margin: 20px; padding: 0; }
+            .upload-form { padding: 30px; }
         }
     </style>
 </head>
 <body>
+    <div class="background-container"><div class="aurora-layer"></div><div class="noise-layer"></div></div>
+    
     <header class="page-header">
         <a href="/admindashboard.html" class="brand-logo">
-            <img src="logo().jpg" alt="IB STUDIOZ Logo">
-            <h1 class="brand-shimmer">IB STUDIOZ </h1>
+            <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" /><g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g></svg>
+            <h1 class="brand-title">IB STUDIOZ</h1>
         </a>
         <button id="logout-btn" class="btn btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
     </header>
-    <div class="container">
+
+    <main class="container">
         <h1 class="page-title">Upload New Content</h1>
         <form id="upload-form" class="upload-form" novalidate>
             <div class="form-group">
@@ -77,84 +120,126 @@
                 <input type="number" id="year" placeholder="e.g., 2024">
             </div>
             <div class="form-group checkbox-group" id="paid-group" style="display:none;">
-                <input type="checkbox" id="isPaid" style="width: auto;">
+                <input type="checkbox" id="isPaid">
                 <label for="isPaid">This is a Premium / Paid resource</label>
             </div>
-            <button type="submit" class="btn btn-primary" style="width:100%;">Upload Content</button>
+            <button type="submit" id="submit-btn" class="btn btn-primary">
+                <span class="btn-text">Upload Content</span>
+                <div class="spinner"></div>
+            </button>
             <div id="form-message" class="message"></div>
         </form>
-    </div>
+         <a href="/admindashboard.html" class="btn btn-secondary" style="width: 100%; text-align: center; margin-top: 20px;"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+    </main>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script>
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao",
-            authDomain: "student-portal-free.firebaseapp.com",
-            projectId: "student-portal-free",
-            storageBucket: "student-portal-free.appspot.com",
-            messagingSenderId: "272865877510",
-            appId: "1:272865877510:web:0875a2502ae55bbf9ead87"
-        };
+        document.addEventListener('DOMContentLoaded', () => {
+            const firebaseConfig = { apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao", authDomain: "student-portal-free.firebaseapp.com", projectId: "student-portal-free", storageBucket: "student-portal-free.appspot.com", messagingSenderId: "272865877510", appId: "1:272865877510:web:0875a2502ae55bbf9ead87" };
+            firebase.initializeApp(firebaseConfig);
+            const auth = firebase.auth();
+            const db = firebase.firestore();
 
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        auth.onAuthStateChanged(user => {
-            if (user) {
+            auth.onAuthStateChanged(user => {
+                if (!user) {
+                    window.location.replace('/index.html');
+                    return;
+                }
                 db.collection('users').doc(user.uid).get().then(doc => {
-                    if (doc.exists && doc.data().role === 'admin') {
-                        document.body.style.visibility = 'visible';
-                    } else { window.location.replace('/studentdashboard.html'); }
+                    if (!doc.exists || doc.data().role !== 'admin') {
+                        window.location.replace('/studentdashboard.html');
+                    }
                 });
-            } else { window.location.replace('/index.html'); }
-        });
-
-        const contentTypeSelect = document.getElementById('contentType'), yearGroup = document.getElementById('year-group'), paidGroup = document.getElementById('paid-group'), detailsLabel = document.getElementById('details-label'), urlLabel = document.getElementById('url-label');
-        contentTypeSelect.addEventListener('change', () => {
-            const type = contentTypeSelect.value;
-            yearGroup.style.display = type === 'pyqs' ? 'block' : 'none';
-            paidGroup.style.display = type === 'materials' ? 'flex' : 'none';
-            if (type === 'seminars') { detailsLabel.innerHTML = '<i class="fas fa-user-tie"></i> Speaker Name'; urlLabel.innerHTML = '<i class="fab fa-youtube"></i> YouTube Embed URL'; }
-            else if (type === 'quizzes') { detailsLabel.innerHTML = '<i class="fas fa-tag"></i> Quiz Topic'; urlLabel.innerHTML = '<i class="fab fa-google-drive"></i> Google Form Embed URL'; }
-            else { detailsLabel.innerHTML = '<i class="fas fa-info-circle"></i> Course Code'; urlLabel.innerHTML = '<i class="fas fa-link"></i> Download URL'; }
-        });
-
-        const uploadForm = document.getElementById('upload-form'), messageEl = document.getElementById('form-message');
-        uploadForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const collectionName = contentTypeSelect.value;
-            if (!collectionName) { alert('Please select a content type.'); return; }
-            const data = { title: document.getElementById('title').value, uploadedAt: firebase.firestore.FieldValue.serverTimestamp() };
-            
-            switch(collectionName) {
-                case 'materials':
-                    data.courseCode = document.getElementById('details').value; data.downloadURL = document.getElementById('url').value; data.isPaid = document.getElementById('isPaid').checked;
-                    break;
-                case 'pyqs':
-                    data.courseCode = document.getElementById('details').value; data.downloadURL = document.getElementById('url').value; data.year = Number(document.getElementById('year').value);
-                    break;
-                case 'seminars':
-                    data.speaker = document.getElementById('details').value; data.youtubeURL = document.getElementById('url').value;
-                    break;
-                case 'quizzes':
-                    data.topic = document.getElementById('details').value; data.googleFormURL = document.getElementById('url').value;
-                    break;
-            }
-            db.collection(collectionName).add(data).then(() => {
-                messageEl.textContent = 'Content uploaded successfully!'; messageEl.className = 'message success';
-                messageEl.style.display = 'block'; uploadForm.reset(); contentTypeSelect.value = "";
-                setTimeout(() => { messageEl.style.display = 'none'; }, 4000);
-            }).catch(err => {
-                messageEl.textContent = 'Error: ' + err.message; messageEl.className = 'message error';
-                messageEl.style.display = 'block';
             });
+
+            const contentTypeSelect = document.getElementById('contentType');
+            const yearGroup = document.getElementById('year-group');
+            const paidGroup = document.getElementById('paid-group');
+            const detailsLabel = document.getElementById('details-label');
+            const urlLabel = document.getElementById('url-label');
+            
+            contentTypeSelect.addEventListener('change', () => {
+                const type = contentTypeSelect.value;
+                yearGroup.style.display = type === 'pyqs' ? 'block' : 'none';
+                paidGroup.style.display = type === 'materials' ? 'flex' : 'none';
+                
+                if (type === 'seminars') {
+                    detailsLabel.innerHTML = '<i class="fas fa-user-tie"></i> Speaker Name';
+                    urlLabel.innerHTML = '<i class="fab fa-youtube"></i> YouTube Embed URL';
+                } else if (type === 'quizzes') {
+                    detailsLabel.innerHTML = '<i class="fas fa-tag"></i> Quiz Topic';
+                    urlLabel.innerHTML = '<i class="fab fa-google-drive"></i> Google Form Embed URL';
+                } else {
+                    detailsLabel.innerHTML = '<i class="fas fa-info-circle"></i> Course Code';
+                    urlLabel.innerHTML = '<i class="fas fa-link"></i> Download URL';
+                }
+            });
+
+            const uploadForm = document.getElementById('upload-form');
+            const messageEl = document.getElementById('form-message');
+            const submitBtn = document.getElementById('submit-btn');
+
+            uploadForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                submitBtn.disabled = true;
+                submitBtn.classList.add('loading');
+                messageEl.style.display = 'none';
+
+                const collectionName = contentTypeSelect.value;
+                if (!collectionName) {
+                    alert('Please select a content type.');
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('loading');
+                    return;
+                }
+                
+                const data = {
+                    title: document.getElementById('title').value.trim(),
+                    uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                switch(collectionName) {
+                    case 'materials':
+                        data.courseCode = document.getElementById('details').value.trim();
+                        data.downloadURL = document.getElementById('url').value.trim();
+                        data.isPaid = document.getElementById('isPaid').checked;
+                        break;
+                    case 'pyqs':
+                        data.courseCode = document.getElementById('details').value.trim();
+                        data.downloadURL = document.getElementById('url').value.trim();
+                        data.year = Number(document.getElementById('year').value) || null;
+                        break;
+                    case 'seminars':
+                        data.speaker = document.getElementById('details').value.trim();
+                        data.youtubeURL = document.getElementById('url').value.trim();
+                        break;
+                    case 'quizzes':
+                        data.topic = document.getElementById('details').value.trim();
+                        data.googleFormURL = document.getElementById('url').value.trim();
+                        break;
+                }
+                
+                db.collection(collectionName).add(data).then(() => {
+                    messageEl.textContent = 'Content uploaded successfully!';
+                    messageEl.className = 'message success';
+                    messageEl.style.display = 'block';
+                    uploadForm.reset();
+                    contentTypeSelect.dispatchEvent(new Event('change')); // Reset conditional fields
+                    setTimeout(() => { messageEl.style.display = 'none'; }, 4000);
+                }).catch(err => {
+                    messageEl.textContent = 'Error: ' + err.message;
+                    messageEl.className = 'message error';
+                    messageEl.style.display = 'block';
+                }).finally(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('loading');
+                });
+            });
+            
+            document.getElementById('logout-btn').addEventListener('click', () => auth.signOut());
         });
-        document.getElementById('logout-btn').addEventListener('click', () => auth.signOut());
     </script>
 </body>
 </html>
