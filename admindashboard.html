@@ -32,27 +32,6 @@
             to { opacity: 1; }
         }
 
-        .background-container, .aurora-layer, .noise-layer, .container, .page-header, .brand-logo, .header-logo-svg, .brand-title, .brand-title::before, .btn-secondary, .welcome-header-pro, .dashboard-grid, .nav-card, .modal-overlay, .modal, .modal-header, .users-list, .user-item, .btn-danger {
-             /* All your existing styles are kept */
-        }
-        /* Your existing styles ... */
-        :root {
-            --primary-glow: #FFD700; --secondary-glow: #00A2FF; --dark-bg: #0A0A0A;
-            --text-primary: #F0F0F0; --text-secondary: #A0A0A0; --card-bg: rgba(22, 22, 22, 0.8);
-            --border-color: rgba(255, 215, 0, 0.2); --shadow-color: rgba(0, 0, 0, 0.5);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: 'Inter', sans-serif; background-color: var(--dark-bg);
-            color: var(--text-primary); line-height: 1.6;
-            opacity: 0;
-            animation: page-fade-in 0.5s ease-out forwards;
-        }
-        @keyframes page-fade-in {
-            to { opacity: 1; }
-        }
-
         .background-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
         .aurora-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 10% 20%, var(--primary-glow) 0%, transparent 25%), radial-gradient(circle at 80% 30%, var(--secondary-glow) 0%, transparent 30%), radial-gradient(circle at 50% 80%, var(--primary-glow) 0%, transparent 25%); animation: aurora-morph 40s linear infinite alternate; filter: blur(120px); opacity: 0.2; }
         @keyframes aurora-morph { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1.8); } }
@@ -121,7 +100,11 @@
 
     <main>
         <header class="page-header">
-            <!-- ... your header content ... -->
+            <a href="/admindashboard.html" class="brand-logo">
+                <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" /><g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g></svg>
+                <h1 class="brand-title">IB STUDIOZ</h1>
+            </a>
+            <button id="logout-btn" class="btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
         </header>
 
         <div class="container">
@@ -132,7 +115,6 @@
             <section class="dashboard-grid">
                 <a href="/upload.html" class="nav-card" style="--card-color: #2575fc;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fas fa-upload"></i></div><span class="nav-card-arrow">→</span></div><h3>Upload Content</h3><p>Add notes, PYQs, and seminar links.</p></a>
                 
-                <!-- NEW CARD: Manage Content -->
                 <div id="manage-content-card" class="nav-card" style="--card-color: #f857a6;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fas fa-edit"></i></div><span class="nav-card-arrow">→</span></div><h3>Manage Content</h3><p>Edit or remove existing platform content.</p></div>
 
                 <div id="manage-users-card" class="nav-card" style="--card-color: #00b09b;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fas fa-users-cog"></i></div><span class="nav-card-arrow">→</span></div><h3>Manage Users</h3><p>View, modify, or remove student accounts.</p></div>
@@ -147,11 +129,13 @@
                     <h2>Manage Student Users</h2>
                     <button id="users-modal-close-btn" class="modal-close">&times;</button>
                 </div>
-                <div class="list-container" id="users-list-container"></div>
+                <div class="list-container" id="users-list-container">
+                    <!-- User items will be dynamically inserted here -->
+                </div>
             </div>
         </div>
 
-        <!-- NEW MODAL: Manage Content -->
+        <!-- Manage Content Modal -->
         <div id="content-modal" class="modal-overlay">
             <div class="modal">
                 <div class="modal-header">
@@ -176,22 +160,21 @@
             const auth = firebase.auth();
             const db = firebase.firestore();
             
-            // Element selectors
+            // --- General & Auth Elements ---
             const adminNameEl = document.getElementById('admin-name');
             const logoutBtn = document.getElementById('logout-btn');
 
-            // Users Modal Elements
+            // --- Users Modal Elements ---
             const manageUsersCard = document.getElementById('manage-users-card');
             const usersModal = document.getElementById('users-modal');
             const usersModalCloseBtn = document.getElementById('users-modal-close-btn');
             const usersListContainer = document.getElementById('users-list-container');
             
-            // --- NEW: Content Modal Elements ---
+            // --- Content Modal Elements ---
             const manageContentCard = document.getElementById('manage-content-card');
             const contentModal = document.getElementById('content-modal');
             const contentModalCloseBtn = document.getElementById('content-modal-close-btn');
             const contentListContainer = document.getElementById('content-list-container');
-
 
             // --- Authentication Check ---
             auth.onAuthStateChanged(user => {
@@ -209,17 +192,55 @@
             });
             logoutBtn.addEventListener('click', () => auth.signOut());
 
-
             // --- Manage Users Modal Logic ---
             manageUsersCard.addEventListener('click', () => { loadUsers(); usersModal.classList.add('active'); });
             usersModalCloseBtn.addEventListener('click', () => usersModal.classList.remove('active'));
             usersModal.addEventListener('click', e => { if (e.target === usersModal) usersModal.classList.remove('active'); });
             
-            async function loadUsers() { /* Your existing loadUsers function */ }
-            usersListContainer.addEventListener('click', async (e) => { /* Your existing user delete logic */ });
+            async function loadUsers() {
+                usersListContainer.innerHTML = '<p style="text-align: center;">Loading users...</p>';
+                try {
+                    const snapshot = await db.collection('users').where('role', '==', 'student').get();
+                    if (snapshot.empty) {
+                        usersListContainer.innerHTML = '<p style="text-align: center;">No student users found.</p>';
+                        return;
+                    }
+                    usersListContainer.innerHTML = '';
+                    snapshot.forEach(doc => {
+                        const user = doc.data();
+                        const userEl = document.createElement('div');
+                        userEl.className = 'list-item';
+                        userEl.innerHTML = `
+                            <div>
+                                <span class="item-title">${user.name}</span><br>
+                                <span class="item-details">${user.email} | ${user.admissionNo || 'N/A'}</span>
+                            </div>
+                            <button class="btn-danger" data-uid="${doc.id}">Delete</button>
+                        `;
+                        usersListContainer.appendChild(userEl);
+                    });
+                } catch (error) {
+                    console.error("Error loading users:", error);
+                    usersListContainer.innerHTML = '<p style="text-align: center; color: var(--danger);">Error loading users. Please try again.</p>';
+                }
+            }
 
+            usersListContainer.addEventListener('click', async (e) => {
+                if (e.target.classList.contains('btn-danger')) {
+                    const uidToDelete = e.target.dataset.uid;
+                    if (confirm(`Are you sure you want to delete this user's database record?`)) {
+                        try {
+                            await db.collection('users').doc(uidToDelete).delete();
+                            loadUsers(); // Refresh the list
+                        } catch (error) {
+                            console.error("Error deleting user record:", error);
+                            alert('Failed to delete user record.');
+                        }
+                    }
+                }
+            });
 
-            // --- NEW: Manage Content Modal Logic ---
+            // --- Manage Content Modal Logic ---
             manageContentCard.addEventListener('click', () => { loadAllContent(); contentModal.classList.add('active'); });
             contentModalCloseBtn.addEventListener('click', () => contentModal.classList.remove('active'));
             contentModal.addEventListener('click', e => { if (e.target === contentModal) contentModal.classList.remove('active'); });
@@ -274,12 +295,12 @@
                     const button = e.target;
                     const collection = button.dataset.collection;
                     const docId = button.dataset.docId;
-                    const itemTitle = button.parentElement.querySelector('.item-title').textContent;
+                    const itemTitle = button.closest('.list-item').querySelector('.item-title').textContent;
 
                     if (confirm(`Are you sure you want to delete "${itemTitle}" from ${collection}? This cannot be undone.`)) {
                         try {
                             await db.collection(collection).doc(docId).delete();
-                            button.parentElement.remove(); // Remove the item from the list instantly
+                            button.closest('.list-item').remove(); // Remove the item from the list instantly
                         } catch (error) {
                             console.error("Error deleting content:", error);
                             alert('Failed to delete content. Please try again.');
