@@ -108,6 +108,18 @@
                 <label for="title"><i class="fas fa-heading"></i> Title</label>
                 <input type="text" id="title" placeholder="e.g., Unit 1 Notes" required>
             </div>
+
+            <!-- START: NEW FIELDS for Study Materials -->
+            <div class="form-group" id="thumbnail-group" style="display:none;">
+                <label for="thumbnailURL"><i class="fas fa-image"></i> Thumbnail Image URL</label>
+                <input type="url" id="thumbnailURL" placeholder="Paste public URL of the preview image">
+            </div>
+            <div class="form-group" id="description-group" style="display:none;">
+                <label for="description"><i class="fas fa-paragraph"></i> Description</label>
+                <textarea id="description" rows="3" placeholder="A short description of the content..."></textarea>
+            </div>
+            <!-- END: NEW FIELDS for Study Materials -->
+
             <div class="form-group">
                 <label for="details" id="details-label"><i class="fas fa-info-circle"></i> Details</label>
                 <input type="text" id="details" placeholder="e.g., CS301 or Dr. Jane Doe" required>
@@ -155,17 +167,27 @@
                 });
             });
 
+            // --- START: JAVASCRIPT CHANGES (1/2) ---
             const contentTypeSelect = document.getElementById('contentType');
             const yearGroup = document.getElementById('year-group');
             const paidGroup = document.getElementById('paid-group');
+            // Get the new group elements
+            const thumbnailGroup = document.getElementById('thumbnail-group');
+            const descriptionGroup = document.getElementById('description-group');
             const detailsLabel = document.getElementById('details-label');
             const urlLabel = document.getElementById('url-label');
             
             contentTypeSelect.addEventListener('change', () => {
                 const type = contentTypeSelect.value;
+                const isMaterials = type === 'materials';
+
+                // Show/hide conditional fields based on content type
                 yearGroup.style.display = type === 'pyqs' ? 'block' : 'none';
-                paidGroup.style.display = type === 'materials' ? 'flex' : 'none';
+                paidGroup.style.display = isMaterials ? 'flex' : 'none';
+                thumbnailGroup.style.display = isMaterials ? 'block' : 'none';
+                descriptionGroup.style.display = isMaterials ? 'block' : 'none';
                 
+                // Update labels based on content type
                 if (type === 'seminars') {
                     detailsLabel.innerHTML = '<i class="fas fa-user-tie"></i> Speaker Name';
                     urlLabel.innerHTML = '<i class="fab fa-youtube"></i> YouTube Embed URL';
@@ -206,6 +228,11 @@
                         data.courseCode = document.getElementById('details').value.trim();
                         data.downloadURL = document.getElementById('url').value.trim();
                         data.isPaid = document.getElementById('isPaid').checked;
+                        // --- START: JAVASCRIPT CHANGES (2/2) ---
+                        // Add the new fields to the data object
+                        data.thumbnailURL = document.getElementById('thumbnailURL').value.trim();
+                        data.description = document.getElementById('description').value.trim();
+                        // --- END: JAVASCRIPT CHANGES ---
                         break;
                     case 'pyqs':
                         data.courseCode = document.getElementById('details').value.trim();
