@@ -5,150 +5,273 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome | IB STUDIOZ</title>
     
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23FFC300' d='M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z' /%3E%3Cg fill='%23121212'%3E%3Cpath d='M28,25 h10 v50 h-10 Z' /%3E%3Cpath d='M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z' /%3E%3C/g%3E%3C/svg%3E">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23FFD700' d='M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z' /%3E%3Cg fill='%230A0A0A'%3E%3Cpath d='M28,25 h10 v50 h-10 Z' /%3E%3Cpath d='M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z' /%3E%3C/g%3E%3C/svg%3E">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-            --primary: #FFC300; --dark: #121212; --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.7); --card-bg: rgba(20, 20, 20, 0.6);
-            --border-color: rgba(255, 195, 0, 0.2); --shadow-color: rgba(0, 0, 0, 0.3);
-            --success: #00b09b; --danger: #ff416c;
-            --glow-1: #ff00c1; --glow-2: #00ffff; --glow-3: #ffc400; --glow-4: #33ff00;
+            --primary-glow: #FFD700;
+            --secondary-glow: #00A2FF;
+            --dark-bg: #0A0A0A;
+            --text-primary: #F0F0F0;
+            --text-secondary: #A0A0A0;
+            --card-bg: rgba(16, 16, 16, 0.6);
+            --border-color: rgba(255, 215, 0, 0.2);
+            --shadow-color: rgba(0, 0, 0, 0.5);
+            --success: #10B981;
+            --danger: #EF4444;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        /* --- FINAL SPLASH SCREEN STYLES --- */
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif; background-color: var(--dark-bg);
+            color: var(--text-primary); line-height: 1.6; 
+            overflow: hidden; /* Prevent scrollbars during animations */
+        }
+
+        /* --- PERFECTED SPLASH SCREEN --- */
         #splash-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark-bg);
             z-index: 9999; display: flex; flex-direction: column; justify-content: center;
             align-items: center; transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
         }
         #splash-screen.fade-out { opacity: 0; visibility: hidden; }
-        
-        @keyframes fade-in-scale-up {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .splash-logo { /* STABLE LOGO (NO SPIN) */
-            width: 80px; height: auto; margin-bottom: 25px;
-            animation: fade-in-scale-up 1s ease-out forwards;
-        }
-        .typing-wrapper { text-align: center; }
+        .splash-logo { width: 80px; height: auto; margin-bottom: 25px; }
         .splash-title-typing {
-            font-family: monospace;
-            font-size: 1.8rem; font-weight: 500; color: var(--text-primary);
-            overflow: hidden; border-right: .15em solid var(--primary);
-            white-space: nowrap; letter-spacing: .1em;
-            animation: typing 2.5s steps(10, end), blink-cursor .75s step-end infinite;
+            font-family: 'Courier New', Courier, monospace; font-size: 1.8rem; font-weight: 500;
+            height: 1.5em; /* Set a fixed height to prevent layout shift */
+            border-right: .15em solid var(--primary-glow);
+            white-space: nowrap; letter-spacing: .1em; color: var(--text-primary);
+            animation: blink-cursor .75s step-end infinite;
         }
-        @keyframes typing { from { width: 0 } to { width: 100% } }
-        @keyframes blink-cursor { from, to { border-color: transparent } 50% { border-color: var(--primary); } }
+        @keyframes blink-cursor { from, to { border-color: transparent } 50% { border-color: var(--primary-glow); } }
 
-        @keyframes multi-color-glow {
-            0%, 100% { text-shadow: 0 0 5px #fff3, 0 0 15px var(--glow-1), 0 0 25px var(--glow-1); }
-            25% { text-shadow: 0 0 5px #fff3, 0 0 15px var(--glow-2), 0 0 25px var(--glow-2); }
-            50% { text-shadow: 0 0 5px #fff3, 0 0 15px var(--glow-3), 0 0 25px var(--glow-3); }
-            75% { text-shadow: 0 0 5px #fff3, 0 0 15px var(--glow-4), 0 0 25px var(--glow-4); }
+        /* --- ADVANCED DYNAMIC BACKGROUND --- */
+        .background-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
+        .aurora-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, var(--primary-glow) 0%, transparent 25%),
+                radial-gradient(circle at 80% 30%, var(--secondary-glow) 0%, transparent 30%),
+                radial-gradient(circle at 50% 80%, var(--primary-glow) 0%, transparent 25%);
+            animation: aurora-morph 40s linear infinite alternate;
+            filter: blur(120px); opacity: 0.2;
+        }
+        @keyframes aurora-morph { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1.8); } }
+        .noise-layer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>');
+            opacity: 0.015;
         }
         
-        body { font-family: "Poppins", sans-serif; background-color: var(--dark); color: var(--text-primary); min-height: 100vh; line-height: 1.6; background-attachment: fixed; }
-        .aurora-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(ellipse at 10% 10%, var(--primary) 0%, #ffc30000 40%), radial-gradient(ellipse at 90% 85%, #444 0%, #4400 35%); animation: background-pan 45s linear infinite; opacity: 0.2; }
-        .container { max-width: 1200px; margin: 30px auto; padding: 30px; }
-        .brand-logo { display: flex; align-items: center; justify-content: center; gap: 12px; text-decoration: none; color: var(--text-primary); margin-bottom: 5px; }
-        .header-logo-svg { width: 50px; height: auto; flex-shrink: 0; }
-        .brand-title { font-size: 1.8rem; font-weight: 600; color: var(--text-primary); animation: multi-color-glow 6s ease-in-out infinite; }
-        .btn { display: inline-block; padding: 12px 30px; border-radius: 10px; border: none; font-size: 1rem; font-weight: 500; cursor: pointer; text-align: center; transition: all 0.3s ease; text-decoration: none; width: 100%; }
-        .btn-primary { background: linear-gradient(45deg, #FFC300, #FFD033); color: var(--dark); box-shadow: 0 4px 15px #00000033; transform: translateY(0); }
-        .btn-primary:hover { box-shadow: 0 6px 20px #0000004d; transform: translateY(-2px); }
-        .auth-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .auth-card { width: 100%; max-width: 450px; text-align: center; background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 15px; border: 1px solid var(--border-color); padding: 40px; box-shadow: 0 8px 32px 0 var(--shadow-color); }
-        .auth-subtitle { color: var(--text-secondary); margin-bottom: 30px; font-size: 1rem; }
-        .form-group label { text-align: left; display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-secondary); }
-        input { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border-color); background-color: #00000033; color: var(--text-primary); font-size: 1rem; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
-        input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 15px #ffc30033; }
-        .password-wrapper { position: relative; display: flex; align-items: center; }
-        #togglePassword { position: absolute; right: 15px; cursor: pointer; color: var(--text-secondary); }
-        .form-group { max-height: 100px; opacity: 1; overflow: hidden; transition: max-height 0.5s ease-out, opacity 0.4s ease-out, margin-bottom 0.5s ease-out; margin-bottom: 20px; }
-        #name-group, #admissionNo-group { max-height: 0; opacity: 0; margin-bottom: 0; }
-        #name-group.active, #admissionNo-group.active { max-height: 100px; opacity: 1; margin-bottom: 20px; }
-        .toggle-auth { margin-top: 25px; color: var(--text-secondary); }
-        .toggle-auth a { color: var(--primary); font-weight: 600; text-decoration: none; cursor: pointer; }
+        /* --- FLAWLESSLY RESPONSIVE LAYOUT --- */
+        .auth-container { 
+            display: flex; justify-content: center; align-items: center; min-height: 100vh; 
+            padding: 20px; opacity: 0; animation: page-fade-in 1s ease-out forwards;
+        }
+        @keyframes page-fade-in { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+
+        /* --- SPECTACULAR RGB TITLE EFFECT --- */
+        .brand-logo { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 5px; }
+        .header-logo-svg { width: 45px; height: auto; }
+        .brand-title {
+            font-size: clamp(1.8rem, 5vw, 2.3rem); /* Fluid font size */
+            font-weight: 700;
+            background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff);
+            background-size: 400% 100%;
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            animation: rgb-text-glow 6s linear infinite;
+        }
+        @keyframes rgb-text-glow {
+            0% { background-position: 0% 50%; text-shadow: 0 0 20px rgba(255,0,255,0.5); }
+            50% { background-position: 200% 50%; text-shadow: 0 0 20px rgba(0,255,234,0.5); }
+            100% { background-position: 400% 50%; text-shadow: 0 0 20px rgba(255,0,255,0.5); }
+        }
+
+        .auth-subtitle {
+            margin-bottom: 35px; color: var(--text-secondary); font-size: 0.9rem;
+            font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
+        }
+        
+        .auth-card {
+            width: 100%; max-width: 420px; background: var(--card-bg); backdrop-filter: blur(25px);
+            border-radius: 20px; padding: 40px; text-align: center;
+            box-shadow: 0 15px 40px var(--shadow-color); position: relative;
+            border: 1px solid var(--border-color);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        @media (hover: hover) {
+            .auth-card:hover { transform: scale(1.02); box-shadow: 0 20px 50px var(--shadow-color), 0 0 30px rgba(255,215,0,0.4); }
+        }
+        
+        #form-title { font-size: 1.6rem; font-weight: 600; margin-bottom: 20px; }
+        .form-group { position: relative; margin-bottom: 35px; }
+        .form-input {
+            width: 100%; padding: 12px 12px 8px 45px; background-color: transparent; border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2); color: var(--text-primary);
+            font-size: 1rem; font-family: 'Inter', sans-serif; transition: border-color 0.3s ease;
+        }
+        .form-input:focus { outline: none; border-bottom-color: var(--primary-glow); }
+        .form-label {
+            position: absolute; left: 45px; top: 12px; color: var(--text-secondary);
+            pointer-events: none; transform-origin: left; transition: all 0.3s ease;
+        }
+        .form-input:focus ~ .form-label,
+        .form-input:not(:placeholder-shown) ~ .form-label {
+            transform: translateY(-20px) scale(0.8); color: var(--primary-glow);
+        }
+        .form-icon { position: absolute; left: 15px; top: 14px; color: var(--text-secondary); transition: color 0.3s ease; }
+        .form-input:focus ~ .form-icon { color: var(--primary-glow); }
+        #togglePassword { position: absolute; right: 10px; top: 14px; cursor: pointer; color: var(--text-secondary); }
+        .form-group-wrapper {
+            max-height: 100px; opacity: 1; overflow: hidden;
+            transition: max-height 0.5s ease-out, opacity 0.4s ease-out, margin-bottom 0.5s ease-out;
+            margin-bottom: 35px;
+        }
+        .form-group-wrapper.hidden { max-height: 0; opacity: 0; margin-bottom: 0; }
+        
+        .btn-primary {
+            width: 100%; display: inline-block; padding: 14px 30px; border-radius: 10px; border: none;
+            font-size: 1rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--dark-bg);
+            background: var(--primary-glow);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+            cursor: pointer; transform: translateY(0); transition: all 0.3s ease;
+        }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 4px 25px rgba(255, 215, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.4); }
+        .btn-primary:active { transform: translateY(-1px); }
+
+        .forgot-password { text-align: right; margin-top: -20px; margin-bottom: 25px; }
+        
+        /* --- SOLVED: REPOSITIONED TOGGLE LINK --- */
+        .toggle-auth { margin-bottom: 25px; color: var(--text-secondary); }
+        .stylish-link {
+            position: relative; color: var(--text-secondary); text-decoration: none;
+            font-size: 0.9rem; font-weight: 500; transition: color 0.3s ease; padding-bottom: 3px;
+        }
+        .stylish-link::after {
+            content: ''; position: absolute; width: 100%; height: 1px;
+            bottom: 0; left: 0; background-color: var(--primary-glow);
+            transform: scaleX(0); transform-origin: center; transition: transform 0.3s ease;
+        }
+        .stylish-link:hover { color: var(--primary-glow); }
+        .stylish-link:hover::after { transform: scaleX(1); }
+        #toggle-link { font-weight: 600; font-size: 0.95rem; }
+
         .message { min-height: 20px; margin-bottom: 15px; font-weight: 500; font-size: 0.9rem; }
         .message.error { color: var(--danger); } .message.success { color: var(--success); }
-        .spinner-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000b3; z-index: 1000; display:flex; justify-content:center; align-items:center; }
-        .forgot-password { text-align: right; margin-top: -10px; margin-bottom: 20px; }
-        .forgot-password a { color: var(--primary); font-size: 0.9rem; text-decoration: none; cursor: pointer; }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000b3; display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+        
+        .spinner-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,10,10,0.7); backdrop-filter: blur(5px); z-index: 10000; display:flex; justify-content:center; align-items:center; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,10,10,0.7); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal { background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 15px; border: 1px solid var(--border-color); width: 90%; max-width: 450px; padding: 30px; box-shadow: 0 8px 32px 0 var(--shadow-color); }
+        .modal { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 15px; width: 90%; max-width: 450px; padding: 30px; box-shadow: 0 8px 32px 0 var(--shadow-color); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .modal-close { background: none; border: none; color: var(--text-primary); font-size: 1.5rem; cursor: pointer; }
-        @media (max-width: 768px) { .container { padding: 15px; } .auth-card { padding: 25px; } .brand-title { font-size: 1.6rem; } .header-logo-svg { width: 45px; } .splash-title-typing { font-size: 1.5rem; } }
+
+        @media (max-width: 480px) {
+            .auth-card { padding: 30px 25px; }
+            .brand-title { font-size: 1.8rem; }
+            .header-logo-svg { width: 40px; }
+            #form-title { font-size: 1.5rem; }
+            .splash-title-typing { font-size: 1.5rem; }
+        }
     </style>
 </head>
 <body>
-    
     <div id="splash-screen">
         <svg class="splash-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <path fill="#FFC300" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" />
-            <g fill="#121212"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g>
+            <path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" />
+            <g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g>
         </svg>
-        <div class="typing-wrapper">
-            <h2 id="splash-title" class="splash-title-typing">IB STUDIOZ</h2>
-        </div>
+        <h2 class="splash-title-typing" id="splash-title"></h2>
     </div>
 
-    <div class="aurora-background"></div>
-    <!-- LOGIN PAGE HTML - RESTORED -->
-    <div class="container auth-container">
-        <div class="auth-card">
+    <div class="background-container">
+        <div class="aurora-layer"></div>
+        <div class="noise-layer"></div>
+    </div>
+    
+    <div class="auth-container" id="auth-container">
+        <div class="auth-card" id="auth-card">
             <div class="brand-logo">
-                <h1 class="brand-title">IB STUDIOZ</h1>
                 <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <path fill="#FFC300" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" />
-                    <g fill="#121212"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g>
+                    <path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" />
+                    <g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g>
                 </svg>
+                <h1 class="brand-title">IB STUDIOZ</h1>
             </div>
             <p class="auth-subtitle">Online Resources Hub</p>
 
             <form id="authForm" novalidate>
                 <h2 id="form-title">Login</h2>
-                <div class="form-group" id="name-group"><label for="name"><i class="fas fa-user"></i> Name</label><input type="text" id="name" placeholder="Enter your full name"></div>
-                <div class="form-group" id="email-group"><label for="email"><i class="fas fa-envelope"></i> Email Address</label><input type="email" id="email" placeholder="Enter your email address" required></div>
-                <div class="form-group" id="admissionNo-group"><label for="admissionNo"><i class="fas fa-id-card"></i> Admission No</label><input type="text" id="admissionNo" placeholder="e.g., 717821F123"></div>
-                <div class="form-group" id="password-group">
-                    <label for="password"><i class="fas fa-lock"></i> Password</label>
-                    <div class="password-wrapper"><input type="password" id="password" placeholder="Minimum 6 characters" required><i class="fas fa-eye" id="togglePassword"></i></div>
+                
+                <div class="form-group-wrapper hidden" id="name-wrapper">
+                    <div class="form-group">
+                        <input type="text" id="name" class="form-input" placeholder=" ">
+                        <label for="name" class="form-label">Full Name</label>
+                        <i class="fas fa-user form-icon"></i>
+                    </div>
                 </div>
-                <div class="forgot-password"><a id="forgot-password-link">Forgot Password?</a></div>
+                <div class="form-group-wrapper">
+                    <div class="form-group">
+                        <input type="email" id="email" class="form-input" placeholder=" " required>
+                        <label for="email" class="form-label">Email Address</label>
+                        <i class="fas fa-envelope form-icon"></i>
+                    </div>
+                </div>
+                <div class="form-group-wrapper hidden" id="admission-wrapper">
+                    <div class="form-group">
+                        <input type="text" id="admissionNo" class="form-input" placeholder=" ">
+                        <label for="admissionNo" class="form-label">Admission No</label>
+                        <i class="fas fa-id-card form-icon"></i>
+                    </div>
+                </div>
+                <div class="form-group-wrapper">
+                    <div class="form-group">
+                        <input type="password" id="password" class="form-input" placeholder=" " required>
+                        <label for="password" class="form-label">Password</label>
+                        <i class="fas fa-lock form-icon"></i>
+                        <i class="fas fa-eye" id="togglePassword"></i>
+                    </div>
+                </div>
+
+                <div class="forgot-password"><a href="#" id="forgot-password-link" class="stylish-link">Forgot Password?</a></div>
                 <div id="message-area" class="message" aria-live="polite"></div>
+                
+                <!-- SOLVED: Toggle link is now before the button -->
+                <p class="toggle-auth"><span id="toggle-text">Don't have an account?</span> <a href="#" id="toggle-link" class="stylish-link">Register Now</a></p>
                 <button type="submit" class="btn btn-primary" id="submit-btn">Login</button>
             </form>
-            <p class="toggle-auth"><span id="toggle-text">Don't have an account?</span> <a id="toggle-link">Register Now</a></p>
         </div>
     </div>
     
     <div class="modal-overlay" id="forgot-password-modal">
         <div class="modal">
-            <div class="modal-header"><h3 class="modal-title">Reset Password</h3><button class="modal-close" id="modal-close">&times;</button></div>
-            <p style="color: var(--text-secondary); margin-bottom: 20px;">Enter your registered email address to receive a password reset link.</p>
-            <div class="form-group"><label for="reset-email"><i class="fas fa-envelope"></i> Email Address</label><input type="email" id="reset-email" placeholder="Enter your email address"></div>
+             <div class="modal-header"><h3 class="modal-title">Reset Password</h3><button class="modal-close" id="modal-close">&times;</button></div>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">Enter your registered email to receive a password reset link.</p>
+            <div class="form-group">
+                 <input type="email" id="reset-email" class="form-input" placeholder=" " required>
+                 <label for="reset-email" class="form-label">Email Address</label>
+                 <i class="fas fa-envelope form-icon"></i>
+            </div>
             <div id="reset-message" class="message"></div>
             <button class="btn btn-primary" id="send-reset-link-btn">Send Reset Link</button>
         </div>
     </div>
 
-    <div id="spinner" class="spinner-overlay" style="display: none;"><svg class="splash-logo" style="width: 80px; animation: spin 2s linear infinite;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="#FFC300" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" /><g fill="#121212"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g></svg></div>
+    <div id="spinner" class="spinner-overlay" style="display: none;"><svg style="width: 60px; animation: spin 1.5s linear infinite;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" /><g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g></svg></div>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     
     <script>
-        // --- COMPLETE & UNABRIDGED JAVASCRIPT ---
+        // --- FINALIZED JAVASCRIPT LOGIC ---
         const firebaseConfig = {
             apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao", authDomain: "student-portal-free.firebaseapp.com",
             projectId: "student-portal-free", storageBucket: "student-portal-free.appspot.com",
@@ -158,29 +281,47 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
         
+        const splashScreen = document.getElementById('splash-screen');
+        const splashTitle = document.getElementById('splash-title');
         const authForm = document.getElementById('authForm'), messageArea = document.getElementById('message-area'),
               spinner = document.getElementById('spinner'), toggleLink = document.getElementById('toggle-link'),
-              nameGroup = document.getElementById('name-group'), admissionNoGroup = document.getElementById('admissionNo-group'),
+              nameWrapper = document.getElementById('name-wrapper'),
+              admissionWrapper = document.getElementById('admission-wrapper'),
               emailInput = document.getElementById('email'), passwordInput = document.getElementById('password'),
               togglePassword = document.getElementById('togglePassword');
         let isLogin = true;
-        const actionCodeSettings = { url: 'https://student-portal-free.firebaseapp.com/', handleCodeInApp: false };
 
-        function handleAppReady() {
-            const splash = document.getElementById('splash-screen');
-            const splashTitle = document.getElementById('splash-title');
-            
-            const animationEndPromise = new Promise(resolve => {
-                splashTitle.addEventListener('animationend', resolve, { once: true });
+        // --- NEW JAVASCRIPT-DRIVEN TYPEWRITER EFFECT ---
+        function typewriterEffect(element, text, speed = 150) {
+            return new Promise(resolve => {
+                let i = 0;
+                element.innerHTML = ""; // Clear existing text
+                function type() {
+                    if (i < text.length) {
+                        element.innerHTML += text.charAt(i);
+                        i++;
+                        setTimeout(type, speed);
+                    } else {
+                        // Typing finished, resolve the promise.
+                        resolve();
+                    }
+                }
+                type();
             });
+        }
+
+        // --- PERFECTED HYBRID SPLASH SCREEN LOGIC ---
+        function handleAppReady() {
+            const animationPromise = typewriterEffect(splashTitle, "IB STUDIOZ");
+            const minTimePromise = new Promise(resolve => setTimeout(resolve, 3000)); // Min display time
             const authReadyPromise = new Promise(resolve => {
                 const unsubscribe = auth.onAuthStateChanged(user => {
-                    resolve(user);
                     unsubscribe();
+                    resolve(user);
                 });
             });
 
-            Promise.all([animationEndPromise, authReadyPromise]).then(([_, user]) => {
+            Promise.all([animationPromise, minTimePromise, authReadyPromise]).then(([_, __, user]) => {
                 if (user) {
                     spinner.style.display = 'flex';
                     db.collection('users').doc(user.uid).get().then(doc => {
@@ -189,24 +330,29 @@
                         } else {
                             auth.signOut();
                             spinner.style.display = 'none';
+                            splashScreen.classList.add('fade-out');
                         }
+                    }).catch(() => {
+                        auth.signOut();
+                        spinner.style.display = 'none';
+                        splashScreen.classList.add('fade-out');
                     });
+                } else {
+                    splashScreen.classList.add('fade-out');
                 }
-                setTimeout(() => {
-                    splash.classList.add('fade-out');
-                }, 500);
             });
         }
-        window.addEventListener('load', handleAppReady);
+        document.addEventListener('DOMContentLoaded', handleAppReady);
 
         function showMessage(text, type) { messageArea.textContent = text; messageArea.className = `message ${type}`; }
         function clearMessage() { messageArea.textContent = ''; }
         
-        toggleLink.addEventListener('click', () => {
+        toggleLink.addEventListener('click', (e) => {
+            e.preventDefault();
             isLogin = !isLogin; authForm.reset(); clearMessage();
             document.getElementById('form-title').innerText = isLogin ? 'Login' : 'Register';
-            if (isLogin) { nameGroup.classList.remove('active'); admissionNoGroup.classList.remove('active'); } 
-            else { nameGroup.classList.add('active'); admissionNoGroup.classList.add('active'); }
+            nameWrapper.classList.toggle('hidden', isLogin);
+            admissionWrapper.classList.toggle('hidden', isLogin);
             document.querySelector('.forgot-password').style.display = isLogin ? 'block' : 'none';
             document.getElementById('submit-btn').innerText = isLogin ? 'Login' : 'Register';
             document.getElementById('toggle-text').innerText = isLogin ? "Don't have an account?" : 'Already have an account?';
@@ -220,7 +366,8 @@
                 if (!email || !password) return handleAuthError({ message: "Email and Password are required." });
                 auth.signInWithEmailAndPassword(email, password).catch(handleAuthError);
             } else {
-                const name = document.getElementById('name').value.trim(), admissionNo = document.getElementById('admissionNo').value.trim();
+                const name = document.getElementById('name').value.trim();
+                const admissionNo = document.getElementById('admissionNo').value.trim();
                 if (!name || !email || !admissionNo || !password) return handleAuthError({ message: "All fields are required." });
                 if (password.length < 6) return handleAuthError({ message: "Password must be at least 6 characters." });
                 auth.createUserWithEmailAndPassword(email, password)
@@ -231,33 +378,32 @@
         });
 
         function handleAuthError(error) {
-            console.error("Auth Error:", error); let message = error.message;
-            if (error.code === 'auth/invalid-credential') message = "Invalid credentials. Please check your email and password.";
-            else if (error.code === 'auth/email-already-in-use') message = 'An account with this email address already exists.';
-            showMessage(message, 'error'); spinner.style.display = 'none';
+            console.error("Auth Error:", error);
+            let message = "An unexpected error occurred.";
+            if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found' || error.code === 'auth/invalid-email') {
+                message = "Invalid credentials. Please check your email and password.";
+            } else if (error.code === 'auth/email-already-in-use') {
+                message = 'An account with this email address already exists.';
+            }
+            showMessage(message, 'error');
+            spinner.style.display = 'none';
         }
 
-        emailInput.addEventListener('input', () => {
-            if (emailInput.value && !/^\S+@\S+\.\S+$/.test(emailInput.value)) showMessage('Please enter a valid email address.', 'error');
-            else clearMessage();
-        });
-        passwordInput.addEventListener('input', () => {
-            if (!isLogin && passwordInput.value && passwordInput.value.length < 6) showMessage('Password must be at least 6 characters.', 'error');
-            else clearMessage();
-        });
-
         togglePassword.addEventListener('click', function () {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type); this.classList.toggle('fa-eye-slash');
+            const isPassword = passwordInput.getAttribute('type') === 'password';
+            passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+            this.classList.toggle('fa-eye-slash');
+            this.classList.toggle('fa-eye', !isPassword);
         });
 
-        const forgotPasswordLink = document.getElementById('forgot-password-link'), forgotPasswordModal = document.getElementById('forgot-password-modal'),
-              modalClose = document.getElementById('modal-close'), sendResetLinkBtn = document.getElementById('send-reset-link-btn'),
-              resetMessageArea = document.getElementById('reset-message'), resetEmailInput = document.getElementById('reset-email');
+        const forgotPasswordLink = document.getElementById('forgot-password-link'),
+              forgotPasswordModal = document.getElementById('forgot-password-modal'),
+              modalClose = document.getElementById('modal-close'),
+              sendResetLinkBtn = document.getElementById('send-reset-link-btn'),
+              resetMessageArea = document.getElementById('reset-message'),
+              resetEmailInput = document.getElementById('reset-email');
         
-        forgotPasswordLink.addEventListener('click', () => {
-            forgotPasswordModal.classList.add('active'); resetMessageArea.textContent = ''; resetEmailInput.value = '';
-        });
+        forgotPasswordLink.addEventListener('click', (e) => { e.preventDefault(); forgotPasswordModal.classList.add('active'); });
         modalClose.addEventListener('click', () => { forgotPasswordModal.classList.remove('active'); });
         
         sendResetLinkBtn.addEventListener('click', () => {
@@ -266,7 +412,7 @@
                 resetMessageArea.textContent = 'Please enter your email address.'; resetMessageArea.className = 'message error'; return;
             }
             spinner.style.display = 'flex';
-            auth.sendPasswordResetEmail(email, actionCodeSettings)
+            auth.sendPasswordResetEmail(email)
                 .then(() => {
                     spinner.style.display = 'none';
                     resetMessageArea.textContent = 'Password reset email sent! Check your inbox.'; resetMessageArea.className = 'message success';
@@ -274,11 +420,7 @@
                 })
                 .catch((error) => {
                     spinner.style.display = 'none';
-                    if(error.code === 'auth/user-not-found' || error.code === 'auth/invalid-email') {
-                        resetMessageArea.textContent = 'No account found with this email address.';
-                    } else {
-                        resetMessageArea.textContent = "Failed to send reset email. Please try again.";
-                    }
+                    resetMessageArea.textContent = 'Failed to send. No account found with this email.';
                     resetMessageArea.className = 'message error';
                 });
         });
