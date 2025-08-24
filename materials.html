@@ -26,7 +26,6 @@
             color: var(--text-primary); line-height: 1.6;
         }
 
-        /* --- Ultra-Fast Timed Loader --- */
         #fast-loader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: var(--dark-bg);
@@ -37,44 +36,31 @@
             position: relative; display: flex; justify-content: center;
             align-items: center; flex-direction: column;
         }
-        .loader-logo {
-            width: 80px; height: 80px; position: absolute;
-        }
-        .loader-progress-ring {
-            position: absolute; transform: rotate(-90deg);
-        }
-        .progress-ring-track {
-            fill: transparent; stroke: rgba(255, 255, 255, 0.1); stroke-width: 4;
-        }
+        .loader-logo { width: 80px; height: 80px; position: absolute; }
+        .loader-progress-ring { position: absolute; transform: rotate(-90deg); }
+        .progress-ring-track { fill: transparent; stroke: rgba(255, 255, 255, 0.1); stroke-width: 4; }
         .progress-ring-bar {
             fill: transparent; stroke: white; stroke-width: 4; stroke-linecap: round;
             stroke-dasharray: 339.3 339.3; stroke-dashoffset: 339.3;
-            animation: draw-circle 0.5s ease-out forwards;
+            animation: draw-circle 0.3s ease-out forwards; /* UPDATED DURATION */
         }
-        @keyframes draw-circle {
-            to { stroke-dashoffset: 0; }
-        }
+        @keyframes draw-circle { to { stroke-dashoffset: 0; } }
         #loader-timer {
             margin-top: 150px; font-family: 'Courier New', Courier, monospace;
             font-size: 1rem; color: var(--text-secondary);
         }
 
-        /* --- Page Content Visibility --- */
         #page-content {
             visibility: hidden; opacity: 0;
             transition: opacity 0.4s ease-in, visibility 0.4s ease-in;
         }
-        #page-content.visible {
-            visibility: visible; opacity: 1;
-        }
+        #page-content.visible { visibility: visible; opacity: 1; }
         
         .background-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
         .aurora-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 10% 20%, var(--primary-glow) 0%, transparent 25%), radial-gradient(circle at 80% 30%, var(--secondary-glow) 0%, transparent 30%), radial-gradient(circle at 50% 80%, var(--primary-glow) 0%, transparent 25%); animation: aurora-morph 40s linear infinite alternate; filter: blur(120px); opacity: 0.2; }
         @keyframes aurora-morph { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1.8); } }
         .noise-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>'); opacity: 0.015; }
-
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-
         .page-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; margin: 20px; background: rgba(16,16,16,0.6); backdrop-filter: blur(20px); border-radius: 15px; border: 1px solid var(--border-color); }
         .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; }
         .header-logo-svg { width: 45px; height: auto; }
@@ -84,19 +70,12 @@
         .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 10px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
         .btn-secondary:hover { background: var(--primary-glow); color: var(--dark-bg); border-color: var(--primary-glow); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
         .btn-secondary .fas { margin-right: 8px; }
-        
         .page-title-header { padding: 40px 0; margin-bottom: 40px; border-left: 4px solid; border-image: linear-gradient(to bottom, var(--primary-glow), var(--secondary-glow)) 1; padding-left: 30px; }
         .page-title-header h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.2; margin-bottom: 10px; }
         .page-title-header p { font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; }
-        
         .materials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
-        .material-card {
-            background: var(--card-bg); border-radius: 15px; border: 1px solid var(--border-color);
-            padding: 30px 25px; text-decoration: none; box-shadow: 0 8px 32px 0 var(--shadow-color);
-            transition: transform 0.3s ease, border-color 0.3s ease; display: flex; flex-direction: column;
-        }
+        .material-card { background: var(--card-bg); border-radius: 15px; border: 1px solid var(--border-color); padding: 30px 25px; text-decoration: none; box-shadow: 0 8px 32px 0 var(--shadow-color); transition: transform 0.3s ease, border-color 0.3s ease; display: flex; flex-direction: column; }
         .material-card:hover { transform: translateY(-8px); border-color: var(--primary-glow); }
-        
         .material-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
         .material-icon { font-size: 2.2rem; color: var(--primary-glow); transition: transform 0.3s ease; }
         .material-card:hover .material-icon { transform: scale(1.1); }
@@ -105,18 +84,15 @@
         .material-info { flex-grow: 1; }
         .material-title { font-size: 1.3rem; margin-bottom: 8px; color: var(--text-primary); }
         .material-meta { font-size: 0.9rem; color: var(--text-secondary); }
-        
         .material-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px; }
         .tag { padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
         .tag-free { background-color: rgba(16, 185, 129, 0.2); color: #10B981; }
         .tag-premium { background-color: rgba(255, 179, 71, 0.2); color: #ffb347; }
         .material-action-icon { font-size: 1.5rem; color: var(--text-secondary); }
         .material-card:hover .material-action-icon { color: var(--primary-glow); }
-        
         .empty-state { grid-column: 1 / -1; text-align: center; padding: 50px; background: var(--card-bg); border-radius: 15px; border: 1px solid var(--border-color); }
         .empty-state i { font-size: 3rem; color: var(--primary-glow); margin-bottom: 20px; display: block; }
         .empty-state p { font-size: 1.1rem; color: var(--text-secondary); }
-        
         .skeleton { background: rgba(255,255,255,0.05); border-radius: 15px; padding: 30px 25px; position: relative; overflow: hidden; }
         .skeleton::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); animation: shimmer 1.5s infinite; }
         @keyframes shimmer { 100% { transform: translateX(100%); } }
@@ -124,7 +100,6 @@
         .skeleton-icon { width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 8px; }
         .skeleton-line { height: 20px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 10px; }
         .skeleton-line.short { width: 60%; }
-
         @media (max-width: 768px) {
             .page-header { flex-direction: column; gap: 20px; margin: 15px; }
             .page-title-header { padding-left: 20px; margin-bottom: 30px; }
@@ -132,7 +107,6 @@
     </style>
 </head>
 <body>
-    <!-- NEW: Ultra-Fast Timed Loader -->
     <div id="fast-loader">
         <div class="loader-content">
             <svg class="loader-progress-ring" width="120" height="120">
@@ -152,7 +126,6 @@
         <div class="noise-layer"></div>
     </div>
 
-    <!-- UPDATED: Wrapped content in a main tag with the correct ID -->
     <main id="page-content" style="visibility: hidden; opacity: 0;">
         <header class="page-header">
             <a href="/studentdashboard.html" class="brand-logo">
@@ -168,9 +141,7 @@
                 <p>Your central hub for course notes, e-books, and essential learning resources.</p>
             </div>
             
-            <div id="materials-grid" class="materials-grid">
-                <!-- Skeleton Loader will be shown here -->
-            </div>
+            <div id="materials-grid" class="materials-grid"></div>
         </div>
     </main>
 
@@ -178,62 +149,39 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     
-    <!-- FIXED: Combined both scripts into a single, reliable block -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- 1. DEFINE ALL CONSTANTS AND ELEMENTS ---
-            const LOADER_DURATION = 500; // 0.5 seconds
+            const LOADER_DURATION = 300; // 0.3 seconds
             const loader = document.getElementById('fast-loader');
             const content = document.getElementById('page-content');
             const timerElement = document.getElementById('loader-timer');
             const grid = document.getElementById('materials-grid');
             
-            // --- FIREBASE SETUP ---
-            const firebaseConfig = {
-              apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao",
-              authDomain: "student-portal-free.firebaseapp.com",
-              projectId: "student-portal-free",
-              storageBucket: "student-portal-free.appspot.com",
-              messagingSenderId: "272865877510",
-              appId: "1:272865877510:web:0875a2502ae55bbf9ead87"
-            };
-            const app = firebase.initializeApp(firebaseConfig);
+            const firebaseConfig = { apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao", authDomain: "student-portal-free.firebaseapp.com", projectId: "student-portal-free", storageBucket: "student-portal-free.appspot.com", messagingSenderId: "272865877510", appId: "1:272865877510:web:0875a2502ae55bbf9ead87" };
+            firebase.initializeApp(firebaseConfig);
             const auth = firebase.auth();
             const db = firebase.firestore();
 
-            // --- 2. START THE LOADER ANIMATION ---
             const startTime = Date.now();
             const timerInterval = setInterval(() => {
-                const elapsedTime = Date.now() - startTime;
-                if (elapsedTime < LOADER_DURATION) {
-                    timerElement.textContent = (elapsedTime / 1000).toFixed(1) + 's';
-                } else {
-                    timerElement.textContent = (LOADER_DURATION / 1000).toFixed(1) + 's';
-                    clearInterval(timerInterval);
-                }
+                const elapsedTime = Math.min(Date.now() - startTime, LOADER_DURATION);
+                timerElement.textContent = (elapsedTime / 1000).toFixed(1) + 's';
+                if (elapsedTime >= LOADER_DURATION) clearInterval(timerInterval);
             }, 50);
 
-            // --- 3. REVEAL CONTENT AFTER ANIMATION ---
             setTimeout(() => {
-                if (loader) {
-                    loader.style.opacity = '0';
-                    loader.style.visibility = 'hidden';
-                }
-                if (content) {
-                    content.classList.add('visible');
-                }
+                loader.style.opacity = '0';
+                loader.style.visibility = 'hidden';
+                content.classList.add('visible');
             }, LOADER_DURATION);
 
-            // --- 4. START FIREBASE & DATA LOGIC ---
             auth.onAuthStateChanged(user => {
                 if (user) {
                     db.collection('users').doc(user.uid).get().then(doc => {
                         if (doc.exists && doc.data().role !== 'admin') {
                             loadMaterials();
-                        } else if (doc.exists && doc.data().role === 'admin') {
-                            window.location.replace('/admindashboard.html');
                         } else {
-                            auth.signOut();
+                            window.location.replace(doc.exists ? '/admindashboard.html' : '/index.html');
                         }
                     }).catch(() => auth.signOut());
                 } else {
@@ -244,12 +192,7 @@
             function showSkeletonLoader() {
                 let skeletons = '';
                 for (let i = 0; i < 6; i++) {
-                    skeletons += `
-                        <div class="skeleton">
-                            <div class="skeleton-header"><div class="skeleton-icon"></div></div>
-                            <div class="skeleton-line"></div>
-                            <div class="skeleton-line short"></div>
-                        </div>`;
+                    skeletons += `<div class="skeleton"><div class="skeleton-header"><div class="skeleton-icon"></div></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>`;
                 }
                 grid.innerHTML = skeletons;
             }
@@ -258,31 +201,16 @@
                 showSkeletonLoader();
                 try {
                     const snapshot = await db.collection('materials').orderBy('uploadedAt', 'desc').get();
-                    if (snapshot.empty) {
-                        grid.innerHTML = `<div class="empty-state"><i class="fas fa-box-open"></i><p>No study materials have been uploaded yet.</p></div>`;
-                        return;
-                    }
-                    
                     let materialsHTML = '';
-                    snapshot.forEach(doc => {
-                        const material = doc.data();
-                        const isPremium = material.isPaid || false;
-                        materialsHTML += `
-                            <a href="${isPremium ? '#' : material.downloadURL}" class="material-card" ${isPremium ? 'onclick="alert(\'This is a premium resource! Please contact the admin for access.\')"' : 'target="_blank" rel="noopener noreferrer"'}>
-                                <div class="material-card-header">
-                                    <div class="material-icon"><i class="fas fa-book-open"></i></div>
-                                    <span class="material-card-arrow">→</span>
-                                </div>
-                                <div class="material-info">
-                                    <h3 class="material-title">${material.title}</h3>
-                                    <p class="material-meta">Course: ${material.courseCode}</p>
-                                </div>
-                                <div class="material-footer">
-                                    <span class="tag ${isPremium ? 'tag-premium' : 'tag-free'}">${isPremium ? 'Premium' : 'Free'}</span>
-                                    <i class="fas ${isPremium ? 'fa-lock' : 'fa-download'} material-action-icon"></i>
-                                </div>
-                            </a>`;
-                    });
+                    if (snapshot.empty) {
+                        materialsHTML = `<div class="empty-state"><i class="fas fa-box-open"></i><p>No study materials have been uploaded yet.</p></div>`;
+                    } else {
+                        snapshot.forEach(doc => {
+                            const material = doc.data();
+                            const isPremium = material.isPaid || false;
+                            materialsHTML += `<a href="${isPremium ? '#' : material.downloadURL}" class="material-card" ${isPremium ? 'onclick="alert(\'This is a premium resource! Please contact the admin for access.\')"' : 'target="_blank" rel="noopener noreferrer"'}><div class="material-card-header"><div class="material-icon"><i class="fas fa-book-open"></i></div><span class="material-card-arrow">→</span></div><div class="material-info"><h3 class="material-title">${material.title}</h3><p class="material-meta">Course: ${material.courseCode}</p></div><div class="material-footer"><span class="tag ${isPremium ? 'tag-premium' : 'tag-free'}">${isPremium ? 'Premium' : 'Free'}</span><i class="fas ${isPremium ? 'fa-lock' : 'fa-download'} material-action-icon"></i></div></a>`;
+                        });
+                    }
                     grid.innerHTML = materialsHTML;
                 } catch (err) {
                     console.error("Error loading materials:", err);
