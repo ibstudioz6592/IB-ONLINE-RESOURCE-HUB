@@ -5,19 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Content | Admin Panel</title>
     
-    <!-- Favicon matching the IB Studioz Logo -->
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23FFD700' d='M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z' /%3E%3Cg fill='%230A0A0A'%3E%3Cpath d='M28,25 h10 v50 h-10 Z' /%3E%3Cpath d='M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z' /%3E%3C/g%3E%3C/svg%3E">
-
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Font to match admindashboard.html -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* Styles to match admindashboard.html */
         :root {
             --primary-glow: #FFD700; --secondary-glow: #00A2FF; --dark-bg: #0A0A0A;
             --text-primary: #F0F0F0; --text-secondary: #A0A0A0; --card-bg: rgba(22, 22, 22, 0.8);
@@ -67,6 +63,7 @@
         .form-group label .fas, .form-group label .fab { margin-right: 10px; color: var(--primary-glow); }
         input, select, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background-color: rgba(0,0,0,0.3); color: var(--text-primary); font-family: 'Inter', sans-serif; font-size: 1rem; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary-glow); box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+        select:disabled { background-color: rgba(0,0,0,0.5); cursor: not-allowed; }
         .checkbox-group { display: flex; align-items: center; gap: 12px; }
         .checkbox-group input { width: auto; }
         .message { text-align: center; padding: 15px; border-radius: 8px; margin-top: 20px; display: none; font-weight: 500; }
@@ -108,19 +105,36 @@
                 <label for="title"><i class="fas fa-heading"></i> Title</label>
                 <input type="text" id="title" placeholder="e.g., Unit 1 Notes" required>
             </div>
-
-            <!-- START: NEW FIELDS for Study Materials -->
-            <div class="form-group" id="thumbnail-group" style="display:none;">
-                <label for="thumbnailURL"><i class="fas fa-image"></i> Thumbnail Image URL</label>
-                <input type="url" id="thumbnailURL" placeholder="Paste public URL of the preview image">
+            
+            <!-- THIS CONTAINER HOLDS ALL FIELDS SPECIFIC TO 'STUDY MATERIALS' -->
+            <div id="materials-fields" style="display:none;">
+                <div class="form-group">
+                    <label for="department"><i class="fas fa-university"></i> Department</label>
+                    <select id="department" required></select>
+                </div>
+                 <div class="form-group">
+                    <label for="semester"><i class="fas fa-graduation-cap"></i> Semester</label>
+                    <select id="semester" required disabled></select>
+                </div>
+                 <div class="form-group">
+                    <label for="course"><i class="fas fa-book"></i> Course</label>
+                    <select id="course" required disabled></select>
+                </div>
+                <div class="form-group">
+                    <label for="thumbnailURL"><i class="fas fa-image"></i> Thumbnail Image URL</label>
+                    <input type="url" id="thumbnailURL" placeholder="Paste public URL of the preview image">
+                </div>
+                <div class="form-group">
+                    <label for="description"><i class="fas fa-paragraph"></i> Description</label>
+                    <textarea id="description" rows="3" placeholder="A short description of the content..."></textarea>
+                </div>
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="isPaid">
+                    <label for="isPaid">This is a Premium / Paid resource</label>
+                </div>
             </div>
-            <div class="form-group" id="description-group" style="display:none;">
-                <label for="description"><i class="fas fa-paragraph"></i> Description</label>
-                <textarea id="description" rows="3" placeholder="A short description of the content..."></textarea>
-            </div>
-            <!-- END: NEW FIELDS for Study Materials -->
 
-            <div class="form-group">
+            <div class="form-group" id="details-group">
                 <label for="details" id="details-label"><i class="fas fa-info-circle"></i> Details</label>
                 <input type="text" id="details" placeholder="e.g., CS301 or Dr. Jane Doe" required>
             </div>
@@ -132,10 +146,7 @@
                 <label for="year"><i class="fas fa-calendar-alt"></i> Year (for PYQs)</label>
                 <input type="number" id="year" placeholder="e.g., 2024">
             </div>
-            <div class="form-group checkbox-group" id="paid-group" style="display:none;">
-                <input type="checkbox" id="isPaid">
-                <label for="isPaid">This is a Premium / Paid resource</label>
-            </div>
+
             <button type="submit" id="submit-btn" class="btn btn-primary">
                 <span class="btn-text">Upload Content</span>
                 <div class="spinner"></div>
@@ -149,6 +160,23 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script>
+        const academicData = {
+            branches: {"CSE":{"name":"Computer Science","color":"var(--cse-color)","icon":"fas fa-laptop-code","semesters":{"1":[{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus With MATLAB","credits":4},{"code":"U23PHY103B","name":"Engineering Physics","credits":3},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23BEE106A","name":"Basic Electrical and Electronics Engineering","credits":3},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1},{"code":"U23PHL110","name":"Engineering Physics Lab","credits":1},{"code":"U23BEEL113","name":"Basic Electrical and Electronics Engineering Lab","credits":1},{"code":"U23PPL112","name":"Python Programming Lab","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202B","name":"Discrete Mathematics","credits":4},{"code":"U23CHE204B","name":"Chemistry For Computer Science","credits":3},{"code":"U23CPR205B","name":"Programming In C","credits":3},{"code":"U23EGR207","name":"Engineering Graphics","credits":3},{"code":"U23EC203","name":"Digital Principles And System Design","credits":3},{"code":"U23CHL211","name":"Chemistry Lab","credits":1},{"code":"U23CPL212","name":"C programming Lab","credits":1},{"code":"U23TAM201","name":"Tamils And Technology","credits":1}],"3":[{"code":"U23MAT301D","name":"Probability and Statistics","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming","credits":3},{"code":"U23CS304","name":"Operating Systems","credits":3},{"code":"U23CS305","name":"Computer Information and Ethics","credits":3},{"code":"U23CS306","name":"Data Structures Lab","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Lab","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1},{"code":"Noc24-mg72","name":"NPTEL:design Thinking-A Primer","credits":1}],"4":[{"code":"U23MAT401B","name":"Numerical Methods","credits":4},{"code":"U23CS401","name":"Design And Analysis of Algorithms","credits":3},{"code":"U23CS402","name":"Software Engineering","credits":3},{"code":"U23CS403","name":"DataBase Management Systems","credits":3},{"code":"U23CS404","name":"Embedded System Design ","credits":3},{"code":"U23CS405","name":"Software Development Lab","credits":1},{"code":"U23CS403","name":"Database Management Systems Lab","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CS502","name":"Artificial Intelligence","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":" U23CS947 / U23CS903","name":"Professional Elective ","credits":3},{"code":"U23CS505","name":"Computer Networks Laboratory","credits":2},{"code":"U23CS506","name":"Artificial Intelligence and Machine Learning Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude -III","credits":1}],"6":[],"7":[],"8":[]}},
+            "IT":{"name":"Info. Technology","color":"var(--it-color)","icon":"fas fa-network-wired","semesters":{"1":[{"code":"U23IT101","name":"Programming Fundamentals","credits":4},{"code":"U23IT102","name":"Discrete Mathematics","credits":4},{"code":"U23IT103","name":"Digital Systems","credits":3},{"code":"U23IT104","name":"Computer Organization","credits":3},{"code":"U23IT105","name":"Communication Skills","credits":2},{"code":"U23IT106","name":"Programming Lab","credits":1},{"code":"U23IT107","name":"Digital Systems Lab","credits":1}],"2":[{"code":"U23IT201","name":"Data Structures","credits":4},{"code":"U23IT202","name":"Database Systems","credits":4},{"code":"U23IT203","name":"Operating Systems","credits":3},{"code":"U23IT204","name":"Computer Networks","credits":3},{"code":"U23IT205","name":"Web Technologies","credits":3},{"code":"U23IT206","name":"Data Structures Lab","credits":1},{"code":"U23IT207","name":"Web Technologies Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
+            "ECE":{"name":"Electronics & Comm","color":"var(--ece-color)","icon":"fas fa-satellite-dish","semesters":{"1":[{"code":"U23EC101","name":"Basic Electronics","credits":4},{"code":"U23EC102","name":"Circuit Theory","credits":4},{"code":"U23EC103","name":"Engineering Mathematics","credits":4},{"code":"U23EC104","name":"Programming in C","credits":3},{"code":"U23EC105","name":"Communication Skills","credits":2},{"code":"U23EC106","name":"Electronics Lab","credits":1},{"code":"U23EC107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EC201","name":"Analog Electronics","credits":4},{"code":"U23EC202","name":"Digital Electronics","credits":4},{"code":"U23EC203","name":"Signals and Systems","credits":4},{"code":"U23EC204","name":"Electromagnetic Theory","credits":3},{"code":"U23EC205","name":"Data Structures","credits":3},{"code":"U23EC206","name":"Analog Electronics Lab","credits":1},{"code":"U23EC207","name":"Digital Electronics Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
+            "EEE":{"name":"Electrical & Electronics","color":"var(--eee-color)","icon":"fas fa-bolt","semesters":{"1":[{"code":"U23EE101","name":"Basic Electrical Engineering","credits":4},{"code":"U23EE102","name":"Engineering Mathematics","credits":4},{"code":"U23EE103","name":"Electronics Engineering","credits":3},{"code":"U23EE104","name":"Programming in C","credits":3},{"code":"U23EE105","name":"Communication Skills","credits":2},{"code":"U23EE106","name":"Electrical Lab","credits":1},{"code":"U23EE107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EE201","name":"Circuit Theory","credits":4},{"code":"U23EE202","name":"Electromagnetic Theory","credits":4},{"code":"U23EE203","name":"Digital Electronics","credits":4},{"code":"U23EE204","name":"Electrical Machines","credits":3},{"code":"U23EE205","name":"Data Structures","credits":3},{"code":"U23EE206","name":"Circuit Theory Lab","credits":1},{"code":"U23EE207","name":"Digital Electronics Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
+            "MECH":{"name":"Mechanical","color":"var(--mech-color)","icon":"fas fa-cogs","semesters":{"1":[{"code":"U23ME101","name":"Engineering Mechanics","credits":4},{"code":"U23ME102","name":"Engineering Graphics","credits":4},{"code":"U23ME103","name":"Engineering Mathematics","credits":4},{"code":"U23ME104","name":"Basic Electrical Engineering","credits":3},{"code":"U23ME105","name":"Communication Skills","credits":2},{"code":"U23ME106","name":"Workshop Practice","credits":1},{"code":"U23ME107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23ME201","name":"Thermodynamics","credits":4},{"code":"U23ME202","name":"Mechanics of Materials","credits":4},{"code":"U23ME203","name":"Manufacturing Technology","credits":4},{"code":"U23ME204","name":"Fluid Mechanics","credits":3},{"code":"U23ME205","name":"Computer Programming","credits":3},{"code":"U23ME206","name":"Thermodynamics Lab","credits":1},{"code":"U23ME207","name":"Manufacturing Technology Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
+            "AIML":{"name":"AI & Machine Learning","color":"var(--aiml-color)","icon":"fas fa-brain","semesters":{"1":[{"code":"U23EG107","name":"Engineering Graphics","credits":3},{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus with MATLAB","credits":4},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23PHY103E","name":"Engineering Physics","credits":3},{"code":"U23PHL110","name":"Engineering Physics Laboratory","credits":1},{"code":"U23PPL112","name":"Python Programming Laboratory","credits":1},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202D","name":"Discrete Mathematics","credits":4},{"code":"U23BEEE206B","name":"Basics of Electrical and Electronics Engineering","credits":3},{"code":"U23CPR205","name":"Programming in C","credits":3},{"code":"U23CHE204C","name":"Applied Chemistry","credits":2},{"code":"U23EC203","name":"Digital Principles and System Design","credits":3},{"code":"U23CPL212","name":"C Programming Laboratory","credits":1},{"code":"U23CHL211","name":"Chemistry Laboratory","credits":1},{"code":"U23BEEL213B","name":"BEEE Laboratory","credits":1},{"code":"U23TAM201","name":"Tamils and Technology","credits":1}],"3":[{"code":"U23MAT301E","name":"Applied Probability and Statistics-I","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming Using Java","credits":3},{"code":"U23AML301","name":"Data Visualization","credits":3},{"code":"noc25-mg106","name":"NPTEL: Design Thinking - A Primer","credits":1},{"code":"U23CS306","name":"Data Structures Laboratory","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Using Java Laboratory","credits":1},{"code":"U23AML302","name":"Data Visualization Laboratory","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1}],"4":[{"code":"U23MAT401A","name":"Applied Probability and Statistics-II","credits":4},{"code":"U23CS403","name":"Database Management Systems","credits":3},{"code":"U23CS401","name":"Design and Analysis of Algorithms","credits":3},{"code":"U23AML401","name":"Artificial Intelligence","credits":3},{"code":"U23CSD402","name":"Operating Systems","credits":3},{"code":"U23AML402","name":"Artificial Intelligence Lab","credits":1},{"code":"U23CS405","name":"Database Management Systems Lab","credits":1},{"code":"U23GE401","name":"Soft Skills and Aptitude-II","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CSD502","name":"Software Engineering","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":"U19CS903","name":"Professional Elective - Agile Methodologies","credits":3},{"code":"U23AML501","name":"Machine Learning Laboratory","credits":2},{"code":"U23CSD504","name":"Software Development Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude -III","credits":1}],"6":[{"code":"U23CS601","name":"Computer Vision","credits":3},{"code":"U23CS602","name":"Reinforcement Learning","credits":3},{"code":"U23CS603","name":"Robotics","credits":3},{"code":"U23CS604","name":"Cyber Security","credits":3},{"code":"U23CS605","name":"Blockchain Technology","credits":3},{"code":"U23CS606","name":"Elective III","credits":3},{"code":"U23CS607","name":"Project Work II","credits":3}],"7":[{"code":"U23CS701","name":"Advanced Machine Learning","credits":3},{"code":"U23CS702","name":"AI Ethics and Governance","credits":3},{"code":"U23CS703","name":"Elective IV","credits":3},{"code":"U23CS704","name":"Project Work III","credits":3}],"8":[{"code":"U23CS801","name":"Industry Internship","credits":6},{"code":"U23CS802","name":"Project Work IV","credits":6}]}},
+            "CIVIL":{"name":"Civil Engineering","color":"var(--civil-color)","icon":"fas fa-building","semesters":{"1":[{"code":"U23CE101","name":"Engineering Mechanics","credits":4},{"code":"U23CE102","name":"Engineering Graphics","credits":4},{"code":"U23CE103","name":"Engineering Mathematics","credits":4},{"code":"U23CE104","name":"Basic Civil Engineering","credits":3},{"code":"U23CE105","name":"Communication Skills","credits":2},{"code":"U23CE106","name":"Surveying","credits":1},{"code":"U23CE107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23CE201","name":"Building Materials","credits":4},{"code":"U23CE202","name":"Structural Analysis","credits":4},{"code":"U23CE203","name":"Fluid Mechanics","credits":4},{"code":"U23CE204","name":"Surveying","credits":3},{"code":"U23CE205","name":"Computer Programming","credits":3},{"code":"U23CE206","name":"Building Materials Lab","credits":1},{"code":"U23CE207","name":"Surveying Lab","credits":1}]}},
+            "BME":{"name":"Bio Medical","color":"var(--bme-color)","icon":"fas fa-heartbeat","semesters":{"1":[{"code":"U23BM101","name":"Human Anatomy","credits":4},{"code":"U23BM102","name":"Engineering Mathematics","credits":4},{"code":"U23BM103","name":"Basic Electronics","credits":3},{"code":"U23BM104","name":"Programming in C","credits":3},{"code":"U23BM105","name":"Communication Skills","credits":2},{"code":"U23BM106","name":"Human Anatomy Lab","credits":1},{"code":"U23BM107","name":"Programming Lab","credits":1}],"2":[{"code":"U23BM201","name":"Human Physiology","credits":4},{"code":"U23BM202","name":"Biochemistry","credits":4},{"code":"U23BM203","name":"Medical Electronics","credits":4},{"code":"U23BM204","name":"Biomechanics","credits":3},{"code":"U23BM205","name":"Data Structures","credits":3},{"code":"U23BM206","name":"Human Physiology Lab","credits":1},{"code":"U23BM207","name":"Medical Electronics Lab","credits":1}]}},
+            "FT":{"name":"Fashion Technology","color":"var(--ft-color)","icon":"fas fa-tshirt","semesters":{"1":[{"code":"U23FT101","name":"Fiber Science","credits":4},{"code":"U23FT102","name":"Textile Chemistry","credits":4},{"code":"U23FT103","name":"Fashion Illustration","credits":3},{"code":"U23FT104","name":"Pattern Making","credits":3},{"code":"U23FT105","name":"Communication Skills","credits":2},{"code":"U23FT106","name":"Textile Chemistry Lab","credits":1},{"code":"U23FT107","name":"Pattern Making Lab","credits":1}],"2":[{"code":"U23FT201","name":"Textile Processing","credits":4},{"code":"U23FT202","name":"Apparel Manufacturing","credits":4},{"code":"U23FT203","name":"Fashion Design","credits":4},{"code":"U23FT204","name":"Garment Construction","credits":3},{"code":"U23FT205","name":"Computer Applications","credits":3},{"code":"U23FT206","name":"Apparel Manufacturing Lab","credits":1},{"code":"U23FT207","name":"Garment Construction Lab","credits":1}]}},
+            "MCT":{"name":"Mechatronics","color":"var(--mct-color)","icon":"fas fa-robot","semesters":{"1":[{"code":"U23MT101","name":"Engineering Mechanics","credits":4},{"code":"U23MT102","name":"Engineering Graphics","credits":4},{"code":"U23MT103","name":"Engineering Mathematics","credits":4},{"code":"U23MT104","name":"Basic Electronics","credits":3},{"code":"U23MT105","name":"Communication Skills","credits":2},{"code":"U23MT106","name":"Workshop Practice","credits":1},{"code":"U23MT107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23MT201","name":"Thermodynamics","credits":4},{"code":"U23MT202","name":"Mechanics of Materials","credits":4},{"code":"U23MT203","name":"Digital Electronics","credits":4},{"code":"U23MT204","name":"Fluid Mechanics","credits":3},{"code":"U23MT205","name":"Computer Programming","credits":3},{"code":"U23MT206","name":"Thermodynamics Lab","credits":1},{"code":"U23MT207","name":"Digital Electronics Lab","credits":1}]}},
+            "CSD":{"name":"CS & Design","color":"var(--csd-color)","icon":"fas fa-paint-brush","semesters":{"1":[{"code":"U23CD101","name":"Design Fundamentals","credits":4},{"code":"U23CD102","name":"Programming Basics","credits":4},{"code":"U23CD103","name":"Visual Communication","credits":3},{"code":"U23CD104","name":"Mathematics for Design","credits":3},{"code":"U23CD105","name":"Communication Skills","credits":2},{"code":"U23CD106","name":"Design Studio","credits":1},{"code":"U23CD107","name":"Programming Lab","credits":1}],"2":[{"code":"U23CD201","name":"User Interface Design","credits":4},{"code":"U23CD202","name":"Data Structures","credits":4},{"code":"U23CD203","name":"Web Design","credits":4},{"code":"U23CD204","name":"Digital Illustration","credits":3},{"code":"U23CD205","name":"Human-Computer Interaction","credits":3},{"code":"U23CD206","name":"UI Design Lab","credits":1},{"code":"U23CD207","name":"Web Design Lab","credits":1}]}},
+            "ADS":{"name":"AI & Data Science","color":"var(--ads-color)","icon":"fas fa-database","semesters":{"1":[{"code":"U23DS101","name":"Programming Fundamentals","credits":4},{"code":"U23DS102","name":"Linear Algebra","credits":4},{"code":"U23DS103","name":"Statistics Basics","credits":3},{"code":"U23DS104","name":"Computational Thinking","credits":3},{"code":"U23DS105","name":"Communication Skills","credits":2},{"code":"U23DS106","name":"Programming Lab","credits":1},{"code":"U23DS107","name":"Statistics Lab","credits":1}],"2":[{"code":"U23DS201","name":"Data Structures","credits":4},{"code":"U23DS202","name":"Probability and Statistics","credits":4},{"code":"U23DS203","name":"Database Systems","credits":4},{"code":"U23DS204","name":"Data Visualization","credits":3},{"code":"U23DS205","name":"Python Programming","credits":3},{"code":"U23DS206","name":"Data Structures Lab","credits":1},{"code":"U23DS207","name":"Database Lab","credits":1}]}},
+            "EFE":{"name":"Electrical & Computer","color":"var(--efe-color)","icon":"fas fa-microchip","semesters":{"1":[{"code":"U23EF101","name":"Circuit Theory","credits":4},{"code":"U23EF102","name":"Programming Fundamentals","credits":4},{"code":"U23EF103","name":"Digital Electronics","credits":3},{"code":"U23EF104","name":"Engineering Mathematics","credits":3},{"code":"U23EF105","name":"Communication Skills","credits":2},{"code":"U23EF106","name":"Circuit Theory Lab","credits":1},{"code":"U23EF107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EF201","name":"Signals and Systems","credits":4},{"code":"U23EF202","name":"Data Structures","credits":4},{"code":"U23EF203","name":"Analog Electronics","credits":4},{"code":"U23EF204","name":"Electromagnetic Theory","credits":3},{"code":"U23EF205","name":"Computer Organization","credits":3},{"code":"U23EF206","name":"Analog Electronics Lab","credits":1},{"code":"U23EF207","name":"Data Structures Lab","credits":1}]}},
+            "EXE":{"name":"Electronics & Computer","color":"var(--exe-color)","icon":"fas fa-desktop","semesters":{"1":[{"code":"U23EX101","name":"Basic Electronics","credits":4},{"code":"U23EX102","name":"Programming Fundamentals","credits":4},{"code":"U23EX103","name":"Digital Logic Design","credits":3},{"code":"U23EX104","name":"Engineering Mathematics","credits":3},{"code":"U23EX105","name":"Communication Skills","credits":2},{"code":"U23EX106","name":"Electronics Lab","credits":1},{"code":"U23EX107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EX201","name":"Data Structures","credits":4},{"code":"U23EX202","name":"Analog Electronics","credits":4},{"code":"U23EX203","name":"Computer Organization","credits":4},{"code":"U23EX204","name":"Signals and Systems","credits":3},{"code":"U23EX205","name":"Database Systems","credits":3},{"code":"U23EX206","name":"Analog Electronics Lab","credits":1},{"code":"U23EX207","name":"Data Structures Lab","credits":1}]}}}
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
             const firebaseConfig = { apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao", authDomain: "student-portal-free.firebaseapp.com", projectId: "student-portal-free", storageBucket: "student-portal-free.appspot.com", messagingSenderId: "272865877510", appId: "1:272865877510:web:0875a2502ae55bbf9ead87" };
             firebase.initializeApp(firebaseConfig);
@@ -163,49 +191,112 @@
                 db.collection('users').doc(user.uid).get().then(doc => {
                     if (!doc.exists || doc.data().role !== 'admin') {
                         window.location.replace('/studentdashboard.html');
+                    } else {
+                        initializeAdminForm(); // User is an admin, set up the form
                     }
                 });
             });
 
-            // --- START: JAVASCRIPT CHANGES (1/2) ---
+            // --- FORM ELEMENTS ---
             const contentTypeSelect = document.getElementById('contentType');
             const yearGroup = document.getElementById('year-group');
-            const paidGroup = document.getElementById('paid-group');
-            // Get the new group elements
-            const thumbnailGroup = document.getElementById('thumbnail-group');
-            const descriptionGroup = document.getElementById('description-group');
+            const detailsGroup = document.getElementById('details-group');
             const detailsLabel = document.getElementById('details-label');
             const urlLabel = document.getElementById('url-label');
+            const materialsFields = document.getElementById('materials-fields');
+            const departmentSelect = document.getElementById('department');
+            const semesterSelect = document.getElementById('semester');
+            const courseSelect = document.getElementById('course');
             
-            contentTypeSelect.addEventListener('change', () => {
+            function initializeAdminForm() {
+                populateDepartments();
+                setupEventListeners();
+            }
+            
+            function setupEventListeners() {
+                contentTypeSelect.addEventListener('change', handleContentTypeChange);
+                departmentSelect.addEventListener('change', handleDepartmentChange);
+                semesterSelect.addEventListener('change', handleSemesterChange);
+
+                const uploadForm = document.getElementById('upload-form');
+                uploadForm.addEventListener('submit', handleFormSubmit);
+
+                document.getElementById('logout-btn').addEventListener('click', () => auth.signOut());
+            }
+            
+            function handleContentTypeChange() {
                 const type = contentTypeSelect.value;
                 const isMaterials = type === 'materials';
 
-                // Show/hide conditional fields based on content type
+                materialsFields.style.display = isMaterials ? 'block' : 'none';
+                detailsGroup.style.display = isMaterials ? 'none' : 'block';
                 yearGroup.style.display = type === 'pyqs' ? 'block' : 'none';
-                paidGroup.style.display = isMaterials ? 'flex' : 'none';
-                thumbnailGroup.style.display = isMaterials ? 'block' : 'none';
-                descriptionGroup.style.display = isMaterials ? 'block' : 'none';
                 
-                // Update labels based on content type
                 if (type === 'seminars') {
                     detailsLabel.innerHTML = '<i class="fas fa-user-tie"></i> Speaker Name';
                     urlLabel.innerHTML = '<i class="fab fa-youtube"></i> YouTube Embed URL';
                 } else if (type === 'quizzes') {
                     detailsLabel.innerHTML = '<i class="fas fa-tag"></i> Quiz Topic';
                     urlLabel.innerHTML = '<i class="fab fa-google-drive"></i> Google Form Embed URL';
-                } else {
+                } else if (type === 'pyqs') {
                     detailsLabel.innerHTML = '<i class="fas fa-info-circle"></i> Course Code';
                     urlLabel.innerHTML = '<i class="fas fa-link"></i> Download URL';
+                } else {
+                    urlLabel.innerHTML = '<i class="fas fa-link"></i> Download URL';
                 }
-            });
+            }
 
-            const uploadForm = document.getElementById('upload-form');
-            const messageEl = document.getElementById('form-message');
-            const submitBtn = document.getElementById('submit-btn');
+            // --- DYNAMIC DROPDOWN LOGIC ---
+            function populateDepartments() {
+                departmentSelect.innerHTML = '<option value="" disabled selected>-- Select a Department --</option>';
+                Object.keys(academicData.branches).forEach(branchCode => {
+                    const branch = academicData.branches[branchCode];
+                    const option = new Option(branch.name, branchCode);
+                    departmentSelect.add(option);
+                });
+            }
 
-            uploadForm.addEventListener('submit', (e) => {
+            function handleDepartmentChange() {
+                const deptCode = departmentSelect.value;
+                semesterSelect.innerHTML = '<option value="" disabled selected>-- Select a Semester --</option>';
+                courseSelect.innerHTML = '<option value="" disabled selected>-- Select a Course --</option>';
+                courseSelect.disabled = true;
+
+                if (deptCode) {
+                    const branchData = academicData.branches[deptCode];
+                    Object.keys(branchData.semesters).forEach(sem => {
+                        const option = new Option(`Semester ${sem}`, sem);
+                        semesterSelect.add(option);
+                    });
+                    semesterSelect.disabled = false;
+                }
+            }
+
+            function handleSemesterChange() {
+                const deptCode = departmentSelect.value;
+                const semCode = semesterSelect.value;
+                courseSelect.innerHTML = '<option value="" disabled selected>-- Select a Course --</option>';
+                
+                if (deptCode && semCode) {
+                    const subjects = academicData.branches[deptCode].semesters[semCode];
+                    if (subjects && subjects.length > 0) {
+                        subjects.forEach(subject => {
+                            const option = new Option(`${subject.code} - ${subject.name}`, subject.code);
+                            courseSelect.add(option);
+                        });
+                        courseSelect.disabled = false;
+                    } else {
+                        courseSelect.disabled = true;
+                    }
+                }
+            }
+            
+            // --- FORM SUBMISSION ---
+            function handleFormSubmit(e) {
                 e.preventDefault();
+                const submitBtn = document.getElementById('submit-btn');
+                const messageEl = document.getElementById('form-message');
+
                 submitBtn.disabled = true;
                 submitBtn.classList.add('loading');
                 messageEl.style.display = 'none';
@@ -225,14 +316,19 @@
                 
                 switch(collectionName) {
                     case 'materials':
-                        data.courseCode = document.getElementById('details').value.trim();
+                        data.department = departmentSelect.value;
+                        data.semester = semesterSelect.value;
+                        data.courseCode = courseSelect.value;
                         data.downloadURL = document.getElementById('url').value.trim();
                         data.isPaid = document.getElementById('isPaid').checked;
-                        // --- START: JAVASCRIPT CHANGES (2/2) ---
-                        // Add the new fields to the data object
                         data.thumbnailURL = document.getElementById('thumbnailURL').value.trim();
                         data.description = document.getElementById('description').value.trim();
-                        // --- END: JAVASCRIPT CHANGES ---
+                        if (!data.department || !data.semester || !data.courseCode) {
+                           alert('Please select Department, Semester, and Course.');
+                           submitBtn.disabled = false;
+                           submitBtn.classList.remove('loading');
+                           return;
+                        }
                         break;
                     case 'pyqs':
                         data.courseCode = document.getElementById('details').value.trim();
@@ -253,8 +349,9 @@
                     messageEl.textContent = 'Content uploaded successfully!';
                     messageEl.className = 'message success';
                     messageEl.style.display = 'block';
-                    uploadForm.reset();
-                    contentTypeSelect.dispatchEvent(new Event('change')); // Reset conditional fields
+                    document.getElementById('upload-form').reset();
+                    handleContentTypeChange(); // Reset conditional fields
+                    resetMaterialSelects(); // Reset the new dropdowns
                     setTimeout(() => { messageEl.style.display = 'none'; }, 4000);
                 }).catch(err => {
                     messageEl.textContent = 'Error: ' + err.message;
@@ -264,9 +361,15 @@
                     submitBtn.disabled = false;
                     submitBtn.classList.remove('loading');
                 });
-            });
-            
-            document.getElementById('logout-btn').addEventListener('click', () => auth.signOut());
+            }
+
+            function resetMaterialSelects() {
+                departmentSelect.selectedIndex = 0;
+                semesterSelect.innerHTML = '<option value="" disabled selected>-- Select a Semester --</option>';
+                semesterSelect.disabled = true;
+                courseSelect.innerHTML = '<option value="" disabled selected>-- Select a Course --</option>';
+                courseSelect.disabled = true;
+            }
         });
     </script>
 </body>
