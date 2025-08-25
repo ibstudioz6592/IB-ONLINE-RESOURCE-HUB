@@ -35,15 +35,34 @@
         .noise-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>'); opacity: 0.015; }
         
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .page-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; margin: 20px; background: rgba(16,16,16,0.6); backdrop-filter: blur(20px); border-radius: 15px; border: 1px solid var(--border-color); }
+        .page-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; margin: 20px; background: rgba(16,16,16,0.6); backdrop-filter: blur(20px); border-radius: 15px; border: 1px solid var(--border-color); flex-wrap: wrap; gap: 15px; }
         .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; }
         .header-logo-svg { width: 45px; height: auto; }
         .brand-title { position: relative; font-size: 1.5rem; font-weight: 700; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: rgb-text-flow 6s linear infinite; }
         @keyframes rgb-text-flow { to { background-position: 400% 0; } }
-        .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 10px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
-        .btn-secondary:hover { background: var(--primary-glow); color: var(--dark-bg); border-color: var(--primary-glow); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
-        .btn-secondary .fas { margin-right: 8px; }
         
+        /* UPDATED: Button Styles */
+        .btn {
+            padding: 10px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 600;
+            cursor: pointer; transition: all 0.3s ease; text-decoration: none; border: none;
+            display: inline-flex; align-items: center; justify-content: center;
+        }
+        .btn .fas { margin-right: 8px; }
+        .btn-primary {
+            background: var(--primary-glow);
+            color: var(--dark-bg);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+        .btn-primary:hover {
+            box-shadow: 0 4px 25px rgba(255, 215, 0, 0.5);
+            transform: translateY(-2px);
+        }
+        .header-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap; /* Allow wrapping on very small screens if needed */
+        }
+
         .page-title { text-align: center; font-size: 2.5rem; margin-bottom: 40px; }
         .materials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
         .material-card {
@@ -69,6 +88,18 @@
         .modal-content { background: var(--dark-bg); padding: 30px; border-radius: 15px; border: 1px solid var(--border-color); width: 90%; max-width: 900px; max-height: 90vh; display: flex; flex-direction: column; position: relative; transform: scale(0.95); transition: transform 0.3s ease; }
         .modal-overlay.active .modal-content { transform: scale(1); }
         .modal-close { position: absolute; top: 15px; right: 20px; background: none; border: none; color: var(--text-primary); font-size: 2rem; cursor: pointer; z-index: 10; }
+        
+        /* UPDATED: Responsive styles for header */
+        @media (max-width: 600px) {
+            .page-header {
+                flex-direction: column;
+                align-items: stretch; /* Make items take full width */
+            }
+            .header-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -80,9 +111,10 @@
                 <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" /><g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g></svg>
                 <h1 class="brand-title">IB STUDIOZ</h1>
             </a>
-            <div style="display: flex; gap: 15px;">
-                <a href="/studentdashboard.html" class="btn-secondary"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
-                <button id="logout-btn" class="btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            <!-- UPDATED: Buttons now use new classes for styling -->
+            <div class="header-buttons">
+                <a href="/studentdashboard.html" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+                <button id="logout-btn" class="btn btn-primary"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
         </header>
 
@@ -192,7 +224,6 @@
                 document.getElementById('modal-courseCode').textContent = material.courseCode || 'N/A';
                 document.getElementById('modal-description').textContent = material.description || 'No description available.';
                 
-                // This function converts a Google Drive share link to a preview/embed link
                 const embedUrl = getGoogleDriveEmbedUrl(material.downloadURL);
                 document.getElementById('modal-embed-preview').src = embedUrl;
                 
