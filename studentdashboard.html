@@ -44,7 +44,7 @@
     .brand-title { position: relative; font-size: 1.5rem; font-weight: 700; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: rgb-text-flow 6s linear infinite; }
     .brand-title::before { content: 'IB STUDIOZ'; position: absolute; top: 0; left: 0; z-index: -1; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; filter: blur(20px) opacity(0.9); transform: scale(1.1); animation: rgb-text-flow 6s linear infinite; }
     @keyframes rgb-text-flow { to { background-position: 400% 0; } }
-    .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 10px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; }
+    .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 10px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
     .btn-secondary:hover { background: var(--primary-glow); color: var(--dark-bg); border-color: var(--primary-glow); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
     .btn-secondary .fas { margin-right: 8px; }
     .welcome-card-pro { background: var(--card-bg); border-radius: 15px; border: 1px solid var(--border-color); padding: 40px; margin-bottom: 60px; text-align: left; position: relative; overflow: hidden; transition: transform 0.4s ease; }
@@ -99,7 +99,12 @@
             <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" /><g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g></svg>
             <h1 class="brand-title">IB STUDIOZ</h1>
         </a>
-        <button id="logout-btn" class="btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        
+        <!-- UPDATED HEADER BUTTONS -->
+        <div style="display: flex; gap: 15px;">
+            <a href="/account.html" class="btn-secondary"><i class="fas fa-user-circle"></i> My Account</a>
+            <button id="logout-btn" class="btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
     </header>
 
 <div class="container">
