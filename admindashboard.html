@@ -77,10 +77,36 @@
         .list-item-content { display: flex; align-items: center; }
         .list-item-thumb { width: 80px; height: 45px; object-fit: cover; border-radius: 5px; margin-right: 15px; background-color: #333; }
         .list-item-no-thumb { width: 80px; height: 45px; background: #222; border-radius: 5px; margin-right: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--text-secondary); }
-        .list-item span.item-title { font-weight: 600; color: var(--text-primary); }
+        .list-item span.item-title { font-weight: 600; font-size: 1.1rem; color: var(--text-primary); }
         .list-item span.item-details { font-size: 0.9rem; color: var(--text-secondary); }
         .list-category { font-size: 1.2rem; font-weight: 700; color: var(--primary-glow); margin-top: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color);}
         .list-category:first-child { margin-top: 0; }
+        
+        /* NEW: Styles for the enhanced user list */
+        .user-info-grid {
+            display: grid;
+            gap: 6px 20px;
+        }
+        .user-info-grid .item-title {
+            grid-column: 1 / -1; /* Title spans all columns */
+            margin-bottom: 5px;
+        }
+        .user-info-grid .item-details {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .user-info-grid .item-details .fas {
+            width: 16px;
+            text-align: center;
+            color: var(--primary-glow);
+            opacity: 0.7;
+        }
+        @media (min-width: 600px) {
+            .user-info-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
         
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
         .btn-sm { padding: 8px 15px; border-radius: 8px; cursor: pointer; border: none; transition: all 0.3s ease; font-family: 'Inter', sans-serif; font-weight: 500; }
@@ -297,26 +323,34 @@
                 return date.toLocaleString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true });
             }
 
-            // --- USER MANAGEMENT FUNCTIONS ---
+            // --- USER MANAGEMENT FUNCTIONS (UPDATED) ---
             async function loadUsers() {
                 usersListContainer.innerHTML = '<p style="text-align: center;">Loading users...</p>';
                 try {
+                    // This query correctly gets the most recently registered users on top.
                     const snapshot = await db.collection('users').where('role', '==', 'student').orderBy('createdAt', 'desc').get();
+                    
                     if (snapshot.empty) {
                         usersListContainer.innerHTML = '<p style="text-align: center;">No student users found.</p>';
                         return;
                     }
+                    
                     usersListContainer.innerHTML = '';
                     snapshot.forEach(doc => {
                         const user = doc.data();
-                        const registrationDate = formatTimestamp(user.createdAt);
+                        const lastLoginDate = formatTimestamp(user.lastLoginAt);
                         const userEl = document.createElement('div');
                         userEl.className = 'list-item';
+                        
+                        // New, more detailed HTML structure
                         userEl.innerHTML = `
-                            <div>
-                                <span class="item-title">${user.name}</span><br>
-                                <span class="item-details">${user.email}</span><br>
-                                <span class="item-details" style="font-size: 0.8rem; color: var(--primary-glow);">Registered: ${registrationDate}</span>
+                            <div class="user-info-grid">
+                                <span class="item-title">${user.name}</span>
+                                <span class="item-details"><i class="fas fa-envelope"></i> ${user.email}</span>
+                                <span class="item-details"><i class="fas fa-id-card"></i> ${user.admissionNo || 'Not Set'}</span>
+                                <span class="item-details"><i class="fas fa-clock"></i> Last Login: ${lastLoginDate}</span>
+                                <span class="item-details"><i class="fas fa-sign-in-alt"></i> Logins: ${user.loginCount || 0}</span>
+                                <span class="item-details"><i class="fas fa-calendar-alt"></i> Joined: ${formatTimestamp(user.createdAt)}</span>
                             </div>
                             <div class="btn-group">
                                 <button class="btn-sm btn-details" data-uid="${doc.id}">Details</button>
