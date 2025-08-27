@@ -15,6 +15,11 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
     <!-- Custom Styles -->
     <style>
       :root {
@@ -25,6 +30,21 @@
           --text-secondary: #A0A0A0;
           --card-bg: rgba(22, 22, 22, 0.8);
           --border-color: rgba(255, 215, 0, 0.2);
+          /* Branch Colors */
+          --cse-color: #3b82f6;
+          --it-color: #8b5cf6;
+          --ece-color: #10b981;
+          --eee-color: #f59e0b;
+          --mech-color: #ef4444;
+          --aiml-color: #06b6d4;
+          --civil-color: #0ea5e9;
+          --bme-color: #ec4899;
+          --ft-color: #8b5cf6;
+          --mct-color: #f97316;
+          --csd-color: #a855f7;
+          --ads-color: #0ea5e9;
+          --efe-color: #10b981;
+          --exe-color: #8b5cf6;
       }
       body {
         font-family: 'Inter', sans-serif;
@@ -75,12 +95,45 @@
       @keyframes rgb-text-flow {
         to { background-position: 400% 0; }
       }
+      @keyframes pulse-glow {
+        0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+        50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+        100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+      }
+      .locked-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+        border-radius: 1rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .material-card:hover .locked-overlay {
+        opacity: 1;
+      }
+      .branch-cse { border-left: 4px solid var(--cse-color); }
+      .branch-it { border-left: 4px solid var(--it-color); }
+      .branch-ece { border-left: 4px solid var(--ece-color); }
+      .branch-eee { border-left: 4px solid var(--eee-color); }
+      .branch-mech { border-left: 4px solid var(--mech-color); }
+      .branch-aiml { border-left: 4px solid var(--aiml-color); }
+      .branch-civil { border-left: 4px solid var(--civil-color); }
+      .branch-bme { border-left: 4px solid var(--bme-color); }
+      .branch-ft { border-left: 4px solid var(--ft-color); }
+      .branch-mct { border-left: 4px solid var(--mct-color); }
+      .branch-csd { border-left: 4px solid var(--csd-color); }
+      .branch-ads { border-left: 4px solid var(--ads-color); }
+      .branch-efe { border-left: 4px solid var(--efe-color); }
+      .branch-exe { border-left: 4px solid var(--exe-color); }
     </style>
-    
-    <!-- React & Babel for in-browser JSX compilation -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
     <div id="root"></div>
@@ -88,82 +141,307 @@
     <script type="text/babel">
         // Deconstruct React for easier use
         const { useState, useEffect, useMemo, useCallback } = React;
-
+        
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao",
+            authDomain: "student-portal-free.firebaseapp.com",
+            projectId: "student-portal-free",
+            storageBucket: "student-portal-free.appspot.com",
+            messagingSenderId: "272865877510",
+            appId: "1:272865877510:web:0875a2502ae55bbf9ead87"
+        };
+        
+        // Initialize Firebase
+        let firebaseApp;
+        let auth;
+        let db;
+        
+        try {
+            firebaseApp = firebase.initializeApp(firebaseConfig);
+            auth = firebase.auth();
+            db = firebase.firestore();
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+        }
+        
         // --- CONSTANTS ---
         const academicData = {
             branches: {
                 "CSE": {
-                    "name": "Computer Science", "icon": "fas fa-laptop-code",
+                    "name": "Computer Science", "color": "var(--cse-color)", "icon": "fas fa-laptop-code",
                     "semesters": {
-                        "1": [{"code": "U23ENG101A", "name": "Communication Skills in English", "credits": 3}, {"code": "U23MAT102A", "name": "Linear Algebra and Calculus With MATLAB", "credits": 4}],
-                        "2": [{"code": "U23ENG201A", "name": "Technical English", "credits": 2}, {"code": "U23MAT202B", "name": "Discrete Mathematics", "credits": 4}],
-                        "3": [{"code": "U23MAT301D", "name": "Probability and Statistics", "credits": 4}, {"code": "U23CS301", "name": "Data Structures", "credits": 3}],
-                        "4": [{"code": "U23MAT401B", "name": "Numerical Methods", "credits": 4}, {"code": "U23CS401", "name": "Design And Analysis of Algorithms", "credits": 3}],
-                        "5": [{"code": "U23CS504", "name": "Machine Learning", "credits": 3}, {"code": "U23CS501", "name": "Computer Networks", "credits": 3}],
+                        "1": [{"code": "U23ENG101A", "name": "Communication Skills in English", "credits": 3}, {"code": "U23MAT102A", "name": "Linear Algebra and Calculus With MATLAB", "credits": 4}, {"code": "U23PHY103B", "name": "Engineering Physics", "credits": 3}, {"code": "U23PPR105", "name": "Problem Solving using Python Programming", "credits": 3}, {"code": "U23BEE106A", "name": "Basic Electrical and Electronics Engineering", "credits": 3}, {"code": "U23TAM101", "name": "Heritage of Tamils", "credits": 1}, {"code": "U23PHL110", "name": "Engineering Physics Lab", "credits": 1}, {"code": "U23BEEL113", "name": "Basic Electrical and Electronics Engineering Lab", "credits": 1}, {"code": "U23PPL112", "name": "Python Programming Lab", "credits": 1}],
+                        "2": [{"code": "U23ENG201A", "name": "Technical English", "credits": 2}, {"code": "U23MAT202B", "name": "Discrete Mathematics", "credits": 4}, {"code": "U23CHE204B", "name": "Chemistry For Computer Science", "credits": 3}, {"code": "U23CPR205B", "name": "Programming In C", "credits": 3}, {"code": "U23EGR207", "name": "Engineering Graphics", "credits": 3}, {"code": "U23EC203", "name": "Digital Principles And System Design", "credits": 3}, {"code": "U23CHL211", "name": "Chemistry Lab", "credits": 1}, {"code": "U23CPL212", "name": "C programming Lab", "credits": 1}, {"code": "U23TAM201", "name": "Tamils And Technology", "credits": 1}],
+                        "3": [{"code": "U23MAT301D", "name": "Probability and Statistics", "credits": 4}, {"code": "U23CS301", "name": "Data Structures", "credits": 3}, {"code": "U23CS302", "name": "Computer Architecture", "credits": 3}, {"code": "U23CS303", "name": "Object Oriented Programming", "credits": 3}, {"code": "U23CS304", "name": "Operating Systems", "credits": 3}, {"code": "U23CS305", "name": "Computer Information and Ethics", "credits": 3}, {"code": "U23CS306", "name": "Data Structures Lab", "credits": 1}, {"code": "U23CS307", "name": "Object Oriented Programming Lab", "credits": 1}, {"code": "U23GE301", "name": "Soft Skills and Aptitude-I", "credits": 1}, {"code": "Noc24-mg72", "name": "NPTEL:design Thinking-A Primer", "credits": 1}],
+                        "4": [{"code": "U23MAT401B", "name": "Numerical Methods", "credits": 4}, {"code": "U23CS401", "name": "Design And Analysis of Algorithms", "credits": 3}, {"code": "U23CS402", "name": "Software Engineering", "credits": 3}, {"code": "U23CS403", "name": "DataBase Management Systems", "credits": 3}, {"code": "U23CS404", "name": "Embedded System Design ", "credits": 3}, {"code": "U23CS405", "name": "Software Development Lab", "credits": 1}, {"code": "U23CS403", "name": "Database Management Systems Lab", "credits": 1}],
+                        "5": [{"code": "U23CS504", "name": "Machine Learning", "credits": 3}, {"code": "U23CS501", "name": "Computer Networks", "credits": 3}, {"code": "U23CS502", "name": "Artificial Intelligence", "credits": 3}, {"code": "U23CS503", "name": "Theory of Computation", "credits": 3}, {"code": "noc25-cs135", "name": "Elective NPTEL", "credits": 3}, {"code": " U23CS947 / U23CS903", "name": "Professional Elective ", "credits": 3}, {"code": "U23CS505", "name": "Computer Networks Laboratory", "credits": 2}, {"code": "U23CS506", "name": "Artificial Intelligence and Machine Learning Laboratory", "credits": 1}, {"code": "U23GE501", "name": "Soft Skills and Aptitude -III", "credits": 1}],
                         "6": [], "7": [], "8": []
                     }
                 },
                 "IT": {
-                    "name": "Info. Technology", "icon": "fas fa-network-wired",
+                    "name": "Info. Technology", "color": "var(--it-color)", "icon": "fas fa-network-wired",
                     "semesters": {
-                        "1": [{"code": "U23IT101", "name": "Programming Fundamentals", "credits": 4}, {"code": "U23IT102", "name": "Discrete Mathematics", "credits": 4}],
-                        "2": [{"code": "U23IT201", "name": "Data Structures", "credits": 4}, {"code": "U23IT202", "name": "Database Systems", "credits": 4}],
+                        "1": [{"code": "U23IT101", "name": "Programming Fundamentals", "credits": 4}, {"code": "U23IT102", "name": "Discrete Mathematics", "credits": 4}, {"code": "U23IT103", "name": "Digital Systems", "credits": 3}, {"code": "U23IT104", "name": "Computer Organization", "credits": 3}, {"code": "U23IT105", "name": "Communication Skills", "credits": 2}, {"code": "U23IT106", "name": "Programming Lab", "credits": 1}, {"code": "U23IT107", "name": "Digital Systems Lab", "credits": 1}],
+                        "2": [{"code": "U23IT201", "name": "Data Structures", "credits": 4}, {"code": "U23IT202", "name": "Database Systems", "credits": 4}, {"code": "U23IT203", "name": "Operating Systems", "credits": 3}, {"code": "U23IT204", "name": "Computer Networks", "credits": 3}, {"code": "U23IT205", "name": "Web Technologies", "credits": 3}, {"code": "U23IT206", "name": "Data Structures Lab", "credits": 1}, {"code": "U23IT207", "name": "Web Technologies Lab", "credits": 1}],
                         "3": [], "4": [], "5": [], "6": [], "7": [], "8": []
                     }
                 },
                 "ECE": {
-                    "name": "Electronics & Comm", "icon": "fas fa-satellite-dish",
+                    "name": "Electronics & Comm", "color": "var(--ece-color)", "icon": "fas fa-satellite-dish",
                     "semesters": {
-                        "1": [{"code": "U23EC101", "name": "Basic Electronics", "credits": 4}],
-                        "2": [{"code": "U23EC201", "name": "Analog Electronics", "credits": 4}],
+                        "1": [{"code": "U23EC101", "name": "Basic Electronics", "credits": 4}, {"code": "U23EC102", "name": "Circuit Theory", "credits": 4}, {"code": "U23EC103", "name": "Engineering Mathematics", "credits": 4}, {"code": "U23EC104", "name": "Programming in C", "credits": 3}, {"code": "U23EC105", "name": "Communication Skills", "credits": 2}, {"code": "U23EC106", "name": "Electronics Lab", "credits": 1}, {"code": "U23EC107", "name": "Programming Lab", "credits": 1}],
+                        "2": [{"code": "U23EC201", "name": "Analog Electronics", "credits": 4}, {"code": "U23EC202", "name": "Digital Electronics", "credits": 4}, {"code": "U23EC203", "name": "Signals and Systems", "credits": 4}, {"code": "U23EC204", "name": "Electromagnetic Theory", "credits": 3}, {"code": "U23EC205", "name": "Data Structures", "credits": 3}, {"code": "U23EC206", "name": "Analog Electronics Lab", "credits": 1}, {"code": "U23EC207", "name": "Digital Electronics Lab", "credits": 1}],
                         "3": [], "4": [], "5": [], "6": [], "7": [], "8": []
                     }
                 },
                 "EEE": {
-                    "name": "Electrical & Electronics", "icon": "fas fa-bolt",
+                    "name": "Electrical & Electronics", "color": "var(--eee-color)", "icon": "fas fa-bolt",
                     "semesters": {
-                        "1": [{"code": "U23EE101", "name": "Basic Electrical Engineering", "credits": 4}],
-                        "2": [{"code": "U23EE201", "name": "Circuit Theory", "credits": 4}],
+                        "1": [{"code": "U23EE101", "name": "Basic Electrical Engineering", "credits": 4}, {"code": "U23EE102", "name": "Engineering Mathematics", "credits": 4}, {"code": "U23EE103", "name": "Electronics Engineering", "credits": 3}, {"code": "U23EE104", "name": "Programming in C", "credits": 3}, {"code": "U23EE105", "name": "Communication Skills", "credits": 2}, {"code": "U23EE106", "name": "Electrical Lab", "credits": 1}, {"code": "U23EE107", "name": "Programming Lab", "credits": 1}],
+                        "2": [{"code": "U23EE201", "name": "Circuit Theory", "credits": 4}, {"code": "U23EE202", "name": "Electromagnetic Theory", "credits": 4}, {"code": "U23EE203", "name": "Digital Electronics", "credits": 4}, {"code": "U23EE204", "name": "Electrical Machines", "credits": 3}, {"code": "U23EE205", "name": "Data Structures", "credits": 3}, {"code": "U23EE206", "name": "Circuit Theory Lab", "credits": 1}, {"code": "U23EE207", "name": "Digital Electronics Lab", "credits": 1}],
+                        "3": [], "4": [], "5": [], "6": [], "7": [], "8": []
+                    }
+                },
+                "MECH": {
+                    "name": "Mechanical", "color": "var(--mech-color)", "icon": "fas fa-cogs",
+                    "semesters": {
+                        "1": [{"code": "U23ME101", "name": "Engineering Mechanics", "credits": 4}, {"code": "U23ME102", "name": "Engineering Graphics", "credits": 4}, {"code": "U23ME103", "name": "Engineering Mathematics", "credits": 4}, {"code": "U23ME104", "name": "Basic Electrical Engineering", "credits": 3}, {"code": "U23ME105", "name": "Communication Skills", "credits": 2}, {"code": "U23ME106", "name": "Workshop Practice", "credits": 1}, {"code": "U23ME107", "name": "Engineering Graphics Lab", "credits": 1}],
+                        "2": [{"code": "U23ME201", "name": "Thermodynamics", "credits": 4}, {"code": "U23ME202", "name": "Mechanics of Materials", "credits": 4}, {"code": "U23ME203", "name": "Manufacturing Technology", "credits": 4}, {"code": "U23ME204", "name": "Fluid Mechanics", "credits": 3}, {"code": "U23ME205", "name": "Computer Programming", "credits": 3}, {"code": "U23ME206", "name": "Thermodynamics Lab", "credits": 1}, {"code": "U23ME207", "name": "Manufacturing Technology Lab", "credits": 1}],
                         "3": [], "4": [], "5": [], "6": [], "7": [], "8": []
                     }
                 },
                 "AIML": {
-                    "name": "AI & Machine Learning", "icon": "fas fa-brain",
+                    "name": "AI & Machine Learning", "color": "var(--aiml-color)", "icon": "fas fa-brain",
                     "semesters": {
-                        "1": [{"code": "U23EG107", "name": "Engineering Graphics", "credits": 3}],
-                        "2": [{"code": "U23ENG201A", "name": "Technical English", "credits": 2}],
-                        "3": [{"code": "U23MAT301E", "name": "Applied Probability and Statistics-I", "credits": 4}],
-                        "4": [{"code": "U23MAT401A", "name": "Applied Probability and Statistics-II", "credits": 4}],
-                        "5": [{"code": "U23CS504", "name": "Machine Learning", "credits": 3}],
-                        "6": [{"code": "U23CS601", "name": "Computer Vision", "credits": 3}],
-                        "7": [{"code": "U23CS701", "name": "Advanced Machine Learning", "credits": 3}],
-                        "8": [{"code": "U23CS801", "name": "Industry Internship", "credits": 6}]
+                        "1": [{"code": "U23EG107", "name": "Engineering Graphics", "credits": 3}, {"code": "U23ENG101A", "name": "Communication Skills in English", "credits": 3}, {"code": "U23MAT102A", "name": "Linear Algebra and Calculus with MATLAB", "credits": 4}, {"code": "U23PPR105", "name": "Problem Solving using Python Programming", "credits": 3}, {"code": "U23PHY103E", "name": "Engineering Physics", "credits": 3}, {"code": "U23PHL110", "name": "Engineering Physics Laboratory", "credits": 1}, {"code": "U23PPL112", "name": "Python Programming Laboratory", "credits": 1}, {"code": "U23TAM101", "name": "Heritage of Tamils", "credits": 1}],
+                        "2": [{"code": "U23ENG201A", "name": "Technical English", "credits": 2}, {"code": "U23MAT202D", "name": "Discrete Mathematics", "credits": 4}, {"code": "U23BEEE206B", "name": "Basics of Electrical and Electronics Engineering", "credits": 3}, {"code": "U23CPR205", "name": "Programming in C", "credits": 3}, {"code": "U23CHE204C", "name": "Applied Chemistry", "credits": 2}, {"code": "U23EC203", "name": "Digital Principles and System Design", "credits": 3}, {"code": "U23CPL212", "name": "C Programming Laboratory", "credits": 1}, {"code": "U23CHL211", "name": "Chemistry Laboratory", "credits": 1}, {"code": "U23BEEL213B", "name": "BEEE Laboratory", "credits": 1}, {"code": "U23TAM201", "name": "Tamils and Technology", "credits": 1}],
+                        "3": [{"code": "U23MAT301E", "name": "Applied Probability and Statistics-I", "credits": 4}, {"code": "U23CS301", "name": "Data Structures", "credits": 3}, {"code": "U23CS302", "name": "Computer Architecture", "credits": 3}, {"code": "U23CS303", "name": "Object Oriented Programming Using Java", "credits": 3}, {"code": "U23AML301", "name": "Data Visualization", "credits": 3}, {"code": "noc25-mg106", "name": "NPTEL: Design Thinking - A Primer", "credits": 1}, {"code": "U23CS306", "name": "Data Structures Laboratory", "credits": 1}, {"code": "U23CS307", "name": "Object Oriented Programming Using Java Laboratory", "credits": 1}, {"code": "U23AML302", "name": "Data Visualization Laboratory", "credits": 1}, {"code": "U23GE301", "name": "Soft Skills and Aptitude-I", "credits": 1}],
+                        "4": [{"code": "U23MAT401A", "name": "Applied Probability and Statistics-II", "credits": 4}, {"code": "U23CS403", "name": "Database Management Systems", "credits": 3}, {"code": "U23CS401", "name": "Design and Analysis of Algorithms", "credits": 3}, {"code": "U23AML401", "name": "Artificial Intelligence", "credits": 3}, {"code": "U23CSD402", "name": "Operating Systems", "credits": 3}, {"code": "U23AML402", "name": "Artificial Intelligence Lab", "credits": 1}, {"code": "U23CS405", "name": "Database Management Systems Lab", "credits": 1}, {"code": "U23GE401", "name": "Soft Skills and Aptitude-II", "credits": 1}],
+                        "5": [{"code": "U23CS504", "name": "Machine Learning", "credits": 3}, {"code": "U23CS501", "name": "Computer Networks", "credits": 3}, {"code": "U23CSD502", "name": "Software Engineering", "credits": 3}, {"code": "U23CS503", "name": "Theory of Computation", "credits": 3}, {"code": "noc25-cs135", "name": "Elective NPTEL", "credits": 3}, {"code": "U19CS903", "name": "Professional Elective - Agile Methodologies", "credits": 3}, {"code": "U23AML501", "name": "Machine Learning Laboratory", "credits": 2}, {"code": "U23CSD504", "name": "Software Development Laboratory", "credits": 1}, {"code": "U23GE501", "name": "Soft Skills and Aptitude -III", "credits": 1}],
+                        "6": [{"code": "U23CS601", "name": "Computer Vision", "credits": 3}, {"code": "U23CS602", "name": "Reinforcement Learning", "credits": 3}, {"code": "U23CS603", "name": "Robotics", "credits": 3}, {"code": "U23CS604", "name": "Cyber Security", "credits": 3}, {"code": "U23CS605", "name": "Blockchain Technology", "credits": 3}, {"code": "U23CS606", "name": "Elective III", "credits": 3}, {"code": "U23CS607", "name": "Project Work II", "credits": 3}],
+                        "7": [{"code": "U23CS701", "name": "Advanced Machine Learning", "credits": 3}, {"code": "U23CS702", "name": "AI Ethics and Governance", "credits": 3}, {"code": "U23CS703", "name": "Elective IV", "credits": 3}, {"code": "U23CS704", "name": "Project Work III", "credits": 3}],
+                        "8": [{"code": "U23CS801", "name": "Industry Internship", "credits": 6}, {"code": "U23CS802", "name": "Project Work IV", "credits": 6}]
+                    }
+                },
+                "CIVIL": {
+                    "name": "Civil Engineering", "color": "var(--civil-color)", "icon": "fas fa-building",
+                    "semesters": {
+                        "1": [{"code": "U23CE101", "name": "Engineering Mechanics", "credits": 4}, {"code": "U23CE102", "name": "Engineering Graphics", "credits": 4}, {"code": "U23CE103", "name": "Engineering Mathematics", "credits": 4}, {"code": "U23CE104", "name": "Basic Civil Engineering", "credits": 3}, {"code": "U23CE105", "name": "Communication Skills", "credits": 2}, {"code": "U23CE106", "name": "Surveying", "credits": 1}, {"code": "U23CE107", "name": "Engineering Graphics Lab", "credits": 1}],
+                        "2": [{"code": "U23CE201", "name": "Building Materials", "credits": 4}, {"code": "U23CE202", "name": "Structural Analysis", "credits": 4}, {"code": "U23CE203", "name": "Fluid Mechanics", "credits": 4}, {"code": "U23CE204", "name": "Surveying", "credits": 3}, {"code": "U23CE205", "name": "Computer Programming", "credits": 3}, {"code": "U23CE206", "name": "Building Materials Lab", "credits": 1}, {"code": "U23CE207", "name": "Surveying Lab", "credits": 1}]
+                    }
+                },
+                "BME": {
+                    "name": "Bio Medical", "color": "var(--bme-color)", "icon": "fas fa-heartbeat",
+                    "semesters": {
+                        "1": [{"code": "U23BM101", "name": "Human Anatomy", "credits": 4}, {"code": "U23BM102", "name": "Engineering Mathematics", "credits": 4}, {"code": "U23BM103", "name": "Basic Electronics", "credits": 3}, {"code": "U23BM104", "name": "Programming in C", "credits": 3}, {"code": "U23BM105", "name": "Communication Skills", "credits": 2}, {"code": "U23BM106", "name": "Human Anatomy Lab", "credits": 1}, {"code": "U23BM107", "name": "Programming Lab", "credits": 1}],
+                        "2": [{"code": "U23BM201", "name": "Human Physiology", "credits": 4}, {"code": "U23BM202", "name": "Biochemistry", "credits": 4}, {"code": "U23BM203", "name": "Medical Electronics", "credits": 4}, {"code": "U23BM204", "name": "Biomechanics", "credits": 3}, {"code": "U23BM205", "name": "Data Structures", "credits": 3}, {"code": "U23BM206", "name": "Human Physiology Lab", "credits": 1}, {"code": "U23BM207", "name": "Medical Electronics Lab", "credits": 1}]
+                    }
+                },
+                "FT": {
+                    "name": "Fashion Technology", "color": "var(--ft-color)", "icon": "fas fa-tshirt",
+                    "semesters": {
+                        "1": [{"code": "U23FT101", "name": "Fiber Science", "credits": 4}, {"code": "U23FT102", "name": "Textile Chemistry", "credits": 4}, {"code": "U23FT103", "name": "Fashion Illustration", "credits": 3}, {"code": "U23FT104", "name": "Pattern Making", "credits": 3}, {"code": "U23FT105", "name": "Communication Skills", "credits": 2}, {"code": "U23FT106", "name": "Textile Chemistry Lab", "credits": 1}, {"code": "U23FT107", "name": "Pattern Making Lab", "credits": 1}],
+                        "2": [{"code": "U23FT201", "name": "Textile Processing", "credits": 4}, {"code": "U23FT202", "name": "Apparel Manufacturing", "credits": 4}, {"code": "U23FT203", "name": "Fashion Design", "credits": 4}, {"code": "U23FT204", "name": "Garment Construction", "credits": 3}, {"code": "U23FT205", "name": "Computer Applications", "credits": 3}, {"code": "U23FT206", "name": "Apparel Manufacturing Lab", "credits": 1}, {"code": "U23FT207", "name": "Garment Construction Lab", "credits": 1}]
+                    }
+                },
+                "MCT": {
+                    "name": "Mechatronics", "color": "var(--mct-color)", "icon": "fas fa-robot",
+                    "semesters": {
+                        "1": [{"code": "U23MT101", "name": "Engineering Mechanics", "credits": 4}, {"code": "U23MT102", "name": "Engineering Graphics", "credits": 4}, {"code": "U23MT103", "name": "Engineering Mathematics", "credits": 4}, {"code": "U23MT104", "name": "Basic Electronics", "credits": 3}, {"code": "U23MT105", "name": "Communication Skills", "credits": 2}, {"code": "U23MT106", "name": "Workshop Practice", "credits": 1}, {"code": "U23MT107", "name": "Engineering Graphics Lab", "credits": 1}],
+                        "2": [{"code": "U23MT201", "name": "Thermodynamics", "credits": 4}, {"code": "U23MT202", "name": "Mechanics of Materials", "credits": 4}, {"code": "U23MT203", "name": "Digital Electronics", "credits": 4}, {"code": "U23MT204", "name": "Fluid Mechanics", "credits": 3}, {"code": "U23MT205", "name": "Computer Programming", "credits": 3}, {"code": "U23MT206", "name": "Thermodynamics Lab", "credits": 1}, {"code": "U23MT207", "name": "Digital Electronics Lab", "credits": 1}]
+                    }
+                },
+                "CSD": {
+                    "name": "CS & Design", "color": "var(--csd-color)", "icon": "fas fa-paint-brush",
+                    "semesters": {
+                        "1": [{"code": "U23CD101", "name": "Design Fundamentals", "credits": 4}, {"code": "U23CD102", "name": "Programming Basics", "credits": 4}, {"code": "U23CD103", "name": "Visual Communication", "credits": 3}, {"code": "U23CD104", "name": "Mathematics for Design", "credits": 3}, {"code": "U23CD105", "name": "Communication Skills", "credits": 2}, {"code": "U23CD106", "name": "Design Studio", "credits": 1}, {"code": "U23CD107", "name": "Programming Lab", "credits": 1}],
+                        "2": [{"code": "U23CD201", "name": "User Interface Design", "credits": 4}, {"code": "U23CD202", "name": "Data Structures", "credits": 4}, {"code": "U23CD203", "name": "Web Design", "credits": 4}, {"code": "U23CD204", "name": "Digital Illustration", "credits": 3}, {"code": "U23CD205", "name": "Human-Computer Interaction", "credits": 3}, {"code": "U23CD206", "name": "UI Design Lab", "credits": 1}, {"code": "U23CD207", "name": "Web Design Lab", "credits": 1}]
+                    }
+                },
+                "ADS": {
+                    "name": "AI & Data Science", "color": "var(--ads-color)", "icon": "fas fa-database",
+                    "semesters": {
+                        "1": [{"code": "U23DS101", "name": "Programming Fundamentals", "credits": 4}, {"code": "U23DS102", "name": "Linear Algebra", "credits": 4}, {"code": "U23DS103", "name": "Statistics Basics", "credits": 3}, {"code": "U23DS104", "name": "Computational Thinking", "credits": 3}, {"code": "U23DS105", "name": "Communication Skills", "credits": 2}, {"code": "U23DS106", "name": "Programming Lab", "credits": 1}, {"code": "U23DS107", "name": "Statistics Lab", "credits": 1}],
+                        "2": [{"code": "U23DS201", "name": "Data Structures", "credits": 4}, {"code": "U23DS202", "name": "Probability and Statistics", "credits": 4}, {"code": "U23DS203", "name": "Database Systems", "credits": 4}, {"code": "U23DS204", "name": "Data Visualization", "credits": 3}, {"code": "U23DS205", "name": "Python Programming", "credits": 3}, {"code": "U23DS206", "name": "Data Structures Lab", "credits": 1}, {"code": "U23DS207", "name": "Database Lab", "credits": 1}]
+                    }
+                },
+                "EFE": {
+                    "name": "Electrical & Computer", "color": "var(--efe-color)", "icon": "fas fa-microchip",
+                    "semesters": {
+                        "1": [{"code": "U23EF101", "name": "Circuit Theory", "credits": 4}, {"code": "U23EF102", "name": "Programming Fundamentals", "credits": 4}, {"code": "U23EF103", "name": "Digital Electronics", "credits": 3}, {"code": "U23EF104", "name": "Engineering Mathematics", "credits": 3}, {"code": "U23EF105", "name": "Communication Skills", "credits": 2}, {"code": "U23EF106", "name": "Circuit Theory Lab", "credits": 1}, {"code": "U23EF107", "name": "Programming Lab", "credits": 1}],
+                        "2": [{"code": "U23EF201", "name": "Signals and Systems", "credits": 4}, {"code": "U23EF202", "name": "Data Structures", "credits": 4}, {"code": "U23EF203", "name": "Analog Electronics", "credits": 4}, {"code": "U23EF204", "name": "Electromagnetic Theory", "credits": 3}, {"code": "U23EF205", "name": "Computer Organization", "credits": 3}, {"code": "U23EF206", "name": "Analog Electronics Lab", "credits": 1}, {"code": "U23EF207", "name": "Data Structures Lab", "credits": 1}]
+                    }
+                },
+                "EXE": {
+                    "name": "Electronics & Computer", "color": "var(--exe-color)", "icon": "fas fa-desktop",
+                    "semesters": {
+                        "1": [{"code": "U23EX101", "name": "Basic Electronics", "credits": 4}, {"code": "U23EX102", "name": "Programming Fundamentals", "credits": 4}, {"code": "U23EX103", "name": "Digital Logic Design", "credits": 3}, {"code": "U23EX104", "name": "Engineering Mathematics", "credits": 3}, {"code": "U23EX105", "name": "Communication Skills", "credits": 2}, {"code": "U23EX106", "name": "Electronics Lab", "credits": 1}, {"code": "U23EX107", "name": "Programming Lab", "credits": 1}],
+                        "2": [{"code": "U23EX201", "name": "Data Structures", "credits": 4}, {"code": "U23EX202", "name": "Analog Electronics", "credits": 4}, {"code": "U23EX203", "name": "Computer Organization", "credits": 4}, {"code": "U23EX204", "name": "Signals and Systems", "credits": 3}, {"code": "U23EX205", "name": "Database Systems", "credits": 3}, {"code": "U23EX206", "name": "Analog Electronics Lab", "credits": 1}, {"code": "U23EX207", "name": "Data Structures Lab", "credits": 1}]
                     }
                 }
             }
         };
-
+        const gradePoints = { "O": 10, "A+": 9, "A": 8, "B+": 7, "B": 6, "C": 5, "U": 0 };
+        
         const translations = {
-            en: { selectCourse: "Select a course to begin", selectCourseBtn: "Select Course", loading: "Loading materials...", noMaterials: "No study materials found for this course.", tryRequesting: "Try requesting one or check back later.", requestMaterial: "Request Material", searchPlaceholder: "Search by title or tags...", viewing: "Viewing", trending: "Trending", recent: "Recent", favorites: "Favorites", upload: "Upload", language: "Language", dashboard: "Dashboard", logout: "Logout", addedToFavorites: "Added to favorites!", linkCopied: "Material link copied!", reportSubmitted: "Report submitted!", findYourMaterials: "Find Your Study Materials", findDescription: "Select your department, semester, and course to begin.", department: "Department", semester: "Semester", course: "Course", noCoursesFound: "No courses found.", free: "Free", paid: "Paid", views: "Views", downloads: "Downloads", unlock: "Unlock", view: "View", uploadedBy: "Uploaded by", on: "on" },
-            es: { selectCourse: "Selecciona un curso para comenzar", selectCourseBtn: "Seleccionar Curso", loading: "Cargando materiales...", noMaterials: "No se encontraron materiales de estudio para este curso.", tryRequesting: "Intenta solicitar uno o vuelve más tarde.", requestMaterial: "Solicitar Material", searchPlaceholder: "Buscar por título o etiquetas...", viewing: "Viendo", trending: "Tendencias", recent: "Recientes", favorites: "Favoritos", upload: "Subir", language: "Idioma", dashboard: "Tablero", logout: "Cerrar sesión", addedToFavorites: "¡Agregado a favoritos!", linkCopied: "¡Enlace del material copiado!", reportSubmitted: "¡Reporte enviado!", findYourMaterials: "Encuentra Tus Materiales de Estudio", findDescription: "Selecciona tu departamento, semestre y curso para comenzar.", department: "Departamento", semester: "Semestre", course: "Curso", noCoursesFound: "No se encontraron cursos.", free: "Gratis", paid: "De pago", views: "Vistas", downloads: "Descargas", unlock: "Desbloquear", view: "Ver", uploadedBy: "Subido por", on: "el" }
+            en: { 
+                selectCourse: "Select a course to begin", 
+                selectCourseBtn: "Select Course", 
+                loading: "Loading materials...", 
+                noMaterials: "No study materials found for this course.", 
+                tryRequesting: "Try requesting one or check back later.", 
+                requestMaterial: "Request Material", 
+                searchPlaceholder: "Search by title or tags...", 
+                viewing: "Viewing", 
+                trending: "Trending", 
+                recent: "Recent", 
+                favorites: "Favorites", 
+                upload: "Upload", 
+                language: "Language", 
+                dashboard: "Dashboard", 
+                logout: "Logout", 
+                addedToFavorites: "Added to favorites!", 
+                linkCopied: "Material link copied!", 
+                reportSubmitted: "Report submitted!", 
+                findYourMaterials: "Find Your Study Materials", 
+                findDescription: "Select your department, semester, and course to begin.", 
+                department: "Department", 
+                semester: "Semester", 
+                course: "Course", 
+                noCoursesFound: "No courses found.", 
+                free: "Free", 
+                paid: "Paid", 
+                views: "Views", 
+                downloads: "Downloads", 
+                unlock: "Unlock", 
+                view: "View", 
+                uploadedBy: "Uploaded by", 
+                on: "on",
+                price: "Price",
+                unlockMaterial: "Unlock Material",
+                paymentSuccess: "Payment successful! Material is now unlocked.",
+                paymentFailed: "Payment failed. Please try again.",
+                myMaterials: "My Materials",
+                account: "Account",
+                purchased: "Purchased",
+                downloaded: "Downloaded"
+            },
+            es: { 
+                selectCourse: "Selecciona un curso para comenzar", 
+                selectCourseBtn: "Seleccionar Curso", 
+                loading: "Cargando materiales...", 
+                noMaterials: "No se encontraron materiales de estudio para este curso.", 
+                tryRequesting: "Intenta solicitar uno o vuelve más tarde.", 
+                requestMaterial: "Solicitar Material", 
+                searchPlaceholder: "Buscar por título o etiquetas...", 
+                viewing: "Viendo", 
+                trending: "Tendencias", 
+                recent: "Recientes", 
+                favorites: "Favoritos", 
+                upload: "Subir", 
+                language: "Idioma", 
+                dashboard: "Tablero", 
+                logout: "Cerrar sesión", 
+                addedToFavorites: "¡Agregado a favoritos!", 
+                linkCopied: "¡Enlace del material copiado!", 
+                reportSubmitted: "¡Reporte enviado!", 
+                findYourMaterials: "Encuentra Tus Materiales de Estudio", 
+                findDescription: "Selecciona tu departamento, semestre y curso para comenzar.", 
+                department: "Departamento", 
+                semester: "Semestre", 
+                course: "Curso", 
+                noCoursesFound: "No se encontraron cursos.", 
+                free: "Gratis", 
+                paid: "De pago", 
+                views: "Vistas", 
+                downloads: "Descargas", 
+                unlock: "Desbloquear", 
+                view: "Ver", 
+                uploadedBy: "Subido por", 
+                on: "el",
+                price: "Precio",
+                unlockMaterial: "Desbloquear Material",
+                paymentSuccess: "¡Pago exitoso! El material ahora está desbloqueado.",
+                paymentFailed: "Pago fallido. Por favor, inténtalo de nuevo.",
+                myMaterials: "Mis Materiales",
+                account: "Cuenta",
+                purchased: "Comprado",
+                downloaded: "Descargado"
+            }
         };
-
+        
         // --- SERVICES ---
         const MOCK_MATERIALS = [
-            { title: 'Complete Notes on Data Structures', description: 'Comprehensive notes covering all topics in the DS syllabus including arrays, linked lists, stacks, queues, trees, and graphs.', downloadURL: 'https://drive.google.com/file/d/1B-c8X9E8v9Z4Yk_1J_6j_9H_8d_7f_6/view?usp=sharing', thumbnailURL: 'https://picsum.photos/seed/dsa/400/225', tags: ['notes', 'pdf', 'full-syllabus'], isPaid: false, views: 1250, downloads: 800, uploader: 'Prof. Anjali Sharma', uploadedAt: { seconds: 1672531200, nanoseconds: 0 } },
-            { title: 'Machine Learning Mid-Term Question Bank', description: 'A curated list of important questions for the mid-term exams, with solutions.', downloadURL: 'https://drive.google.com/file/d/1B-c8X9E8v9Z4Yk_1J_6j_9H_8d_7f_6/view?usp=sharing', thumbnailURL: 'https://picsum.photos/seed/mlq/400/225', tags: ['questions', 'exam-prep'], isPaid: true, isUnlocked: false, views: 980, downloads: 320, uploader: 'Rahul Verma', uploadedAt: { seconds: 1675209600, nanoseconds: 0 } },
-            { title: 'Advanced Algorithms Video Lectures', description: 'Link to a playlist of high-quality video lectures on advanced algorithm topics like dynamic programming and graph theory.', downloadURL: 'https://www.youtube.com/playlist?list=PLDN4rrl48XKpZkf03iYFl-O29szjTrs_O', thumbnailURL: 'https://picsum.photos/seed/algovid/400/225', tags: ['video', 'lectures', 'algorithms'], isPaid: false, views: 2100, downloads: 1500, uploader: 'TechTutor Channel', uploadedAt: { seconds: 1677628800, nanoseconds: 0 } },
-            { title: 'Operating Systems Lab Manual', description: 'Official lab manual with all experiments, code snippets, and viva questions for the OS lab.', downloadURL: 'https://drive.google.com/file/d/1B-c8X9E8v9Z4Yk_1J_6j_9H_8d_7f_6/view?usp=sharing', thumbnailURL: 'https://picsum.photos/seed/oslab/400/225', tags: ['lab', 'manual', 'os'], isPaid: false, views: 750, downloads: 600, uploader: 'College Dept.', uploadedAt: { seconds: 1680307200, nanoseconds: 0 } },
-            { title: 'Premium Project: E-commerce Website', description: 'Full source code and documentation for a final year project on an e-commerce website using the MERN stack.', downloadURL: 'https://github.com/example/ecommerce-project', thumbnailURL: 'https://picsum.photos/seed/project/400/225', tags: ['project', 'source-code', 'mern'], isPaid: true, isUnlocked: true, views: 500, downloads: 50, uploader: 'Priya Singh', uploadedAt: { seconds: 1682899200, nanoseconds: 0 } },
+            { 
+                title: 'Complete Notes on Data Structures', 
+                description: 'Comprehensive notes covering all topics in the DS syllabus including arrays, linked lists, stacks, queues, trees, and graphs.', 
+                downloadURL: 'https://drive.google.com/file/d/1B-c8X9E8v9Z4Yk_1J_6j_9H_8d_7f_6/view?usp=sharing', 
+                thumbnailURL: 'https://picsum.photos/seed/dsa/400/225', 
+                tags: ['notes', 'pdf', 'full-syllabus'], 
+                isPaid: false, 
+                price: 0,
+                views: 1250, 
+                downloads: 800, 
+                uploader: 'Prof. Anjali Sharma', 
+                uploadedAt: { seconds: 1672531200, nanoseconds: 0 } 
+            },
+            { 
+                title: 'Machine Learning Mid-Term Question Bank', 
+                description: 'A curated list of important questions for the mid-term exams, with solutions.', 
+                downloadURL: 'https://drive.google.com/file/d/1B-c8X9E8v9Z4Yk_1J_6j_9H_8d_7f_6/view?usp=sharing', 
+                thumbnailURL: 'https://picsum.photos/seed/mlq/400/225', 
+                tags: ['questions', 'exam-prep'], 
+                isPaid: true, 
+                price: 99,
+                isUnlocked: false, 
+                views: 980, 
+                downloads: 320, 
+                uploader: 'Rahul Verma', 
+                uploadedAt: { seconds: 1675209600, nanoseconds: 0 } 
+            },
+            { 
+                title: 'Advanced Algorithms Video Lectures', 
+                description: 'Link to a playlist of high-quality video lectures on advanced algorithm topics like dynamic programming and graph theory.', 
+                downloadURL: 'https://www.youtube.com/playlist?list=PLDN4rrl48XKpZkf03iYFl-O29szjTrs_O', 
+                thumbnailURL: 'https://picsum.photos/seed/algovid/400/225', 
+                tags: ['video', 'lectures', 'algorithms'], 
+                isPaid: false, 
+                price: 0,
+                views: 2100, 
+                downloads: 1500, 
+                uploader: 'TechTutor Channel', 
+                uploadedAt: { seconds: 1677628800, nanoseconds: 0 } 
+            },
+            { 
+                title: 'Operating Systems Lab Manual', 
+                description: 'Official lab manual with all experiments, code snippets, and viva questions for the OS lab.', 
+                downloadURL: 'https://drive.google.com/file/d/1B-c8X9E8v9Z4Yk_1J_6j_9H_8d_7f_6/view?usp=sharing', 
+                thumbnailURL: 'https://picsum.photos/seed/oslab/400/225', 
+                tags: ['lab', 'manual', 'os'], 
+                isPaid: false, 
+                price: 0,
+                views: 750, 
+                downloads: 600, 
+                uploader: 'College Dept.', 
+                uploadedAt: { seconds: 1680307200, nanoseconds: 0 } 
+            },
+            { 
+                title: 'Premium Project: E-commerce Website', 
+                description: 'Full source code and documentation for a final year project on an e-commerce website using the MERN stack.', 
+                downloadURL: 'https://github.com/example/ecommerce-project', 
+                thumbnailURL: 'https://picsum.photos/seed/project/400/225', 
+                tags: ['project', 'source-code', 'mern'], 
+                isPaid: true, 
+                price: 299,
+                isUnlocked: true, 
+                views: 500, 
+                downloads: 50, 
+                uploader: 'Priya Singh', 
+                uploadedAt: { seconds: 1682899200, nanoseconds: 0 } 
+            },
         ];
-        const fetchMaterials = async (department, semester, courseCode) => {
-            console.log(`Fetching materials for ${department}, Sem ${semester}, Course ${courseCode}...`);
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            if (!department || !semester || !courseCode) return [];
-            if (courseCode.includes("U23MAT")) return [];
-            return MOCK_MATERIALS.map((material, index) => ({...material, id: `${courseCode}-${index}`, department, semester, courseCode })).sort(() => Math.random() - 0.5);
-        };
-
+        
         // --- HOOKS ---
         function useDebounce(value, delay) {
             const [debouncedValue, setDebouncedValue] = useState(value);
@@ -173,7 +451,7 @@
             }, [value, delay]);
             return debouncedValue;
         }
-
+        
         function useScroll(threshold = 300) {
             const [isScrolled, setIsScrolled] = useState(false);
             useEffect(() => {
@@ -183,7 +461,28 @@
             }, [threshold]);
             return isScrolled;
         }
-
+        
+        function useAuth() {
+            const [currentUser, setCurrentUser] = useState(null);
+            const [loading, setLoading] = useState(true);
+            
+            useEffect(() => {
+                if (!auth) {
+                    setLoading(false);
+                    return;
+                }
+                
+                const unsubscribe = auth.onAuthStateChanged(user => {
+                    setCurrentUser(user);
+                    setLoading(false);
+                });
+                
+                return () => unsubscribe();
+            }, [auth]);
+            
+            return { currentUser, loading };
+        }
+        
         // --- COMPONENTS ---
         const Background = () => (
             <div className="fixed inset-0 -z-20">
@@ -191,38 +490,46 @@
                 <div className="noise-layer fixed inset-0 -z-10"></div>
             </div>
         );
-
-        const Header = ({ currentLanguage, onLanguageToggle, translations }) => (
-            <header className="sticky top-2 z-50 mx-2 md:mx-4">
-                <div className="flex justify-between items-center p-3 md:p-4 bg-[rgba(16,16,16,0.6)] backdrop-blur-xl rounded-2xl border border-[--border-color]">
-                    <div className="flex items-center gap-4">
-                        <a href="#" className="flex items-center gap-3 text-decoration-none">
-                            <svg className="w-10 h-10 md:w-12 md:h-12" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="50" cy="50" r="45" fill="var(--primary-glow)" />
-                                <text x="50" y="65" fontFamily="Arial Black, sans-serif" fontSize="36" fontWeight="bold" textAnchor="middle" fill="var(--dark-bg)">IB</text>
-                            </svg>
-                            <h1 className="relative text-xl md:text-2xl font-bold brand-title">IB STUDIOZ</h1>
-                        </a>
-                        <a href="#" className="hidden md:inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-[--border-color] text-[--text-secondary] hover:bg-[--primary-glow] hover:text-[--dark-bg] hover:border-[--primary-glow] transition-all duration-300">
-                            <i className="fas fa-arrow-left"></i>
-                            <span>{translations.dashboard}</span>
-                        </a>
+        
+        const Header = ({ currentLanguage, onLanguageToggle, translations, onAccountClick }) => {
+            const { currentUser } = useAuth();
+            
+            return (
+                <header className="sticky top-2 z-50 mx-2 md:mx-4">
+                    <div className="flex justify-between items-center p-3 md:p-4 bg-[rgba(16,16,16,0.6)] backdrop-blur-xl rounded-2xl border border-[--border-color]">
+                        <div className="flex items-center gap-4">
+                            <a href="#" className="flex items-center gap-3 text-decoration-none">
+                                <svg className="w-10 h-10 md:w-12 md:h-12" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="50" cy="50" r="45" fill="var(--primary-glow)" />
+                                    <text x="50" y="65" fontFamily="Arial Black, sans-serif" fontSize="36" fontWeight="bold" textAnchor="middle" fill="var(--dark-bg)">IB</text>
+                                </svg>
+                                <h1 className="relative text-xl md:text-2xl font-bold brand-title">IB STUDIOZ</h1>
+                            </a>
+                            <a href="#" className="hidden md:inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-[--border-color] text-[--text-secondary] hover:bg-[--primary-glow] hover:text-[--dark-bg] hover:border-[--primary-glow] transition-all duration-300">
+                                <i className="fas fa-arrow-left"></i>
+                                <span>{translations.dashboard}</span>
+                            </a>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <button onClick={onLanguageToggle} className="hidden md:inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-[--border-color] text-[--text-secondary] hover:bg-[--primary-glow] hover:text-[--dark-bg] hover:border-[--primary-glow] transition-all duration-300">
+                                <i className="fas fa-language"></i>
+                                <span className="uppercase">{currentLanguage === 'en' ? 'es' : 'en'}</span>
+                            </button>
+                            <button onClick={onAccountClick} className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-[--border-color] text-[--text-secondary] hover:bg-[--primary-glow] hover:text-[--dark-bg] hover:border-[--primary-glow] transition-all duration-300">
+                                <i className="fas fa-user"></i>
+                                <span className="hidden md:inline">{currentUser?.displayName || translations.account}</span>
+                            </button>
+                            <a href="#" className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-[--border-color] text-[--text-secondary] hover:bg-[--primary-glow] hover:text-[--dark-bg] hover:border-[--primary-glow] transition-all duration-300">
+                                <i className="fas fa-sign-out-alt"></i>
+                                <span className="hidden md:inline">{translations.logout}</span>
+                            </a>
+                        </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <button onClick={onLanguageToggle} className="hidden md:inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-[--border-color] text-[--text-secondary] hover:bg-[--primary-glow] hover:text-[--dark-bg] hover:border-[--primary-glow] transition-all duration-300">
-                            <i className="fas fa-language"></i>
-                            <span className="uppercase">{currentLanguage === 'en' ? 'es' : 'en'}</span>
-                        </button>
-                        <a href="#" className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-[--border-color] text-[--text-secondary] hover:bg-[--primary-glow] hover:text-[--dark-bg] hover:border-[--primary-glow] transition-all duration-300">
-                            <i className="fas fa-sign-out-alt"></i>
-                            <span className="hidden md:inline">{translations.logout}</span>
-                        </a>
-                    </div>
-                </div>
-            </header>
-        );
-
-        const FilterBar = ({ selection, searchTerm, onSearchChange, onOpenFilterModal, onRequestMaterial, translations }) => {
+                </header>
+            );
+        };
+        
+        const FilterBar = ({ selection, searchTerm, onSearchChange, onOpenFilterModal, onRequestMaterial, translations, onMyMaterialsClick }) => {
             const display_text = selection.course 
                 ? <React.Fragment><span className="hidden md:inline">{translations.viewing}: </span><strong className="text-white">{selection.course.code} - {selection.course.name}</strong></React.Fragment>
                 : <strong className="text-white">{translations.selectCourse}</strong>;
@@ -234,13 +541,17 @@
                             <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-[--text-secondary]"></i>
                             <input type="text" value={searchTerm} onChange={onSearchChange} placeholder={translations.searchPlaceholder} className="w-full bg-black/30 border border-[--border-color] rounded-lg py-2.5 pl-11 pr-4 text-white placeholder:text-[--text-secondary] focus:outline-none focus:border-[--primary-glow] focus:ring-2 focus:ring-[--primary-glow]/50 transition-all" />
                         </div>
+                        <button onClick={onMyMaterialsClick} className="flex-shrink-0 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border border-[--border-color] text-[--text-secondary] hover:bg-[--primary-glow] hover:text-[--dark-bg] hover:border-[--primary-glow] transition-all duration-300">
+                            <i className="fas fa-folder"></i>
+                            <span className="hidden sm:inline">{translations.myMaterials}</span>
+                        </button>
                         <button onClick={onOpenFilterModal} className="flex-shrink-0 flex items-center justify-center gap-2 px-5 py-2.5 text-base font-semibold bg-[--primary-glow] text-[--dark-bg] rounded-lg hover:shadow-[0_0_20px_rgba(255,215,0,0.5)] transition-all duration-300 transform hover:-translate-y-0.5"><i className="fas fa-filter"></i><span>{translations.selectCourseBtn}</span></button>
                         <button onClick={onRequestMaterial} className="flex-shrink-0 md:hidden lg:flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border border-[--border-color] text-[--text-secondary] hover:bg-[--primary-glow] hover:text-[--dark-bg] hover:border-[--primary-glow] transition-all duration-300"><i className="fas fa-plus"></i><span>{translations.requestMaterial}</span></button>
                     </div>
                 </div>
             );
         };
-
+        
         const SkeletonCard = () => (
             <div className="bg-[--card-bg] border border-[--border-color] rounded-2xl overflow-hidden animate-pulse">
                 <div className="h-48 bg-white/5"></div>
@@ -259,14 +570,30 @@
                 </div>
             </div>
         );
-
-        const MaterialCard = ({ material, onView, onToast, translations }) => {
+        
+        const MaterialCard = ({ material, onView, onUnlock, onToast, translations, branchClass = '' }) => {
             const handleActionClick = (e, message) => { e.stopPropagation(); onToast(message, 'success'); };
+            
             return (
-                <div onClick={() => onView(material)} className="bg-[--card-bg] border border-[--border-color] rounded-2xl overflow-hidden cursor-pointer group transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-yellow-500/10">
+                <div className={`bg-[--card-bg] border border-[--border-color] rounded-2xl overflow-hidden cursor-pointer group transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-yellow-500/10 ${branchClass} material-card relative`}>
                     <div className="relative h-48 overflow-hidden">
                         <img src={material.thumbnailURL || 'https://picsum.photos/400/225'} alt={material.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        {material.isPaid && !material.isUnlocked && (
+                            <div className="locked-overlay">
+                                <i className="fas fa-lock text-4xl text-yellow-400 mb-2"></i>
+                                <span className="text-white font-bold">₹{material.price}</span>
+                                <button 
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onUnlock(material);
+                                    }}
+                                    className="mt-3 px-4 py-2 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition-colors"
+                                >
+                                    {translations.unlockMaterial}
+                                </button>
+                            </div>
+                        )}
                     </div>
                     <div className="p-5 flex flex-col">
                         <h3 className="text-lg font-bold text-white mb-2 truncate">{material.title}</h3>
@@ -275,7 +602,9 @@
                             <div className="flex items-center gap-2"><i className="fas fa-download w-4 text-center"></i><span>{material.downloads} {translations.downloads}</span></div>
                         </div>
                         <div className="mt-auto pt-4 border-t border-[--border-color] flex justify-between items-center">
-                            <span className={`px-3 py-1 text-xs font-semibold rounded-full ${material.isPaid ? 'bg-orange-500/20 text-orange-400' : 'bg-green-500/20 text-green-400'}`}>{material.isPaid ? translations.paid : translations.free}</span>
+                            <span className={`px-3 py-1 text-xs font-semibold rounded-full ${material.isPaid ? 'bg-orange-500/20 text-orange-400' : 'bg-green-500/20 text-green-400'}`}>
+                                {material.isPaid ? `${translations.paid} • ₹${material.price}` : translations.free}
+                            </span>
                             <div className="flex items-center gap-2">
                                 <button onClick={(e) => handleActionClick(e, translations.addedToFavorites)} className="w-9 h-9 flex items-center justify-center rounded-full bg-transparent border border-[--border-color] text-[--text-secondary] hover:bg-[--primary-glow] hover:text-[--dark-bg] hover:border-[--primary-glow] transition-all"><i className="fas fa-star"></i></button>
                                 <button onClick={(e) => handleActionClick(e, translations.linkCopied)} className="w-9 h-9 flex items-center justify-center rounded-full bg-transparent border border-[--border-color] text-[--text-secondary] hover:bg-[--primary-glow] hover:text-[--dark-bg] hover:border-[--primary-glow] transition-all"><i className="fas fa-share"></i></button>
@@ -286,7 +615,7 @@
                 </div>
             );
         };
-
+        
         const EmptyState = ({ hasSelection, onRequestMaterial, translations }) => {
             if (!hasSelection) {
                 return (
@@ -306,8 +635,8 @@
                 </div>
             );
         };
-
-        const MaterialsGrid = ({ materials, isLoading, hasSelection, onViewMaterial, onRequestMaterial, onToast, translations }) => {
+        
+        const MaterialsGrid = ({ materials, isLoading, hasSelection, onViewMaterial, onUnlockMaterial, onRequestMaterial, onToast, translations, branchClass = '' }) => {
             if (isLoading) {
                 return (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -320,7 +649,17 @@
             }
             return (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {materials.map((material) => <MaterialCard key={material.id} material={material} onView={onViewMaterial} onToast={onToast} translations={translations} />)}
+                    {materials.map((material) => (
+                        <MaterialCard 
+                            key={material.id} 
+                            material={material} 
+                            onView={onViewMaterial} 
+                            onUnlock={onUnlockMaterial}
+                            onToast={onToast} 
+                            translations={translations}
+                            branchClass={branchClass}
+                        />
+                    ))}
                 </div>
             );
         };
@@ -328,17 +667,34 @@
         const FilterModal = ({ isOpen, onClose, onSelect, academicData, currentSelection, translations }) => {
             const [step, setStep] = useState('department');
             const [selection, setSelection] = useState(currentSelection);
-
-            useEffect(() => { if (isOpen) { setSelection(currentSelection); setStep('department'); } }, [isOpen, currentSelection]);
-
-            const handleDeptSelect = (code, name) => { setSelection({ department: { code, name }, semester: null, course: null }); setStep('semester'); };
-            const handleSemSelect = (code, name) => { setSelection(prev => ({ ...prev, semester: { code, name }, course: null })); setStep('course'); };
-            const handleCourseSelect = (code, name) => { const finalSelection = { ...selection, course: { code, name } }; onSelect(finalSelection); onClose(); };
-
+            
+            useEffect(() => { 
+                if (isOpen) { 
+                    setSelection(currentSelection); 
+                    setStep('department'); 
+                } 
+            }, [isOpen, currentSelection]);
+            
+            const handleDeptSelect = (code, name) => { 
+                setSelection({ department: { code, name }, semester: null, course: null }); 
+                setStep('semester'); 
+            };
+            
+            const handleSemSelect = (code, name) => { 
+                setSelection(prev => ({ ...prev, semester: { code, name }, course: null })); 
+                setStep('course'); 
+            };
+            
+            const handleCourseSelect = (code, name) => { 
+                const finalSelection = { ...selection, course: { code, name } }; 
+                onSelect(finalSelection); 
+                onClose(); 
+            };
+            
             const transformClass = step === 'department' ? 'translate-x-0' : step === 'semester' ? '-translate-x-full' : '-translate-x-[200%]';
-
+            
             if (!isOpen) return null;
-
+            
             return (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-[999] flex justify-center items-center p-4 transition-opacity duration-300" onClick={onClose}>
                     <div className={`relative w-full max-w-4xl max-h-[80vh] bg-[--dark-bg] rounded-2xl border border-[--border-color] flex flex-col overflow-hidden transition-transform duration-300 transform ${isOpen ? 'scale-100' : 'scale-95'}`} onClick={(e) => e.stopPropagation()}>
@@ -351,15 +707,48 @@
                             <div className={`flex w-[300%] md:w-full h-full transition-transform duration-500 ease-in-out ${transformClass} md:transform-none md:grid md:grid-cols-3 md:gap-4 md:p-4`}>
                                 <div className="w-full h-full flex flex-col p-4 md:p-0">
                                     <h3 className="text-lg font-semibold text-[--primary-glow] mb-3 flex items-center gap-2"><i className="fas fa-university"></i> {translations.department}</h3>
-                                    <ul className="flex-grow overflow-y-auto space-y-2 pr-2">{Object.entries(academicData.branches).map(([code, { name, icon }]) => (<li key={code} onClick={() => handleDeptSelect(code, name)} className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all ${selection.department?.code === code ? 'bg-[--primary-glow] text-[--dark-bg] font-bold' : 'hover:bg-white/5'}`}><i className={`${icon} w-5 text-center`}></i><span>{name}</span></li>))}</ul>
+                                    <ul className="flex-grow overflow-y-auto space-y-2 pr-2">
+                                        {Object.entries(academicData.branches).map(([code, { name, icon }]) => (
+                                            <li key={code} onClick={() => handleDeptSelect(code, name)} className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all ${selection.department?.code === code ? 'bg-[--primary-glow] text-[--dark-bg] font-bold' : 'hover:bg-white/5'}`}>
+                                                <i className={`${icon} w-5 text-center`}></i>
+                                                <span>{name}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </div>
                                 <div className="w-full h-full flex flex-col p-4 md:p-0 md:border-l md:border-r border-[--border-color] md:px-4">
-                                    <div className="flex items-center mb-3"><button onClick={() => setStep('department')} className="md:hidden mr-3 text-[--text-secondary]"><i className="fas fa-arrow-left"></i></button><h3 className="text-lg font-semibold text-[--primary-glow] flex items-center gap-2"><i className="fas fa-graduation-cap"></i> {translations.semester}</h3></div>
-                                    <ul className={`flex-grow overflow-y-auto space-y-2 pr-2 ${!selection.department ? 'opacity-50' : ''}`}>{selection.department && Object.keys(academicData.branches[selection.department.code].semesters).map(sem => (<li key={sem} onClick={() => handleSemSelect(sem, `Semester ${sem}`)} className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all ${selection.semester?.code === sem ? 'bg-[--primary-glow] text-[--dark-bg] font-bold' : 'hover:bg-white/5'}`}><i className="fas fa-calendar-alt w-5 text-center"></i><span>{translations.semester} {sem}</span></li>))}</ul>
+                                    <div className="flex items-center mb-3">
+                                        <button onClick={() => setStep('department')} className="md:hidden mr-3 text-[--text-secondary]"><i className="fas fa-arrow-left"></i></button>
+                                        <h3 className="text-lg font-semibold text-[--primary-glow] flex items-center gap-2"><i className="fas fa-graduation-cap"></i> {translations.semester}</h3>
+                                    </div>
+                                    <ul className={`flex-grow overflow-y-auto space-y-2 pr-2 ${!selection.department ? 'opacity-50' : ''}`}>
+                                        {selection.department && Object.keys(academicData.branches[selection.department.code].semesters).map(sem => (
+                                            <li key={sem} onClick={() => handleSemSelect(sem, `Semester ${sem}`)} className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all ${selection.semester?.code === sem ? 'bg-[--primary-glow] text-[--dark-bg] font-bold' : 'hover:bg-white/5'}`}>
+                                                <i className="fas fa-calendar-alt w-5 text-center"></i>
+                                                <span>{translations.semester} {sem}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </div>
                                 <div className="w-full h-full flex flex-col p-4 md:p-0">
-                                    <div className="flex items-center mb-3"><button onClick={() => setStep('semester')} className="md:hidden mr-3 text-[--text-secondary]"><i className="fas fa-arrow-left"></i></button><h3 className="text-lg font-semibold text-[--primary-glow] flex items-center gap-2"><i className="fas fa-book"></i> {translations.course}</h3></div>
-                                    <ul className={`flex-grow overflow-y-auto space-y-2 pr-2 ${!selection.semester ? 'opacity-50' : ''}`}>{selection.department && selection.semester && (academicData.branches[selection.department.code].semesters[selection.semester.code].length > 0 ? (academicData.branches[selection.department.code].semesters[selection.semester.code].map(course => (<li key={course.code} onClick={() => handleCourseSelect(course.code, course.name)} className={`p-3 rounded-lg cursor-pointer transition-all ${selection.course?.code === course.code ? 'bg-[--primary-glow] text-[--dark-bg] font-bold' : 'hover:bg-white/5'}`}><div className="font-semibold text-sm">{course.name}</div><div className="text-xs opacity-70">{course.code}</div></li>))) : (<li className="p-3 text-center text-[--text-secondary]">{translations.noCoursesFound}</li>))}</ul>
+                                    <div className="flex items-center mb-3">
+                                        <button onClick={() => setStep('semester')} className="md:hidden mr-3 text-[--text-secondary]"><i className="fas fa-arrow-left"></i></button>
+                                        <h3 className="text-lg font-semibold text-[--primary-glow] flex items-center gap-2"><i className="fas fa-book"></i> {translations.course}</h3>
+                                    </div>
+                                    <ul className={`flex-grow overflow-y-auto space-y-2 pr-2 ${!selection.semester ? 'opacity-50' : ''}`}>
+                                        {selection.department && selection.semester && (
+                                            academicData.branches[selection.department.code].semesters[selection.semester.code].length > 0 ? (
+                                                academicData.branches[selection.department.code].semesters[selection.semester.code].map(course => (
+                                                    <li key={course.code} onClick={() => handleCourseSelect(course.code, course.name)} className={`p-3 rounded-lg cursor-pointer transition-all ${selection.course?.code === course.code ? 'bg-[--primary-glow] text-[--dark-bg] font-bold' : 'hover:bg-white/5'}`}>
+                                                        <div className="font-semibold text-sm">{course.name}</div>
+                                                        <div className="text-xs opacity-70">{course.code}</div>
+                                                    </li>
+                                                ))
+                                            ) : (
+                                                <li className="p-3 text-center text-[--text-secondary]">{translations.noCoursesFound}</li>
+                                            )
+                                        )}
+                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -367,32 +756,223 @@
                 </div>
             );
         };
-
+        
         const DetailsModal = ({ material, isOpen, onClose, translations }) => {
             if (!isOpen || !material) return null;
-            const getEmbedUrl = (url) => { const match = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/); return match?.[1] ? `https://drive.google.com/file/d/${match[1]}/preview` : url; };
+            
+            const getEmbedUrl = (url) => { 
+                const match = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/); 
+                return match?.[1] ? `https://drive.google.com/file/d/${match[1]}/preview` : url; 
+            };
+            
             const uploadedDate = new Date(material.uploadedAt.seconds * 1000).toLocaleDateString();
+            
             return (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-[999] flex justify-center items-center p-4 transition-opacity duration-300" onClick={onClose}>
                     <div className={`relative w-full max-w-4xl max-h-[90vh] bg-[--dark-bg] rounded-2xl border border-[--border-color] flex flex-col overflow-hidden transition-transform duration-300 transform ${isOpen ? 'scale-100' : 'scale-95'}`} onClick={(e) => e.stopPropagation()}>
                         <button onClick={onClose} className="absolute top-4 right-4 w-10 h-10 text-2xl text-[--text-secondary] hover:text-white transition-colors z-10"><i className="fas fa-times"></i></button>
-                        <div className="p-6 border-b border-[--border-color]"><h2 className="text-2xl font-bold text-white pr-12">{material.title}</h2><p className="text-sm text-[--text-secondary] mt-2">{translations.uploadedBy} <span className="font-semibold text-white/80">{material.uploader}</span> {translations.on} {uploadedDate}</p></div>
-                        <div className="flex-grow p-6 overflow-y-auto"><div className="bg-black/20 rounded-lg overflow-hidden border border-[--border-color] mb-6"><iframe src={getEmbedUrl(material.downloadURL)} className="w-full h-96" frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen title="Material Preview"></iframe></div><p className="text-white/90 whitespace-pre-wrap">{material.description}</p></div>
+                        <div className="p-6 border-b border-[--border-color]">
+                            <h2 className="text-2xl font-bold text-white pr-12">{material.title}</h2>
+                            <p className="text-sm text-[--text-secondary] mt-2">{translations.uploadedBy} <span className="font-semibold text-white/80">{material.uploader}</span> {translations.on} {uploadedDate}</p>
+                        </div>
+                        <div className="flex-grow p-6 overflow-y-auto">
+                            <div className="bg-black/20 rounded-lg overflow-hidden border border-[--border-color] mb-6">
+                                <iframe src={getEmbedUrl(material.downloadURL)} className="w-full h-96" frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen title="Material Preview"></iframe>
+                            </div>
+                            <p className="text-white/90 whitespace-pre-wrap">{material.description}</p>
+                        </div>
                         <div className="p-6 border-t border-[--border-color] bg-black/20 flex flex-col sm:flex-row items-center justify-between gap-4">
-                            <span className={`px-4 py-2 text-sm font-semibold rounded-full ${material.isPaid ? 'bg-orange-500/20 text-orange-400' : 'bg-green-500/20 text-green-400'}`}>{material.isPaid ? (material.isUnlocked ? 'Paid: Unlocked' : 'Paid: Locked') : 'Free Material'}</span>
-                            <a href={material.downloadURL} target="_blank" rel="noopener noreferrer" className="flex-shrink-0 w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-[--primary-glow] text-[--dark-bg] rounded-lg hover:shadow-[0_0_20px_rgba(255,215,0,0.5)] transition-all duration-300 transform hover:-translate-y-0.5"><i className="fas fa-download"></i><span>Download File</span></a>
+                            <span className={`px-4 py-2 text-sm font-semibold rounded-full ${material.isPaid ? 'bg-orange-500/20 text-orange-400' : 'bg-green-500/20 text-green-400'}`}>
+                                {material.isPaid ? (material.isUnlocked ? 'Paid: Unlocked' : `Paid: Locked • ₹${material.price}`) : 'Free Material'}
+                            </span>
+                            <a href={material.downloadURL} target="_blank" rel="noopener noreferrer" className="flex-shrink-0 w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-[--primary-glow] text-[--dark-bg] rounded-lg hover:shadow-[0_0_20px_rgba(255,215,0,0.5)] transition-all duration-300 transform hover:-translate-y-0.5">
+                                <i className="fas fa-download"></i>
+                                <span>Download File</span>
+                            </a>
                         </div>
                     </div>
                 </div>
             );
         };
-
+        
+        const PaymentModal = ({ material, isOpen, onClose, onPaymentSuccess, translations }) => {
+            const [isProcessing, setIsProcessing] = useState(false);
+            
+            const handlePayment = () => {
+                setIsProcessing(true);
+                
+                // Simulate payment processing
+                setTimeout(() => {
+                    setIsProcessing(false);
+                    onPaymentSuccess(material);
+                    onClose();
+                }, 2000);
+            };
+            
+            if (!isOpen || !material) return null;
+            
+            return (
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-[999] flex justify-center items-center p-4 transition-opacity duration-300" onClick={onClose}>
+                    <div className={`relative w-full max-w-md bg-[--dark-bg] rounded-2xl border border-[--border-color] flex flex-col overflow-hidden transition-transform duration-300 transform ${isOpen ? 'scale-100' : 'scale-95'}`} onClick={(e) => e.stopPropagation()}>
+                        <button onClick={onClose} className="absolute top-4 right-4 w-10 h-10 text-2xl text-[--text-secondary] hover:text-white transition-colors z-10"><i className="fas fa-times"></i></button>
+                        <div className="p-6 border-b border-[--border-color] text-center">
+                            <h2 className="text-2xl font-bold text-white">{translations.unlockMaterial}</h2>
+                            <p className="text-sm text-[--text-secondary] mt-1">{material.title}</p>
+                        </div>
+                        <div className="p-6">
+                            <div className="text-center mb-6">
+                                <div className="text-4xl font-bold text-yellow-400 mb-2">₹{material.price}</div>
+                                <p className="text-[--text-secondary]">One-time payment for unlimited access</p>
+                            </div>
+                            
+                            <div className="space-y-4">
+                                <div className="p-4 bg-black/30 rounded-lg border border-[--border-color]">
+                                    <div className="flex items-center gap-3">
+                                        <i className="fas fa-credit-card text-yellow-400"></i>
+                                        <div>
+                                            <div className="font-medium">Credit/Debit Card</div>
+                                            <div className="text-xs text-[--text-secondary]">Secure payment powered by Razorpay</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="p-4 bg-black/30 rounded-lg border border-[--border-color]">
+                                    <div className="flex items-center gap-3">
+                                        <i className="fas fa-wallet text-yellow-400"></i>
+                                        <div>
+                                            <div className="font-medium">Wallet</div>
+                                            <div className="text-xs text-[--text-secondary]">Pay with UPI, Paytm, or other wallets</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button 
+                                onClick={handlePayment}
+                                disabled={isProcessing}
+                                className="w-full mt-6 flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-[--primary-glow] text-[--dark-bg] rounded-lg hover:shadow-[0_0_20px_rgba(255,215,0,0.5)] transition-all duration-300 disabled:opacity-70"
+                            >
+                                {isProcessing ? (
+                                    <React.Fragment>
+                                        <i className="fas fa-spinner fa-spin"></i>
+                                        <span>Processing...</span>
+                                    </React.Fragment>
+                                ) : (
+                                    <React.Fragment>
+                                        <i className="fas fa-lock-open"></i>
+                                        <span>Pay Now</span>
+                                    </React.Fragment>
+                                )}
+                            </button>
+                            
+                            <div className="mt-4 text-xs text-center text-[--text-secondary]">
+                                By completing this purchase you agree to our Terms of Service and Privacy Policy
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+        
+        const AccountModal = ({ isOpen, onClose, translations, userMaterials }) => {
+            const [activeTab, setActiveTab] = useState('purchased');
+            
+            if (!isOpen) return null;
+            
+            return (
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-[999] flex justify-center items-center p-4 transition-opacity duration-300" onClick={onClose}>
+                    <div className={`relative w-full max-w-4xl max-h-[80vh] bg-[--dark-bg] rounded-2xl border border-[--border-color] flex flex-col overflow-hidden transition-transform duration-300 transform ${isOpen ? 'scale-100' : 'scale-95'}`} onClick={(e) => e.stopPropagation()}>
+                        <button onClick={onClose} className="absolute top-4 right-4 w-10 h-10 text-2xl text-[--text-secondary] hover:text-white transition-colors z-10"><i className="fas fa-times"></i></button>
+                        <div className="p-6 border-b border-[--border-color]">
+                            <h2 className="text-2xl font-bold text-white">{translations.myMaterials}</h2>
+                        </div>
+                        
+                        <div className="flex border-b border-[--border-color]">
+                            <button 
+                                onClick={() => setActiveTab('purchased')}
+                                className={`flex-1 py-4 text-center font-medium ${activeTab === 'purchased' ? 'text-yellow-400 border-b-2 border-yellow-400' : 'text-[--text-secondary]'}`}
+                            >
+                                {translations.purchased}
+                            </button>
+                            <button 
+                                onClick={() => setActiveTab('downloaded')}
+                                className={`flex-1 py-4 text-center font-medium ${activeTab === 'downloaded' ? 'text-yellow-400 border-b-2 border-yellow-400' : 'text-[--text-secondary]'}`}
+                            >
+                                {translations.downloaded}
+                            </button>
+                        </div>
+                        
+                        <div className="flex-grow overflow-y-auto p-6">
+                            {activeTab === 'purchased' && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {userMaterials.purchased.length > 0 ? (
+                                        userMaterials.purchased.map(material => (
+                                            <div key={material.id} className="bg-[--card-bg] border border-[--border-color] rounded-lg p-4">
+                                                <div className="flex items-start gap-3">
+                                                    <img src={material.thumbnailURL || 'https://picsum.photos/100/100'} alt={material.title} className="w-16 h-16 rounded object-cover" />
+                                                    <div className="flex-1 min-w-0">
+                                                        <h3 className="font-medium text-white truncate">{material.title}</h3>
+                                                        <p className="text-xs text-[--text-secondary] mt-1">{material.uploader}</p>
+                                                        <div className="flex items-center justify-between mt-2">
+                                                            <span className="text-xs px-2 py-1 bg-orange-500/20 text-orange-400 rounded-full">{translations.purchased}</span>
+                                                            <a href={material.downloadURL} target="_blank" rel="noopener noreferrer" className="text-xs text-yellow-400 hover:text-yellow-300">
+                                                                <i className="fas fa-download"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="col-span-full text-center py-10">
+                                            <i className="fas fa-shopping-cart text-3xl text-[--text-secondary] mb-3"></i>
+                                            <p className="text-[--text-secondary]">No purchased materials yet</p>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                            
+                            {activeTab === 'downloaded' && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {userMaterials.downloaded.length > 0 ? (
+                                        userMaterials.downloaded.map(material => (
+                                            <div key={material.id} className="bg-[--card-bg] border border-[--border-color] rounded-lg p-4">
+                                                <div className="flex items-start gap-3">
+                                                    <img src={material.thumbnailURL || 'https://picsum.photos/100/100'} alt={material.title} className="w-16 h-16 rounded object-cover" />
+                                                    <div className="flex-1 min-w-0">
+                                                        <h3 className="font-medium text-white truncate">{material.title}</h3>
+                                                        <p className="text-xs text-[--text-secondary] mt-1">{material.uploader}</p>
+                                                        <div className="flex items-center justify-between mt-2">
+                                                            <span className="text-xs px-2 py-1 bg-green-500/20 text-green-400 rounded-full">{translations.downloaded}</span>
+                                                            <a href={material.downloadURL} target="_blank" rel="noopener noreferrer" className="text-xs text-yellow-400 hover:text-yellow-300">
+                                                                <i className="fas fa-external-link-alt"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="col-span-full text-center py-10">
+                                            <i className="fas fa-download text-3xl text-[--text-secondary] mb-3"></i>
+                                            <p className="text-[--text-secondary]">No downloaded materials yet</p>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+        
         const MobileNavItem = ({ icon, label, onClick }) => (
             <button onClick={onClick} className="flex flex-col items-center gap-1 text-[--text-secondary] hover:text-[--primary-glow] p-2 rounded-lg transition-colors w-1/4">
-                <i className={`fas ${icon} text-xl`}></i><span className="text-xs font-medium">{label}</span>
+                <i className={`fas ${icon} text-xl`}></i>
+                <span className="text-xs font-medium">{label}</span>
             </button>
         );
-
+        
         const MobileNav = ({ onTrending, onRecent, onFavorites, onUpload, translations }) => (
             <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[rgba(16,16,16,0.8)] backdrop-blur-xl border-t border-[--border-color] z-50">
                 <div className="flex justify-around items-center h-20">
@@ -403,16 +983,28 @@
                 </div>
             </nav>
         );
-
+        
         const Toast = ({ toast, onDismiss }) => {
             const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
             const colors = { success: 'border-green-500', error: 'border-red-500', info: 'border-blue-500' };
             const iconColors = { success: 'text-green-500', error: 'text-red-500', info: 'text-blue-500' };
             const [isExiting, setIsExiting] = useState(false);
-            useEffect(() => { const timer = setTimeout(() => { setIsExiting(true); setTimeout(() => onDismiss(toast.id), 300); }, 3000); return () => clearTimeout(timer); }, [toast.id, onDismiss]);
-            const handleDismiss = () => { setIsExiting(true); setTimeout(() => onDismiss(toast.id), 300); };
+            
+            useEffect(() => { 
+                const timer = setTimeout(() => { 
+                    setIsExiting(true); 
+                    setTimeout(() => onDismiss(toast.id), 300); 
+                }, 3000); 
+                return () => clearTimeout(timer); 
+            }, [toast.id, onDismiss]);
+            
+            const handleDismiss = () => { 
+                setIsExiting(true); 
+                setTimeout(() => onDismiss(toast.id), 300); 
+            };
+            
             const animationClass = isExiting ? 'animate-[fadeOut_0.3s_ease-out_forwards]' : 'animate-[slideIn_0.3s_ease-out_forwards]';
-
+            
             return (
                 <div className={`relative flex items-center gap-4 w-full max-w-sm p-4 bg-[--card-bg] border-l-4 ${colors[toast.type]} rounded-lg shadow-lg border border-[--border-color] ${animationClass}`}>
                     <style>{`@keyframes slideIn { from { opacity: 0; transform: translateX(100%); } to { opacity: 1; transform: translateX(0); } } @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }`}</style>
@@ -426,7 +1018,14 @@
         const BackToTopButton = () => {
             const isScrolled = useScroll(400);
             const scrollToTop = () => { window.scrollTo({ top: 0, behavior: 'smooth' }); };
-            return (<button onClick={scrollToTop} className={`fixed bottom-24 md:bottom-8 right-4 md:right-8 w-12 h-12 flex items-center justify-center bg-[--primary-glow] text-[--dark-bg] rounded-full shadow-lg z-50 transition-all duration-300 ${isScrolled ? 'opacity-100 visible scale-100' : 'opacity-0 invisible scale-90'}`}><i className="fas fa-arrow-up text-lg"></i></button>);
+            return (
+                <button 
+                    onClick={scrollToTop} 
+                    className={`fixed bottom-24 md:bottom-8 right-4 md:right-8 w-12 h-12 flex items-center justify-center bg-[--primary-glow] text-[--dark-bg] rounded-full shadow-lg z-50 transition-all duration-300 ${isScrolled ? 'opacity-100 visible scale-100' : 'opacity-0 invisible scale-90'}`}
+                >
+                    <i className="fas fa-arrow-up text-lg"></i>
+                </button>
+            );
         };
         
         // --- MAIN APP ---
@@ -435,22 +1034,47 @@
             const [isLoading, setIsLoading] = useState(false);
             const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
             const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+            const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+            const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
             const [selectedMaterial, setSelectedMaterial] = useState(null);
             const [selection, setSelection] = useState({ department: null, semester: null, course: null });
             const [searchTerm, setSearchTerm] = useState('');
-            const debouncedSearchTerm = useDebounce(searchTerm, 300);
             const [toasts, setToasts] = useState([]);
             const [currentLanguage, setCurrentLanguage] = useState('en');
+            const [userMaterials, setUserMaterials] = useState({
+                purchased: [],
+                downloaded: []
+            });
+            const { currentUser } = useAuth();
+            
             const t = translations[currentLanguage];
-
+            const debouncedSearchTerm = useDebounce(searchTerm, 300);
+            
+            // Fetch materials based on selection
             useEffect(() => {
                 const { department, semester, course } = selection;
                 if (department && semester && course) {
                     const loadMaterials = async () => {
                         setIsLoading(true);
                         try {
-                            const fetchedMaterials = await fetchMaterials(department.code, semester.code, course.code);
-                            setMaterials(fetchedMaterials);
+                            // Simulate API call
+                            await new Promise(resolve => setTimeout(resolve, 1000));
+                            
+                            // Generate materials based on course code
+                            if (course.code.includes("U23MAT")) {
+                                setMaterials([]);
+                            } else {
+                                // Filter materials that match the course
+                                const courseMaterials = MOCK_MATERIALS.map((material, index) => ({
+                                    ...material, 
+                                    id: `${course.code}-${index}`, 
+                                    department, 
+                                    semester, 
+                                    courseCode: course.code
+                                }));
+                                
+                                setMaterials(courseMaterials);
+                            }
                         } catch (error) {
                             console.error("Failed to fetch materials:", error);
                             addToast("Error fetching materials.", 'error');
@@ -464,25 +1088,162 @@
                 }
             }, [selection]);
             
+            // Load user materials from Firebase (if available)
+            useEffect(() => {
+                if (currentUser && db) {
+                    const loadUserMaterials = async () => {
+                        try {
+                            // Get user document
+                            const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                            const userData = userDoc.data();
+                            
+                            // Get purchased materials
+                            const purchasedSnapshot = await db.collection('payments')
+                                .where('userId', '==', currentUser.uid)
+                                .where('status', '==', 'completed')
+                                .get();
+                            
+                            const purchasedMaterials = [];
+                            purchasedSnapshot.forEach(doc => {
+                                const payment = doc.data();
+                                if (payment.materialData) {
+                                    purchasedMaterials.push({
+                                        id: doc.id,
+                                        ...payment.materialData,
+                                        downloadURL: payment.materialData.downloadURL || payment.materialData.fileUrl
+                                    });
+                                }
+                            });
+                            
+                            // Get downloaded materials
+                            const downloadedMaterials = userData.downloadedMaterials || [];
+                            
+                            setUserMaterials({
+                                purchased: purchasedMaterials,
+                                downloaded: downloadedMaterials
+                            });
+                        } catch (error) {
+                            console.error("Error loading user materials:", error);
+                        }
+                    };
+                    
+                    loadUserMaterials();
+                }
+            }, [currentUser, db]);
+            
             const handleSelect = (newSelection) => setSelection(newSelection);
-            const handleViewMaterial = (material) => { setSelectedMaterial(material); setIsDetailsModalOpen(true); };
+            const handleViewMaterial = (material) => { 
+                setSelectedMaterial(material); 
+                setIsDetailsModalOpen(true); 
+            };
+            
+            const handleUnlockMaterial = (material) => {
+                setSelectedMaterial(material);
+                setIsPaymentModalOpen(true);
+            };
+            
+            const handlePaymentSuccess = (material) => {
+                // Update material to unlocked
+                const updatedMaterials = materials.map(m => 
+                    m.id === material.id ? { ...m, isUnlocked: true } : m
+                );
+                setMaterials(updatedMaterials);
+                
+                // Add to user's purchased materials
+                setUserMaterials(prev => ({
+                    ...prev,
+                    purchased: [...prev.purchased, material]
+                }));
+                
+                addToast(t.paymentSuccess, 'success');
+            };
+            
             const addToast = (message, type = 'info') => setToasts(prev => [...prev, { id: Date.now(), message, type }]);
             const dismissToast = (id) => setToasts(prev => prev.filter(toast => toast.id !== id));
-            const filteredMaterials = useMemo(() => materials.filter(material => material.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) || material.tags.some(tag => tag.toLowerCase().includes(debouncedSearchTerm.toLowerCase()))), [materials, debouncedSearchTerm]);
-            const handleLanguageToggle = () => { setCurrentLanguage(prev => prev === 'en' ? 'es' : 'en'); addToast(currentLanguage === 'en' ? 'Idioma cambiado a Español' : 'Language changed to English', 'success'); };
-
+            
+            const filteredMaterials = useMemo(() => 
+                materials.filter(material => 
+                    material.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) || 
+                    material.tags.some(tag => tag.toLowerCase().includes(debouncedSearchTerm.toLowerCase()))
+                ), [materials, debouncedSearchTerm]);
+            
+            const handleLanguageToggle = () => { 
+                setCurrentLanguage(prev => prev === 'en' ? 'es' : 'en'); 
+                addToast(currentLanguage === 'en' ? 'Idioma cambiado a Español' : 'Language changed to English', 'success'); 
+            };
+            
+            // Get branch class for styling
+            const getBranchClass = () => {
+                if (!selection.department) return '';
+                return `branch-${selection.department.code.toLowerCase()}`;
+            };
+            
             return (
                 <React.Fragment>
                     <Background />
                     <div className="min-h-screen flex flex-col">
-                        <Header currentLanguage={currentLanguage} onLanguageToggle={handleLanguageToggle} translations={t} />
+                        <Header 
+                            currentLanguage={currentLanguage} 
+                            onLanguageToggle={handleLanguageToggle} 
+                            translations={t} 
+                            onAccountClick={() => setIsAccountModalOpen(true)}
+                        />
                         <main className="container mx-auto px-4 py-6 flex-grow">
-                            <FilterBar selection={selection} searchTerm={searchTerm} onSearchChange={(e) => setSearchTerm(e.target.value)} onOpenFilterModal={() => setIsFilterModalOpen(true)} onRequestMaterial={() => addToast("Request material feature coming soon!", 'info')} translations={t} />
-                            <MaterialsGrid materials={filteredMaterials} isLoading={isLoading} hasSelection={!!selection.course} onViewMaterial={handleViewMaterial} onRequestMaterial={() => addToast("Request material feature coming soon!", 'info')} onToast={addToast} translations={t} />
+                            <FilterBar 
+                                selection={selection} 
+                                searchTerm={searchTerm} 
+                                onSearchChange={(e) => setSearchTerm(e.target.value)} 
+                                onOpenFilterModal={() => setIsFilterModalOpen(true)} 
+                                onRequestMaterial={() => addToast("Request material feature coming soon!", 'info')} 
+                                translations={t}
+                                onMyMaterialsClick={() => setIsAccountModalOpen(true)}
+                            />
+                            <MaterialsGrid 
+                                materials={filteredMaterials} 
+                                isLoading={isLoading} 
+                                hasSelection={!!selection.course} 
+                                onViewMaterial={handleViewMaterial} 
+                                onUnlockMaterial={handleUnlockMaterial}
+                                onRequestMaterial={() => addToast("Request material feature coming soon!", 'info')} 
+                                onToast={addToast} 
+                                translations={t}
+                                branchClass={getBranchClass()}
+                            />
                         </main>
-                        <FilterModal isOpen={isFilterModalOpen} onClose={() => setIsFilterModalOpen(false)} onSelect={handleSelect} academicData={academicData} currentSelection={selection} translations={t} />
-                        <DetailsModal material={selectedMaterial} isOpen={isDetailsModalOpen} onClose={() => setIsDetailsModalOpen(false)} translations={t} />
-                        <MobileNav onTrending={() => addToast("Trending feature coming soon!", "info")} onRecent={() => addToast("Recent feature coming soon!", "info")} onFavorites={() => addToast("Favorites feature coming soon!", "info")} onUpload={() => addToast("Upload feature coming soon!", "info")} translations={t} />
+                        <FilterModal 
+                            isOpen={isFilterModalOpen} 
+                            onClose={() => setIsFilterModalOpen(false)} 
+                            onSelect={handleSelect} 
+                            academicData={academicData} 
+                            currentSelection={selection} 
+                            translations={t} 
+                        />
+                        <DetailsModal 
+                            material={selectedMaterial} 
+                            isOpen={isDetailsModalOpen} 
+                            onClose={() => setIsDetailsModalOpen(false)} 
+                            translations={t} 
+                        />
+                        <PaymentModal
+                            material={selectedMaterial}
+                            isOpen={isPaymentModalOpen}
+                            onClose={() => setIsPaymentModalOpen(false)}
+                            onPaymentSuccess={handlePaymentSuccess}
+                            translations={t}
+                        />
+                        <AccountModal
+                            isOpen={isAccountModalOpen}
+                            onClose={() => setIsAccountModalOpen(false)}
+                            translations={t}
+                            userMaterials={userMaterials}
+                        />
+                        <MobileNav 
+                            onTrending={() => addToast("Trending feature coming soon!", "info")} 
+                            onRecent={() => addToast("Recent feature coming soon!", "info")} 
+                            onFavorites={() => addToast("Favorites feature coming soon!", "info")} 
+                            onUpload={() => addToast("Upload feature coming soon!", "info")} 
+                            translations={t} 
+                        />
                         <BackToTopButton />
                         <div className="fixed top-4 right-4 z-[1000] space-y-3 w-full max-w-sm">
                             {toasts.map(toast => <Toast key={toast.id} toast={toast} onDismiss={dismissToast} />)}
@@ -492,12 +1253,15 @@
                 </React.Fragment>
             );
         };
-
+        
         // --- RENDER APP ---
-        const rootElement = document.getElementById('root');
-        const root = ReactDOM.createRoot(rootElement);
-        root.render(<App />);
-
+        document.addEventListener('DOMContentLoaded', () => {
+            const rootElement = document.getElementById('root');
+            if (rootElement) {
+                const root = ReactDOM.createRoot(rootElement);
+                root.render(<App />);
+            }
+        });
     </script>
 </body>
 </html>
