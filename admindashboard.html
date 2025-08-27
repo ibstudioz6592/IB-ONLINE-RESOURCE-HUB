@@ -249,8 +249,34 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-functions.js"></script>
-    
     <script>
+        function smoothNavigate(url) {
+    document.body.style.transition = 'opacity 0.4s';
+    document.body.style.opacity = '0';
+    setTimeout(() => { window.location.href = url; }, 400);
+}
+function isLoggedIn() {
+    return sessionStorage.getItem('loggedIn') === 'true';
+}
+function setLoggedIn() {
+    sessionStorage.setItem('loggedIn', 'true');
+}
+function logout() {
+    sessionStorage.removeItem('loggedIn');
+    smoothNavigate('/index.html');
+}
+document.addEventListener('DOMContentLoaded', () => {
+    if (!isLoggedIn()) {
+        smoothNavigate('/index.html');
+    } else {
+        initializePage();
+    }
+    document.getElementById('logout-btn').addEventListener('click', e => {
+        e.preventDefault();
+        logout();
+    });
+});
+
         document.addEventListener('DOMContentLoaded', () => {
             const firebaseConfig = { apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao", authDomain: "student-portal-free.firebaseapp.com", projectId: "student-portal-free", storageBucket: "student-portal-free.appspot.com", messagingSenderId: "272865877510", appId: "1:272865877510:web:0875a2502ae55bbf9ead87" };
             firebase.initializeApp(firebaseConfig);
