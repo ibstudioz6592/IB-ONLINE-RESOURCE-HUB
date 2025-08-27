@@ -1,146 +1,1189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Study Materials | IB STUDIOZ</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23FFD700' d='M50,10 A40,40 0 1,0 50,90 A40,40 0 1,0 50,10 Z' /%3E%3Ctext x='50' y='65' font-family='Arial' font-size='36' font-weight='bold' text-anchor='middle' fill='%230A0A0A'%3EIB%3C/text%3E%3C/svg%3E">
-    
-    <!-- Fonts & Icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Access and manage your study materials at IB STUDIOZ">
+    <meta property="og:title" content="Study Materials - IB STUDIOZ">
+    <meta property="og:description" content="Access your study materials, notes, and resources">
+    <meta property="og:type" content="website">
+    <title>Study Materials - IB STUDIOZ</title>
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
     
-    <!-- Custom Styles -->
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-      :root {
-          --primary-glow: #FFD700;
-          --secondary-glow: #00A2FF;
-          --dark-bg: #0A0A0A;
-          --text-primary: #F0F0F0;
-          --text-secondary: #A0A0A0;
-          --card-bg: rgba(22, 22, 22, 0.8);
-          --border-color: rgba(255, 215, 0, 0.2);
-          /* Branch Colors */
-          --cse-color: #3b82f6;
-          --it-color: #8b5cf6;
-          --ece-color: #10b981;
-          --eee-color: #f59e0b;
-          --mech-color: #ef4444;
-          --aiml-color: #06b6d4;
-          --civil-color: #0ea5e9;
-          --bme-color: #ec4899;
-          --ft-color: #8b5cf6;
-          --mct-color: #f97316;
-          --csd-color: #a855f7;
-          --ads-color: #0ea5e9;
-          --efe-color: #10b981;
-          --exe-color: #8b5cf6;
-      }
-      body {
-        font-family: 'Inter', sans-serif;
-        background-color: var(--dark-bg);
-        color: var(--text-primary);
-      }
-      .aurora-layer {
-        background: radial-gradient(circle at 10% 20%, var(--primary-glow) 0%, transparent 25%), radial-gradient(circle at 80% 30%, var(--secondary-glow) 0%, transparent 30%), radial-gradient(circle at 50% 80%, var(--primary-glow) 0%, transparent 25%);
-        animation: aurora-morph 40s linear infinite alternate;
-      }
-      .noise-layer {
-        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>');
-        opacity: 0.015;
-      }
-      .brand-title {
-        background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff);
-        background-size: 400% 100%;
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        animation: rgb-text-flow 6s linear infinite;
-      }
-      .brand-title::before {
-        content: 'IB STUDIOZ';
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-        background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff);
-        background-size: 400% 100%;
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        filter: blur(20px) opacity(0.9);
-        transform: scale(1.1);
-        animation: rgb-text-flow 6s linear infinite;
-      }
-      ::-webkit-scrollbar { width: 8px; }
-      ::-webkit-scrollbar-track { background: transparent; }
-      ::-webkit-scrollbar-thumb { 
-          background: rgba(255, 215, 0, 0.2); 
-          border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover { background: rgba(255, 215, 0, 0.4); }
-      @keyframes aurora-morph {
-        0% { transform: rotate(0deg) scale(1.2); }
-        100% { transform: rotate(360deg) scale(1.8); }
-      }
-      @keyframes rgb-text-flow {
-        to { background-position: 400% 0; }
-      }
-      @keyframes pulse-glow {
-        0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
-        50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
-        100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
-      }
-      .locked-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.7);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        z-index: 10;
-        border-radius: 1rem;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-      }
-      .material-card:hover .locked-overlay {
-        opacity: 1;
-      }
-      .branch-cse { border-left: 4px solid var(--cse-color); }
-      .branch-it { border-left: 4px solid var(--it-color); }
-      .branch-ece { border-left: 4px solid var(--ece-color); }
-      .branch-eee { border-left: 4px solid var(--eee-color); }
-      .branch-mech { border-left: 4px solid var(--mech-color); }
-      .branch-aiml { border-left: 4px solid var(--aiml-color); }
-      .branch-civil { border-left: 4px solid var(--civil-color); }
-      .branch-bme { border-left: 4px solid var(--bme-color); }
-      .branch-ft { border-left: 4px solid var(--ft-color); }
-      .branch-mct { border-left: 4px solid var(--mct-color); }
-      .branch-csd { border-left: 4px solid var(--csd-color); }
-      .branch-ads { border-left: 4px solid var(--ads-color); }
-      .branch-efe { border-left: 4px solid var(--efe-color); }
-      .branch-exe { border-left: 4px solid var(--exe-color); }
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #06b6d4;
+            --background: #ffffff;
+            --surface: #f8fafc;
+            --surface-hover: #f1f5f9;
+            --border: #e2e8f0;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --radius: 0.75rem;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            /* Branch Colors */
+            --cse-color: #3b82f6;
+            --it-color: #8b5cf6;
+            --ece-color: #10b981;
+            --eee-color: #f59e0b;
+            --mech-color: #ef4444;
+            --aiml-color: #06b6d4;
+            --civil-color: #0ea5e9;
+            --bme-color: #ec4899;
+            --ft-color: #8b5cf6;
+            --mct-color: #f97316;
+            --csd-color: #a855f7;
+            --ads-color: #0ea5e9;
+            --efe-color: #10b981;
+            --exe-color: #8b5cf6;
+        }
+        
+        [data-theme="dark"] {
+            --primary: #60a5fa;
+            --primary-dark: #3b82f6;
+            --secondary: #a78bfa;
+            --background: #0f172a;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --border: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+        
+        /* Background Effects */
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: linear-gradient(135deg, var(--background) 0%, var(--surface) 100%);
+        }
+        
+        .aurora-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 20%, var(--primary) 0%, transparent 30%),
+                        radial-gradient(circle at 80% 80%, var(--secondary) 0%, transparent 30%);
+            animation: aurora-morph 20s ease-in-out infinite alternate;
+            filter: blur(100px);
+            opacity: 0.1;
+        }
+        
+        @keyframes aurora-morph {
+            0% { transform: rotate(0deg) scale(1); }
+            100% { transform: rotate(180deg) scale(1.2); }
+        }
+        
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: var(--transition);
+        }
+        
+        [data-theme="dark"] .header {
+            background: rgba(15, 23, 42, 0.8);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary);
+        }
+        
+        .nav-link.active {
+            color: var(--primary);
+        }
+        
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1.5rem;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px 3px 0 0;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-outline:hover {
+            background: var(--surface-hover);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .theme-toggle {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .theme-toggle:hover {
+            background: var(--surface-hover);
+            border-color: var(--primary);
+        }
+        
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* Welcome Section */
+        .welcome-section {
+            margin-bottom: 2rem;
+        }
+        
+        .welcome-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        .welcome-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .welcome-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+        
+        .welcome-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+        }
+        
+        .welcome-illustration {
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            opacity: 0.1;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 50%;
+        }
+        
+        /* Filter Section */
+        .filter-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .filter-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .filter-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .filter-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        .filter-select, .filter-input {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--background);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            transition: var(--transition);
+        }
+        
+        .filter-select:focus, .filter-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        /* Materials Grid */
+        .materials-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .materials-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .materials-count {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .material-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .material-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .material-thumbnail {
+            height: 180px;
+            background: linear-gradient(135deg, var(--surface-hover) 0%, var(--border) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--text-muted);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .material-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .material-type-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+        
+        .material-content {
+            padding: 1.5rem;
+        }
+        
+        .material-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1.125rem;
+            line-height: 1.3;
+        }
+        
+        .material-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .material-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+        
+        .material-branch {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .material-branch-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .material-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .material-action {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface-hover);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .material-action:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .material-action.favorite.active {
+            background: var(--warning);
+            color: white;
+            border-color: var(--warning);
+        }
+        
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+            transition: var(--transition);
+        }
+        
+        .fab:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+        
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .empty-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        
+        .empty-description {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        /* Loading State */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-close:hover {
+            background: var(--surface-hover);
+            color: var(--text-primary);
+        }
+        
+        .modal-content {
+            padding: 1.5rem;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--background);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            transition: var(--transition);
+        }
+        
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        
+        /* Chatbot */
+        .chatbot-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 5rem;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            cursor: pointer;
+            z-index: 99;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+            transition: var(--transition);
+        }
+        
+        .chatbot-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        .chatbot-container {
+            position: fixed;
+            bottom: 6rem;
+            right: 2rem;
+            width: 90%;
+            max-width: 400px;
+            height: 500px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-xl);
+            z-index: 98;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(20px) scale(0.95);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        
+        .chatbot-container.active {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .chatbot-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            text-align: center;
+            background: var(--surface);
+        }
+        
+        .chatbot-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .message {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            animation: messageSlide 0.3s ease;
+        }
+        
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .message.user {
+            background: var(--primary);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 0.25rem;
+        }
+        
+        .message.bot {
+            background: var(--surface-hover);
+            color: var(--text-primary);
+            margin-right: auto;
+            border-bottom-left-radius: 0.25rem;
+        }
+        
+        .chatbot-input {
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .chatbot-input input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--background);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+        
+        .chatbot-input input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .chatbot-send {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .chatbot-send:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem 1.5rem;
+            box-shadow: var(--shadow-lg);
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 300px;
+            opacity: 0;
+            transform: translateX(-50%) translateY(20px);
+            transition: var(--transition);
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+        
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        
+        .toast.info {
+            border-left: 4px solid var(--info);
+        }
+        
+        .toast-icon {
+            font-size: 1.25rem;
+        }
+        
+        .toast.success .toast-icon {
+            color: var(--success);
+        }
+        
+        .toast.error .toast-icon {
+            color: var(--danger);
+        }
+        
+        .toast.info .toast-icon {
+            color: var(--info);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 1rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .welcome-title {
+                font-size: 1.5rem;
+            }
+            
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .materials-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chatbot-container {
+                right: 1rem;
+                left: 1rem;
+                max-width: none;
+            }
+            
+            .modal {
+                width: 95%;
+                max-height: 95vh;
+            }
+        }
     </style>
 </head>
 <body>
-    <div id="root"></div>
+    <!-- Background Effects -->
+    <div class="background-container">
+        <div class="aurora-layer"></div>
+    </div>
     
-    <script type="text/babel">
-        // Deconstruct React for easier use
-        const { useState, useEffect, useMemo, useCallback } = React;
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="dashboard.html" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                IB STUDIOZ
+            </a>
+            
+            <nav class="nav-links">
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="materials.html" class="nav-link active">Materials</a>
+                <a href="pyq.html" class="nav-link">PYQs</a>
+                <a href="seminar.html" class="nav-link">Seminars</a>
+                <a href="quiz.html" class="nav-link">Quizzes</a>
+                <a href="cgpa.html" class="nav-link">GPA Calculator</a>
+            </nav>
+            
+            <div class="header-actions">
+                <button class="btn btn-outline" id="accountBtn">
+                    <i class="fas fa-user"></i>
+                    <span>Account</span>
+                </button>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+                <button class="btn btn-outline" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <div class="welcome-card">
+                <div class="welcome-content">
+                    <h1 class="welcome-title">
+                        Study Materials
+                    </h1>
+                    <p class="welcome-subtitle">
+                        Access notes, e-books, slides, and other learning resources for your courses.
+                    </p>
+                </div>
+                <div class="welcome-illustration"></div>
+            </div>
+        </div>
+        
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-header">
+                <h2 class="filter-title">Filter Materials</h2>
+                <div class="filter-actions">
+                    <button class="btn btn-outline" id="resetFilters">
+                        <i class="fas fa-redo"></i>
+                        Reset
+                    </button>
+                </div>
+            </div>
+            
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label class="filter-label">Branch</label>
+                    <select class="filter-select" id="branchFilter">
+                        <option value="">All Branches</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Semester</label>
+                    <select class="filter-select" id="semesterFilter">
+                        <option value="">All Semesters</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Course</label>
+                    <select class="filter-select" id="courseFilter">
+                        <option value="">All Courses</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Material Type</label>
+                    <select class="filter-select" id="typeFilter">
+                        <option value="">All Types</option>
+                        <option value="notes">Notes</option>
+                        <option value="ebook">E-Books</option>
+                        <option value="slides">Slides</option>
+                        <option value="video">Videos</option>
+                        <option value="lab">Lab Manuals</option>
+                        <option value="project">Projects</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Search</label>
+                    <input type="text" class="filter-input" id="searchFilter" placeholder="Search materials...">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Materials Section -->
+        <div class="materials-header">
+            <div>
+                <h2 class="materials-title">Available Materials</h2>
+                <p class="materials-count" id="materialsCount">Loading materials...</p>
+            </div>
+        </div>
+        
+        <div class="materials-grid" id="materialsGrid">
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Floating Action Button -->
+    <button class="fab" id="uploadBtn">
+        <i class="fas fa-plus"></i>
+    </button>
+    
+    <!-- Upload Modal -->
+    <div class="modal-overlay" id="uploadModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Upload Material</h2>
+                <button class="modal-close" id="uploadModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <form id="uploadForm">
+                    <div class="form-group">
+                        <label class="form-label">Title</label>
+                        <input type="text" class="form-input" id="materialTitle" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" id="materialDescription"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Branch</label>
+                        <select class="form-select" id="materialBranch" required>
+                            <option value="">Select Branch</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Semester</label>
+                        <select class="form-select" id="materialSemester" required>
+                            <option value="">Select Semester</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Course</label>
+                        <select class="form-select" id="materialCourse" required>
+                            <option value="">Select Course</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Material Type</label>
+                        <select class="form-select" id="materialType" required>
+                            <option value="">Select Type</option>
+                            <option value="notes">Notes</option>
+                            <option value="ebook">E-Books</option>
+                            <option value="slides">Slides</option>
+                            <option value="video">Videos</option>
+                            <option value="lab">Lab Manuals</option>
+                            <option value="project">Projects</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">File</label>
+                        <input type="file" class="form-input" id="materialFile" required>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" id="cancelUpload">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Chatbot -->
+    <button class="chatbot-toggle" id="chatbotToggle">
+        <i class="fas fa-robot"></i>
+    </button>
+    <div class="chatbot-container" id="chatbotContainer">
+        <div class="chatbot-header">
+            <i class="fas fa-robot"></i> IB STUDIOZ Assistant
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="message bot">
+                Hello! I'm here to help you find study materials. You can ask me about specific subjects, courses, or types of materials.
+            </div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatbotInput" placeholder="Type your message...">
+            <button class="chatbot-send" id="chatbotSend">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Toast Container -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle toast-icon"></i>
+        <span id="toastMessage">Notification message</span>
+    </div>
+    
+    <script>
+        // Academic Data
+        const academicData = {
+            branches: {
+                "CSE": {"name":"Computer Science","color":"var(--cse-color)","icon":"fas fa-laptop-code","semesters":{"1":[{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus With MATLAB","credits":4},{"code":"U23PHY103B","name":"Engineering Physics","credits":3},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23BEE106A","name":"Basic Electrical and Electronics Engineering","credits":3},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1},{"code":"U23PHL110","name":"Engineering Physics Lab","credits":1},{"code":"U23BEEL113","name":"Basic Electrical and Electronics Engineering Lab","credits":1},{"code":"U23PPL112","name":"Python Programming Lab","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202B","name":"Discrete Mathematics","credits":4},{"code":"U23CHE204B","name":"Chemistry For Computer Science","credits":3},{"code":"U23CPR205B","name":"Programming In C","credits":3},{"code":"U23EGR207","name":"Engineering Graphics","credits":3},{"code":"U23EC203","name":"Digital Principles And System Design","credits":3},{"code":"U23CHL211","name":"Chemistry Lab","credits":1},{"code":"U23CPL212","name":"C programming Lab","credits":1},{"code":"U23TAM201","name":"Tamils And Technology","credits":1}],"3":[{"code":"U23MAT301D","name":"Probability and Statistics","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming","credits":3},{"code":"U23CS304","name":"Operating Systems","credits":3},{"code":"U23CS305","name":"Computer Information and Ethics","credits":3},{"code":"U23CS306","name":"Data Structures Lab","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Lab","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1},{"code":"Noc24-mg72","name":"NPTEL:design Thinking-A Primer","credits":1}],"4":[{"code":"U23MAT401B","name":"Numerical Methods","credits":4},{"code":"U23CS401","name":"Design And Analysis of Algorithms","credits":3},{"code":"U23CS402","name":"Software Engineering","credits":3},{"code":"U23CS403","name":"DataBase Management Systems","credits":3},{"code":"U23CS404","name":"Embedded System Design ","credits":3},{"code":"U23CS405","name":"Software Development Lab","credits":1},{"code":"U23CS403","name":"Database Management Systems Lab","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CS502","name":"Artificial Intelligence","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":" U23CS947 / U23CS903","name":"Professional Elective ","credits":3},{"code":"U23CS505","name":"Computer Networks Laboratory","credits":2},{"code":"U23CS506","name":"Artificial Intelligence and Machine Learning Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude -III","credits":1}],"6":[],"7":[],"8":[]}},
+                "IT": {"name":"Info. Technology","color":"var(--it-color)","icon":"fas fa-network-wired","semesters":{"1":[{"code":"U23IT101","name":"Programming Fundamentals","credits":4},{"code":"U23IT102","name":"Discrete Mathematics","credits":4},{"code":"U23IT103","name":"Digital Systems","credits":3},{"code":"U23IT104","name":"Computer Organization","credits":3},{"code":"U23IT105","name":"Communication Skills","credits":2},{"code":"U23IT106","name":"Programming Lab","credits":1},{"code":"U23IT107","name":"Digital Systems Lab","credits":1}],"2":[{"code":"U23IT201","name":"Data Structures","credits":4},{"code":"U23IT202","name":"Database Systems","credits":4},{"code":"U23IT203","name":"Operating Systems","credits":3},{"code":"U23IT204","name":"Computer Networks","credits":3},{"code":"U23IT205","name":"Web Technologies","credits":3},{"code":"U23IT206","name":"Data Structures Lab","credits":1},{"code":"U23IT207","name":"Web Technologies Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
+                "ECE": {"name":"Electronics & Comm","color":"var(--ece-color)","icon":"fas fa-satellite-dish","semesters":{"1":[{"code":"U23EC101","name":"Basic Electronics","credits":4},{"code":"U23EC102","name":"Circuit Theory","credits":4},{"code":"U23EC103","name":"Engineering Mathematics","credits":4},{"code":"U23EC104","name":"Programming in C","credits":3},{"code":"U23EC105","name":"Communication Skills","credits":2},{"code":"U23EC106","name":"Electronics Lab","credits":1},{"code":"U23EC107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EC201","name":"Analog Electronics","credits":4},{"code":"U23EC202","name":"Digital Electronics","credits":4},{"code":"U23EC203","name":"Signals and Systems","credits":4},{"code":"U23EC204","name":"Electromagnetic Theory","credits":3},{"code":"U23EC205","name":"Data Structures","credits":3},{"code":"U23EC206","name":"Analog Electronics Lab","credits":1},{"code":"U23EC207","name":"Digital Electronics Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
+                "EEE": {"name":"Electrical & Electronics","color":"var(--eee-color)","icon":"fas fa-bolt","semesters":{"1":[{"code":"U23EE101","name":"Basic Electrical Engineering","credits":4},{"code":"U23EE102","name":"Engineering Mathematics","credits":4},{"code":"U23EE103","name":"Electronics Engineering","credits":3},{"code":"U23EE104","name":"Programming in C","credits":3},{"code":"U23EE105","name":"Communication Skills","credits":2},{"code":"U23EE106","name":"Electrical Lab","credits":1},{"code":"U23EE107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EE201","name":"Circuit Theory","credits":4},{"code":"U23EE202","name":"Electromagnetic Theory","credits":4},{"code":"U23EE203","name":"Digital Electronics","credits":4},{"code":"U23EE204","name":"Electrical Machines","credits":3},{"code":"U23EE205","name":"Data Structures","credits":3},{"code":"U23EE206","name":"Circuit Theory Lab","credits":1},{"code":"U23EE207","name":"Digital Electronics Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
+                "MECH": {"name":"Mechanical","color":"var(--mech-color)","icon":"fas fa-cogs","semesters":{"1":[{"code":"U23ME101","name":"Engineering Mechanics","credits":4},{"code":"U23ME102","name":"Engineering Graphics","credits":4},{"code":"U23ME103","name":"Engineering Mathematics","credits":4},{"code":"U23ME104","name":"Basic Electrical Engineering","credits":3},{"code":"U23ME105","name":"Communication Skills","credits":2},{"code":"U23ME106","name":"Workshop Practice","credits":1},{"code":"U23ME107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23ME201","name":"Thermodynamics","credits":4},{"code":"U23ME202","name":"Mechanics of Materials","credits":4},{"code":"U23ME203","name":"Manufacturing Technology","credits":4},{"code":"U23ME204","name":"Fluid Mechanics","credits":3},{"code":"U23ME205","name":"Computer Programming","credits":3},{"code":"U23ME206","name":"Thermodynamics Lab","credits":1},{"code":"U23ME207","name":"Manufacturing Technology Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
+                "AIML": {"name":"AI & Machine Learning","color":"var(--aiml-color)","icon":"fas fa-brain","semesters":{"1":[{"code":"U23EG107","name":"Engineering Graphics","credits":3},{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus with MATLAB","credits":4},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23PHY103E","name":"Engineering Physics","credits":3},{"code":"U23PHL110","name":"Engineering Physics Laboratory","credits":1},{"code":"U23PPL112","name":"Python Programming Laboratory","credits":1},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202D","name":"Discrete Mathematics","credits":4},{"code":"U23BEEE206B","name":"Basics of Electrical and Electronics Engineering","credits":3},{"code":"U23CPR205","name":"Programming in C","credits":3},{"code":"U23CHE204C","name":"Applied Chemistry","credits":2},{"code":"U23EC203","name":"Digital Principles and System Design","credits":3},{"code":"U23CPL212","name":"C Programming Laboratory","credits":1},{"code":"U23CHL211","name":"Chemistry Laboratory","credits":1},{"code":"U23BEEL213B","name":"BEEE Laboratory","credits":1},{"code":"U23TAM201","name":"Tamils and Technology","credits":1}],"3":[{"code":"U23MAT301E","name":"Applied Probability and Statistics-I","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming Using Java","credits":3},{"code":"U23AML301","name":"Data Visualization","credits":3},{"code":"noc25-mg106","name":"NPTEL: Design Thinking - A Primer","credits":1},{"code":"U23CS306","name":"Data Structures Laboratory","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Using Java Laboratory","credits":1},{"code":"U23AML302","name":"Data Visualization Laboratory","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1}],"4":[{"code":"U23MAT401A","name":"Applied Probability and Statistics-II","credits":4},{"code":"U23CS403","name":"Database Management Systems","credits":3},{"code":"U23CS401","name":"Design and Analysis of Algorithms","credits":3},{"code":"U23AML401","name":"Artificial Intelligence","credits":3},{"code":"U23CSD402","name":"Operating Systems","credits":3},{"code":"U23AML402","name":"Artificial Intelligence Lab","credits":1},{"code":"U23CS405","name":"Database Management Systems Lab","credits":1},{"code":"U23GE401","name":"Soft Skills and Aptitude-II","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CSD502","name":"Software Engineering","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":"U19CS903","name":"Professional Elective - Agile Methodologies","credits":3},{"code":"U23AML501","name":"Machine Learning Laboratory","credits":2},{"code":"U23CSD504","name":"Software Development Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude -III","credits":1}],"6":[{"code":"U23CS601","name":"Computer Vision","credits":3},{"code":"U23CS602","name":"Reinforcement Learning","credits":3},{"code":"U23CS603","name":"Robotics","credits":3},{"code":"U23CS604","name":"Cyber Security","credits":3},{"code":"U23CS605","name":"Blockchain Technology","credits":3},{"code":"U23CS606","name":"Elective III","credits":3},{"code":"U23CS607","name":"Project Work II","credits":3}],"7":[{"code":"U23CS701","name":"Advanced Machine Learning","credits":3},{"code":"U23CS702","name":"AI Ethics and Governance","credits":3},{"code":"U23CS703","name":"Elective IV","credits":3},{"code":"U23CS704","name":"Project Work III","credits":3}],"8":[{"code":"U23CS801","name":"Industry Internship","credits":6},{"code":"U23CS802","name":"Project Work IV","credits":6}]}},
+                "CIVIL": {"name":"Civil Engineering","color":"var(--civil-color)","icon":"fas fa-building","semesters":{"1":[{"code":"U23CE101","name":"Engineering Mechanics","credits":4},{"code":"U23CE102","name":"Engineering Graphics","credits":4},{"code":"U23CE103","name":"Engineering Mathematics","credits":4},{"code":"U23CE104","name":"Basic Civil Engineering","credits":3},{"code":"U23CE105","name":"Communication Skills","credits":2},{"code":"U23CE106","name":"Surveying","credits":1},{"code":"U23CE107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23CE201","name":"Building Materials","credits":4},{"code":"U23CE202","name":"Structural Analysis","credits":4},{"code":"U23CE203","name":"Fluid Mechanics","credits":4},{"code":"U23CE204","name":"Surveying","credits":3},{"code":"U23CE205","name":"Computer Programming","credits":3},{"code":"U23CE206","name":"Building Materials Lab","credits":1},{"code":"U23CE207","name":"Surveying Lab","credits":1}]}},
+                "BME": {"name":"Bio Medical","color":"var(--bme-color)","icon":"fas fa-heartbeat","semesters":{"1":[{"code":"U23BM101","name":"Human Anatomy","credits":4},{"code":"U23BM102","name":"Engineering Mathematics","credits":4},{"code":"U23BM103","name":"Basic Electronics","credits":3},{"code":"U23BM104","name":"Programming in C","credits":3},{"code":"U23BM105","name":"Communication Skills","credits":2},{"code":"U23BM106","name":"Human Anatomy Lab","credits":1},{"code":"U23BM107","name":"Programming Lab","credits":1}],"2":[{"code":"U23BM201","name":"Human Physiology","credits":4},{"code":"U23BM202","name":"Biochemistry","credits":4},{"code":"U23BM203","name":"Medical Electronics","credits":4},{"code":"U23BM204","name":"Biomechanics","credits":3},{"code":"U23BM205","name":"Data Structures","credits":3},{"code":"U23BM206","name":"Human Physiology Lab","credits":1},{"code":"U23BM207","name":"Medical Electronics Lab","credits":1}]}},
+                "FT": {"name":"Fashion Technology","color":"var(--ft-color)","icon":"fas fa-tshirt","semesters":{"1":[{"code":"U23FT101","name":"Fiber Science","credits":4},{"code":"U23FT102","name":"Textile Chemistry","credits":4},{"code":"U23FT103","name":"Fashion Illustration","credits":3},{"code":"U23FT104","name":"Pattern Making","credits":3},{"code":"U23FT105","name":"Communication Skills","credits":2},{"code":"U23FT106","name":"Textile Chemistry Lab","credits":1},{"code":"U23FT107","name":"Pattern Making Lab","credits":1}],"2":[{"code":"U23FT201","name":"Textile Processing","credits":4},{"code":"U23FT202","name":"Apparel Manufacturing","credits":4},{"code":"U23FT203","name":"Fashion Design","credits":4},{"code":"U23FT204","name":"Garment Construction","credits":3},{"code":"U23FT205","name":"Computer Applications","credits":3},{"code":"U23FT206","name":"Apparel Manufacturing Lab","credits":1},{"code":"U23FT207","name":"Garment Construction Lab","credits":1}]}},
+                "MCT": {"name":"Mechatronics","color":"var(--mct-color)","icon":"fas fa-robot","semesters":{"1":[{"code":"U23MT101","name":"Engineering Mechanics","credits":4},{"code":"U23MT102","name":"Engineering Graphics","credits":4},{"code":"U23MT103","name":"Engineering Mathematics","credits":4},{"code":"U23MT104","name":"Basic Electronics","credits":3},{"code":"U23MT105","name":"Communication Skills","credits":2},{"code":"U23MT106","name":"Workshop Practice","credits":1},{"code":"U23MT107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23MT201","name":"Thermodynamics","credits":4},{"code":"U23MT202","name":"Mechanics of Materials","credits":4},{"code":"U23MT203","name":"Digital Electronics","credits":4},{"code":"U23MT204","name":"Fluid Mechanics","credits":3},{"code":"U23MT205","name":"Computer Programming","credits":3},{"code":"U23MT206","name":"Thermodynamics Lab","credits":1},{"code":"U23MT207","name":"Digital Electronics Lab","credits":1}]}},
+                "CSD": {"name":"CS & Design","color":"var(--csd-color)","icon":"fas fa-paint-brush","semesters":{"1":[{"code":"U23CD101","name":"Design Fundamentals","credits":4},{"code":"U23CD102","name":"Programming Basics","credits":4},{"code":"U23CD103","name":"Visual Communication","credits":3},{"code":"U23CD104","name":"Mathematics for Design","credits":3},{"code":"U23CD105","name":"Communication Skills","credits":2},{"code":"U23CD106","name":"Design Studio","credits":1},{"code":"U23CD107","name":"Programming Lab","credits":1}],"2":[{"code":"U23CD201","name":"User Interface Design","credits":4},{"code":"U23CD202","name":"Data Structures","credits":4},{"code":"U23CD203","name":"Web Design","credits":4},{"code":"U23CD204","name":"Digital Illustration","credits":3},{"code":"U23CD205","name":"Human-Computer Interaction","credits":3},{"code":"U23CD206","name":"UI Design Lab","credits":1},{"code":"U23CD207","name":"Web Design Lab","credits":1}]}},
+                "ADS": {"name":"AI & Data Science","color":"var(--ads-color)","icon":"fas fa-database","semesters":{"1":[{"code":"U23DS101","name":"Programming Fundamentals","credits":4},{"code":"U23DS102","name":"Linear Algebra","credits":4},{"code":"U23DS103","name":"Statistics Basics","credits":3},{"code":"U23DS104","name":"Computational Thinking","credits":3},{"code":"U23DS105","name":"Communication Skills","credits":2},{"code":"U23DS106","name":"Programming Lab","credits":1},{"code":"U23DS107","name":"Statistics Lab","credits":1}],"2":[{"code":"U23DS201","name":"Data Structures","credits":4},{"code":"U23DS202","name":"Probability and Statistics","credits":4},{"code":"U23DS203","name":"Database Systems","credits":4},{"code":"U23DS204","name":"Data Visualization","credits":3},{"code":"U23DS205","name":"Python Programming","credits":3},{"code":"U23DS206","name":"Data Structures Lab","credits":1},{"code":"U23DS207","name":"Database Lab","credits":1}]}},
+                "EFE": {"name":"Electrical & Computer","color":"var(--efe-color)","icon":"fas fa-microchip","semesters":{"1":[{"code":"U23EF101","name":"Circuit Theory","credits":4},{"code":"U23EF102","name":"Programming Fundamentals","credits":4},{"code":"U23EF103","name":"Digital Electronics","credits":3},{"code":"U23EF104","name":"Engineering Mathematics","credits":3},{"code":"U23EF105","name":"Communication Skills","credits":2},{"code":"U23EF106","name":"Circuit Theory Lab","credits":1},{"code":"U23EF107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EF201","name":"Signals and Systems","credits":4},{"code":"U23EF202","name":"Data Structures","credits":4},{"code":"U23EF203","name":"Analog Electronics","credits":4},{"code":"U23EF204","name":"Electromagnetic Theory","credits":3},{"code":"U23EF205","name":"Computer Organization","credits":3},{"code":"U23EF206","name":"Analog Electronics Lab","credits":1},{"code":"U23EF207","name":"Data Structures Lab","credits":1}]}},
+                "EXE": {"name":"Electronics & Computer","color":"var(--exe-color)","icon":"fas fa-desktop","semesters":{"1":[{"code":"U23EX101","name":"Basic Electronics","credits":4},{"code":"U23EX102","name":"Programming Fundamentals","credits":4},{"code":"U23EX103","name":"Digital Logic Design","credits":3},{"code":"U23EX104","name":"Engineering Mathematics","credits":3},{"code":"U23EX105","name":"Communication Skills","credits":2},{"code":"U23EX106","name":"Electronics Lab","credits":1},{"code":"U23EX107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EX201","name":"Data Structures","credits":4},{"code":"U23EX202","name":"Analog Electronics","credits":4},{"code":"U23EX203","name":"Computer Organization","credits":4},{"code":"U23EX204","name":"Signals and Systems","credits":3},{"code":"U23EX205","name":"Database Systems","credits":3},{"code":"U23EX206","name":"Analog Electronics Lab","credits":1},{"code":"U23EX207","name":"Data Structures Lab","credits":1}]}}
+            }
+        };
         
         // Firebase Configuration
         const firebaseConfig = {
@@ -153,1114 +1196,682 @@
         };
         
         // Initialize Firebase
-        let firebaseApp;
-        let auth;
-        let db;
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
         
-        try {
-            firebaseApp = firebase.initializeApp(firebaseConfig);
-            auth = firebase.auth();
-            db = firebase.firestore();
-        } catch (error) {
-            console.error("Firebase initialization error:", error);
+        // Global Variables
+        let currentUser = null;
+        let materials = [];
+        let filteredMaterials = [];
+        let unsubscribeFunctions = [];
+        
+        // DOM Elements
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const accountBtn = document.getElementById('accountBtn');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const uploadModal = document.getElementById('uploadModal');
+        const uploadModalClose = document.getElementById('uploadModalClose');
+        const cancelUpload = document.getElementById('cancelUpload');
+        const uploadForm = document.getElementById('uploadForm');
+        const materialsGrid = document.getElementById('materialsGrid');
+        const materialsCount = document.getElementById('materialsCount');
+        const branchFilter = document.getElementById('branchFilter');
+        const semesterFilter = document.getElementById('semesterFilter');
+        const courseFilter = document.getElementById('courseFilter');
+        const typeFilter = document.getElementById('typeFilter');
+        const searchFilter = document.getElementById('searchFilter');
+        const resetFilters = document.getElementById('resetFilters');
+        const materialBranch = document.getElementById('materialBranch');
+        const materialSemester = document.getElementById('materialSemester');
+        const materialCourse = document.getElementById('materialCourse');
+        const chatbotToggle = document.getElementById('chatbotToggle');
+        const chatbotContainer = document.getElementById('chatbotContainer');
+        const chatbotMessages = document.getElementById('chatbotMessages');
+        const chatbotInput = document.getElementById('chatbotInput');
+        const chatbotSend = document.getElementById('chatbotSend');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        
+        // Theme Management
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
         }
         
-        // --- CONSTANTS ---
-        const academicData = {
-            branches: {
-                "CSE": {
-                    "name": "Computer Science", "color": "var(--cse-color)", "icon": "fas fa-laptop-code",
-                    "semesters": {
-                        "1": [{"code": "U23ENG101A", "name": "Communication Skills in English", "credits": 3}, {"code": "U23MAT102A", "name": "Linear Algebra and Calculus With MATLAB", "credits": 4}, {"code": "U23PHY103B", "name": "Engineering Physics", "credits": 3}, {"code": "U23PPR105", "name": "Problem Solving using Python Programming", "credits": 3}, {"code": "U23BEE106A", "name": "Basic Electrical and Electronics Engineering", "credits": 3}, {"code": "U23TAM101", "name": "Heritage of Tamils", "credits": 1}, {"code": "U23PHL110", "name": "Engineering Physics Lab", "credits": 1}, {"code": "U23BEEL113", "name": "Basic Electrical and Electronics Engineering Lab", "credits": 1}, {"code": "U23PPL112", "name": "Python Programming Lab", "credits": 1}],
-                        "2": [{"code": "U23ENG201A", "name": "Technical English", "credits": 2}, {"code": "U23MAT202B", "name": "Discrete Mathematics", "credits": 4}, {"code": "U23CHE204B", "name": "Chemistry For Computer Science", "credits": 3}, {"code": "U23CPR205B", "name": "Programming In C", "credits": 3}, {"code": "U23EGR207", "name": "Engineering Graphics", "credits": 3}, {"code": "U23EC203", "name": "Digital Principles And System Design", "credits": 3}, {"code": "U23CHL211", "name": "Chemistry Lab", "credits": 1}, {"code": "U23CPL212", "name": "C programming Lab", "credits": 1}, {"code": "U23TAM201", "name": "Tamils And Technology", "credits": 1}],
-                        "3": [{"code": "U23MAT301D", "name": "Probability and Statistics", "credits": 4}, {"code": "U23CS301", "name": "Data Structures", "credits": 3}, {"code": "U23CS302", "name": "Computer Architecture", "credits": 3}, {"code": "U23CS303", "name": "Object Oriented Programming", "credits": 3}, {"code": "U23CS304", "name": "Operating Systems", "credits": 3}, {"code": "U23CS305", "name": "Computer Information and Ethics", "credits": 3}, {"code": "U23CS306", "name": "Data Structures Lab", "credits": 1}, {"code": "U23CS307", "name": "Object Oriented Programming Lab", "credits": 1}, {"code": "U23GE301", "name": "Soft Skills and Aptitude-I", "credits": 1}, {"code": "Noc24-mg72", "name": "NPTEL:design Thinking-A Primer", "credits": 1}],
-                        "4": [{"code": "U23MAT401B", "name": "Numerical Methods", "credits": 4}, {"code": "U23CS401", "name": "Design And Analysis of Algorithms", "credits": 3}, {"code": "U23CS402", "name": "Software Engineering", "credits": 3}, {"code": "U23CS403", "name": "DataBase Management Systems", "credits": 3}, {"code": "U23CS404", "name": "Embedded System Design ", "credits": 3}, {"code": "U23CS405", "name": "Software Development Lab", "credits": 1}, {"code": "U23CS403", "name": "Database Management Systems Lab", "credits": 1}],
-                        "5": [{"code": "U23CS504", "name": "Machine Learning", "credits": 3}, {"code": "U23CS501", "name": "Computer Networks", "credits": 3}, {"code": "U23CS502", "name": "Artificial Intelligence", "credits": 3}, {"code": "U23CS503", "name": "Theory of Computation", "credits": 3}, {"code": "noc25-cs135", "name": "Elective NPTEL", "credits": 3}, {"code": " U23CS947 / U23CS903", "name": "Professional Elective ", "credits": 3}, {"code": "U23CS505", "name": "Computer Networks Laboratory", "credits": 2}, {"code": "U23CS506", "name": "Artificial Intelligence and Machine Learning Laboratory", "credits": 1}, {"code": "U23GE501", "name": "Soft Skills and Aptitude -III", "credits": 1}],
-                        "6": [], "7": [], "8": []
-                    }
-                },
-                "IT": {
-                    "name": "Info. Technology", "color": "var(--it-color)", "icon": "fas fa-network-wired",
-                    "semesters": {
-                        "1": [{"code": "U23IT101", "name": "Programming Fundamentals", "credits": 4}, {"code": "U23IT102", "name": "Discrete Mathematics", "credits": 4}, {"code": "U23IT103", "name": "Digital Systems", "credits": 3}, {"code": "U23IT104", "name": "Computer Organization", "credits": 3}, {"code": "U23IT105", "name": "Communication Skills", "credits": 2}, {"code": "U23IT106", "name": "Programming Lab", "credits": 1}, {"code": "U23IT107", "name": "Digital Systems Lab", "credits": 1}],
-                        "2": [{"code": "U23IT201", "name": "Data Structures", "credits": 4}, {"code": "U23IT202", "name": "Database Systems", "credits": 4}, {"code": "U23IT203", "name": "Operating Systems", "credits": 3}, {"code": "U23IT204", "name": "Computer Networks", "credits": 3}, {"code": "U23IT205", "name": "Web Technologies", "credits": 3}, {"code": "U23IT206", "name": "Data Structures Lab", "credits": 1}, {"code": "U23IT207", "name": "Web Technologies Lab", "credits": 1}],
-                        "3": [], "4": [], "5": [], "6": [], "7": [], "8": []
-                    }
-                },
-                "ECE": {
-                    "name": "Electronics & Comm", "color": "var(--ece-color)", "icon": "fas fa-satellite-dish",
-                    "semesters": {
-                        "1": [{"code": "U23EC101", "name": "Basic Electronics", "credits": 4}, {"code": "U23EC102", "name": "Circuit Theory", "credits": 4}, {"code": "U23EC103", "name": "Engineering Mathematics", "credits": 4}, {"code": "U23EC104", "name": "Programming in C", "credits": 3}, {"code": "U23EC105", "name": "Communication Skills", "credits": 2}, {"code": "U23EC106", "name": "Electronics Lab", "credits": 1}, {"code": "U23EC107", "name": "Programming Lab", "credits": 1}],
-                        "2": [{"code": "U23EC201", "name": "Analog Electronics", "credits": 4}, {"code": "U23EC202", "name": "Digital Electronics", "credits": 4}, {"code": "U23EC203", "name": "Signals and Systems", "credits": 4}, {"code": "U23EC204", "name": "Electromagnetic Theory", "credits": 3}, {"code": "U23EC205", "name": "Data Structures", "credits": 3}, {"code": "U23EC206", "name": "Analog Electronics Lab", "credits": 1}, {"code": "U23EC207", "name": "Digital Electronics Lab", "credits": 1}],
-                        "3": [], "4": [], "5": [], "6": [], "7": [], "8": []
-                    }
-                },
-                "EEE": {
-                    "name": "Electrical & Electronics", "color": "var(--eee-color)", "icon": "fas fa-bolt",
-                    "semesters": {
-                        "1": [{"code": "U23EE101", "name": "Basic Electrical Engineering", "credits": 4}, {"code": "U23EE102", "name": "Engineering Mathematics", "credits": 4}, {"code": "U23EE103", "name": "Electronics Engineering", "credits": 3}, {"code": "U23EE104", "name": "Programming in C", "credits": 3}, {"code": "U23EE105", "name": "Communication Skills", "credits": 2}, {"code": "U23EE106", "name": "Electrical Lab", "credits": 1}, {"code": "U23EE107", "name": "Programming Lab", "credits": 1}],
-                        "2": [{"code": "U23EE201", "name": "Circuit Theory", "credits": 4}, {"code": "U23EE202", "name": "Electromagnetic Theory", "credits": 4}, {"code": "U23EE203", "name": "Digital Electronics", "credits": 4}, {"code": "U23EE204", "name": "Electrical Machines", "credits": 3}, {"code": "U23EE205", "name": "Data Structures", "credits": 3}, {"code": "U23EE206", "name": "Circuit Theory Lab", "credits": 1}, {"code": "U23EE207", "name": "Digital Electronics Lab", "credits": 1}],
-                        "3": [], "4": [], "5": [], "6": [], "7": [], "8": []
-                    }
-                },
-                "MECH": {
-                    "name": "Mechanical", "color": "var(--mech-color)", "icon": "fas fa-cogs",
-                    "semesters": {
-                        "1": [{"code": "U23ME101", "name": "Engineering Mechanics", "credits": 4}, {"code": "U23ME102", "name": "Engineering Graphics", "credits": 4}, {"code": "U23ME103", "name": "Engineering Mathematics", "credits": 4}, {"code": "U23ME104", "name": "Basic Electrical Engineering", "credits": 3}, {"code": "U23ME105", "name": "Communication Skills", "credits": 2}, {"code": "U23ME106", "name": "Workshop Practice", "credits": 1}, {"code": "U23ME107", "name": "Engineering Graphics Lab", "credits": 1}],
-                        "2": [{"code": "U23ME201", "name": "Thermodynamics", "credits": 4}, {"code": "U23ME202", "name": "Mechanics of Materials", "credits": 4}, {"code": "U23ME203", "name": "Manufacturing Technology", "credits": 4}, {"code": "U23ME204", "name": "Fluid Mechanics", "credits": 3}, {"code": "U23ME205", "name": "Computer Programming", "credits": 3}, {"code": "U23ME206", "name": "Thermodynamics Lab", "credits": 1}, {"code": "U23ME207", "name": "Manufacturing Technology Lab", "credits": 1}],
-                        "3": [], "4": [], "5": [], "6": [], "7": [], "8": []
-                    }
-                },
-                "AIML": {
-                    "name": "AI & Machine Learning", "color": "var(--aiml-color)", "icon": "fas fa-brain",
-                    "semesters": {
-                        "1": [{"code": "U23EG107", "name": "Engineering Graphics", "credits": 3}, {"code": "U23ENG101A", "name": "Communication Skills in English", "credits": 3}, {"code": "U23MAT102A", "name": "Linear Algebra and Calculus with MATLAB", "credits": 4}, {"code": "U23PPR105", "name": "Problem Solving using Python Programming", "credits": 3}, {"code": "U23PHY103E", "name": "Engineering Physics", "credits": 3}, {"code": "U23PHL110", "name": "Engineering Physics Laboratory", "credits": 1}, {"code": "U23PPL112", "name": "Python Programming Laboratory", "credits": 1}, {"code": "U23TAM101", "name": "Heritage of Tamils", "credits": 1}],
-                        "2": [{"code": "U23ENG201A", "name": "Technical English", "credits": 2}, {"code": "U23MAT202D", "name": "Discrete Mathematics", "credits": 4}, {"code": "U23BEEE206B", "name": "Basics of Electrical and Electronics Engineering", "credits": 3}, {"code": "U23CPR205", "name": "Programming in C", "credits": 3}, {"code": "U23CHE204C", "name": "Applied Chemistry", "credits": 2}, {"code": "U23EC203", "name": "Digital Principles and System Design", "credits": 3}, {"code": "U23CPL212", "name": "C Programming Laboratory", "credits": 1}, {"code": "U23CHL211", "name": "Chemistry Laboratory", "credits": 1}, {"code": "U23BEEL213B", "name": "BEEE Laboratory", "credits": 1}, {"code": "U23TAM201", "name": "Tamils and Technology", "credits": 1}],
-                        "3": [{"code": "U23MAT301E", "name": "Applied Probability and Statistics-I", "credits": 4}, {"code": "U23CS301", "name": "Data Structures", "credits": 3}, {"code": "U23CS302", "name": "Computer Architecture", "credits": 3}, {"code": "U23CS303", "name": "Object Oriented Programming Using Java", "credits": 3}, {"code": "U23AML301", "name": "Data Visualization", "credits": 3}, {"code": "noc25-mg106", "name": "NPTEL: Design Thinking - A Primer", "credits": 1}, {"code": "U23CS306", "name": "Data Structures Laboratory", "credits": 1}, {"code": "U23CS307", "name": "Object Oriented Programming Using Java Laboratory", "credits": 1}, {"code": "U23AML302", "name": "Data Visualization Laboratory", "credits": 1}, {"code": "U23GE301", "name": "Soft Skills and Aptitude-I", "credits": 1}],
-                        "4": [{"code": "U23MAT401A", "name": "Applied Probability and Statistics-II", "credits": 4}, {"code": "U23CS403", "name": "Database Management Systems", "credits": 3}, {"code": "U23CS401", "name": "Design and Analysis of Algorithms", "credits": 3}, {"code": "U23AML401", "name": "Artificial Intelligence", "credits": 3}, {"code": "U23CSD402", "name": "Operating Systems", "credits": 3}, {"code": "U23AML402", "name": "Artificial Intelligence Lab", "credits": 1}, {"code": "U23CS405", "name": "Database Management Systems Lab", "credits": 1}, {"code": "U23GE401", "name": "Soft Skills and Aptitude-II", "credits": 1}],
-                        "5": [{"code": "U23CS504", "name": "Machine Learning", "credits": 3}, {"code": "U23CS501", "name": "Computer Networks", "credits": 3}, {"code": "U23CSD502", "name": "Software Engineering", "credits": 3}, {"code": "U23CS503", "name": "Theory of Computation", "credits": 3}, {"code": "noc25-cs135", "name": "Elective NPTEL", "credits": 3}, {"code": "U19CS903", "name": "Professional Elective - Agile Methodologies", "credits": 3}, {"code": "U23AML501", "name": "Machine Learning Laboratory", "credits": 2}, {"code": "U23CSD504", "name": "Software Development Laboratory", "credits": 1}, {"code": "U23GE501", "name": "Soft Skills and Aptitude -III", "credits": 1}],
-                        "6": [{"code": "U23CS601", "name": "Computer Vision", "credits": 3}, {"code": "U23CS602", "name": "Reinforcement Learning", "credits": 3}, {"code": "U23CS603", "name": "Robotics", "credits": 3}, {"code": "U23CS604", "name": "Cyber Security", "credits": 3}, {"code": "U23CS605", "name": "Blockchain Technology", "credits": 3}, {"code": "U23CS606", "name": "Elective III", "credits": 3}, {"code": "U23CS607", "name": "Project Work II", "credits": 3}],
-                        "7": [{"code": "U23CS701", "name": "Advanced Machine Learning", "credits": 3}, {"code": "U23CS702", "name": "AI Ethics and Governance", "credits": 3}, {"code": "U23CS703", "name": "Elective IV", "credits": 3}, {"code": "U23CS704", "name": "Project Work III", "credits": 3}],
-                        "8": [{"code": "U23CS801", "name": "Industry Internship", "credits": 6}, {"code": "U23CS802", "name": "Project Work IV", "credits": 6}]
-                    }
-                },
-                "CIVIL": {
-                    "name": "Civil Engineering", "color": "var(--civil-color)", "icon": "fas fa-building",
-                    "semesters": {
-                        "1": [{"code": "U23CE101", "name": "Engineering Mechanics", "credits": 4}, {"code": "U23CE102", "name": "Engineering Graphics", "credits": 4}, {"code": "U23CE103", "name": "Engineering Mathematics", "credits": 4}, {"code": "U23CE104", "name": "Basic Civil Engineering", "credits": 3}, {"code": "U23CE105", "name": "Communication Skills", "credits": 2}, {"code": "U23CE106", "name": "Surveying", "credits": 1}, {"code": "U23CE107", "name": "Engineering Graphics Lab", "credits": 1}],
-                        "2": [{"code": "U23CE201", "name": "Building Materials", "credits": 4}, {"code": "U23CE202", "name": "Structural Analysis", "credits": 4}, {"code": "U23CE203", "name": "Fluid Mechanics", "credits": 4}, {"code": "U23CE204", "name": "Surveying", "credits": 3}, {"code": "U23CE205", "name": "Computer Programming", "credits": 3}, {"code": "U23CE206", "name": "Building Materials Lab", "credits": 1}, {"code": "U23CE207", "name": "Surveying Lab", "credits": 1}]
-                    }
-                },
-                "BME": {
-                    "name": "Bio Medical", "color": "var(--bme-color)", "icon": "fas fa-heartbeat",
-                    "semesters": {
-                        "1": [{"code": "U23BM101", "name": "Human Anatomy", "credits": 4}, {"code": "U23BM102", "name": "Engineering Mathematics", "credits": 4}, {"code": "U23BM103", "name": "Basic Electronics", "credits": 3}, {"code": "U23BM104", "name": "Programming in C", "credits": 3}, {"code": "U23BM105", "name": "Communication Skills", "credits": 2}, {"code": "U23BM106", "name": "Human Anatomy Lab", "credits": 1}, {"code": "U23BM107", "name": "Programming Lab", "credits": 1}],
-                        "2": [{"code": "U23BM201", "name": "Human Physiology", "credits": 4}, {"code": "U23BM202", "name": "Biochemistry", "credits": 4}, {"code": "U23BM203", "name": "Medical Electronics", "credits": 4}, {"code": "U23BM204", "name": "Biomechanics", "credits": 3}, {"code": "U23BM205", "name": "Data Structures", "credits": 3}, {"code": "U23BM206", "name": "Human Physiology Lab", "credits": 1}, {"code": "U23BM207", "name": "Medical Electronics Lab", "credits": 1}]
-                    }
-                },
-                "FT": {
-                    "name": "Fashion Technology", "color": "var(--ft-color)", "icon": "fas fa-tshirt",
-                    "semesters": {
-                        "1": [{"code": "U23FT101", "name": "Fiber Science", "credits": 4}, {"code": "U23FT102", "name": "Textile Chemistry", "credits": 4}, {"code": "U23FT103", "name": "Fashion Illustration", "credits": 3}, {"code": "U23FT104", "name": "Pattern Making", "credits": 3}, {"code": "U23FT105", "name": "Communication Skills", "credits": 2}, {"code": "U23FT106", "name": "Textile Chemistry Lab", "credits": 1}, {"code": "U23FT107", "name": "Pattern Making Lab", "credits": 1}],
-                        "2": [{"code": "U23FT201", "name": "Textile Processing", "credits": 4}, {"code": "U23FT202", "name": "Apparel Manufacturing", "credits": 4}, {"code": "U23FT203", "name": "Fashion Design", "credits": 4}, {"code": "U23FT204", "name": "Garment Construction", "credits": 3}, {"code": "U23FT205", "name": "Computer Applications", "credits": 3}, {"code": "U23FT206", "name": "Apparel Manufacturing Lab", "credits": 1}, {"code": "U23FT207", "name": "Garment Construction Lab", "credits": 1}]
-                    }
-                },
-                "MCT": {
-                    "name": "Mechatronics", "color": "var(--mct-color)", "icon": "fas fa-robot",
-                    "semesters": {
-                        "1": [{"code": "U23MT101", "name": "Engineering Mechanics", "credits": 4}, {"code": "U23MT102", "name": "Engineering Graphics", "credits": 4}, {"code": "U23MT103", "name": "Engineering Mathematics", "credits": 4}, {"code": "U23MT104", "name": "Basic Electronics", "credits": 3}, {"code": "U23MT105", "name": "Communication Skills", "credits": 2}, {"code": "U23MT106", "name": "Workshop Practice", "credits": 1}, {"code": "U23MT107", "name": "Engineering Graphics Lab", "credits": 1}],
-                        "2": [{"code": "U23MT201", "name": "Thermodynamics", "credits": 4}, {"code": "U23MT202", "name": "Mechanics of Materials", "credits": 4}, {"code": "U23MT203", "name": "Digital Electronics", "credits": 4}, {"code": "U23MT204", "name": "Fluid Mechanics", "credits": 3}, {"code": "U23MT205", "name": "Computer Programming", "credits": 3}, {"code": "U23MT206", "name": "Thermodynamics Lab", "credits": 1}, {"code": "U23MT207", "name": "Digital Electronics Lab", "credits": 1}]
-                    }
-                },
-                "CSD": {
-                    "name": "CS & Design", "color": "var(--csd-color)", "icon": "fas fa-paint-brush",
-                    "semesters": {
-                        "1": [{"code": "U23CD101", "name": "Design Fundamentals", "credits": 4}, {"code": "U23CD102", "name": "Programming Basics", "credits": 4}, {"code": "U23CD103", "name": "Visual Communication", "credits": 3}, {"code": "U23CD104", "name": "Mathematics for Design", "credits": 3}, {"code": "U23CD105", "name": "Communication Skills", "credits": 2}, {"code": "U23CD106", "name": "Design Studio", "credits": 1}, {"code": "U23CD107", "name": "Programming Lab", "credits": 1}],
-                        "2": [{"code": "U23CD201", "name": "User Interface Design", "credits": 4}, {"code": "U23CD202", "name": "Data Structures", "credits": 4}, {"code": "U23CD203", "name": "Web Design", "credits": 4}, {"code": "U23CD204", "name": "Digital Illustration", "credits": 3}, {"code": "U23CD205", "name": "Human-Computer Interaction", "credits": 3}, {"code": "U23CD206", "name": "UI Design Lab", "credits": 1}, {"code": "U23CD207", "name": "Web Design Lab", "credits": 1}]
-                    }
-                },
-                "ADS": {
-                    "name": "AI & Data Science", "color": "var(--ads-color)", "icon": "fas fa-database",
-                    "semesters": {
-                        "1": [{"code": "U23DS101", "name": "Programming Fundamentals", "credits": 4}, {"code": "U23DS102", "name": "Linear Algebra", "credits": 4}, {"code": "U23DS103", "name": "Statistics Basics", "credits": 3}, {"code": "U23DS104", "name": "Computational Thinking", "credits": 3}, {"code": "U23DS105", "name": "Communication Skills", "credits": 2}, {"code": "U23DS106", "name": "Programming Lab", "credits": 1}, {"code": "U23DS107", "name": "Statistics Lab", "credits": 1}],
-                        "2": [{"code": "U23DS201", "name": "Data Structures", "credits": 4}, {"code": "U23DS202", "name": "Probability and Statistics", "credits": 4}, {"code": "U23DS203", "name": "Database Systems", "credits": 4}, {"code": "U23DS204", "name": "Data Visualization", "credits": 3}, {"code": "U23DS205", "name": "Python Programming", "credits": 3}, {"code": "U23DS206", "name": "Data Structures Lab", "credits": 1}, {"code": "U23DS207", "name": "Database Lab", "credits": 1}]
-                    }
-                },
-                "EFE": {
-                    "name": "Electrical & Computer", "color": "var(--efe-color)", "icon": "fas fa-microchip",
-                    "semesters": {
-                        "1": [{"code": "U23EF101", "name": "Circuit Theory", "credits": 4}, {"code": "U23EF102", "name": "Programming Fundamentals", "credits": 4}, {"code": "U23EF103", "name": "Digital Electronics", "credits": 3}, {"code": "U23EF104", "name": "Engineering Mathematics", "credits": 3}, {"code": "U23EF105", "name": "Communication Skills", "credits": 2}, {"code": "U23EF106", "name": "Circuit Theory Lab", "credits": 1}, {"code": "U23EF107", "name": "Programming Lab", "credits": 1}],
-                        "2": [{"code": "U23EF201", "name": "Signals and Systems", "credits": 4}, {"code": "U23EF202", "name": "Data Structures", "credits": 4}, {"code": "U23EF203", "name": "Analog Electronics", "credits": 4}, {"code": "U23EF204", "name": "Electromagnetic Theory", "credits": 3}, {"code": "U23EF205", "name": "Computer Organization", "credits": 3}, {"code": "U23EF206", "name": "Analog Electronics Lab", "credits": 1}, {"code": "U23EF207", "name": "Data Structures Lab", "credits": 1}]
-                    }
-                },
-                "EXE": {
-                    "name": "Electronics & Computer", "color": "var(--exe-color)", "icon": "fas fa-desktop",
-                    "semesters": {
-                        "1": [{"code": "U23EX101", "name": "Basic Electronics", "credits": 4}, {"code": "U23EX102", "name": "Programming Fundamentals", "credits": 4}, {"code": "U23EX103", "name": "Digital Logic Design", "credits": 3}, {"code": "U23EX104", "name": "Engineering Mathematics", "credits": 3}, {"code": "U23EX105", "name": "Communication Skills", "credits": 2}, {"code": "U23EX106", "name": "Electronics Lab", "credits": 1}, {"code": "U23EX107", "name": "Programming Lab", "credits": 1}],
-                        "2": [{"code": "U23EX201", "name": "Data Structures", "credits": 4}, {"code": "U23EX202", "name": "Analog Electronics", "credits": 4}, {"code": "U23EX203", "name": "Computer Organization", "credits": 4}, {"code": "U23EX204", "name": "Signals and Systems", "credits": 3}, {"code": "U23EX205", "name": "Database Systems", "credits": 3}, {"code": "U23EX206", "name": "Analog Electronics Lab", "credits": 1}, {"code": "U23EX207", "name": "Data Structures Lab", "credits": 1}]
-                    }
-                }
-            }
-        };
-        const gradePoints = { "O": 10, "A+": 9, "A": 8, "B+": 7, "B": 6, "C": 5, "U": 0 };
-        
-        const translations = {
-            en: { 
-                selectCourse: "Select a course to begin", 
-                selectCourseBtn: "Select Course", 
-                loading: "Loading materials...", 
-                noMaterials: "No study materials found for this course.", 
-                tryRequesting: "Try requesting one or check back later.", 
-                requestMaterial: "Request Material", 
-                searchPlaceholder: "Search by title or tags...", 
-                viewing: "Viewing", 
-                trending: "Trending", 
-                recent: "Recent", 
-                favorites: "Favorites", 
-                upload: "Upload", 
-                language: "Language", 
-                dashboard: "Dashboard", 
-                logout: "Logout", 
-                addedToFavorites: "Added to favorites!", 
-                linkCopied: "Material link copied!", 
-                reportSubmitted: "Report submitted!", 
-                findYourMaterials: "Find Your Study Materials", 
-                findDescription: "Select your department, semester, and course to begin.", 
-                department: "Department", 
-                semester: "Semester", 
-                course: "Course", 
-                noCoursesFound: "No courses found.", 
-                free: "Free", 
-                paid: "Paid", 
-                views: "Views", 
-                downloads: "Downloads", 
-                unlock: "Unlock", 
-                view: "View", 
-                uploadedBy: "Uploaded by", 
-                on: "on",
-                price: "Price",
-                unlockMaterial: "Unlock Material",
-                paymentSuccess: "Payment successful! Material is now unlocked.",
-                paymentFailed: "Payment failed. Please try again.",
-                myMaterials: "My Materials",
-                account: "Account",
-                purchased: "Purchased",
-                downloaded: "Downloaded"
-            },
-            es: { 
-                selectCourse: "Selecciona un curso para comenzar", 
-                selectCourseBtn: "Seleccionar Curso", 
-                loading: "Cargando materiales...", 
-                noMaterials: "No se encontraron materiales de estudio para este curso.", 
-                tryRequesting: "Intenta solicitar uno o vuelve más tarde.", 
-                requestMaterial: "Solicitar Material", 
-                searchPlaceholder: "Buscar por título o etiquetas...", 
-                viewing: "Viendo", 
-                trending: "Tendencias", 
-                recent: "Recientes", 
-                favorites: "Favoritos", 
-                upload: "Subir", 
-                language: "Idioma", 
-                dashboard: "Tablero", 
-                logout: "Cerrar sesión", 
-                addedToFavorites: "¡Agregado a favoritos!", 
-                linkCopied: "¡Enlace del material copiado!", 
-                reportSubmitted: "¡Reporte enviado!", 
-                findYourMaterials: "Encuentra Tus Materiales de Estudio", 
-                findDescription: "Selecciona tu departamento, semestre y curso para comenzar.", 
-                department: "Departamento", 
-                semester: "Semestre", 
-                course: "Curso", 
-                noCoursesFound: "No se encontraron cursos.", 
-                free: "Gratis", 
-                paid: "De pago", 
-                views: "Vistas", 
-                downloads: "Descargas", 
-                unlock: "Desbloquear", 
-                view: "Ver", 
-                uploadedBy: "Subido por", 
-                on: "el",
-                price: "Precio",
-                unlockMaterial: "Desbloquear Material",
-                paymentSuccess: "¡Pago exitoso! El material ahora está desbloqueado.",
-                paymentFailed: "Pago fallido. Por favor, inténtalo de nuevo.",
-                myMaterials: "Mis Materiales",
-                account: "Cuenta",
-                purchased: "Comprado",
-                downloaded: "Descargado"
-            }
-        };
-        
-        // --- SERVICES ---
-        const MOCK_MATERIALS = [
-            { 
-                title: 'Complete Notes on Data Structures', 
-                description: 'Comprehensive notes covering all topics in the DS syllabus including arrays, linked lists, stacks, queues, trees, and graphs.', 
-                downloadURL: 'https://drive.google.com/file/d/1B-c8X9E8v9Z4Yk_1J_6j_9H_8d_7f_6/view?usp=sharing', 
-                thumbnailURL: 'https://picsum.photos/seed/dsa/400/225', 
-                tags: ['notes', 'pdf', 'full-syllabus'], 
-                isPaid: false, 
-                price: 0,
-                views: 1250, 
-                downloads: 800, 
-                uploader: 'Prof. Anjali Sharma', 
-                uploadedAt: { seconds: 1672531200, nanoseconds: 0 } 
-            },
-            { 
-                title: 'Machine Learning Mid-Term Question Bank', 
-                description: 'A curated list of important questions for the mid-term exams, with solutions.', 
-                downloadURL: 'https://drive.google.com/file/d/1B-c8X9E8v9Z4Yk_1J_6j_9H_8d_7f_6/view?usp=sharing', 
-                thumbnailURL: 'https://picsum.photos/seed/mlq/400/225', 
-                tags: ['questions', 'exam-prep'], 
-                isPaid: true, 
-                price: 99,
-                isUnlocked: false, 
-                views: 980, 
-                downloads: 320, 
-                uploader: 'Rahul Verma', 
-                uploadedAt: { seconds: 1675209600, nanoseconds: 0 } 
-            },
-            { 
-                title: 'Advanced Algorithms Video Lectures', 
-                description: 'Link to a playlist of high-quality video lectures on advanced algorithm topics like dynamic programming and graph theory.', 
-                downloadURL: 'https://www.youtube.com/playlist?list=PLDN4rrl48XKpZkf03iYFl-O29szjTrs_O', 
-                thumbnailURL: 'https://picsum.photos/seed/algovid/400/225', 
-                tags: ['video', 'lectures', 'algorithms'], 
-                isPaid: false, 
-                price: 0,
-                views: 2100, 
-                downloads: 1500, 
-                uploader: 'TechTutor Channel', 
-                uploadedAt: { seconds: 1677628800, nanoseconds: 0 } 
-            },
-            { 
-                title: 'Operating Systems Lab Manual', 
-                description: 'Official lab manual with all experiments, code snippets, and viva questions for the OS lab.', 
-                downloadURL: 'https://drive.google.com/file/d/1B-c8X9E8v9Z4Yk_1J_6j_9H_8d_7f_6/view?usp=sharing', 
-                thumbnailURL: 'https://picsum.photos/seed/oslab/400/225', 
-                tags: ['lab', 'manual', 'os'], 
-                isPaid: false, 
-                price: 0,
-                views: 750, 
-                downloads: 600, 
-                uploader: 'College Dept.', 
-                uploadedAt: { seconds: 1680307200, nanoseconds: 0 } 
-            },
-            { 
-                title: 'Premium Project: E-commerce Website', 
-                description: 'Full source code and documentation for a final year project on an e-commerce website using the MERN stack.', 
-                downloadURL: 'https://github.com/example/ecommerce-project', 
-                thumbnailURL: 'https://picsum.photos/seed/project/400/225', 
-                tags: ['project', 'source-code', 'mern'], 
-                isPaid: true, 
-                price: 299,
-                isUnlocked: true, 
-                views: 500, 
-                downloads: 50, 
-                uploader: 'Priya Singh', 
-                uploadedAt: { seconds: 1682899200, nanoseconds: 0 } 
-            },
-        ];
-        
-        // --- HOOKS ---
-        function useDebounce(value, delay) {
-            const [debouncedValue, setDebouncedValue] = useState(value);
-            useEffect(() => {
-                const handler = setTimeout(() => { setDebouncedValue(value); }, delay);
-                return () => { clearTimeout(handler); };
-            }, [value, delay]);
-            return debouncedValue;
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
         }
         
-        function useScroll(threshold = 300) {
-            const [isScrolled, setIsScrolled] = useState(false);
-            useEffect(() => {
-                const handleScroll = () => { setIsScrolled(window.pageYOffset > threshold); };
-                window.addEventListener('scroll', handleScroll, { passive: true });
-                return () => window.removeEventListener('scroll', handleScroll);
-            }, [threshold]);
-            return isScrolled;
+        function updateThemeIcon(theme) {
+            themeIcon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
         }
         
-        function useAuth() {
-            const [currentUser, setCurrentUser] = useState(null);
-            const [loading, setLoading] = useState(true);
+        // Toast Notifications
+        function showToast(message, type = 'success') {
+            toastMessage.textContent = message;
+            toast.className = `toast ${type} show`;
             
-            useEffect(() => {
-                if (!auth) {
-                    setLoading(false);
-                    return;
+            const icon = toast.querySelector('.toast-icon');
+            icon.className = `toast-icon fas ${
+                type === 'success' ? 'fa-check-circle' :
+                type === 'error' ? 'fa-exclamation-circle' :
+                'fa-info-circle'
+            }`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Initialize Filters
+        function initFilters() {
+            // Populate branch filter
+            Object.entries(academicData.branches).forEach(([code, branch]) => {
+                const option = document.createElement('option');
+                option.value = code;
+                option.textContent = branch.name;
+                branchFilter.appendChild(option);
+                
+                // Also populate upload form branch
+                const uploadOption = document.createElement('option');
+                uploadOption.value = code;
+                uploadOption.textContent = branch.name;
+                materialBranch.appendChild(uploadOption);
+            });
+            
+            // Add event listeners
+            branchFilter.addEventListener('change', updateSemesterFilter);
+            semesterFilter.addEventListener('change', updateCourseFilter);
+            typeFilter.addEventListener('change', applyFilters);
+            searchFilter.addEventListener('input', applyFilters);
+            resetFilters.addEventListener('click', resetAllFilters);
+            
+            materialBranch.addEventListener('change', updateMaterialSemesterFilter);
+            materialSemester.addEventListener('change', updateMaterialCourseFilter);
+        }
+        
+        function updateSemesterFilter() {
+            const branch = branchFilter.value;
+            semesterFilter.innerHTML = '<option value="">All Semesters</option>';
+            courseFilter.innerHTML = '<option value="">All Courses</option>';
+            
+            if (branch && academicData.branches[branch]) {
+                Object.keys(academicData.branches[branch].semesters).forEach(sem => {
+                    const option = document.createElement('option');
+                    option.value = sem;
+                    option.textContent = `Semester ${sem}`;
+                    semesterFilter.appendChild(option);
+                });
+            }
+            
+            applyFilters();
+        }
+        
+        function updateCourseFilter() {
+            const branch = branchFilter.value;
+            const semester = semesterFilter.value;
+            courseFilter.innerHTML = '<option value="">All Courses</option>';
+            
+            if (branch && semester && academicData.branches[branch]) {
+                const courses = academicData.branches[branch].semesters[semester] || [];
+                courses.forEach(course => {
+                    const option = document.createElement('option');
+                    option.value = course.code;
+                    option.textContent = `${course.code} - ${course.name}`;
+                    courseFilter.appendChild(option);
+                });
+            }
+            
+            applyFilters();
+        }
+        
+        function updateMaterialSemesterFilter() {
+            const branch = materialBranch.value;
+            materialSemester.innerHTML = '<option value="">Select Semester</option>';
+            materialCourse.innerHTML = '<option value="">Select Course</option>';
+            
+            if (branch && academicData.branches[branch]) {
+                Object.keys(academicData.branches[branch].semesters).forEach(sem => {
+                    const option = document.createElement('option');
+                    option.value = sem;
+                    option.textContent = `Semester ${sem}`;
+                    materialSemester.appendChild(option);
+                });
+            }
+        }
+        
+        function updateMaterialCourseFilter() {
+            const branch = materialBranch.value;
+            const semester = materialSemester.value;
+            materialCourse.innerHTML = '<option value="">Select Course</option>';
+            
+            if (branch && semester && academicData.branches[branch]) {
+                const courses = academicData.branches[branch].semesters[semester] || [];
+                courses.forEach(course => {
+                    const option = document.createElement('option');
+                    option.value = course.code;
+                    option.textContent = `${course.code} - ${course.name}`;
+                    materialCourse.appendChild(option);
+                });
+            }
+        }
+        
+        function applyFilters() {
+            const branch = branchFilter.value;
+            const semester = semesterFilter.value;
+            const course = courseFilter.value;
+            const type = typeFilter.value;
+            const search = searchFilter.value.toLowerCase();
+            
+            filteredMaterials = materials.filter(material => {
+                // Branch filter
+                if (branch && material.branch !== branch) return false;
+                
+                // Semester filter
+                if (semester && material.semester !== semester) return false;
+                
+                // Course filter
+                if (course && material.course !== course) return false;
+                
+                // Type filter
+                if (type && material.type !== type) return false;
+                
+                // Search filter
+                if (search && !material.title.toLowerCase().includes(search) && 
+                    !material.description.toLowerCase().includes(search)) {
+                    return false;
                 }
                 
-                const unsubscribe = auth.onAuthStateChanged(user => {
-                    setCurrentUser(user);
-                    setLoading(false);
+                return true;
+            });
+            
+            renderMaterials();
+        }
+        
+        function resetAllFilters() {
+            branchFilter.value = '';
+            semesterFilter.value = '';
+            courseFilter.value = '';
+            typeFilter.value = '';
+            searchFilter.value = '';
+            
+            updateSemesterFilter();
+            updateCourseFilter();
+            applyFilters();
+        }
+        
+        // Load Materials
+        function loadMaterials() {
+            materialsGrid.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+            
+            db.collection('materials').get().then(snapshot => {
+                materials = [];
+                snapshot.forEach(doc => {
+                    const material = doc.data();
+                    material.id = doc.id;
+                    materials.push(material);
                 });
                 
-                return () => unsubscribe();
-            }, [auth]);
-            
-            return { currentUser, loading };
+                filteredMaterials = [...materials];
+                renderMaterials();
+            }).catch(error => {
+                console.error('Error loading materials:', error);
+                showToast('Error loading materials', 'error');
+                materialsGrid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="fas fa-exclamation-circle"></i></div>
+                        <h3 class="empty-title">Error Loading Materials</h3>
+                        <p class="empty-description">Please try again later</p>
+                    </div>
+                `;
+            });
         }
         
-        // --- COMPONENTS ---
-        const Background = () => (
-            <div className="fixed inset-0 -z-20">
-                <div className="aurora-layer absolute inset-0 filter blur-[120px] opacity-20"></div>
-                <div className="noise-layer fixed inset-0 -z-10"></div>
-            </div>
-        );
-        
-        const Header = ({ currentLanguage, onLanguageToggle, translations, onAccountClick }) => {
-            const { currentUser } = useAuth();
+        // Render Materials
+        function renderMaterials() {
+            materialsCount.textContent = `Showing ${filteredMaterials.length} of ${materials.length} materials`;
             
-            return (
-                <header className="sticky top-2 z-50 mx-2 md:mx-4">
-                    <div className="flex justify-between items-center p-3 md:p-4 bg-[rgba(16,16,16,0.6)] backdrop-blur-xl rounded-2xl border border-[--border-color]">
-                        <div className="flex items-center gap-4">
-                            <a href="#" className="flex items-center gap-3 text-decoration-none">
-                                <svg className="w-10 h-10 md:w-12 md:h-12" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="50" cy="50" r="45" fill="var(--primary-glow)" />
-                                    <text x="50" y="65" fontFamily="Arial Black, sans-serif" fontSize="36" fontWeight="bold" textAnchor="middle" fill="var(--dark-bg)">IB</text>
-                                </svg>
-                                <h1 className="relative text-xl md:text-2xl font-bold brand-title">IB STUDIOZ</h1>
-                            </a>
-                            <a href="#" className="hidden md:inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-[--border-color] text-[--text-secondary] hover:bg-[--primary-glow] hover:text-[--dark-bg] hover:border-[--primary-glow] transition-all duration-300">
-                                <i className="fas fa-arrow-left"></i>
-                                <span>{translations.dashboard}</span>
-                            </a>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <button onClick={onLanguageToggle} className="hidden md:inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-[--border-color] text-[--text-secondary] hover:bg-[--primary-glow] hover:text-[--dark-bg] hover:border-[--primary-glow] transition-all duration-300">
-                                <i className="fas fa-language"></i>
-                                <span className="uppercase">{currentLanguage === 'en' ? 'es' : 'en'}</span>
-                            </button>
-                            <button onClick={onAccountClick} className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-[--border-color] text-[--text-secondary] hover:bg-[--primary-glow] hover:text-[--dark-bg] hover:border-[--primary-glow] transition-all duration-300">
-                                <i className="fas fa-user"></i>
-                                <span className="hidden md:inline">{currentUser?.displayName || translations.account}</span>
-                            </button>
-                            <a href="#" className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-[--border-color] text-[--text-secondary] hover:bg-[--primary-glow] hover:text-[--dark-bg] hover:border-[--primary-glow] transition-all duration-300">
-                                <i className="fas fa-sign-out-alt"></i>
-                                <span className="hidden md:inline">{translations.logout}</span>
-                            </a>
-                        </div>
+            if (filteredMaterials.length === 0) {
+                materialsGrid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="fas fa-folder-open"></i></div>
+                        <h3 class="empty-title">No Materials Found</h3>
+                        <p class="empty-description">Try adjusting your filters or upload new materials</p>
                     </div>
-                </header>
-            );
-        };
-        
-        const FilterBar = ({ selection, searchTerm, onSearchChange, onOpenFilterModal, onRequestMaterial, translations, onMyMaterialsClick }) => {
-            const display_text = selection.course 
-                ? <React.Fragment><span className="hidden md:inline">{translations.viewing}: </span><strong className="text-white">{selection.course.code} - {selection.course.name}</strong></React.Fragment>
-                : <strong className="text-white">{translations.selectCourse}</strong>;
-            return (
-                <div className="flex flex-col md:flex-row md:items-center gap-4 p-4 md:p-5 mb-6 md:mb-8 bg-[--card-bg] rounded-2xl border border-[--border-color]">
-                    <div className="text-sm text-[--text-secondary] flex-grow truncate min-w-0">{display_text}</div>
-                    <div className="flex flex-col sm:flex-row w-full md:w-auto gap-3">
-                        <div className="relative flex-grow">
-                            <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-[--text-secondary]"></i>
-                            <input type="text" value={searchTerm} onChange={onSearchChange} placeholder={translations.searchPlaceholder} className="w-full bg-black/30 border border-[--border-color] rounded-lg py-2.5 pl-11 pr-4 text-white placeholder:text-[--text-secondary] focus:outline-none focus:border-[--primary-glow] focus:ring-2 focus:ring-[--primary-glow]/50 transition-all" />
-                        </div>
-                        <button onClick={onMyMaterialsClick} className="flex-shrink-0 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border border-[--border-color] text-[--text-secondary] hover:bg-[--primary-glow] hover:text-[--dark-bg] hover:border-[--primary-glow] transition-all duration-300">
-                            <i className="fas fa-folder"></i>
-                            <span className="hidden sm:inline">{translations.myMaterials}</span>
-                        </button>
-                        <button onClick={onOpenFilterModal} className="flex-shrink-0 flex items-center justify-center gap-2 px-5 py-2.5 text-base font-semibold bg-[--primary-glow] text-[--dark-bg] rounded-lg hover:shadow-[0_0_20px_rgba(255,215,0,0.5)] transition-all duration-300 transform hover:-translate-y-0.5"><i className="fas fa-filter"></i><span>{translations.selectCourseBtn}</span></button>
-                        <button onClick={onRequestMaterial} className="flex-shrink-0 md:hidden lg:flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border border-[--border-color] text-[--text-secondary] hover:bg-[--primary-glow] hover:text-[--dark-bg] hover:border-[--primary-glow] transition-all duration-300"><i className="fas fa-plus"></i><span>{translations.requestMaterial}</span></button>
-                    </div>
-                </div>
-            );
-        };
-        
-        const SkeletonCard = () => (
-            <div className="bg-[--card-bg] border border-[--border-color] rounded-2xl overflow-hidden animate-pulse">
-                <div className="h-48 bg-white/5"></div>
-                <div className="p-5">
-                    <div className="h-6 w-3/4 rounded bg-white/10 mb-3"></div>
-                    <div className="h-4 w-1/2 rounded bg-white/10 mb-2"></div>
-                    <div className="h-4 w-1/3 rounded bg-white/10 mb-4"></div>
-                    <div className="flex justify-between items-center pt-4 border-t border-[--border-color]">
-                        <div className="h-7 w-16 rounded-full bg-white/10"></div>
-                        <div className="flex gap-2">
-                            <div className="h-9 w-9 rounded-full bg-white/10"></div>
-                            <div className="h-9 w-9 rounded-full bg-white/10"></div>
-                            <div className="h-9 w-9 rounded-full bg-white/10"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-        
-        const MaterialCard = ({ material, onView, onUnlock, onToast, translations, branchClass = '' }) => {
-            const handleActionClick = (e, message) => { e.stopPropagation(); onToast(message, 'success'); };
+                `;
+                return;
+            }
             
-            return (
-                <div className={`bg-[--card-bg] border border-[--border-color] rounded-2xl overflow-hidden cursor-pointer group transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-yellow-500/10 ${branchClass} material-card relative`}>
-                    <div className="relative h-48 overflow-hidden">
-                        <img src={material.thumbnailURL || 'https://picsum.photos/400/225'} alt={material.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                        {material.isPaid && !material.isUnlocked && (
-                            <div className="locked-overlay">
-                                <i className="fas fa-lock text-4xl text-yellow-400 mb-2"></i>
-                                <span className="text-white font-bold">₹{material.price}</span>
-                                <button 
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onUnlock(material);
-                                    }}
-                                    className="mt-3 px-4 py-2 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition-colors"
-                                >
-                                    {translations.unlockMaterial}
+            materialsGrid.innerHTML = filteredMaterials.map(material => {
+                const branch = academicData.branches[material.branch];
+                const branchColor = branch ? branch.color : 'var(--primary)';
+                
+                return `
+                    <div class="material-card" data-id="${material.id}">
+                        <div class="material-thumbnail">
+                            ${material.thumbnailUrl ? 
+                                `<img src="${material.thumbnailUrl}" alt="${material.title}">` : 
+                                `<i class="fas ${getMaterialIcon(material.type)}"></i>`
+                            }
+                            <div class="material-type-badge">${material.type}</div>
+                        </div>
+                        <div class="material-content">
+                            <h3 class="material-title">${material.title}</h3>
+                            <p class="material-description">${material.description}</p>
+                            <div class="material-meta">
+                                <div class="material-branch">
+                                    <div class="material-branch-color" style="background-color: ${branchColor}"></div>
+                                    <span>${branch ? branch.name : material.branch}</span>
+                                </div>
+                                <span>Semester ${material.semester}</span>
+                            </div>
+                            <div class="material-actions">
+                                <button class="material-action view" title="View">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="material-action download" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="material-action favorite" title="Favorite">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                                <button class="material-action share" title="Share">
+                                    <i class="fas fa-share"></i>
+                                </button>
+                                <button class="material-action report" title="Report">
+                                    <i class="fas fa-flag"></i>
                                 </button>
                             </div>
-                        )}
-                    </div>
-                    <div className="p-5 flex flex-col">
-                        <h3 className="text-lg font-bold text-white mb-2 truncate">{material.title}</h3>
-                        <div className="flex flex-col gap-1 text-xs text-[--text-secondary] mb-4">
-                            <div className="flex items-center gap-2"><i className="fas fa-eye w-4 text-center"></i><span>{material.views} {translations.views}</span></div>
-                            <div className="flex items-center gap-2"><i className="fas fa-download w-4 text-center"></i><span>{material.downloads} {translations.downloads}</span></div>
-                        </div>
-                        <div className="mt-auto pt-4 border-t border-[--border-color] flex justify-between items-center">
-                            <span className={`px-3 py-1 text-xs font-semibold rounded-full ${material.isPaid ? 'bg-orange-500/20 text-orange-400' : 'bg-green-500/20 text-green-400'}`}>
-                                {material.isPaid ? `${translations.paid} • ₹${material.price}` : translations.free}
-                            </span>
-                            <div className="flex items-center gap-2">
-                                <button onClick={(e) => handleActionClick(e, translations.addedToFavorites)} className="w-9 h-9 flex items-center justify-center rounded-full bg-transparent border border-[--border-color] text-[--text-secondary] hover:bg-[--primary-glow] hover:text-[--dark-bg] hover:border-[--primary-glow] transition-all"><i className="fas fa-star"></i></button>
-                                <button onClick={(e) => handleActionClick(e, translations.linkCopied)} className="w-9 h-9 flex items-center justify-center rounded-full bg-transparent border border-[--border-color] text-[--text-secondary] hover:bg-[--primary-glow] hover:text-[--dark-bg] hover:border-[--primary-glow] transition-all"><i className="fas fa-share"></i></button>
-                                <button onClick={(e) => handleActionClick(e, translations.reportSubmitted)} className="w-9 h-9 flex items-center justify-center rounded-full bg-transparent border border-[--border-color] text-[--text-secondary] hover:bg-[--primary-glow] hover:text-[--dark-bg] hover:border-[--primary-glow] transition-all"><i className="fas fa-flag"></i></button>
-                            </div>
                         </div>
                     </div>
-                </div>
-            );
-        };
-        
-        const EmptyState = ({ hasSelection, onRequestMaterial, translations }) => {
-            if (!hasSelection) {
-                return (
-                    <div className="text-center col-span-full py-20 bg-[--card-bg]/50 rounded-2xl border border-dashed border-[--border-color]">
-                        <i className="fas fa-hand-pointer text-5xl text-[--primary-glow] mb-6"></i>
-                        <h3 className="text-2xl font-bold mb-2">{translations.findYourMaterials}</h3>
-                        <p className="text-[--text-secondary]">{translations.selectCourse}</p>
-                    </div>
-                );
-            }
-            return (
-                <div className="text-center col-span-full py-20 bg-[--card-bg]/50 rounded-2xl border border-dashed border-[--border-color]">
-                    <i className="fas fa-box-open text-5xl text-[--primary-glow] mb-6"></i>
-                    <h3 className="text-2xl font-bold mb-2">{translations.noMaterials}</h3>
-                    <p className="text-[--text-secondary] mb-6">{translations.tryRequesting}</p>
-                    <button onClick={onRequestMaterial} className="flex-shrink-0 inline-flex items-center justify-center gap-2 px-5 py-2.5 text-base font-semibold bg-[--primary-glow] text-[--dark-bg] rounded-lg hover:shadow-[0_0_20px_rgba(255,215,0,0.5)] transition-all duration-300 transform hover:-translate-y-0.5"><i className="fas fa-plus"></i><span>{translations.requestMaterial}</span></button>
-                </div>
-            );
-        };
-        
-        const MaterialsGrid = ({ materials, isLoading, hasSelection, onViewMaterial, onUnlockMaterial, onRequestMaterial, onToast, translations, branchClass = '' }) => {
-            if (isLoading) {
-                return (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {Array.from({ length: 8 }).map((_, index) => <SkeletonCard key={index} />)}
-                    </div>
-                );
-            }
-            if (materials.length === 0) {
-                return <EmptyState hasSelection={hasSelection} onRequestMaterial={onRequestMaterial} translations={translations} />;
-            }
-            return (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {materials.map((material) => (
-                        <MaterialCard 
-                            key={material.id} 
-                            material={material} 
-                            onView={onViewMaterial} 
-                            onUnlock={onUnlockMaterial}
-                            onToast={onToast} 
-                            translations={translations}
-                            branchClass={branchClass}
-                        />
-                    ))}
-                </div>
-            );
-        };
-        
-        const FilterModal = ({ isOpen, onClose, onSelect, academicData, currentSelection, translations }) => {
-            const [step, setStep] = useState('department');
-            const [selection, setSelection] = useState(currentSelection);
+                `;
+            }).join('');
             
-            useEffect(() => { 
-                if (isOpen) { 
-                    setSelection(currentSelection); 
-                    setStep('department'); 
-                } 
-            }, [isOpen, currentSelection]);
-            
-            const handleDeptSelect = (code, name) => { 
-                setSelection({ department: { code, name }, semester: null, course: null }); 
-                setStep('semester'); 
-            };
-            
-            const handleSemSelect = (code, name) => { 
-                setSelection(prev => ({ ...prev, semester: { code, name }, course: null })); 
-                setStep('course'); 
-            };
-            
-            const handleCourseSelect = (code, name) => { 
-                const finalSelection = { ...selection, course: { code, name } }; 
-                onSelect(finalSelection); 
-                onClose(); 
-            };
-            
-            const transformClass = step === 'department' ? 'translate-x-0' : step === 'semester' ? '-translate-x-full' : '-translate-x-[200%]';
-            
-            if (!isOpen) return null;
-            
-            return (
-                <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-[999] flex justify-center items-center p-4 transition-opacity duration-300" onClick={onClose}>
-                    <div className={`relative w-full max-w-4xl max-h-[80vh] bg-[--dark-bg] rounded-2xl border border-[--border-color] flex flex-col overflow-hidden transition-transform duration-300 transform ${isOpen ? 'scale-100' : 'scale-95'}`} onClick={(e) => e.stopPropagation()}>
-                        <button onClick={onClose} className="absolute top-4 right-4 w-10 h-10 text-2xl text-[--text-secondary] hover:text-white transition-colors z-10"><i className="fas fa-times"></i></button>
-                        <div className="p-6 border-b border-[--border-color] text-center">
-                            <h2 className="text-2xl font-bold text-white">{translations.findYourMaterials}</h2>
-                            <p className="text-sm text-[--text-secondary] mt-1">{translations.findDescription}</p>
-                        </div>
-                        <div className="flex-grow overflow-hidden">
-                            <div className={`flex w-[300%] md:w-full h-full transition-transform duration-500 ease-in-out ${transformClass} md:transform-none md:grid md:grid-cols-3 md:gap-4 md:p-4`}>
-                                <div className="w-full h-full flex flex-col p-4 md:p-0">
-                                    <h3 className="text-lg font-semibold text-[--primary-glow] mb-3 flex items-center gap-2"><i className="fas fa-university"></i> {translations.department}</h3>
-                                    <ul className="flex-grow overflow-y-auto space-y-2 pr-2">
-                                        {Object.entries(academicData.branches).map(([code, { name, icon }]) => (
-                                            <li key={code} onClick={() => handleDeptSelect(code, name)} className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all ${selection.department?.code === code ? 'bg-[--primary-glow] text-[--dark-bg] font-bold' : 'hover:bg-white/5'}`}>
-                                                <i className={`${icon} w-5 text-center`}></i>
-                                                <span>{name}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                                <div className="w-full h-full flex flex-col p-4 md:p-0 md:border-l md:border-r border-[--border-color] md:px-4">
-                                    <div className="flex items-center mb-3">
-                                        <button onClick={() => setStep('department')} className="md:hidden mr-3 text-[--text-secondary]"><i className="fas fa-arrow-left"></i></button>
-                                        <h3 className="text-lg font-semibold text-[--primary-glow] flex items-center gap-2"><i className="fas fa-graduation-cap"></i> {translations.semester}</h3>
-                                    </div>
-                                    <ul className={`flex-grow overflow-y-auto space-y-2 pr-2 ${!selection.department ? 'opacity-50' : ''}`}>
-                                        {selection.department && Object.keys(academicData.branches[selection.department.code].semesters).map(sem => (
-                                            <li key={sem} onClick={() => handleSemSelect(sem, `Semester ${sem}`)} className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all ${selection.semester?.code === sem ? 'bg-[--primary-glow] text-[--dark-bg] font-bold' : 'hover:bg-white/5'}`}>
-                                                <i className="fas fa-calendar-alt w-5 text-center"></i>
-                                                <span>{translations.semester} {sem}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                                <div className="w-full h-full flex flex-col p-4 md:p-0">
-                                    <div className="flex items-center mb-3">
-                                        <button onClick={() => setStep('semester')} className="md:hidden mr-3 text-[--text-secondary]"><i className="fas fa-arrow-left"></i></button>
-                                        <h3 className="text-lg font-semibold text-[--primary-glow] flex items-center gap-2"><i className="fas fa-book"></i> {translations.course}</h3>
-                                    </div>
-                                    <ul className={`flex-grow overflow-y-auto space-y-2 pr-2 ${!selection.semester ? 'opacity-50' : ''}`}>
-                                        {selection.department && selection.semester && (
-                                            academicData.branches[selection.department.code].semesters[selection.semester.code].length > 0 ? (
-                                                academicData.branches[selection.department.code].semesters[selection.semester.code].map(course => (
-                                                    <li key={course.code} onClick={() => handleCourseSelect(course.code, course.name)} className={`p-3 rounded-lg cursor-pointer transition-all ${selection.course?.code === course.code ? 'bg-[--primary-glow] text-[--dark-bg] font-bold' : 'hover:bg-white/5'}`}>
-                                                        <div className="font-semibold text-sm">{course.name}</div>
-                                                        <div className="text-xs opacity-70">{course.code}</div>
-                                                    </li>
-                                                ))
-                                            ) : (
-                                                <li className="p-3 text-center text-[--text-secondary]">{translations.noCoursesFound}</li>
-                                            )
-                                        )}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-        
-        const DetailsModal = ({ material, isOpen, onClose, translations }) => {
-            if (!isOpen || !material) return null;
-            
-            const getEmbedUrl = (url) => { 
-                const match = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/); 
-                return match?.[1] ? `https://drive.google.com/file/d/${match[1]}/preview` : url; 
-            };
-            
-            const uploadedDate = new Date(material.uploadedAt.seconds * 1000).toLocaleDateString();
-            
-            return (
-                <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-[999] flex justify-center items-center p-4 transition-opacity duration-300" onClick={onClose}>
-                    <div className={`relative w-full max-w-4xl max-h-[90vh] bg-[--dark-bg] rounded-2xl border border-[--border-color] flex flex-col overflow-hidden transition-transform duration-300 transform ${isOpen ? 'scale-100' : 'scale-95'}`} onClick={(e) => e.stopPropagation()}>
-                        <button onClick={onClose} className="absolute top-4 right-4 w-10 h-10 text-2xl text-[--text-secondary] hover:text-white transition-colors z-10"><i className="fas fa-times"></i></button>
-                        <div className="p-6 border-b border-[--border-color]">
-                            <h2 className="text-2xl font-bold text-white pr-12">{material.title}</h2>
-                            <p className="text-sm text-[--text-secondary] mt-2">{translations.uploadedBy} <span className="font-semibold text-white/80">{material.uploader}</span> {translations.on} {uploadedDate}</p>
-                        </div>
-                        <div className="flex-grow p-6 overflow-y-auto">
-                            <div className="bg-black/20 rounded-lg overflow-hidden border border-[--border-color] mb-6">
-                                <iframe src={getEmbedUrl(material.downloadURL)} className="w-full h-96" frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen title="Material Preview"></iframe>
-                            </div>
-                            <p className="text-white/90 whitespace-pre-wrap">{material.description}</p>
-                        </div>
-                        <div className="p-6 border-t border-[--border-color] bg-black/20 flex flex-col sm:flex-row items-center justify-between gap-4">
-                            <span className={`px-4 py-2 text-sm font-semibold rounded-full ${material.isPaid ? 'bg-orange-500/20 text-orange-400' : 'bg-green-500/20 text-green-400'}`}>
-                                {material.isPaid ? (material.isUnlocked ? 'Paid: Unlocked' : `Paid: Locked • ₹${material.price}`) : 'Free Material'}
-                            </span>
-                            <a href={material.downloadURL} target="_blank" rel="noopener noreferrer" className="flex-shrink-0 w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-[--primary-glow] text-[--dark-bg] rounded-lg hover:shadow-[0_0_20px_rgba(255,215,0,0.5)] transition-all duration-300 transform hover:-translate-y-0.5">
-                                <i className="fas fa-download"></i>
-                                <span>Download File</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-        
-        const PaymentModal = ({ material, isOpen, onClose, onPaymentSuccess, translations }) => {
-            const [isProcessing, setIsProcessing] = useState(false);
-            
-            const handlePayment = () => {
-                setIsProcessing(true);
-                
-                // Simulate payment processing
-                setTimeout(() => {
-                    setIsProcessing(false);
-                    onPaymentSuccess(material);
-                    onClose();
-                }, 2000);
-            };
-            
-            if (!isOpen || !material) return null;
-            
-            return (
-                <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-[999] flex justify-center items-center p-4 transition-opacity duration-300" onClick={onClose}>
-                    <div className={`relative w-full max-w-md bg-[--dark-bg] rounded-2xl border border-[--border-color] flex flex-col overflow-hidden transition-transform duration-300 transform ${isOpen ? 'scale-100' : 'scale-95'}`} onClick={(e) => e.stopPropagation()}>
-                        <button onClick={onClose} className="absolute top-4 right-4 w-10 h-10 text-2xl text-[--text-secondary] hover:text-white transition-colors z-10"><i className="fas fa-times"></i></button>
-                        <div className="p-6 border-b border-[--border-color] text-center">
-                            <h2 className="text-2xl font-bold text-white">{translations.unlockMaterial}</h2>
-                            <p className="text-sm text-[--text-secondary] mt-1">{material.title}</p>
-                        </div>
-                        <div className="p-6">
-                            <div className="text-center mb-6">
-                                <div className="text-4xl font-bold text-yellow-400 mb-2">₹{material.price}</div>
-                                <p className="text-[--text-secondary]">One-time payment for unlimited access</p>
-                            </div>
-                            
-                            <div className="space-y-4">
-                                <div className="p-4 bg-black/30 rounded-lg border border-[--border-color]">
-                                    <div className="flex items-center gap-3">
-                                        <i className="fas fa-credit-card text-yellow-400"></i>
-                                        <div>
-                                            <div className="font-medium">Credit/Debit Card</div>
-                                            <div className="text-xs text-[--text-secondary]">Secure payment powered by Razorpay</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div className="p-4 bg-black/30 rounded-lg border border-[--border-color]">
-                                    <div className="flex items-center gap-3">
-                                        <i className="fas fa-wallet text-yellow-400"></i>
-                                        <div>
-                                            <div className="font-medium">Wallet</div>
-                                            <div className="text-xs text-[--text-secondary]">Pay with UPI, Paytm, or other wallets</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <button 
-                                onClick={handlePayment}
-                                disabled={isProcessing}
-                                className="w-full mt-6 flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold bg-[--primary-glow] text-[--dark-bg] rounded-lg hover:shadow-[0_0_20px_rgba(255,215,0,0.5)] transition-all duration-300 disabled:opacity-70"
-                            >
-                                {isProcessing ? (
-                                    <React.Fragment>
-                                        <i className="fas fa-spinner fa-spin"></i>
-                                        <span>Processing...</span>
-                                    </React.Fragment>
-                                ) : (
-                                    <React.Fragment>
-                                        <i className="fas fa-lock-open"></i>
-                                        <span>Pay Now</span>
-                                    </React.Fragment>
-                                )}
-                            </button>
-                            
-                            <div className="mt-4 text-xs text-center text-[--text-secondary]">
-                                By completing this purchase you agree to our Terms of Service and Privacy Policy
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-        
-        const AccountModal = ({ isOpen, onClose, translations, userMaterials }) => {
-            const [activeTab, setActiveTab] = useState('purchased');
-            
-            if (!isOpen) return null;
-            
-            return (
-                <div className="fixed inset-0 bg-black/80 backdrop-blur-lg z-[999] flex justify-center items-center p-4 transition-opacity duration-300" onClick={onClose}>
-                    <div className={`relative w-full max-w-4xl max-h-[80vh] bg-[--dark-bg] rounded-2xl border border-[--border-color] flex flex-col overflow-hidden transition-transform duration-300 transform ${isOpen ? 'scale-100' : 'scale-95'}`} onClick={(e) => e.stopPropagation()}>
-                        <button onClick={onClose} className="absolute top-4 right-4 w-10 h-10 text-2xl text-[--text-secondary] hover:text-white transition-colors z-10"><i className="fas fa-times"></i></button>
-                        <div className="p-6 border-b border-[--border-color]">
-                            <h2 className="text-2xl font-bold text-white">{translations.myMaterials}</h2>
-                        </div>
-                        
-                        <div className="flex border-b border-[--border-color]">
-                            <button 
-                                onClick={() => setActiveTab('purchased')}
-                                className={`flex-1 py-4 text-center font-medium ${activeTab === 'purchased' ? 'text-yellow-400 border-b-2 border-yellow-400' : 'text-[--text-secondary]'}`}
-                            >
-                                {translations.purchased}
-                            </button>
-                            <button 
-                                onClick={() => setActiveTab('downloaded')}
-                                className={`flex-1 py-4 text-center font-medium ${activeTab === 'downloaded' ? 'text-yellow-400 border-b-2 border-yellow-400' : 'text-[--text-secondary]'}`}
-                            >
-                                {translations.downloaded}
-                            </button>
-                        </div>
-                        
-                        <div className="flex-grow overflow-y-auto p-6">
-                            {activeTab === 'purchased' && (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    {userMaterials.purchased.length > 0 ? (
-                                        userMaterials.purchased.map(material => (
-                                            <div key={material.id} className="bg-[--card-bg] border border-[--border-color] rounded-lg p-4">
-                                                <div className="flex items-start gap-3">
-                                                    <img src={material.thumbnailURL || 'https://picsum.photos/100/100'} alt={material.title} className="w-16 h-16 rounded object-cover" />
-                                                    <div className="flex-1 min-w-0">
-                                                        <h3 className="font-medium text-white truncate">{material.title}</h3>
-                                                        <p className="text-xs text-[--text-secondary] mt-1">{material.uploader}</p>
-                                                        <div className="flex items-center justify-between mt-2">
-                                                            <span className="text-xs px-2 py-1 bg-orange-500/20 text-orange-400 rounded-full">{translations.purchased}</span>
-                                                            <a href={material.downloadURL} target="_blank" rel="noopener noreferrer" className="text-xs text-yellow-400 hover:text-yellow-300">
-                                                                <i className="fas fa-download"></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <div className="col-span-full text-center py-10">
-                                            <i className="fas fa-shopping-cart text-3xl text-[--text-secondary] mb-3"></i>
-                                            <p className="text-[--text-secondary]">No purchased materials yet</p>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                            
-                            {activeTab === 'downloaded' && (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    {userMaterials.downloaded.length > 0 ? (
-                                        userMaterials.downloaded.map(material => (
-                                            <div key={material.id} className="bg-[--card-bg] border border-[--border-color] rounded-lg p-4">
-                                                <div className="flex items-start gap-3">
-                                                    <img src={material.thumbnailURL || 'https://picsum.photos/100/100'} alt={material.title} className="w-16 h-16 rounded object-cover" />
-                                                    <div className="flex-1 min-w-0">
-                                                        <h3 className="font-medium text-white truncate">{material.title}</h3>
-                                                        <p className="text-xs text-[--text-secondary] mt-1">{material.uploader}</p>
-                                                        <div className="flex items-center justify-between mt-2">
-                                                            <span className="text-xs px-2 py-1 bg-green-500/20 text-green-400 rounded-full">{translations.downloaded}</span>
-                                                            <a href={material.downloadURL} target="_blank" rel="noopener noreferrer" className="text-xs text-yellow-400 hover:text-yellow-300">
-                                                                <i className="fas fa-external-link-alt"></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <div className="col-span-full text-center py-10">
-                                            <i className="fas fa-download text-3xl text-[--text-secondary] mb-3"></i>
-                                            <p className="text-[--text-secondary]">No downloaded materials yet</p>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-        
-        const MobileNavItem = ({ icon, label, onClick }) => (
-            <button onClick={onClick} className="flex flex-col items-center gap-1 text-[--text-secondary] hover:text-[--primary-glow] p-2 rounded-lg transition-colors w-1/4">
-                <i className={`fas ${icon} text-xl`}></i>
-                <span className="text-xs font-medium">{label}</span>
-            </button>
-        );
-        
-        const MobileNav = ({ onTrending, onRecent, onFavorites, onUpload, translations }) => (
-            <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[rgba(16,16,16,0.8)] backdrop-blur-xl border-t border-[--border-color] z-50">
-                <div className="flex justify-around items-center h-20">
-                    <MobileNavItem icon="fa-fire" label={translations.trending} onClick={onTrending} />
-                    <MobileNavItem icon="fa-history" label={translations.recent} onClick={onRecent} />
-                    <MobileNavItem icon="fa-star" label={translations.favorites} onClick={onFavorites} />
-                    <MobileNavItem icon="fa-upload" label={translations.upload} onClick={onUpload} />
-                </div>
-            </nav>
-        );
-        
-        const Toast = ({ toast, onDismiss }) => {
-            const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
-            const colors = { success: 'border-green-500', error: 'border-red-500', info: 'border-blue-500' };
-            const iconColors = { success: 'text-green-500', error: 'text-red-500', info: 'text-blue-500' };
-            const [isExiting, setIsExiting] = useState(false);
-            
-            useEffect(() => { 
-                const timer = setTimeout(() => { 
-                    setIsExiting(true); 
-                    setTimeout(() => onDismiss(toast.id), 300); 
-                }, 3000); 
-                return () => clearTimeout(timer); 
-            }, [toast.id, onDismiss]);
-            
-            const handleDismiss = () => { 
-                setIsExiting(true); 
-                setTimeout(() => onDismiss(toast.id), 300); 
-            };
-            
-            const animationClass = isExiting ? 'animate-[fadeOut_0.3s_ease-out_forwards]' : 'animate-[slideIn_0.3s_ease-out_forwards]';
-            
-            return (
-                <div className={`relative flex items-center gap-4 w-full max-w-sm p-4 bg-[--card-bg] border-l-4 ${colors[toast.type]} rounded-lg shadow-lg border border-[--border-color] ${animationClass}`}>
-                    <style>{`@keyframes slideIn { from { opacity: 0; transform: translateX(100%); } to { opacity: 1; transform: translateX(0); } } @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }`}</style>
-                    <i className={`fas ${icons[toast.type]} text-xl ${iconColors[toast.type]}`}></i>
-                    <span className="flex-grow text-white/90">{toast.message}</span>
-                    <button onClick={handleDismiss} className="text-xl text-[--text-secondary] hover:text-white transition-colors">&times;</button>
-                </div>
-            );
-        };
-        
-        const BackToTopButton = () => {
-            const isScrolled = useScroll(400);
-            const scrollToTop = () => { window.scrollTo({ top: 0, behavior: 'smooth' }); };
-            return (
-                <button 
-                    onClick={scrollToTop} 
-                    className={`fixed bottom-24 md:bottom-8 right-4 md:right-8 w-12 h-12 flex items-center justify-center bg-[--primary-glow] text-[--dark-bg] rounded-full shadow-lg z-50 transition-all duration-300 ${isScrolled ? 'opacity-100 visible scale-100' : 'opacity-0 invisible scale-90'}`}
-                >
-                    <i className="fas fa-arrow-up text-lg"></i>
-                </button>
-            );
-        };
-        
-        // --- MAIN APP ---
-        const App = () => {
-            const [materials, setMaterials] = useState([]);
-            const [isLoading, setIsLoading] = useState(false);
-            const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-            const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-            const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-            const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
-            const [selectedMaterial, setSelectedMaterial] = useState(null);
-            const [selection, setSelection] = useState({ department: null, semester: null, course: null });
-            const [searchTerm, setSearchTerm] = useState('');
-            const [toasts, setToasts] = useState([]);
-            const [currentLanguage, setCurrentLanguage] = useState('en');
-            const [userMaterials, setUserMaterials] = useState({
-                purchased: [],
-                downloaded: []
+            // Add event listeners to material actions
+            document.querySelectorAll('.material-action').forEach(btn => {
+                btn.addEventListener('click', handleMaterialAction);
             });
-            const { currentUser } = useAuth();
+        }
+        
+        function getMaterialIcon(type) {
+            const icons = {
+                'notes': 'fa-file-alt',
+                'ebook': 'fa-book',
+                'slides': 'fa-presentation',
+                'video': 'fa-video',
+                'lab': 'fa-flask',
+                'project': 'fa-project-diagram'
+            };
+            return icons[type] || 'fa-file';
+        }
+        
+        // Handle Material Actions
+        function handleMaterialAction(e) {
+            e.stopPropagation();
+            const action = e.currentTarget.classList[1];
+            const materialCard = e.currentTarget.closest('.material-card');
+            const materialId = materialCard.dataset.id;
+            const material = materials.find(m => m.id === materialId);
             
-            const t = translations[currentLanguage];
-            const debouncedSearchTerm = useDebounce(searchTerm, 300);
+            if (!material) return;
             
-            // Fetch materials based on selection
-            useEffect(() => {
-                const { department, semester, course } = selection;
-                if (department && semester && course) {
-                    const loadMaterials = async () => {
-                        setIsLoading(true);
-                        try {
-                            // Simulate API call
-                            await new Promise(resolve => setTimeout(resolve, 1000));
+            switch (action) {
+                case 'view':
+                    viewMaterial(material);
+                    break;
+                case 'download':
+                    downloadMaterial(material);
+                    break;
+                case 'favorite':
+                    toggleFavorite(material, e.currentTarget);
+                    break;
+                case 'share':
+                    shareMaterial(material);
+                    break;
+                case 'report':
+                    reportMaterial(material);
+                    break;
+            }
+        }
+        
+        function viewMaterial(material) {
+            if (material.fileUrl) {
+                window.open(material.fileUrl, '_blank');
+                showToast('Opening material...', 'info');
+            } else {
+                showToast('Material file not available', 'error');
+            }
+        }
+        
+        function downloadMaterial(material) {
+            if (material.fileUrl) {
+                const link = document.createElement('a');
+                link.href = material.fileUrl;
+                link.download = material.title;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showToast('Download started', 'success');
+                
+                // Track download
+                if (currentUser) {
+                    db.collection('userActivities').add({
+                        userId: currentUser.uid,
+                        action: 'download',
+                        materialId: material.id,
+                        materialData: {
+                            title: material.title,
+                            type: material.type
+                        },
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+            } else {
+                showToast('Material file not available', 'error');
+            }
+        }
+        
+        function toggleFavorite(material, btn) {
+            if (!currentUser) {
+                showToast('Please login to favorite materials', 'error');
+                return;
+            }
+            
+            const isFavorite = btn.classList.contains('active');
+            
+            if (isFavorite) {
+                // Remove from favorites
+                db.collection('users').doc(currentUser.uid).update({
+                    favoriteMaterials: firebase.firestore.FieldValue.arrayRemove(material.id)
+                }).then(() => {
+                    btn.classList.remove('active');
+                    showToast('Removed from favorites', 'info');
+                }).catch(error => {
+                    console.error('Error removing favorite:', error);
+                    showToast('Error updating favorites', 'error');
+                });
+            } else {
+                // Add to favorites
+                db.collection('users').doc(currentUser.uid).update({
+                    favoriteMaterials: firebase.firestore.FieldValue.arrayUnion(material.id)
+                }).then(() => {
+                    btn.classList.add('active');
+                    showToast('Added to favorites', 'success');
+                }).catch(error => {
+                    console.error('Error adding favorite:', error);
+                    showToast('Error updating favorites', 'error');
+                });
+            }
+        }
+        
+        function shareMaterial(material) {
+            if (navigator.share) {
+                navigator.share({
+                    title: material.title,
+                    text: material.description,
+                    url: window.location.href
+                }).then(() => {
+                    showToast('Shared successfully', 'success');
+                }).catch(error => {
+                    console.error('Error sharing:', error);
+                });
+            } else {
+                // Fallback - copy to clipboard
+                const url = `${window.location.origin}/materials.html?id=${material.id}`;
+                navigator.clipboard.writeText(url).then(() => {
+                    showToast('Link copied to clipboard', 'success');
+                }).catch(error => {
+                    showToast('Error copying link', 'error');
+                });
+            }
+        }
+        
+        function reportMaterial(material) {
+            const reason = prompt('Please describe the issue with this material:');
+            if (reason) {
+                db.collection('reports').add({
+                    materialId: material.id,
+                    userId: currentUser ? currentUser.uid : null,
+                    reason: reason,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                }).then(() => {
+                    showToast('Report submitted successfully', 'success');
+                }).catch(error => {
+                    console.error('Error submitting report:', error);
+                    showToast('Error submitting report', 'error');
+                });
+            }
+        }
+        
+        // Upload Material
+        function initUploadForm() {
+            uploadForm.addEventListener('submit', handleUpload);
+            cancelUpload.addEventListener('click', closeUploadModal);
+            uploadModalClose.addEventListener('click', closeUploadModal);
+            
+            uploadModal.addEventListener('click', (e) => {
+                if (e.target === uploadModal) {
+                    closeUploadModal();
+                }
+            });
+        }
+        
+        function openUploadModal() {
+            uploadModal.classList.add('active');
+        }
+        
+        function closeUploadModal() {
+            uploadModal.classList.remove('active');
+            uploadForm.reset();
+        }
+        
+        function handleUpload(e) {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                showToast('Please login to upload materials', 'error');
+                return;
+            }
+            
+            const title = document.getElementById('materialTitle').value;
+            const description = document.getElementById('materialDescription').value;
+            const branch = document.getElementById('materialBranch').value;
+            const semester = document.getElementById('materialSemester').value;
+            const course = document.getElementById('materialCourse').value;
+            const type = document.getElementById('materialType').value;
+            const file = document.getElementById('materialFile').files[0];
+            
+            if (!file) {
+                showToast('Please select a file', 'error');
+                return;
+            }
+            
+            // Show loading
+            showToast('Uploading material...', 'info');
+            
+            // Upload file to Firebase Storage
+            const storageRef = storage.ref(`materials/${branch}/${semester}/${course}/${file.name}`);
+            const uploadTask = storageRef.put(file);
+            
+            uploadTask.on('state_changed', 
+                (snapshot) => {
+                    // Progress tracking could be added here
+                }, 
+                (error) => {
+                    console.error('Upload error:', error);
+                    showToast('Error uploading file', 'error');
+                }, 
+                () => {
+                    // Upload completed successfully
+                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                        // Save material data to Firestore
+                        db.collection('materials').add({
+                            title,
+                            description,
+                            branch,
+                            semester,
+                            course,
+                            type,
+                            fileUrl: downloadURL,
+                            fileName: file.name,
+                            fileSize: file.size,
+                            uploadedBy: currentUser.uid,
+                            uploadedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            views: 0,
+                            downloads: 0
+                        }).then((docRef) => {
+                            // Add to user's uploaded materials
+                            db.collection('users').doc(currentUser.uid).update({
+                                uploadedMaterials: firebase.firestore.FieldValue.arrayUnion(docRef.id)
+                            });
                             
-                            // Generate materials based on course code
-                            if (course.code.includes("U23MAT")) {
-                                setMaterials([]);
-                            } else {
-                                // Filter materials that match the course
-                                const courseMaterials = MOCK_MATERIALS.map((material, index) => ({
-                                    ...material, 
-                                    id: `${course.code}-${index}`, 
-                                    department, 
-                                    semester, 
-                                    courseCode: course.code
-                                }));
-                                
-                                setMaterials(courseMaterials);
-                            }
-                        } catch (error) {
-                            console.error("Failed to fetch materials:", error);
-                            addToast("Error fetching materials.", 'error');
-                        } finally {
-                            setIsLoading(false);
-                        }
-                    };
+                            // Track activity
+                            db.collection('userActivities').add({
+                                userId: currentUser.uid,
+                                action: 'upload',
+                                materialId: docRef.id,
+                                materialData: {
+                                    title,
+                                    type
+                                },
+                                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                            });
+                            
+                            showToast('Material uploaded successfully', 'success');
+                            closeUploadModal();
+                            loadMaterials();
+                        }).catch((error) => {
+                            console.error('Error saving material data:', error);
+                            showToast('Error saving material', 'error');
+                        });
+                    }).catch((error) => {
+                        console.error('Error getting download URL:', error);
+                        showToast('Error processing file', 'error');
+                    });
+                }
+            );
+        }
+        
+        // Chatbot
+        function initChatbot() {
+            const botResponses = {
+                'material': 'You can find various study materials here including notes, e-books, slides, videos, lab manuals, and projects. Use the filters to narrow down your search.',
+                'notes': 'Notes are concise summaries of course content. You can filter by branch, semester, and course to find relevant notes.',
+                'ebook': 'E-books are digital versions of textbooks. They provide in-depth coverage of subjects.',
+                'slides': 'Slides are presentation materials used in lectures. They are great for quick revision.',
+                'video': 'Video materials include recorded lectures, tutorials, and demonstrations.',
+                'lab': 'Lab manuals contain instructions and procedures for laboratory experiments.',
+                'project': 'Project materials include documentation, source code, and reports for academic projects.',
+                'upload': 'You can upload your own study materials using the + button at the bottom right corner.',
+                'filter': 'Use the filter options to narrow down materials by branch, semester, course, type, or search keywords.',
+                'download': 'Click the download button on any material to save it to your device.',
+                'favorite': 'Click the star button to add materials to your favorites for quick access.',
+                'default': 'I can help you with information about materials, uploading, filtering, and more. What would you like to know?'
+            };
+            
+            function addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}`;
+                messageDiv.textContent = text;
+                chatbotMessages.appendChild(messageDiv);
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }
+            
+            function getBotResponse(userInput) {
+                const input = userInput.toLowerCase();
+                
+                if (input.includes('material') || input.includes('note') || input.includes('book') || input.includes('slide') || input.includes('video') || input.includes('lab') || input.includes('project')) {
+                    return botResponses.material;
+                } else if (input.includes('upload')) {
+                    return botResponses.upload;
+                } else if (input.includes('filter')) {
+                    return botResponses.filter;
+                } else if (input.includes('download')) {
+                    return botResponses.download;
+                } else if (input.includes('favorite')) {
+                    return botResponses.favorite;
+                }
+                
+                return botResponses.default;
+            }
+            
+            function sendMessage() {
+                const message = chatbotInput.value.trim();
+                if (!message) return;
+                
+                addMessage(message, 'user');
+                chatbotInput.value = '';
+                
+                setTimeout(() => {
+                    const response = getBotResponse(message);
+                    addMessage(response, 'bot');
+                }, 500);
+            }
+            
+            chatbotSend.addEventListener('click', sendMessage);
+            chatbotInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendMessage();
+            });
+        }
+        
+        // Authentication
+        function initAuth() {
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    currentUser = user;
                     loadMaterials();
                 } else {
-                    setMaterials([]);
+                    // Redirect to login page
+                    window.location.href = '/index.html';
                 }
-            }, [selection]);
-            
-            // Load user materials from Firebase (if available)
-            useEffect(() => {
-                if (currentUser && db) {
-                    const loadUserMaterials = async () => {
-                        try {
-                            // Get user document
-                            const userDoc = await db.collection('users').doc(currentUser.uid).get();
-                            const userData = userDoc.data();
-                            
-                            // Get purchased materials
-                            const purchasedSnapshot = await db.collection('payments')
-                                .where('userId', '==', currentUser.uid)
-                                .where('status', '==', 'completed')
-                                .get();
-                            
-                            const purchasedMaterials = [];
-                            purchasedSnapshot.forEach(doc => {
-                                const payment = doc.data();
-                                if (payment.materialData) {
-                                    purchasedMaterials.push({
-                                        id: doc.id,
-                                        ...payment.materialData,
-                                        downloadURL: payment.materialData.downloadURL || payment.materialData.fileUrl
-                                    });
-                                }
-                            });
-                            
-                            // Get downloaded materials
-                            const downloadedMaterials = userData.downloadedMaterials || [];
-                            
-                            setUserMaterials({
-                                purchased: purchasedMaterials,
-                                downloaded: downloadedMaterials
-                            });
-                        } catch (error) {
-                            console.error("Error loading user materials:", error);
-                        }
-                    };
-                    
-                    loadUserMaterials();
-                }
-            }, [currentUser, db]);
-            
-            const handleSelect = (newSelection) => setSelection(newSelection);
-            const handleViewMaterial = (material) => { 
-                setSelectedMaterial(material); 
-                setIsDetailsModalOpen(true); 
-            };
-            
-            const handleUnlockMaterial = (material) => {
-                setSelectedMaterial(material);
-                setIsPaymentModalOpen(true);
-            };
-            
-            const handlePaymentSuccess = (material) => {
-                // Update material to unlocked
-                const updatedMaterials = materials.map(m => 
-                    m.id === material.id ? { ...m, isUnlocked: true } : m
-                );
-                setMaterials(updatedMaterials);
-                
-                // Add to user's purchased materials
-                setUserMaterials(prev => ({
-                    ...prev,
-                    purchased: [...prev.purchased, material]
-                }));
-                
-                addToast(t.paymentSuccess, 'success');
-            };
-            
-            const addToast = (message, type = 'info') => setToasts(prev => [...prev, { id: Date.now(), message, type }]);
-            const dismissToast = (id) => setToasts(prev => prev.filter(toast => toast.id !== id));
-            
-            const filteredMaterials = useMemo(() => 
-                materials.filter(material => 
-                    material.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) || 
-                    material.tags.some(tag => tag.toLowerCase().includes(debouncedSearchTerm.toLowerCase()))
-                ), [materials, debouncedSearchTerm]);
-            
-            const handleLanguageToggle = () => { 
-                setCurrentLanguage(prev => prev === 'en' ? 'es' : 'en'); 
-                addToast(currentLanguage === 'en' ? 'Idioma cambiado a Español' : 'Language changed to English', 'success'); 
-            };
-            
-            // Get branch class for styling
-            const getBranchClass = () => {
-                if (!selection.department) return '';
-                return `branch-${selection.department.code.toLowerCase()}`;
-            };
-            
-            return (
-                <React.Fragment>
-                    <Background />
-                    <div className="min-h-screen flex flex-col">
-                        <Header 
-                            currentLanguage={currentLanguage} 
-                            onLanguageToggle={handleLanguageToggle} 
-                            translations={t} 
-                            onAccountClick={() => setIsAccountModalOpen(true)}
-                        />
-                        <main className="container mx-auto px-4 py-6 flex-grow">
-                            <FilterBar 
-                                selection={selection} 
-                                searchTerm={searchTerm} 
-                                onSearchChange={(e) => setSearchTerm(e.target.value)} 
-                                onOpenFilterModal={() => setIsFilterModalOpen(true)} 
-                                onRequestMaterial={() => addToast("Request material feature coming soon!", 'info')} 
-                                translations={t}
-                                onMyMaterialsClick={() => setIsAccountModalOpen(true)}
-                            />
-                            <MaterialsGrid 
-                                materials={filteredMaterials} 
-                                isLoading={isLoading} 
-                                hasSelection={!!selection.course} 
-                                onViewMaterial={handleViewMaterial} 
-                                onUnlockMaterial={handleUnlockMaterial}
-                                onRequestMaterial={() => addToast("Request material feature coming soon!", 'info')} 
-                                onToast={addToast} 
-                                translations={t}
-                                branchClass={getBranchClass()}
-                            />
-                        </main>
-                        <FilterModal 
-                            isOpen={isFilterModalOpen} 
-                            onClose={() => setIsFilterModalOpen(false)} 
-                            onSelect={handleSelect} 
-                            academicData={academicData} 
-                            currentSelection={selection} 
-                            translations={t} 
-                        />
-                        <DetailsModal 
-                            material={selectedMaterial} 
-                            isOpen={isDetailsModalOpen} 
-                            onClose={() => setIsDetailsModalOpen(false)} 
-                            translations={t} 
-                        />
-                        <PaymentModal
-                            material={selectedMaterial}
-                            isOpen={isPaymentModalOpen}
-                            onClose={() => setIsPaymentModalOpen(false)}
-                            onPaymentSuccess={handlePaymentSuccess}
-                            translations={t}
-                        />
-                        <AccountModal
-                            isOpen={isAccountModalOpen}
-                            onClose={() => setIsAccountModalOpen(false)}
-                            translations={t}
-                            userMaterials={userMaterials}
-                        />
-                        <MobileNav 
-                            onTrending={() => addToast("Trending feature coming soon!", "info")} 
-                            onRecent={() => addToast("Recent feature coming soon!", "info")} 
-                            onFavorites={() => addToast("Favorites feature coming soon!", "info")} 
-                            onUpload={() => addToast("Upload feature coming soon!", "info")} 
-                            translations={t} 
-                        />
-                        <BackToTopButton />
-                        <div className="fixed top-4 right-4 z-[1000] space-y-3 w-full max-w-sm">
-                            {toasts.map(toast => <Toast key={toast.id} toast={toast} onDismiss={dismissToast} />)}
-                        </div>
-                        <div className="h-20 md:hidden"></div>
-                    </div>
-                </React.Fragment>
-            );
-        };
+            });
+        }
         
-        // --- RENDER APP ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const rootElement = document.getElementById('root');
-            if (rootElement) {
-                const root = ReactDOM.createRoot(rootElement);
-                root.render(<App />);
+        // Event Listeners
+        themeToggle.addEventListener('click', toggleTheme);
+        
+        logoutBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to logout?')) {
+                auth.signOut().then(() => {
+                    showToast('Logged out successfully', 'success');
+                    window.location.href = '/index.html';
+                }).catch(error => {
+                    console.error('Logout error:', error);
+                    showToast('Logout failed', 'error');
+                });
             }
+        });
+        
+        accountBtn.addEventListener('click', () => {
+            window.location.href = '/account.html';
+        });
+        
+        uploadBtn.addEventListener('click', openUploadModal);
+        
+        chatbotToggle.addEventListener('click', () => {
+            chatbotContainer.classList.toggle('active');
+            if (chatbotContainer.classList.contains('active')) {
+                chatbotInput.focus();
+            }
+        });
+        
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            initAuth();
+            initFilters();
+            initUploadForm();
+            initChatbot();
         });
     </script>
 </body>
