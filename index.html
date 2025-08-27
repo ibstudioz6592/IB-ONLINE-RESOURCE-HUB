@@ -201,7 +201,7 @@
 
     <div id="filter-modal" class="modal-overlay">
         <div class="modal-content">
-            <button id="filter-modal-close-btn" class="modal-close">&times;</button>
+            <button id="filter-modal-close-btn" class="modal-close" aria-label="Close filter modal">&times;</button>
             <div class="modal-header">
                 <h2>Find Your Study Materials</h2>
                 <p class="modal-description">Select your department, semester, and course to begin.</p>
@@ -236,7 +236,7 @@
 
     <div id="details-modal" class="modal-overlay">
         <div class="modal-content">
-            <button id="details-modal-close-btn" class="modal-close">&times;</button>
+            <button id="details-modal-close-btn" class="modal-close" aria-label="Close details modal">&times;</button>
             <div class="modal-header">
                 <h2 id="modal-title"></h2>
                 <p><strong>Course:</strong> <span id="modal-courseCode"></span></p>
@@ -247,7 +247,7 @@
             </div>
             <div class="modal-body">
                 <iframe id="modal-embed-preview" src="" width="100%" height="500" frameborder="0" style="display:none;"></iframe>
-                <img id="modal-image-preview" src="" alt="Preview" style="max-width:100%;max-height:500px;display:none;" />
+                <img src="" alt="Preview" id="modal-image-preview" style="max-width:100%;max-height:500px;display:none;" />
                 <div id="modal-rating-comments"></div>
             </div>
             <a id="modal-download-btn" href="#" target="_blank" class="btn btn-primary">
@@ -256,9 +256,9 @@
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js" defer></script>
     
     <script>
         const academicData = {
@@ -302,7 +302,25 @@
             const auth = firebase.auth();
             const db = firebase.firestore();
 
-            auth.onAuthStateChanged(user => user ? initializePage() : window.location.replace('/index.html'));
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    initializePage();
+                } else {
+                    // Prevent infinite reload: show modal instead of redirect
+                    const unauthModal = document.createElement('div');
+                    unauthModal.className = 'modal-overlay active';
+                    unauthModal.setAttribute('role', 'dialog');
+                    unauthModal.setAttribute('aria-modal', 'true');
+                    unauthModal.innerHTML = `<div class=\"modal-content\"><div class=\"modal-header\"><h2>Authentication Required</h2></div><div style=\"padding:20px;text-align:center;\">You are not logged in.<br><a href=\"/login.html\" class=\"btn btn-primary\" style=\"margin-top:20px;\">Go to Login</a></div></div>`;
+                    document.body.appendChild(unauthModal);
+                    unauthModal.onclick = e => { if (e.target === unauthModal) unauthModal.remove(); };
+                    // In auth.onAuthStateChanged unauthenticated modal, add smooth navigation for login link
+                    unauthModal.querySelector('a').onclick = function(e) {
+                        e.preventDefault();
+                        smoothNavigate('/login.html');
+                    };
+                }
+            });
             
             function initializePage() {
                 setupEventListeners();
@@ -474,7 +492,9 @@
                 
                 document.getElementById('logout-btn').addEventListener('click', e => {
                     e.preventDefault();
-                    auth.signOut();
+                    auth.signOut().then(() => {
+                        smoothNavigate('/login.html');
+                    });
                 });
             }
 
@@ -661,7 +681,7 @@
 
                         card.innerHTML = `
                             <div class="card-thumbnail">
-                                <img src="${thumbnailSrc}" alt="${material.title} preview" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x180.png?text=No+Preview';">
+                                <img src="${thumbnailSrc}" alt="${material.title || 'Material'} preview" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x180.png?text=No+Preview';" aria-label="Material preview">
                             </div>
                             <div class="card-content-wrapper">
                                 <div class="material-info">
@@ -756,6 +776,13 @@
                     console.error("Error loading materials:", err);
                     grid.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Could not load materials. Please check your Firestore rules and try again.</p></div>`;
                 }
+            }
+
+            // Smooth page shifting (fade out on navigation)
+            function smoothNavigate(url) {
+                document.body.style.transition = 'opacity 0.4s';
+                document.body.style.opacity = '0';
+                setTimeout(() => { window.location.href = url; }, 400);
             }
 
             function getGoogleDriveEmbedUrl(shareUrl) {
