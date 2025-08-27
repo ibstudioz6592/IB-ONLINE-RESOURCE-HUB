@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Student Dashboard - Access notes, payments, and resources in real time.">
-    <meta property="og:title" content="Student Dashboard">
-    <meta property="og:description" content="Access your student resources and updates instantly.">
+    <meta name="description" content="Access and manage your study materials at IB STUDIOZ">
+    <meta property="og:title" content="Study Materials - IB STUDIOZ">
+    <meta property="og:description" content="Access your study materials, notes, and resources">
     <meta property="og:type" content="website">
-    <title>Student Dashboard - IB STUDIOZ</title>
+    <title>Study Materials - IB STUDIOZ</title>
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -60,6 +60,7 @@
             --efe-color: #10b981;
             --exe-color: #8b5cf6;
         }
+        
         [data-theme="dark"] {
             --primary: #60a5fa;
             --primary-dark: #3b82f6;
@@ -72,11 +73,13 @@
             --text-secondary: #cbd5e1;
             --text-muted: #64748b;
         }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+        
         body {
             font-family: 'Inter', sans-serif;
             background: var(--background);
@@ -85,6 +88,7 @@
             transition: var(--transition);
             overflow-x: hidden;
         }
+        
         /* Background Effects */
         .background-container {
             position: fixed;
@@ -95,6 +99,7 @@
             z-index: -2;
             background: linear-gradient(135deg, var(--background) 0%, var(--surface) 100%);
         }
+        
         .aurora-layer {
             position: absolute;
             top: 0;
@@ -107,34 +112,12 @@
             filter: blur(100px);
             opacity: 0.1;
         }
+        
         @keyframes aurora-morph {
             0% { transform: rotate(0deg) scale(1); }
             100% { transform: rotate(180deg) scale(1.2); }
         }
-        /* Loading Spinner */
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--border);
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        /* Skeleton Loading */
-        .skeleton {
-            background: linear-gradient(90deg, var(--surface) 25%, var(--surface-hover) 50%, var(--surface) 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
-            border-radius: var(--radius);
-        }
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
+        
         /* Header */
         .header {
             background: rgba(255, 255, 255, 0.8);
@@ -145,9 +128,11 @@
             z-index: 100;
             transition: var(--transition);
         }
+        
         [data-theme="dark"] .header {
             background: rgba(15, 23, 42, 0.8);
         }
+        
         .header-content {
             max-width: 1200px;
             margin: 0 auto;
@@ -156,6 +141,7 @@
             justify-content: space-between;
             align-items: center;
         }
+        
         .logo {
             display: flex;
             align-items: center;
@@ -168,6 +154,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+        
         .logo-icon {
             width: 40px;
             height: 40px;
@@ -177,29 +164,47 @@
             align-items: center;
             justify-content: center;
             color: white;
-            position: relative;
-            overflow: hidden;
+            font-size: 1.2rem;
         }
-        .logo-icon::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
-            transform: rotate(45deg);
-            animation: shine 3s infinite;
-        }
-        @keyframes shine {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-        }
+        
         .header-actions {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary);
+        }
+        
+        .nav-link.active {
+            color: var(--primary);
+        }
+        
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1.5rem;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px 3px 0 0;
+        }
+        
         .btn {
             padding: 0.5rem 1rem;
             border: none;
@@ -213,25 +218,60 @@
             text-decoration: none;
             font-size: 0.875rem;
         }
+        
         .btn-primary {
             background: var(--primary);
             color: white;
         }
+        
         .btn-primary:hover {
             background: var(--primary-dark);
             transform: translateY(-1px);
             box-shadow: var(--shadow-md);
         }
+        
         .btn-outline {
             background: transparent;
             color: var(--text-primary);
             border: 1px solid var(--border);
         }
+        
         .btn-outline:hover {
             background: var(--surface-hover);
             border-color: var(--primary);
             color: var(--primary);
         }
+        
+        .btn-special {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-special::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+        
+        .btn-special:hover::before {
+            transform: translateX(0);
+        }
+        
+        .btn-special:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
         .theme-toggle {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -244,42 +284,185 @@
             cursor: pointer;
             transition: var(--transition);
         }
+        
         .theme-toggle:hover {
             background: var(--surface-hover);
             border-color: var(--primary);
         }
+        
+        /* Account Dropdown */
+        .account-dropdown {
+            position: relative;
+        }
+        
+        .account-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            width: 300px;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: var(--transition);
+        }
+        
+        .account-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .account-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .account-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .account-info h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .account-info p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .account-content {
+            padding: 1rem;
+        }
+        
+        .account-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .account-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .account-section-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .account-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .account-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            border-radius: calc(var(--radius) / 2);
+            transition: var(--transition);
+        }
+        
+        .account-item:hover {
+            background: var(--surface-hover);
+        }
+        
+        .account-item-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface-hover);
+            color: var(--text-secondary);
+        }
+        
+        .account-item-info {
+            flex: 1;
+        }
+        
+        .account-item-title {
+            font-weight: 500;
+            font-size: 0.875rem;
+            margin-bottom: 0.125rem;
+        }
+        
+        .account-item-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        .account-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: center;
+        }
+        
         /* Main Container */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
+        
         /* Welcome Section */
+        .welcome-section {
+            margin-bottom: 2rem;
+        }
+        
         .welcome-card {
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 3rem;
-            margin-bottom: 3rem;
+            padding: 2rem;
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(10px);
         }
+        
         .welcome-content {
             position: relative;
             z-index: 1;
         }
+        
         .welcome-title {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 800;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
             line-height: 1.2;
         }
+        
         .welcome-subtitle {
-            font-size: 1.125rem;
+            font-size: 1rem;
             color: var(--text-secondary);
             max-width: 600px;
         }
+        
         .welcome-illustration {
             position: absolute;
             top: -50px;
@@ -290,149 +473,93 @@
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             border-radius: 50%;
         }
-        /* Dashboard Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-        }
-        .card {
+        
+        /* Filter Section */
+        .filter-section {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 1.5rem;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
+            margin-bottom: 2rem;
         }
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--primary);
-        }
-        .card-header {
+        
+        .filter-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
         }
-        .card-title {
+        
+        .filter-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .filter-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .filter-label {
             font-size: 0.875rem;
             font-weight: 500;
             color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
         }
-        .card-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-        }
-        .card-value {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-        .card-description {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: var(--border);
-            border-radius: 3px;
-            overflow: hidden;
-            margin-top: 1rem;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
-            border-radius: 3px;
-            transition: width 0.3s ease;
-        }
-        /* Navigation Cards */
-        .nav-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-        }
-        .nav-card {
-            background: var(--surface);
+        
+        .filter-select, .filter-input {
+            padding: 0.75rem;
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 2rem;
-            cursor: pointer;
-            transition: var(--transition);
-            text-decoration: none;
+            background: var(--background);
             color: var(--text-primary);
-            position: relative;
-            overflow: hidden;
-        }
-        .nav-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .nav-card:hover::before {
-            opacity: 0.05;
-        }
-        .nav-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--primary);
-        }
-        .nav-card-content {
-            position: relative;
-            z-index: 1;
-        }
-        .nav-card-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-        }
-        .nav-card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-        .nav-card-description {
-            color: var(--text-secondary);
             font-size: 0.875rem;
+            transition: var(--transition);
         }
-        /* Recent Materials */
-        .section-header {
+        
+        .filter-select:focus, .filter-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        /* Materials Grid */
+        .materials-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
-        .section-title {
-            font-size: 1.875rem;
+        
+        .materials-title {
+            font-size: 1.5rem;
             font-weight: 700;
         }
+        
+        .materials-count {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
         .materials-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
         }
+        
         .material-card {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -440,45 +567,192 @@
             overflow: hidden;
             transition: var(--transition);
             cursor: pointer;
+            position: relative;
         }
+        
         .material-card:hover {
             transform: translateY(-4px);
             box-shadow: var(--shadow-lg);
         }
+        
         .material-thumbnail {
-            height: 160px;
+            height: 180px;
             background: linear-gradient(135deg, var(--surface-hover) 0%, var(--border) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 3rem;
             color: var(--text-muted);
-        }
-        .material-content {
-            padding: 1.5rem;
-        }
-        .material-title {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
+            position: relative;
             overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
         }
-        .material-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.875rem;
-            color: var(--text-muted);
+        
+        .material-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
-        .material-type {
-            background: var(--surface-hover);
+        
+        .material-type-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
             padding: 0.25rem 0.75rem;
             border-radius: 9999px;
             font-size: 0.75rem;
             font-weight: 500;
+            backdrop-filter: blur(10px);
         }
-        /* Account Modal */
+        
+        .material-content {
+            padding: 1.5rem;
+        }
+        
+        .material-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1.125rem;
+            line-height: 1.3;
+        }
+        
+        .material-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-clamp: 2;
+        }
+        
+        .material-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+        
+        .material-branch {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .material-branch-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .material-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .material-action {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface-hover);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .material-action:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .material-action.favorite.active {
+            background: var(--warning);
+            color: white;
+            border-color: var(--warning);
+        }
+        
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+            transition: var(--transition);
+        }
+        
+        .fab:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+        
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .empty-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        
+        .empty-description {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        /* Loading State */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Modal */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -494,10 +768,12 @@
             visibility: hidden;
             transition: var(--transition);
         }
+        
         .modal-overlay.active {
             opacity: 1;
             visibility: visible;
         }
+        
         .modal {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -510,9 +786,11 @@
             transform: translateY(20px);
             transition: var(--transition);
         }
+        
         .modal-overlay.active .modal {
             transform: translateY(0);
         }
+        
         .modal-header {
             padding: 1.5rem;
             border-bottom: 1px solid var(--border);
@@ -520,10 +798,12 @@
             justify-content: space-between;
             align-items: center;
         }
+        
         .modal-title {
             font-size: 1.5rem;
             font-weight: 700;
         }
+        
         .modal-close {
             background: none;
             border: none;
@@ -538,105 +818,30 @@
             align-items: center;
             justify-content: center;
         }
+        
         .modal-close:hover {
             background: var(--surface-hover);
             color: var(--text-primary);
         }
-        .modal-tabs {
-            display: flex;
-            border-bottom: 1px solid var(--border);
-        }
-        .modal-tab {
-            padding: 1rem 1.5rem;
-            background: none;
-            border: none;
-            font-weight: 500;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: var(--transition);
-            border-bottom: 3px solid transparent;
-        }
-        .modal-tab.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-        }
-        .modal-tab:hover {
-            color: var(--primary);
-        }
+        
         .modal-content {
             padding: 1.5rem;
             max-height: 60vh;
             overflow-y: auto;
         }
-        .modal-pane {
-            display: none;
-        }
-        .modal-pane.active {
-            display: block;
-        }
-        .account-info {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        .account-label {
-            font-weight: 500;
-            color: var(--text-secondary);
-        }
-        .account-value {
-            color: var(--text-primary);
-        }
-        .materials-list {
-            display: grid;
-            gap: 1rem;
-        }
-        .material-item {
-            background: var(--surface-hover);
-            border-radius: var(--radius);
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .material-info h4 {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-        .material-info p {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
-        .material-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-        .btn-sm {
-            padding: 0.375rem 0.75rem;
-            font-size: 0.75rem;
-            border-radius: calc(var(--radius) * 0.75);
-        }
-        .empty-state {
-            text-align: center;
-            padding: 3rem 1rem;
-            color: var(--text-muted);
-        }
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-        /* Branch/Semester Selection Modal */
+        
         .form-group {
             margin-bottom: 1.5rem;
         }
+        
         .form-label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
-            color: var(--text-primary);
+            color: var(--text-secondary);
         }
-        .form-select, .form-input {
+        
+        .form-input, .form-select, .form-textarea {
             width: 100%;
             padding: 0.75rem;
             border: 1px solid var(--border);
@@ -646,40 +851,66 @@
             font-size: 0.875rem;
             transition: var(--transition);
         }
-        .form-select:focus, .form-input:focus {
+        
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
+        
         .form-actions {
             display: flex;
             justify-content: flex-end;
             gap: 1rem;
-            margin-top: 2rem;
         }
+        
+        /* Filter Modal */
+        .filter-modal .modal-content {
+            padding: 0;
+        }
+        
+        .filter-modal-body {
+            padding: 1.5rem;
+        }
+        
+        .filter-modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        
         /* Chatbot */
         .chatbot-toggle {
             position: fixed;
             bottom: 2rem;
-            right: 2rem;
-            width: 60px;
-            height: 60px;
+            right: 5rem;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             border: none;
             cursor: pointer;
-            z-index: 1000;
+            z-index: 99;
             box-shadow: var(--shadow-xl);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             transition: var(--transition);
         }
+        
         .chatbot-toggle:hover {
             transform: scale(1.1);
         }
+        
         .chatbot-container {
             position: fixed;
             bottom: 6rem;
@@ -691,7 +922,7 @@
             border: 1px solid var(--border);
             border-radius: var(--radius);
             box-shadow: var(--shadow-xl);
-            z-index: 999;
+            z-index: 98;
             display: flex;
             flex-direction: column;
             transform: translateY(20px) scale(0.95);
@@ -699,11 +930,13 @@
             visibility: hidden;
             transition: var(--transition);
         }
+        
         .chatbot-container.active {
             transform: translateY(0) scale(1);
             opacity: 1;
             visibility: visible;
         }
+        
         .chatbot-header {
             padding: 1rem;
             border-bottom: 1px solid var(--border);
@@ -711,6 +944,7 @@
             text-align: center;
             background: var(--surface);
         }
+        
         .chatbot-messages {
             flex: 1;
             padding: 1rem;
@@ -719,12 +953,14 @@
             flex-direction: column;
             gap: 1rem;
         }
+        
         .message {
             max-width: 80%;
             padding: 0.75rem 1rem;
             border-radius: 1rem;
             animation: messageSlide 0.3s ease;
         }
+        
         @keyframes messageSlide {
             from {
                 opacity: 0;
@@ -735,24 +971,28 @@
                 transform: translateY(0);
             }
         }
+        
         .message.user {
             background: var(--primary);
             color: white;
             margin-left: auto;
             border-bottom-right-radius: 0.25rem;
         }
+        
         .message.bot {
             background: var(--surface-hover);
             color: var(--text-primary);
             margin-right: auto;
             border-bottom-left-radius: 0.25rem;
         }
+        
         .chatbot-input {
             padding: 1rem;
             border-top: 1px solid var(--border);
             display: flex;
             gap: 0.5rem;
         }
+        
         .chatbot-input input {
             flex: 1;
             padding: 0.75rem;
@@ -762,10 +1002,12 @@
             color: var(--text-primary);
             font-size: 0.875rem;
         }
+        
         .chatbot-input input:focus {
             outline: none;
             border-color: var(--primary);
         }
+        
         .chatbot-send {
             background: var(--primary);
             color: white;
@@ -779,9 +1021,11 @@
             cursor: pointer;
             transition: var(--transition);
         }
+        
         .chatbot-send:hover {
             background: var(--primary-dark);
         }
+        
         /* Toast Notifications */
         .toast {
             position: fixed;
@@ -802,141 +1046,123 @@
             transform: translateX(-50%) translateY(20px);
             transition: var(--transition);
         }
+        
         .toast.show {
             opacity: 1;
             transform: translateX(-50%) translateY(0);
         }
+        
         .toast.success {
             border-left: 4px solid var(--success);
         }
+        
         .toast.error {
             border-left: 4px solid var(--danger);
         }
+        
         .toast.info {
             border-left: 4px solid var(--info);
         }
+        
         .toast-icon {
             font-size: 1.25rem;
         }
+        
         .toast.success .toast-icon {
             color: var(--success);
         }
+        
         .toast.error .toast-icon {
             color: var(--danger);
         }
+        
         .toast.info .toast-icon {
             color: var(--info);
         }
+        
         /* Responsive Design */
         @media (max-width: 768px) {
             .header-content {
                 padding: 1rem;
             }
+            
             .container {
                 padding: 1rem;
             }
-            .welcome-card {
-                padding: 2rem;
+            
+            .nav-links {
+                display: none;
             }
+            
             .welcome-title {
-                font-size: 2rem;
+                font-size: 1.5rem;
             }
-            .dashboard-grid {
+            
+            .filter-grid {
                 grid-template-columns: 1fr;
             }
-            .nav-grid {
-                grid-template-columns: 1fr;
-            }
+            
             .materials-grid {
                 grid-template-columns: 1fr;
             }
+            
             .chatbot-container {
                 right: 1rem;
                 left: 1rem;
                 max-width: none;
             }
-            .header-actions {
-                gap: 0.5rem;
-            }
-            .btn {
-                padding: 0.5rem;
-                font-size: 0.75rem;
-            }
-            .btn span {
-                display: none;
-            }
+            
             .modal {
                 width: 95%;
                 max-height: 95vh;
             }
+            
+            .account-menu {
+                width: 280px;
+            }
+            
+            .materials-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
-        /* Utility Classes */
-        .text-center { text-align: center; }
-        .text-right { text-align: right; }
-        .mb-1 { margin-bottom: 0.25rem; }
-        .mb-2 { margin-bottom: 0.5rem; }
-        .mb-4 { margin-bottom: 1rem; }
-        .flex { display: flex; }
-        .items-center { align-items: center; }
-        .justify-center { justify-content: center; }
-        .justify-between { justify-content: space-between; }
-        .gap-2 { gap: 0.5rem; }
-        .gap-4 { gap: 1rem; }
-        .w-full { width: 100%; }
-        .h-full { height: 100%; }
-        .relative { position: relative; }
-        .absolute { position: absolute; }
-        .hidden { display: none; }
-        .block { display: block; }
-        /* Loading States */
-        .loading-overlay {
+        
+        /* Mobile Navigation Bar */
+        .mobile-nav {
+            display: none;
             position: fixed;
-            top: 0;
+            bottom: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 0.5rem 0;
+            justify-content: space-around;
             align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            opacity: 0;
-            visibility: hidden;
+            z-index: 100;
+        }
+        
+        .mobile-nav button {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            cursor: pointer;
             transition: var(--transition);
         }
-        .loading-overlay.active {
-            opacity: 1;
-            visibility: visible;
+        
+        .mobile-nav button:hover {
+            color: var(--primary);
         }
-        .loading-content {
-            background: var(--surface);
-            padding: 2rem;
-            border-radius: var(--radius);
-            text-align: center;
-        }
-        /* Animations */
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .slide-in {
-            animation: slideIn 0.5s ease-out;
-        }
-        @keyframes slideIn {
-            from { transform: translateX(-100%); }
-            to { transform: translateX(0); }
-        }
-        .bounce-in {
-            animation: bounceIn 0.6s ease-out;
-        }
-        @keyframes bounceIn {
-            0% { transform: scale(0.3); opacity: 0; }
-            50% { transform: scale(1.05); }
-            70% { transform: scale(0.9); }
-            100% { transform: scale(1); opacity: 1; }
+        
+        @media (max-width: 768px) {
+            .mobile-nav {
+                display: flex;
+            }
+            
+            .header {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -945,193 +1171,291 @@
     <div class="background-container">
         <div class="aurora-layer"></div>
     </div>
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-content">
-            <div class="spinner"></div>
-            <p class="mt-4">Loading dashboard...</p>
-        </div>
-    </div>
+    
     <!-- Header -->
     <header class="header">
         <div class="header-content">
-            <a href="#" class="logo">
+            <a href="dashboard.html" class="logo">
                 <div class="logo-icon">
                     <i class="fas fa-graduation-cap"></i>
                 </div>
                 IB STUDIOZ
             </a>
+            
+            <nav class="nav-links">
+                <a href="dashboard.html" class="nav-link">
+                    <button class="btn btn-special">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </button>
+                </a>
+                <a href="materials.html" class="nav-link active">Materials</a>
+                <a href="pyq.html" class="nav-link">PYQs</a>
+                <a href="seminar.html" class="nav-link">Seminars</a>
+                <a href="quiz.html" class="nav-link">Quizzes</a>
+                <a href="cgpa.html" class="nav-link">GPA Calculator</a>
+            </nav>
+            
             <div class="header-actions">
-                <button class="btn btn-outline" id="accountBtn">
-                    <i class="fas fa-user"></i>
-                    <span>Account</span>
-                </button>
+                <div class="account-dropdown">
+                    <button class="btn btn-outline" id="accountBtn">
+                        <i class="fas fa-user"></i>
+                        <span>Account</span>
+                    </button>
+                    <div class="account-menu" id="accountMenu">
+                        <div class="account-header">
+                            <div class="account-avatar" id="accountAvatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="account-info">
+                                <h3 id="accountName">Loading...</h3>
+                                <p id="accountEmail">Loading...</p>
+                            </div>
+                        </div>
+                        <div class="account-content">
+                            <div class="account-section">
+                                <div class="account-section-title">Downloaded Materials</div>
+                                <div class="account-list" id="downloadedMaterials">
+                                    <div class="loading">
+                                        <div class="spinner"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="account-section">
+                                <div class="account-section-title">Account Settings</div>
+                                <div class="account-list">
+                                    <div class="account-item">
+                                        <div class="account-item-icon">
+                                            <i class="fas fa-user-edit"></i>
+                                        </div>
+                                        <div class="account-item-info">
+                                            <div class="account-item-title">Edit Profile</div>
+                                        </div>
+                                    </div>
+                                    <div class="account-item">
+                                        <div class="account-item-icon">
+                                            <i class="fas fa-cog"></i>
+                                        </div>
+                                        <div class="account-item-info">
+                                            <div class="account-item-title">Preferences</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="account-footer">
+                            <button class="btn btn-primary" id="accountLogout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 <button class="theme-toggle" id="themeToggle">
                     <i class="fas fa-moon" id="themeIcon"></i>
-                </button>
-                <button class="btn btn-outline" id="logoutBtn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Logout</span>
                 </button>
             </div>
         </div>
     </header>
+    
     <!-- Main Content -->
     <main class="container">
         <!-- Welcome Section -->
-        <div class="welcome-card fade-in">
-            <div class="welcome-content">
-                <h1 class="welcome-title">
-                    Welcome back, <span id="userName">Student</span>! 🎓
-                </h1>
-                <p class="welcome-subtitle">
-                    Ready to continue your learning journey? Access your materials, track your progress, and achieve your goals.
-                </p>
+        <div class="welcome-section">
+            <div class="welcome-card">
+                <div class="welcome-content">
+                    <h1 class="welcome-title">
+                        Study Materials
+                    </h1>
+                    <p class="welcome-subtitle">
+                        Access notes, e-books, slides, and other learning resources for your courses.
+                    </p>
+                </div>
+                <div class="welcome-illustration"></div>
             </div>
-            <div class="welcome-illustration"></div>
         </div>
-        <!-- Dashboard Overview Cards -->
-        <div class="dashboard-grid" id="dashboardGrid">
-            <!-- Cards will be populated by JavaScript -->
+        
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-header">
+                <h2 class="filter-title">Filter Materials</h2>
+                <div class="filter-actions">
+                    <button class="btn btn-outline" id="openFilterModal">
+                        <i class="fas fa-filter"></i>
+                        Advanced Filters
+                    </button>
+                    <button class="btn btn-outline" id="resetFilters">
+                        <i class="fas fa-redo"></i>
+                        Reset
+                    </button>
+                </div>
+            </div>
+            
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label class="filter-label">Search</label>
+                    <input type="text" class="filter-input" id="searchFilter" placeholder="Search materials...">
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Material Type</label>
+                    <select class="filter-select" id="typeFilter">
+                        <option value="">All Types</option>
+                        <option value="notes">Notes</option>
+                        <option value="ebook">E-Books</option>
+                        <option value="slides">Slides</option>
+                        <option value="video">Videos</option>
+                        <option value="lab">Lab Manuals</option>
+                        <option value="project">Projects</option>
+                    </select>
+                </div>
+            </div>
         </div>
-        <!-- Quick Access Navigation -->
-        <div class="section-header">
-            <h2 class="section-title">Quick Access</h2>
+        
+        <!-- Materials Section -->
+        <div class="materials-header">
+            <div>
+                <h2 class="materials-title">Available Materials</h2>
+                <p class="materials-count" id="materialsCount">Loading materials...</p>
+            </div>
         </div>
-        <div class="nav-grid" id="navGrid">
-            <!-- Navigation cards will be populated by JavaScript -->
-        </div>
-        <!-- Recently Accessed Materials -->
-        <div class="section-header">
-            <h2 class="section-title">Recently Accessed</h2>
-            <a href="#" class="btn btn-outline" id="viewAllMaterialsBtn">
-                View All
-                <i class="fas fa-arrow-right"></i>
-            </a>
-        </div>
+        
         <div class="materials-grid" id="materialsGrid">
-            <!-- Materials will be populated by JavaScript -->
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
         </div>
     </main>
     
-    <!-- Account Modal -->
-    <div class="modal-overlay" id="accountModal">
+    <!-- Floating Action Button -->
+    <button class="fab" id="uploadBtn">
+        <i class="fas fa-plus"></i>
+    </button>
+    
+    <!-- Upload Modal -->
+    <div class="modal-overlay" id="uploadModal">
         <div class="modal">
             <div class="modal-header">
-                <h2 class="modal-title">Account Details</h2>
-                <button class="modal-close" id="accountModalClose">
+                <h2 class="modal-title">Upload Material</h2>
+                <button class="modal-close" id="uploadModalClose">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="modal-tabs">
-                <button class="modal-tab active" data-tab="details">Account Details</button>
-                <button class="modal-tab" data-tab="paid">Paid Materials</button>
-                <button class="modal-tab" data-tab="downloaded">Downloaded Materials</button>
-            </div>
             <div class="modal-content">
-                <div class="modal-pane active" id="details-pane">
-                    <div class="account-info">
-                        <div class="account-label">Name:</div>
-                        <div class="account-value" id="accountName">-</div>
+                <form id="uploadForm">
+                    <div class="form-group">
+                        <label class="form-label">Title</label>
+                        <input type="text" class="form-input" id="materialTitle" required>
                     </div>
-                    <div class="account-info">
-                        <div class="account-label">Email:</div>
-                        <div class="account-value" id="accountEmail">-</div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" id="materialDescription"></textarea>
                     </div>
-                    <div class="account-info">
-                        <div class="account-label">Phone:</div>
-                        <div class="account-value" id="accountPhone">-</div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Branch</label>
+                        <select class="form-select" id="materialBranch" required>
+                            <option value="">Select Branch</option>
+                        </select>
                     </div>
-                    <div class="account-info">
-                        <div class="account-label">Branch:</div>
-                        <div class="account-value" id="accountBranch">-</div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Semester</label>
+                        <select class="form-select" id="materialSemester" required>
+                            <option value="">Select Semester</option>
+                        </select>
                     </div>
-                    <div class="account-info">
-                        <div class="account-label">Semester:</div>
-                        <div class="account-value" id="accountSemester">-</div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Course</label>
+                        <select class="form-select" id="materialCourse" required>
+                            <option value="">Select Course</option>
+                        </select>
                     </div>
-                    <div class="account-info">
-                        <div class="account-label">Admission No:</div>
-                        <div class="account-value" id="accountAdmissionNo">-</div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Material Type</label>
+                        <select class="form-select" id="materialType" required>
+                            <option value="">Select Type</option>
+                            <option value="notes">Notes</option>
+                            <option value="ebook">E-Books</option>
+                            <option value="slides">Slides</option>
+                            <option value="video">Videos</option>
+                            <option value="lab">Lab Manuals</option>
+                            <option value="project">Projects</option>
+                        </select>
                     </div>
-                    <div class="account-info">
-                        <div class="account-label">Joined:</div>
-                        <div class="account-value" id="accountJoined">-</div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">File</label>
+                        <input type="file" class="form-input" id="materialFile" required>
                     </div>
-                    <div class="account-info">
-                        <div class="account-label">Last Login:</div>
-                        <div class="account-value" id="accountLastLogin">-</div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" id="cancelUpload">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Upload</button>
                     </div>
-                    <div class="account-info">
-                        <div class="account-label">Account Status:</div>
-                        <div class="account-value" id="accountStatus">Active</div>
-                    </div>
-                </div>
-                <div class="modal-pane" id="paid-pane">
-                    <div class="materials-list" id="paidMaterialsList">
-                        <div class="spinner"></div>
-                    </div>
-                </div>
-                <div class="modal-pane" id="downloaded-pane">
-                    <div class="materials-list" id="downloadedMaterialsList">
-                        <div class="spinner"></div>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
     
-    <!-- Branch/Semester Selection Modal -->
-    <div class="modal-overlay" id="branchSemesterModal">
+    <!-- Filter Modal -->
+    <div class="modal-overlay filter-modal" id="filterModal">
         <div class="modal">
             <div class="modal-header">
-                <h2 class="modal-title">Complete Your Profile</h2>
-                <button class="modal-close" id="branchSemesterModalClose">
+                <h2 class="modal-title">Advanced Filters</h2>
+                <button class="modal-close" id="filterModalClose">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class="modal-content">
-                <p>Please select your branch and semester to continue using the dashboard.</p>
-                <form id="branchSemesterForm">
-                    <div class="form-group">
-                        <label class="form-label" for="branchSelect">Branch</label>
-                        <select class="form-select" id="branchSelect" required>
-                            <option value="">Select Branch</option>
-                            <option value="CSE">Computer Science Engineering</option>
-                            <option value="IT">Information Technology</option>
-                            <option value="ECE">Electronics & Communication</option>
-                            <option value="EEE">Electrical & Electronics</option>
-                            <option value="MECH">Mechanical</option>
-                            <option value="AIML">AI & Machine Learning</option>
-                            <option value="CIVIL">Civil Engineering</option>
-                            <option value="BME">Bio Medical</option>
-                            <option value="FT">Fashion Technology</option>
-                            <option value="MCT">Mechatronics</option>
-                            <option value="CSD">CS & Design</option>
-                            <option value="ADS">AI & Data Science</option>
-                            <option value="EFE">Electrical & Computer</option>
-                            <option value="EXE">Electronics & Computer</option>
-                        </select>
+                <div class="filter-modal-body">
+                    <div class="filter-grid">
+                        <div class="filter-group">
+                            <label class="filter-label">Branch</label>
+                            <select class="filter-select" id="branchFilter">
+                                <option value="">All Branches</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Semester</label>
+                            <select class="filter-select" id="semesterFilter">
+                                <option value="">All Semesters</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Course</label>
+                            <select class="filter-select" id="courseFilter">
+                                <option value="">All Courses</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Material Type</label>
+                            <select class="filter-select" id="modalTypeFilter">
+                                <option value="">All Types</option>
+                                <option value="notes">Notes</option>
+                                <option value="ebook">E-Books</option>
+                                <option value="slides">Slides</option>
+                                <option value="video">Videos</option>
+                                <option value="lab">Lab Manuals</option>
+                                <option value="project">Projects</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Search</label>
+                            <input type="text" class="filter-input" id="modalSearchFilter" placeholder="Search materials...">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label" for="semesterSelect">Semester</label>
-                        <select class="form-select" id="semesterSelect" required>
-                            <option value="">Select Semester</option>
-                            <option value="1">1st Semester</option>
-                            <option value="2">2nd Semester</option>
-                            <option value="3">3rd Semester</option>
-                            <option value="4">4th Semester</option>
-                            <option value="5">5th Semester</option>
-                            <option value="6">6th Semester</option>
-                            <option value="7">7th Semester</option>
-                            <option value="8">8th Semester</option>
-                        </select>
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-outline" id="cancelBranchSemesterBtn">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </form>
+                </div>
+                <div class="filter-modal-footer">
+                    <button type="button" class="btn btn-outline" id="cancelFilter">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="applyFilter">Apply Filters</button>
+                </div>
             </div>
         </div>
     </div>
@@ -1146,7 +1470,7 @@
         </div>
         <div class="chatbot-messages" id="chatbotMessages">
             <div class="message bot">
-                Hello! I'm here to help you navigate your dashboard. Ask me about materials, PYQs, seminars, quizzes, or your GPA calculator!
+                Hello! I'm here to help you find study materials. You can ask me about specific subjects, courses, or types of materials.
             </div>
         </div>
         <div class="chatbot-input">
@@ -1156,11 +1480,20 @@
             </button>
         </div>
     </div>
+    
     <!-- Toast Container -->
     <div class="toast" id="toast">
         <i class="fas fa-check-circle toast-icon"></i>
         <span id="toastMessage">Notification message</span>
     </div>
+    
+    <!-- Mobile Navigation Bar -->
+    <div class="mobile-nav">
+      <button onclick="window.location.href='/studentdashboard.html'" aria-label="Dashboard"><i class="fas fa-home"></i></button>
+      <button onclick="window.location.href='/upload.html'" aria-label="Upload"><i class="fas fa-upload"></i></button>
+      <button onclick="window.location.href='/index.html'" aria-label="Logout"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+    
     <script>
         // Academic Data
         const academicData = {
@@ -1181,7 +1514,7 @@
                 "EXE": {"name":"Electronics & Computer","color":"var(--exe-color)","icon":"fas fa-desktop","semesters":{"1":[{"code":"U23EX101","name":"Basic Electronics","credits":4},{"code":"U23EX102","name":"Programming Fundamentals","credits":4},{"code":"U23EX103","name":"Digital Logic Design","credits":3},{"code":"U23EX104","name":"Engineering Mathematics","credits":3},{"code":"U23EX105","name":"Communication Skills","credits":2},{"code":"U23EX106","name":"Electronics Lab","credits":1},{"code":"U23EX107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EX201","name":"Data Structures","credits":4},{"code":"U23EX202","name":"Analog Electronics","credits":4},{"code":"U23EX203","name":"Computer Organization","credits":4},{"code":"U23EX204","name":"Signals and Systems","credits":3},{"code":"U23EX205","name":"Database Systems","credits":3},{"code":"U23EX206","name":"Analog Electronics Lab","credits":1},{"code":"U23EX207","name":"Data Structures Lab","credits":1}]}}
             }
         };
-        const gradePoints = { "O": 10, "A+": 9, "A": 8, "B+": 7, "B": 6, "C": 5, "U": 0 };
+        
         // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao",
@@ -1191,31 +1524,53 @@
             messagingSenderId: "272865877510",
             appId: "1:272865877510:web:0875a2502ae55bbf9ead87"
         };
+        
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        const realtimeDb = firebase.database();
+        const storage = firebase.storage();
+        
         // Global Variables
         let currentUser = null;
-        let dashboardData = null;
+        let materials = [];
+        let filteredMaterials = [];
+        let downloadedMaterials = [];
         let unsubscribeFunctions = [];
+        
         // DOM Elements
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        const userName = document.getElementById('userName');
-        const dashboardGrid = document.getElementById('dashboardGrid');
-        const navGrid = document.getElementById('navGrid');
-        const materialsGrid = document.getElementById('materialsGrid');
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
-        const logoutBtn = document.getElementById('logoutBtn');
         const accountBtn = document.getElementById('accountBtn');
-        const accountModal = document.getElementById('accountModal');
-        const accountModalClose = document.getElementById('accountModalClose');
-        const modalTabs = document.querySelectorAll('.modal-tab');
-        const modalPanes = document.querySelectorAll('.modal-pane');
-        const paidMaterialsList = document.getElementById('paidMaterialsList');
-        const downloadedMaterialsList = document.getElementById('downloadedMaterialsList');
+        const accountMenu = document.getElementById('accountMenu');
+        const accountAvatar = document.getElementById('accountAvatar');
+        const accountName = document.getElementById('accountName');
+        const accountEmail = document.getElementById('accountEmail');
+        const accountLogout = document.getElementById('accountLogout');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const uploadModal = document.getElementById('uploadModal');
+        const uploadModalClose = document.getElementById('uploadModalClose');
+        const cancelUpload = document.getElementById('cancelUpload');
+        const uploadForm = document.getElementById('uploadForm');
+        const materialsGrid = document.getElementById('materialsGrid');
+        const materialsCount = document.getElementById('materialsCount');
+        const branchFilter = document.getElementById('branchFilter');
+        const semesterFilter = document.getElementById('semesterFilter');
+        const courseFilter = document.getElementById('courseFilter');
+        const typeFilter = document.getElementById('typeFilter');
+        const modalTypeFilter = document.getElementById('modalTypeFilter');
+        const searchFilter = document.getElementById('searchFilter');
+        const modalSearchFilter = document.getElementById('modalSearchFilter');
+        const resetFilters = document.getElementById('resetFilters');
+        const materialBranch = document.getElementById('materialBranch');
+        const materialSemester = document.getElementById('materialSemester');
+        const materialCourse = document.getElementById('materialCourse');
+        const openFilterModal = document.getElementById('openFilterModal');
+        const filterModal = document.getElementById('filterModal');
+        const filterModalClose = document.getElementById('filterModalClose');
+        const cancelFilter = document.getElementById('cancelFilter');
+        const applyFilter = document.getElementById('applyFilter');
+        const downloadedMaterialsList = document.getElementById('downloadedMaterials');
         const chatbotToggle = document.getElementById('chatbotToggle');
         const chatbotContainer = document.getElementById('chatbotContainer');
         const chatbotMessages = document.getElementById('chatbotMessages');
@@ -1223,17 +1578,14 @@
         const chatbotSend = document.getElementById('chatbotSend');
         const toast = document.getElementById('toast');
         const toastMessage = document.getElementById('toastMessage');
-        const viewAllMaterialsBtn = document.getElementById('viewAllMaterialsBtn');
-        const branchSemesterModal = document.getElementById('branchSemesterModal');
-        const branchSemesterModalClose = document.getElementById('branchSemesterModalClose');
-        const branchSemesterForm = document.getElementById('branchSemesterForm');
-        const cancelBranchSemesterBtn = document.getElementById('cancelBranchSemesterBtn');
+        
         // Theme Management
         function initTheme() {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
             updateThemeIcon(savedTheme);
         }
+        
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
@@ -1241,9 +1593,11 @@
             localStorage.setItem('theme', newTheme);
             updateThemeIcon(newTheme);
         }
+        
         function updateThemeIcon(theme) {
             themeIcon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
         }
+        
         // Toast Notifications
         function showToast(message, type = 'success') {
             toastMessage.textContent = message;
@@ -1255,513 +1609,669 @@
                 type === 'error' ? 'fa-exclamation-circle' :
                 'fa-info-circle'
             }`;
+            
             setTimeout(() => {
                 toast.classList.remove('show');
             }, 3000);
         }
-        // Loading Management
-        function showLoading() {
-            loadingOverlay.classList.add('active');
-        }
-        function hideLoading() {
-            loadingOverlay.classList.remove('active');
-        }
-        // Dashboard Cards
-        function createDashboardCards() {
-            const cards = [
-                {
-                    title: 'Purchased Items',
-                    value: dashboardData?.purchasedCount || 0,
-                    icon: 'fas fa-shopping-cart',
-                    color: '#3b82f6',
-                    description: 'Total items purchased'
-                },
-                {
-                    title: 'Last Login',
-                    value: dashboardData?.lastLogin || 'Today',
-                    icon: 'fas fa-clock',
-                    color: '#10b981',
-                    description: 'Last access time'
-                },
-                {
-                    title: 'Days Remaining',
-                    value: dashboardData?.accessDays || 0,
-                    icon: 'fas fa-calendar-alt',
-                    color: '#f59e0b',
-                    description: 'Access validity',
-                    progress: (dashboardData?.accessDays || 0) / 365 * 100
-                },
-                {
-                    title: 'Total Spent',
-                    value: `₹${dashboardData?.totalSpent || 0}`,
-                    icon: 'fas fa-rupee-sign',
-                    color: '#8b5cf6',
-                    description: 'Total expenditure'
-                }
-            ];
-            dashboardGrid.innerHTML = cards.map(card => `
-                <div class="card bounce-in">
-                    <div class="card-header">
-                        <div class="card-title">${card.title}</div>
-                        <div class="card-icon" style="background: ${card.color}20; color: ${card.color};">
-                            <i class="${card.icon}"></i>
-                        </div>
-                    </div>
-                    <div class="card-value">${card.value}</div>
-                    <div class="card-description">${card.description}</div>
-                    ${card.progress ? `
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${card.progress}%"></div>
-                        </div>
-                    ` : ''}
-                </div>
-            `).join('');
-        }
-        // Navigation Cards
-        function createNavigationCards() {
-            const navItems = [
-                {
-                    title: 'Study Materials',
-                    description: 'Access notes, e-books, and slides',
-                    icon: 'fas fa-book-open',
-                    color: '#3b82f6',
-                    href: '/materials.html'
-                },
-                {
-                    title: 'PYQs & Question Banks',
-                    description: 'Prepare for exams with past papers',
-                    icon: 'fas fa-file-alt',
-                    color: '#10b981',
-                    href: '/pyq.html'
-                },
-                {
-                    title: 'Seminars',
-                    description: 'Watch recorded talks and presentations',
-                    icon: 'fas fa-video',
-                    color: '#8b5cf6',
-                    href: '/seminar.html'
-                },
-                {
-                    title: 'Quizzes',
-                    description: 'Test your knowledge and skills',
-                    icon: 'fas fa-question-circle',
-                    color: '#f59e0b',
-                    href: '/quiz.html'
-                },
-                {
-                    title: 'GPA/CGPA Calculator',
-                    description: 'Calculate your academic performance',
-                    icon: 'fas fa-calculator',
-                    color: '#06b6d4',
-                    href: '/cgpa.html'
-                }
-            ];
-            navGrid.innerHTML = navItems.map((item, index) => `
-                <a href="${item.href}" class="nav-card slide-in" style="animation-delay: ${index * 0.1}s;">
-                    <div class="nav-card-content">
-                        <div class="nav-card-icon" style="background: ${item.color}20; color: ${item.color};">
-                            <i class="${item.icon}"></i>
-                        </div>
-                        <div class="nav-card-title">${item.title}</div>
-                        <div class="nav-card-description">${item.description}</div>
-                    </div>
-                </a>
-            `).join('');
-        }
-        // Materials Grid
-        function createMaterialsGrid() {
-            const materials = dashboardData?.recentMaterials || [];
+        
+        // Initialize Filters
+        function initFilters() {
+            // Populate branch filter
+            Object.entries(academicData.branches).forEach(([code, branch]) => {
+                const option = document.createElement('option');
+                option.value = code;
+                option.textContent = branch.name;
+                branchFilter.appendChild(option);
+                
+                // Also populate upload form branch
+                const uploadOption = document.createElement('option');
+                uploadOption.value = code;
+                uploadOption.textContent = branch.name;
+                materialBranch.appendChild(uploadOption);
+            });
             
-            if (materials.length === 0) {
+            // Add event listeners
+            branchFilter.addEventListener('change', updateSemesterFilter);
+            semesterFilter.addEventListener('change', updateCourseFilter);
+            typeFilter.addEventListener('change', applyFilters);
+            modalTypeFilter.addEventListener('change', applyFilters);
+            searchFilter.addEventListener('input', applyFilters);
+            modalSearchFilter.addEventListener('input', applyFilters);
+            resetFilters.addEventListener('reset', resetAllFilters);
+            
+            materialBranch.addEventListener('change', updateMaterialSemesterFilter);
+            materialSemester.addEventListener('change', updateMaterialCourseFilter);
+            
+            // Filter modal event listeners
+            openFilterModal.addEventListener('click', () => {
+                filterModal.classList.add('active');
+                // Sync filter values
+                branchFilter.value = document.getElementById('branchFilter').value;
+                semesterFilter.value = document.getElementById('semesterFilter').value;
+                courseFilter.value = document.getElementById('courseFilter').value;
+                modalTypeFilter.value = typeFilter.value;
+                modalSearchFilter.value = searchFilter.value;
+            });
+            
+            filterModalClose.addEventListener('click', () => {
+                filterModal.classList.remove('active');
+            });
+            
+            cancelFilter.addEventListener('click', () => {
+                filterModal.classList.remove('active');
+            });
+            
+            applyFilter.addEventListener('click', () => {
+                // Apply filter values from modal
+                typeFilter.value = modalTypeFilter.value;
+                searchFilter.value = modalSearchFilter.value;
+                applyFilters();
+                filterModal.classList.remove('active');
+            });
+            
+            filterModal.addEventListener('click', (e) => {
+                if (e.target === filterModal) {
+                    filterModal.classList.remove('active');
+                }
+            });
+        }
+        
+        function updateSemesterFilter() {
+            const branch = branchFilter.value;
+            semesterFilter.innerHTML = '<option value="">All Semesters</option>';
+            courseFilter.innerHTML = '<option value="">All Courses</option>';
+            
+            if (branch && academicData.branches[branch]) {
+                Object.keys(academicData.branches[branch].semesters).forEach(sem => {
+                    const option = document.createElement('option');
+                    option.value = sem;
+                    option.textContent = `Semester ${sem}`;
+                    semesterFilter.appendChild(option);
+                });
+            }
+            
+            applyFilters();
+        }
+        
+        function updateCourseFilter() {
+            const branch = branchFilter.value;
+            const semester = semesterFilter.value;
+            courseFilter.innerHTML = '<option value="">All Courses</option>';
+            
+            if (branch && semester && academicData.branches[branch]) {
+                const courses = academicData.branches[branch].semesters[semester] || [];
+                courses.forEach(course => {
+                    const option = document.createElement('option');
+                    option.value = course.code;
+                    option.textContent = `${course.code} - ${course.name}`;
+                    courseFilter.appendChild(option);
+                });
+            }
+            
+            applyFilters();
+        }
+        
+        function updateMaterialSemesterFilter() {
+            const branch = materialBranch.value;
+            materialSemester.innerHTML = '<option value="">Select Semester</option>';
+            materialCourse.innerHTML = '<option value="">Select Course</option>';
+            
+            if (branch && academicData.branches[branch]) {
+                Object.keys(academicData.branches[branch].semesters).forEach(sem => {
+                    const option = document.createElement('option');
+                    option.value = sem;
+                    option.textContent = `Semester ${sem}`;
+                    materialSemester.appendChild(option);
+                });
+            }
+        }
+        
+        function updateMaterialCourseFilter() {
+            const branch = materialBranch.value;
+            const semester = materialSemester.value;
+            materialCourse.innerHTML = '<option value="">Select Course</option>';
+            
+            if (branch && semester && academicData.branches[branch]) {
+                const courses = academicData.branches[branch].semesters[semester] || [];
+                courses.forEach(course => {
+                    const option = document.createElement('option');
+                    option.value = course.code;
+                    option.textContent = `${course.code} - ${course.name}`;
+                    materialCourse.appendChild(option);
+                });
+            }
+        }
+        
+        function applyFilters() {
+            const branch = branchFilter.value;
+            const semester = semesterFilter.value;
+            const course = courseFilter.value;
+            const type = typeFilter.value || modalTypeFilter.value;
+            const search = (searchFilter.value || modalSearchFilter.value).toLowerCase();
+            
+            filteredMaterials = materials.filter(material => {
+                // Branch filter
+                if (branch && material.branch !== branch) return false;
+                
+                // Semester filter
+                if (semester && material.semester !== semester) return false;
+                
+                // Course filter
+                if (course && material.course !== course) return false;
+                
+                // Type filter
+                if (type && material.type !== type) return false;
+                
+                // Search filter
+                if (search && !material.title.toLowerCase().includes(search) && 
+                    !material.description.toLowerCase().includes(search)) {
+                    return false;
+                }
+                
+                return true;
+            });
+            
+            renderMaterials();
+        }
+        
+        function resetAllFilters() {
+            branchFilter.value = '';
+            semesterFilter.value = '';
+            courseFilter.value = '';
+            typeFilter.value = '';
+            modalTypeFilter.value = '';
+            searchFilter.value = '';
+            modalSearchFilter.value = '';
+            
+            updateSemesterFilter();
+            updateCourseFilter();
+            applyFilters();
+        }
+        
+        // Load Materials
+        function loadMaterials() {
+            materialsGrid.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+            
+            db.collection('materials').get().then(snapshot => {
+                materials = [];
+                snapshot.forEach(doc => {
+                    const material = doc.data();
+                    material.id = doc.id;
+                    materials.push(material);
+                });
+                
+                filteredMaterials = [...materials];
+                renderMaterials();
+                
+                // Load user's downloaded materials
+                if (currentUser) {
+                    loadDownloadedMaterials();
+                }
+            }).catch(error => {
+                console.error('Error loading materials:', error);
+                showToast('Error loading materials', 'error');
                 materialsGrid.innerHTML = `
-                    <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
-                        <i class="fas fa-inbox" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
-                        <p>No recently accessed materials yet</p>
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="fas fa-exclamation-circle"></i></div>
+                        <h3 class="empty-title">Error Loading Materials</h3>
+                        <p class="empty-description">Please try again later</p>
                     </div>
                 `;
-                return;
-            }
-            materialsGrid.innerHTML = materials.map((material, index) => `
-                <div class="material-card fade-in" style="animation-delay: ${index * 0.1}s;">
-                    <div class="material-thumbnail">
-                        <i class="fas fa-file-alt"></i>
-                    </div>
-                    <div class="material-content">
-                        <div class="material-title">${material.title}</div>
-                        <div class="material-meta">
-                            <span class="material-type">${material.type}</span>
-                            <span>${material.timestamp}</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-        // Load Dashboard Data
-        function loadDashboardData() {
-            showLoading();
-            
-            if (!currentUser) {
-                hideLoading();
-                return;
-            }
-            // Load user data
-            const userUnsubscribe = db.collection('users').doc(currentUser.uid).onSnapshot(doc => {
-                if (doc.exists) {
-                    const userData = doc.data();
-                    userName.textContent = userData.name || 'Student';
-                    
-                    // Check if branch and semester are set
-                    if (!userData.branch || !userData.semester) {
-                        // Show branch/semester modal
-                        branchSemesterModal.classList.add('active');
-                        hideLoading();
-                        return;
-                    }
-                    
-                    // Update dashboard data
-                    dashboardData = {
-                        ...dashboardData,
-                        userName: userData.name || 'Student',
-                        userBranch: userData.branch || 'Student',
-                        lastLogin: userData.lastLoginAt ? formatDetailedTimestamp(userData.lastLoginAt) : 'Today',
-                        accessDays: userData.accessExpires ? calculateDaysRemaining(userData.accessExpires) : 0
-                    };
-                    
-                    createDashboardCards();
-                }
-            }, error => {
-                console.error('Error loading user data:', error);
-                showToast('Error loading user data', 'error');
             });
-            unsubscribeFunctions.push(userUnsubscribe);
-            // Load payments data
-            const paymentsUnsubscribe = db.collection('payments')
+        }
+        
+        // Load Downloaded Materials
+        function loadDownloadedMaterials() {
+            if (!currentUser) return;
+            
+            downloadedMaterialsList.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+            
+            db.collection('userActivities')
                 .where('userId', '==', currentUser.uid)
-                .where('status', '==', 'completed')
-                .onSnapshot(snapshot => {
-                    let totalSpent = 0;
-                    let purchasedCount = 0;
-                    
-                    snapshot.forEach(doc => {
-                        const payment = doc.data();
-                        totalSpent += payment.amount || 0;
-                        purchasedCount += 1;
-                    });
-                    
-                    dashboardData = {
-                        ...dashboardData,
-                        totalSpent,
-                        purchasedCount
-                    };
-                    
-                    createDashboardCards();
-                }, error => {
-                    console.error('Error loading payments:', error);
-                });
-            unsubscribeFunctions.push(paymentsUnsubscribe);
-            // Load recent activities
-            const activitiesUnsubscribe = db.collection('userActivities')
-                .where('userId', '==', currentUser.uid)
-                .where('action', '==', 'view')
-                .orderBy('timestamp', 'desc')
-                .limit(4)
-                .onSnapshot(snapshot => {
-                    const recentMaterials = [];
+                .where('action', '==', 'download')
+                .get()
+                .then(snapshot => {
+                    downloadedMaterials = [];
+                    const materialIds = new Set();
                     
                     snapshot.forEach(doc => {
                         const activity = doc.data();
-                        recentMaterials.push({
-                            id: doc.id,
-                            title: activity.materialData?.title || 'Untitled',
-                            type: activity.materialType || 'Material',
-                            timestamp: formatTimestamp(activity.timestamp)
-                        });
-                    });
-                    
-                    dashboardData = {
-                        ...dashboardData,
-                        recentMaterials
-                    };
-                    
-                    createMaterialsGrid();
-                }, error => {
-                    console.error('Error loading recent activities:', error);
-                });
-            unsubscribeFunctions.push(activitiesUnsubscribe);
-            // Load stats from Realtime Database
-            const statsRef = realtimeDb.ref(`stats/${currentUser.uid}`);
-            statsRef.on('value', (snapshot) => {
-                const stats = snapshot.val() || {};
-                dashboardData = {
-                    ...dashboardData,
-                    stats: {
-                        notes: stats.notes || 0,
-                        pyqs: stats.pyqs || 0,
-                        seminars: stats.seminars || 0,
-                        payments: stats.payments || 0
-                    }
-                };
-            });
-            hideLoading();
-        }
-        // Load Account Details
-        function loadAccountDetails() {
-            if (!currentUser) return;
-            
-            // Load user details
-            db.collection('users').doc(currentUser.uid).get().then(doc => {
-                if (doc.exists) {
-                    const userData = doc.data();
-                    
-                    // Update account details
-                    document.getElementById('accountName').textContent = userData.name || 'N/A';
-                    document.getElementById('accountEmail').textContent = userData.email || 'N/A';
-                    document.getElementById('accountPhone').textContent = userData.phone || 'N/A';
-                    document.getElementById('accountBranch').textContent = 
-                        userData.branch ? academicData.branches[userData.branch]?.name || userData.branch : 'N/A';
-                    document.getElementById('accountSemester').textContent = userData.semester || 'N/A';
-                    document.getElementById('accountAdmissionNo').textContent = userData.admissionNo || 'N/A';
-                    document.getElementById('accountJoined').textContent = 
-                        userData.createdAt ? formatTimestamp(userData.createdAt) : 'N/A';
-                    document.getElementById('accountLastLogin').textContent = 
-                        userData.lastLoginAt ? formatDetailedTimestamp(userData.lastLoginAt) : 'N/A';
-                    document.getElementById('accountStatus').textContent = 
-                        userData.accessExpires && new Date() > new Date(userData.accessExpires.toDate()) ? 'Expired' : 'Active';
-                }
-            }).catch(error => {
-                console.error('Error loading account details:', error);
-                showToast('Error loading account details', 'error');
-            });
-            
-            // Load paid materials
-            loadPaidMaterials();
-            
-            // Load downloaded materials
-            loadDownloadedMaterials();
-        }
-        // Load Paid Materials
-        function loadPaidMaterials() {
-            paidMaterialsList.innerHTML = '<div class="spinner"></div>';
-            
-            db.collection('payments')
-                .where('userId', '==', currentUser.uid)
-                .where('status', '==', 'completed')
-                .get()
-                .then(snapshot => {
-                    if (snapshot.empty) {
-                        paidMaterialsList.innerHTML = `
-                            <div class="empty-state">
-                                <i class="fas fa-shopping-cart"></i>
-                                <p>No paid materials yet</p>
-                            </div>
-                        `;
-                        return;
-                    }
-                    
-                    const materials = [];
-                    const materialIds = [];
-                    
-                    snapshot.forEach(doc => {
-                        const payment = doc.data();
-                        materialIds.push(payment.materialId);
-                        materials.push({
-                            id: doc.id,
-                            materialId: payment.materialId,
-                            title: payment.materialTitle || 'Untitled',
-                            type: payment.materialType || 'Material',
-                            amount: payment.amount || 0,
-                            timestamp: formatTimestamp(payment.createdAt)
-                        });
-                    });
-                    
-                    // Get material details
-                    if (materialIds.length > 0) {
-                        const promises = materialIds.map(id => {
-                            return db.collection('notes').doc(id).get()
-                                .then(doc => ({ id, ...doc.data(), collection: 'notes' }))
-                                .catch(() => null);
-                        });
-                        
-                        Promise.all(promises).then(results => {
-                            const materialDetails = {};
-                            results.forEach(result => {
-                                if (result) {
-                                    materialDetails[result.id] = result;
-                                }
-                            });
-                            
-                            paidMaterialsList.innerHTML = materials.map(material => {
-                                const details = materialDetails[material.materialId];
-                                const fileUrl = details?.fileUrl || details?.downloadUrl || '#';
-                                
-                                return `
-                                    <div class="material-item">
-                                        <div class="material-info">
-                                            <h4>${material.title}</h4>
-                                            <p>${material.type} • ₹${material.amount} • ${material.timestamp}</p>
-                                        </div>
-                                        <div class="material-actions">
-                                            <button class="btn btn-primary btn-sm" onclick="window.open('${fileUrl}', '_blank')">
-                                                <i class="fas fa-eye"></i> View
-                                            </button>
-                                        </div>
-                                    </div>
-                                `;
-                            }).join('');
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error loading paid materials:', error);
-                    paidMaterialsList.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-exclamation-circle"></i>
-                            <p>Error loading materials</p>
-                        </div>
-                    `;
-                });
-        }
-        // Load Downloaded Materials
-        function loadDownloadedMaterials() {
-            downloadedMaterialsList.innerHTML = '<div class="spinner"></div>';
-            
-            // Check if user has downloaded materials
-            db.collection('users').doc(currentUser.uid).get()
-                .then(doc => {
-                    if (doc.exists) {
-                        const userData = doc.data();
-                        const downloadedIds = userData.downloadedMaterials || [];
-                        
-                        if (downloadedIds.length === 0) {
-                            downloadedMaterialsList.innerHTML = `
-                                <div class="empty-state">
-                                    <i class="fas fa-download"></i>
-                                    <p>No downloaded materials yet</p>
-                                </div>
-                            `;
-                            return;
+                        if (activity.materialId && !materialIds.has(activity.materialId)) {
+                            materialIds.add(activity.materialId);
+                            downloadedMaterials.push(activity.materialId);
                         }
-                        
-                        // Get material details
-                        const promises = downloadedIds.map(id => {
-                            return db.collection('notes').doc(id).get()
-                                .then(doc => ({ id, ...doc.data(), collection: 'notes' }))
-                                .catch(() => null);
-                        });
-                        
-                        Promise.all(promises).then(results => {
-                            const validMaterials = results.filter(material => material !== null);
-                            
-                            if (validMaterials.length === 0) {
-                                downloadedMaterialsList.innerHTML = `
-                                    <div class="empty-state">
-                                        <i class="fas fa-download"></i>
-                                        <p>No downloaded materials found</p>
-                                    </div>
-                                `;
-                                return;
-                            }
-                            
-                            downloadedMaterialsList.innerHTML = validMaterials.map(material => {
-                                const fileUrl = material.fileUrl || material.downloadUrl || '#';
-                                const isMobile = window.innerWidth <= 768;
-                                
-                                return `
-                                    <div class="material-item">
-                                        <div class="material-info">
-                                            <h4>${material.title || 'Untitled'}</h4>
-                                            <p>${material.collection || 'Material'}</p>
-                                        </div>
-                                        <div class="material-actions">
-                                            ${isMobile ? 
-                                                `<button class="btn btn-primary btn-sm" onclick="window.open('${fileUrl}', '_blank')">
-                                                    <i class="fas fa-eye"></i> View
-                                                </button>` :
-                                                `<button class="btn btn-primary btn-sm" onclick="downloadMaterial('${fileUrl}', '${material.title}')">
-                                                    <i class="fas fa-download"></i> Download
-                                                </button>`
-                                            }
-                                        </div>
-                                    </div>
-                                `;
-                            }).join('');
-                        });
-                    }
+                    });
+                    
+                    renderDownloadedMaterials();
                 })
                 .catch(error => {
                     console.error('Error loading downloaded materials:', error);
                     downloadedMaterialsList.innerHTML = `
                         <div class="empty-state">
-                            <i class="fas fa-exclamation-circle"></i>
-                            <p>Error loading materials</p>
+                            <div class="empty-icon"><i class="fas fa-exclamation-circle"></i></div>
+                            <p class="empty-description">Error loading downloads</p>
                         </div>
                     `;
                 });
         }
-        // Download Material
-        function downloadMaterial(url, title) {
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = title || 'material';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+        
+        function renderDownloadedMaterials() {
+            if (downloadedMaterials.length === 0) {
+                downloadedMaterialsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="fas fa-download"></i></div>
+                        <p class="empty-description">No downloaded materials yet</p>
+                    </div>
+                `;
+                return;
+            }
             
-            showToast('Download started', 'success');
+            // Get material details for each downloaded material
+            const materialPromises = downloadedMaterials.map(materialId => {
+                return db.collection('materials').doc(materialId).get();
+            });
+            
+            Promise.all(materialPromises)
+                .then(snapshots => {
+                    const materialsData = [];
+                    
+                    snapshots.forEach(snapshot => {
+                        if (snapshot.exists) {
+                            const material = snapshot.data();
+                            material.id = snapshot.id;
+                            materialsData.push(material);
+                        }
+                    });
+                    
+                    downloadedMaterialsList.innerHTML = materialsData.map(material => {
+                        const branch = academicData.branches[material.branch];
+                        const branchColor = branch ? branch.color : 'var(--primary)';
+                        
+                        return `
+                            <div class="account-item" data-id="${material.id}">
+                                <div class="account-item-icon" style="background-color: ${branchColor}20; color: ${branchColor}">
+                                    <i class="fas ${getMaterialIcon(material.type)}"></i>
+                                </div>
+                                <div class="account-item-info">
+                                    <div class="account-item-title">${material.title}</div>
+                                    <div class="account-item-meta">${material.type} • ${branch ? branch.name : material.branch}</div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    // Add click event listeners to downloaded materials
+                    document.querySelectorAll('#downloadedMaterials .account-item').forEach(item => {
+                        item.addEventListener('click', () => {
+                            const materialId = item.dataset.id;
+                            const material = materials.find(m => m.id === materialId);
+                            if (material) {
+                                viewMaterial(material);
+                                accountMenu.classList.remove('active');
+                            }
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.error('Error getting material details:', error);
+                    downloadedMaterialsList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon"><i class="fas fa-exclamation-circle"></i></div>
+                            <p class="empty-description">Error loading materials</p>
+                        </div>
+                    `;
+                });
         }
-        // Utility Functions
-        function formatTimestamp(timestamp) {
-            if (!timestamp) return 'N/A';
+        
+        // Render Materials
+        function renderMaterials() {
+            materialsCount.textContent = `Showing ${filteredMaterials.length} of ${materials.length} materials`;
             
-            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-            const now = new Date();
-            const diffMs = now - date;
-            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            if (filteredMaterials.length === 0) {
+                materialsGrid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="fas fa-folder-open"></i></div>
+                        <h3 class="empty-title">No Materials Found</h3>
+                        <p class="empty-description">Try adjusting your filters or upload new materials</p>
+                    </div>
+                `;
+                return;
+            }
             
-            if (diffDays === 0) return 'Today';
-            if (diffDays === 1) return 'Yesterday';
-            if (diffDays < 7) return `${diffDays} days ago`;
+            materialsGrid.innerHTML = filteredMaterials.map(material => {
+                const branch = academicData.branches[material.branch];
+                const branchColor = branch ? branch.color : 'var(--primary)';
+                
+                return `
+                    <div class="material-card" data-id="${material.id}">
+                        <div class="material-thumbnail">
+                            ${material.thumbnailUrl ? 
+                                `<img src="${material.thumbnailUrl}" alt="${material.title}">` : 
+                                `<i class="fas ${getMaterialIcon(material.type)}"></i>`
+                            }
+                            <div class="material-type-badge">${material.type}</div>
+                        </div>
+                        <div class="material-content">
+                            <h3 class="material-title">${material.title}</h3>
+                            <p class="material-description">${material.description}</p>
+                            <div class="material-meta">
+                                <div class="material-branch">
+                                    <div class="material-branch-color" style="background-color: ${branchColor}"></div>
+                                    <span>${branch ? branch.name : material.branch}</span>
+                                </div>
+                                <span>Semester ${material.semester}</span>
+                            </div>
+                            <div class="material-actions">
+                                <button class="material-action view" title="View">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="material-action download" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="material-action favorite" title="Favorite">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                                <button class="material-action share" title="Share">
+                                    <i class="fas fa-share"></i>
+                                </button>
+                                <button class="material-action report" title="Report">
+                                    <i class="fas fa-flag"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
             
-            return date.toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric'
+            // Add event listeners to material actions
+            document.querySelectorAll('.material-action').forEach(btn => {
+                btn.addEventListener('click', handleMaterialAction);
             });
         }
         
-        function formatDetailedTimestamp(timestamp) {
-            if (!timestamp) return 'N/A';
+        function getMaterialIcon(type) {
+            const icons = {
+                'notes': 'fa-file-alt',
+                'ebook': 'fa-book',
+                'slides': 'fa-presentation',
+                'video': 'fa-video',
+                'lab': 'fa-flask',
+                'project': 'fa-project-diagram'
+            };
+            return icons[type] || 'fa-file';
+        }
+        
+        // Handle Material Actions
+        function handleMaterialAction(e) {
+            e.stopPropagation();
+            const action = e.currentTarget.classList[1];
+            const materialCard = e.currentTarget.closest('.material-card');
+            const materialId = materialCard.dataset.id;
+            const material = materials.find(m => m.id === materialId);
             
-            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            if (!material) return;
             
-            return date.toLocaleDateString('en-US', {
-                weekday: 'short',
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
+            switch (action) {
+                case 'view':
+                    viewMaterial(material);
+                    break;
+                case 'download':
+                    downloadMaterial(material);
+                    break;
+                case 'favorite':
+                    toggleFavorite(material, e.currentTarget);
+                    break;
+                case 'share':
+                    shareMaterial(material);
+                    break;
+                case 'report':
+                    reportMaterial(material);
+                    break;
+            }
+        }
+        
+        function viewMaterial(material) {
+            if (material.fileUrl) {
+                window.open(material.fileUrl, '_blank');
+                showToast('Opening material...', 'info');
+            } else {
+                showToast('Material file not available', 'error');
+            }
+        }
+        
+        function downloadMaterial(material) {
+            if (material.fileUrl) {
+                const link = document.createElement('a');
+                link.href = material.fileUrl;
+                link.download = material.title;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showToast('Download started', 'success');
+                
+                // Track download
+                if (currentUser) {
+                    db.collection('userActivities').add({
+                        userId: currentUser.uid,
+                        action: 'download',
+                        materialId: material.id,
+                        materialData: {
+                            title: material.title,
+                            type: material.type
+                        },
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    }).then(() => {
+                        // Refresh downloaded materials list if account menu is open
+                        if (accountMenu.classList.contains('active')) {
+                            loadDownloadedMaterials();
+                        }
+                    });
+                }
+            } else {
+                showToast('Material file not available', 'error');
+            }
+        }
+        
+        function toggleFavorite(material, btn) {
+            if (!currentUser) {
+                showToast('Please login to favorite materials', 'error');
+                return;
+            }
+            
+            const isFavorite = btn.classList.contains('active');
+            
+            if (isFavorite) {
+                // Remove from favorites
+                db.collection('users').doc(currentUser.uid).update({
+                    favoriteMaterials: firebase.firestore.FieldValue.arrayRemove(material.id)
+                }).then(() => {
+                    btn.classList.remove('active');
+                    showToast('Removed from favorites', 'info');
+                }).catch(error => {
+                    console.error('Error removing favorite:', error);
+                    showToast('Error updating favorites', 'error');
+                });
+            } else {
+                // Add to favorites
+                db.collection('users').doc(currentUser.uid).update({
+                    favoriteMaterials: firebase.firestore.FieldValue.arrayUnion(material.id)
+                }).then(() => {
+                    btn.classList.add('active');
+                    showToast('Added to favorites', 'success');
+                }).catch(error => {
+                    console.error('Error adding favorite:', error);
+                    showToast('Error updating favorites', 'error');
+                });
+            }
+        }
+        
+        function shareMaterial(material) {
+            if (navigator.share) {
+                navigator.share({
+                    title: material.title,
+                    text: material.description,
+                    url: window.location.href
+                }).then(() => {
+                    showToast('Shared successfully', 'success');
+                }).catch(error => {
+                    console.error('Error sharing:', error);
+                });
+            } else {
+                // Fallback - copy to clipboard
+                const url = `${window.location.origin}/materials.html?id=${material.id}`;
+                navigator.clipboard.writeText(url).then(() => {
+                    showToast('Link copied to clipboard', 'success');
+                }).catch(error => {
+                    showToast('Error copying link', 'error');
+                });
+            }
+        }
+        
+        function reportMaterial(material) {
+            const reason = prompt('Please describe the issue with this material:');
+            if (reason) {
+                db.collection('reports').add({
+                    materialId: material.id,
+                    userId: currentUser ? currentUser.uid : null,
+                    reason: reason,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                }).then(() => {
+                    showToast('Report submitted successfully', 'success');
+                }).catch(error => {
+                    console.error('Error submitting report:', error);
+                    showToast('Error submitting report', 'error');
+                });
+            }
+        }
+        
+        // Upload Material
+        function initUploadForm() {
+            uploadForm.addEventListener('submit', handleUpload);
+            cancelUpload.addEventListener('click', closeUploadModal);
+            uploadModalClose.addEventListener('click', closeUploadModal);
+            
+            uploadModal.addEventListener('click', (e) => {
+                if (e.target === uploadModal) {
+                    closeUploadModal();
+                }
             });
         }
         
-        function calculateDaysRemaining(expiresTimestamp) {
-            if (!expiresTimestamp) return 0;
-            
-            const expiresDate = expiresTimestamp.toDate ? expiresTimestamp.toDate() : new Date(expiresTimestamp);
-            const today = new Date();
-            const diffTime = expiresDate - today;
-            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        function openUploadModal() {
+            uploadModal.classList.add('active');
         }
-        // Chatbot Functionality
+        
+        function closeUploadModal() {
+            uploadModal.classList.remove('active');
+            uploadForm.reset();
+        }
+        
+        function handleUpload(e) {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                showToast('Please login to upload materials', 'error');
+                return;
+            }
+            
+            const title = document.getElementById('materialTitle').value;
+            const description = document.getElementById('materialDescription').value;
+            const branch = document.getElementById('materialBranch').value;
+            const semester = document.getElementById('materialSemester').value;
+            const course = document.getElementById('materialCourse').value;
+            const type = document.getElementById('materialType').value;
+            const file = document.getElementById('materialFile').files[0];
+            
+            if (!file) {
+                showToast('Please select a file', 'error');
+                return;
+            }
+            
+            // Show loading
+            showToast('Uploading material...', 'info');
+            
+            // Upload file to Firebase Storage
+            const storageRef = storage.ref(`materials/${branch}/${semester}/${course}/${file.name}`);
+            const uploadTask = storageRef.put(file);
+            
+            uploadTask.on('state_changed', 
+                (snapshot) => {
+                    // Progress tracking could be added here
+                }, 
+                (error) => {
+                    console.error('Upload error:', error);
+                    showToast('Error uploading file', 'error');
+                }, 
+                () => {
+                    // Upload completed successfully
+                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                        // Save material data to Firestore
+                        db.collection('materials').add({
+                            title,
+                            description,
+                            branch,
+                            semester,
+                            course,
+                            type,
+                            fileUrl: downloadURL,
+                            fileName: file.name,
+                            fileSize: file.size,
+                            uploadedBy: currentUser.uid,
+                            uploadedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            views: 0,
+                            downloads: 0
+                        }).then((docRef) => {
+                            // Add to user's uploaded materials
+                            db.collection('users').doc(currentUser.uid).update({
+                                uploadedMaterials: firebase.firestore.FieldValue.arrayUnion(docRef.id)
+                            });
+                            
+                            // Track activity
+                            db.collection('userActivities').add({
+                                userId: currentUser.uid,
+                                action: 'upload',
+                                materialId: docRef.id,
+                                materialData: {
+                                    title,
+                                    type
+                                },
+                                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                            });
+                            
+                            showToast('Material uploaded successfully', 'success');
+                            closeUploadModal();
+                            loadMaterials();
+                        }).catch((error) => {
+                            console.error('Error saving material data:', error);
+                            showToast('Error saving material', 'error');
+                        });
+                    }).catch((error) => {
+                        console.error('Error getting download URL:', error);
+                        showToast('Error processing file', 'error');
+                    });
+                }
+            );
+        }
+        
+        // Chatbot
         function initChatbot() {
             const botResponses = {
-                'materials': 'You can access all your study materials in the "Study Materials" section. Click on the navigation card to view notes, e-books, and slides.',
-                'pyq': 'The "PYQs & Question Banks" section contains all previous year question papers to help you prepare for your exams.',
-                'seminars': 'Check out the "Seminars" section to watch recorded talks and presentations from experts in various fields.',
-                'quizzes': 'Test your knowledge with interactive quizzes in the "Quizzes" section. Track your progress and improve your skills.',
-                'gpa': 'Use the "GPA/CGPA Calculator" to calculate your academic performance. Enter your grades and credits to get your GPA.',
-                'default': 'I can help you with information about materials, PYQs, seminars, quizzes, and GPA calculator. What would you like to know?'
+                'material': 'You can find various study materials here including notes, e-books, slides, videos, lab manuals, and projects. Use the filters to narrow down your search.',
+                'notes': 'Notes are concise summaries of course content. You can filter by branch, semester, and course to find relevant notes.',
+                'ebook': 'E-books are digital versions of textbooks. They provide in-depth coverage of subjects.',
+                'slides': 'Slides are presentation materials used in lectures. They are great for quick revision.',
+                'video': 'Video materials include recorded lectures, tutorials, and demonstrations.',
+                'lab': 'Lab manuals contain instructions and procedures for laboratory experiments.',
+                'project': 'Project materials include documentation, source code, and reports for academic projects.',
+                'upload': 'You can upload your own study materials using the + button at the bottom right corner.',
+                'filter': 'Use the filter options to narrow down materials by branch, semester, course, type, or search keywords.',
+                'download': 'Click the download button on any material to save it to your device.',
+                'favorite': 'Click the star button to add materials to your favorites for quick access.',
+                'default': 'I can help you with information about materials, uploading, filtering, and more. What would you like to know?'
             };
+            
             function addMessage(text, sender) {
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `message ${sender}`;
@@ -1769,109 +2279,99 @@
                 chatbotMessages.appendChild(messageDiv);
                 chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
             }
+            
             function getBotResponse(userInput) {
                 const input = userInput.toLowerCase();
                 
-                if (input.includes('material') || input.includes('note') || input.includes('book')) {
-                    return botResponses.materials;
-                } else if (input.includes('pyq') || input.includes('question') || input.includes('paper')) {
-                    return botResponses.pyq;
-                } else if (input.includes('seminar') || input.includes('video') || input.includes('talk')) {
-                    return botResponses.seminars;
-                } else if (input.includes('quiz') || input.includes('test')) {
-                    return botResponses.quizzes;
-                } else if (input.includes('gpa') || input.includes('calculator') || input.includes('grade')) {
-                    return botResponses.gpa;
+                if (input.includes('material') || input.includes('note') || input.includes('book') || input.includes('slide') || input.includes('video') || input.includes('lab') || input.includes('project')) {
+                    return botResponses.material;
+                } else if (input.includes('upload')) {
+                    return botResponses.upload;
+                } else if (input.includes('filter')) {
+                    return botResponses.filter;
+                } else if (input.includes('download')) {
+                    return botResponses.download;
+                } else if (input.includes('favorite')) {
+                    return botResponses.favorite;
                 }
                 
                 return botResponses.default;
             }
+            
             function sendMessage() {
                 const message = chatbotInput.value.trim();
                 if (!message) return;
+                
                 addMessage(message, 'user');
                 chatbotInput.value = '';
+                
                 setTimeout(() => {
                     const response = getBotResponse(message);
                     addMessage(response, 'bot');
                 }, 500);
             }
+            
             chatbotSend.addEventListener('click', sendMessage);
             chatbotInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') sendMessage();
             });
         }
+        
+        // Account Management
+        function initAccount() {
+            accountBtn.addEventListener('click', () => {
+                accountMenu.classList.toggle('active');
+            });
+            
+            accountLogout.addEventListener('click', () => {
+                if (confirm('Are you sure you want to logout?')) {
+                    auth.signOut().then(() => {
+                        showToast('Logged out successfully', 'success');
+                        window.location.href = '/index.html';
+                    }).catch(error => {
+                        console.error('Logout error:', error);
+                        showToast('Logout failed', 'error');
+                    });
+                }
+            });
+            
+            // Close account menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!accountBtn.contains(e.target) && !accountMenu.contains(e.target)) {
+                    accountMenu.classList.remove('active');
+                }
+            });
+        }
+        
         // Authentication
         function initAuth() {
             auth.onAuthStateChanged(user => {
                 if (user) {
                     currentUser = user;
-                    loadDashboardData();
-                    showToast('Welcome back!', 'success');
+                    
+                    // Update account info
+                    accountName.textContent = user.displayName || 'User';
+                    accountEmail.textContent = user.email;
+                    
+                    // Set avatar with user initial
+                    if (user.displayName) {
+                        accountAvatar.textContent = user.displayName.charAt(0).toUpperCase();
+                    } else {
+                        accountAvatar.innerHTML = '<i class="fas fa-user"></i>';
+                    }
+                    
+                    loadMaterials();
                 } else {
                     // Redirect to login page
                     window.location.href = '/index.html';
                 }
             });
         }
+        
         // Event Listeners
         themeToggle.addEventListener('click', toggleTheme);
         
-        logoutBtn.addEventListener('click', () => {
-            if (confirm('Are you sure you want to logout?')) {
-                // Unsubscribe from all listeners
-                unsubscribeFunctions.forEach(unsubscribe => {
-                    if (typeof unsubscribe === 'function') {
-                        unsubscribe();
-                    }
-                });
-                
-                auth.signOut()
-                    .then(() => {
-                        showToast('Logged out successfully', 'success');
-                        window.location.href = '/index.html';
-                    })
-                    .catch(error => {
-                        console.error('Logout error:', error);
-                        showToast('Logout failed', 'error');
-                    });
-            }
-        });
-        
-        accountBtn.addEventListener('click', () => {
-            accountModal.classList.add('active');
-            loadAccountDetails();
-        });
-        
-        accountModalClose.addEventListener('click', () => {
-            accountModal.classList.remove('active');
-        });
-        
-        accountModal.addEventListener('click', (e) => {
-            if (e.target === accountModal) {
-                accountModal.classList.remove('active');
-            }
-        });
-        
-        // Modal tabs
-        modalTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const tabName = tab.getAttribute('data-tab');
-                
-                // Update active tab
-                modalTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                // Update active pane
-                modalPanes.forEach(pane => {
-                    if (pane.id === `${tabName}-pane`) {
-                        pane.classList.add('active');
-                    } else {
-                        pane.classList.remove('active');
-                    }
-                });
-            });
-        });
+        uploadBtn.addEventListener('click', openUploadModal);
         
         chatbotToggle.addEventListener('click', () => {
             chatbotContainer.classList.toggle('active');
@@ -1880,65 +2380,14 @@
             }
         });
         
-        // View All Materials Button
-        viewAllMaterialsBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            // Redirect to materials page with filter for recent materials
-            window.location.href = '/materials.html?filter=recent';
-        });
-        
-        // Branch/Semester Modal
-        branchSemesterModalClose.addEventListener('click', () => {
-            branchSemesterModal.classList.remove('active');
-        });
-        
-        cancelBranchSemesterBtn.addEventListener('click', () => {
-            branchSemesterModal.classList.remove('active');
-        });
-        
-        branchSemesterForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const branch = document.getElementById('branchSelect').value;
-            const semester = document.getElementById('semesterSelect').value;
-            
-            if (!branch || !semester) {
-                showToast('Please select both branch and semester', 'error');
-                return;
-            }
-            
-            // Update user data in Firebase
-            db.collection('users').doc(currentUser.uid).update({
-                branch: branch,
-                semester: semester,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            })
-            .then(() => {
-                showToast('Profile updated successfully', 'success');
-                branchSemesterModal.classList.remove('active');
-                // Reload dashboard data
-                loadDashboardData();
-            })
-            .catch(error => {
-                console.error('Error updating profile:', error);
-                showToast('Error updating profile', 'error');
-            });
-        });
-        
         // Initialize Application
         document.addEventListener('DOMContentLoaded', () => {
             initTheme();
             initAuth();
+            initFilters();
+            initUploadForm();
             initChatbot();
-            createNavigationCards();
-        });
-        // Cleanup on page unload
-        window.addEventListener('beforeunload', () => {
-            unsubscribeFunctions.forEach(unsubscribe => {
-                if (typeof unsubscribe === 'function') {
-                    unsubscribe();
-                }
-            });
+            initAccount();
         });
     </script>
 </body>
