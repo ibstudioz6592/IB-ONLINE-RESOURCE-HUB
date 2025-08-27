@@ -43,8 +43,23 @@
             --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
             --radius: 0.75rem;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            /* Branch Colors */
+            --cse-color: #3b82f6;
+            --it-color: #8b5cf6;
+            --ece-color: #10b981;
+            --eee-color: #f59e0b;
+            --mech-color: #ef4444;
+            --aiml-color: #06b6d4;
+            --civil-color: #0ea5e9;
+            --bme-color: #ec4899;
+            --ft-color: #8b5cf6;
+            --mct-color: #f97316;
+            --csd-color: #a855f7;
+            --ads-color: #0ea5e9;
+            --efe-color: #10b981;
+            --exe-color: #8b5cf6;
         }
-
         [data-theme="dark"] {
             --primary: #60a5fa;
             --primary-dark: #3b82f6;
@@ -57,13 +72,11 @@
             --text-secondary: #cbd5e1;
             --text-muted: #64748b;
         }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Inter', sans-serif;
             background: var(--background);
@@ -72,7 +85,6 @@
             transition: var(--transition);
             overflow-x: hidden;
         }
-
         /* Background Effects */
         .background-container {
             position: fixed;
@@ -83,7 +95,6 @@
             z-index: -2;
             background: linear-gradient(135deg, var(--background) 0%, var(--surface) 100%);
         }
-
         .aurora-layer {
             position: absolute;
             top: 0;
@@ -96,12 +107,10 @@
             filter: blur(100px);
             opacity: 0.1;
         }
-
         @keyframes aurora-morph {
             0% { transform: rotate(0deg) scale(1); }
             100% { transform: rotate(180deg) scale(1.2); }
         }
-
         /* Loading Spinner */
         .spinner {
             width: 40px;
@@ -111,12 +120,10 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
         /* Skeleton Loading */
         .skeleton {
             background: linear-gradient(90deg, var(--surface) 25%, var(--surface-hover) 50%, var(--surface) 75%);
@@ -124,12 +131,10 @@
             animation: loading 1.5s infinite;
             border-radius: var(--radius);
         }
-
         @keyframes loading {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
         }
-
         /* Header */
         .header {
             background: rgba(255, 255, 255, 0.8);
@@ -140,11 +145,9 @@
             z-index: 100;
             transition: var(--transition);
         }
-
         [data-theme="dark"] .header {
             background: rgba(15, 23, 42, 0.8);
         }
-
         .header-content {
             max-width: 1200px;
             margin: 0 auto;
@@ -153,7 +156,6 @@
             justify-content: space-between;
             align-items: center;
         }
-
         .logo {
             display: flex;
             align-items: center;
@@ -166,7 +168,6 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
         .logo-icon {
             width: 40px;
             height: 40px;
@@ -177,13 +178,11 @@
             justify-content: center;
             color: white;
         }
-
         .header-actions {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
-
         .btn {
             padding: 0.5rem 1rem;
             border: none;
@@ -197,30 +196,25 @@
             text-decoration: none;
             font-size: 0.875rem;
         }
-
         .btn-primary {
             background: var(--primary);
             color: white;
         }
-
         .btn-primary:hover {
             background: var(--primary-dark);
             transform: translateY(-1px);
             box-shadow: var(--shadow-md);
         }
-
         .btn-outline {
             background: transparent;
             color: var(--text-primary);
             border: 1px solid var(--border);
         }
-
         .btn-outline:hover {
             background: var(--surface-hover);
             border-color: var(--primary);
             color: var(--primary);
         }
-
         .theme-toggle {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -233,19 +227,16 @@
             cursor: pointer;
             transition: var(--transition);
         }
-
         .theme-toggle:hover {
             background: var(--surface-hover);
             border-color: var(--primary);
         }
-
         /* Main Container */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
-
         /* Welcome Section */
         .welcome-card {
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
@@ -257,25 +248,21 @@
             overflow: hidden;
             backdrop-filter: blur(10px);
         }
-
         .welcome-content {
             position: relative;
             z-index: 1;
         }
-
         .welcome-title {
             font-size: 2.5rem;
             font-weight: 800;
             margin-bottom: 1rem;
             line-height: 1.2;
         }
-
         .welcome-subtitle {
             font-size: 1.125rem;
             color: var(--text-secondary);
             max-width: 600px;
         }
-
         .welcome-illustration {
             position: absolute;
             top: -50px;
@@ -286,7 +273,6 @@
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             border-radius: 50%;
         }
-
         /* Dashboard Grid */
         .dashboard-grid {
             display: grid;
@@ -294,7 +280,6 @@
             gap: 1.5rem;
             margin-bottom: 3rem;
         }
-
         .card {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -304,20 +289,17 @@
             position: relative;
             overflow: hidden;
         }
-
         .card:hover {
             transform: translateY(-4px);
             box-shadow: var(--shadow-lg);
             border-color: var(--primary);
         }
-
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
         }
-
         .card-title {
             font-size: 0.875rem;
             font-weight: 500;
@@ -325,7 +307,6 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
-
         .card-icon {
             width: 48px;
             height: 48px;
@@ -335,18 +316,15 @@
             justify-content: center;
             font-size: 1.25rem;
         }
-
         .card-value {
             font-size: 2rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
         }
-
         .card-description {
             font-size: 0.875rem;
             color: var(--text-muted);
         }
-
         .progress-bar {
             width: 100%;
             height: 6px;
@@ -355,14 +333,12 @@
             overflow: hidden;
             margin-top: 1rem;
         }
-
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
             border-radius: 3px;
             transition: width 0.3s ease;
         }
-
         /* Navigation Cards */
         .nav-grid {
             display: grid;
@@ -370,7 +346,6 @@
             gap: 1.5rem;
             margin-bottom: 3rem;
         }
-
         .nav-card {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -383,7 +358,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .nav-card::before {
             content: '';
             position: absolute;
@@ -395,22 +369,18 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-
         .nav-card:hover::before {
             opacity: 0.05;
         }
-
         .nav-card:hover {
             transform: translateY(-4px);
             box-shadow: var(--shadow-lg);
             border-color: var(--primary);
         }
-
         .nav-card-content {
             position: relative;
             z-index: 1;
         }
-
         .nav-card-icon {
             width: 56px;
             height: 56px;
@@ -421,18 +391,15 @@
             justify-content: center;
             font-size: 1.5rem;
         }
-
         .nav-card-title {
             font-size: 1.25rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
         }
-
         .nav-card-description {
             color: var(--text-secondary);
             font-size: 0.875rem;
         }
-
         /* Recent Materials */
         .section-header {
             display: flex;
@@ -440,18 +407,15 @@
             align-items: center;
             margin-bottom: 2rem;
         }
-
         .section-title {
             font-size: 1.875rem;
             font-weight: 700;
         }
-
         .materials-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 1.5rem;
         }
-
         .material-card {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -460,12 +424,10 @@
             transition: var(--transition);
             cursor: pointer;
         }
-
         .material-card:hover {
             transform: translateY(-4px);
             box-shadow: var(--shadow-lg);
         }
-
         .material-thumbnail {
             height: 160px;
             background: linear-gradient(135deg, var(--surface-hover) 0%, var(--border) 100%);
@@ -475,11 +437,9 @@
             font-size: 3rem;
             color: var(--text-muted);
         }
-
         .material-content {
             padding: 1.5rem;
         }
-
         .material-title {
             font-weight: 600;
             margin-bottom: 0.5rem;
@@ -487,7 +447,6 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-
         .material-meta {
             display: flex;
             justify-content: space-between;
@@ -495,7 +454,6 @@
             font-size: 0.875rem;
             color: var(--text-muted);
         }
-
         .material-type {
             background: var(--surface-hover);
             padding: 0.25rem 0.75rem;
@@ -503,7 +461,154 @@
             font-size: 0.75rem;
             font-weight: 500;
         }
-
+        /* Account Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-close:hover {
+            background: var(--surface-hover);
+            color: var(--text-primary);
+        }
+        .modal-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+        }
+        .modal-tab {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+        }
+        .modal-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        .modal-tab:hover {
+            color: var(--primary);
+        }
+        .modal-content {
+            padding: 1.5rem;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        .modal-pane {
+            display: none;
+        }
+        .modal-pane.active {
+            display: block;
+        }
+        .account-info {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .account-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .account-value {
+            color: var(--text-primary);
+        }
+        .materials-list {
+            display: grid;
+            gap: 1rem;
+        }
+        .material-item {
+            background: var(--surface-hover);
+            border-radius: var(--radius);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .material-info h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        .material-info p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+        .material-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .btn-sm {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+            border-radius: calc(var(--radius) * 0.75);
+        }
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+        }
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
         /* Chatbot */
         .chatbot-toggle {
             position: fixed;
@@ -524,11 +629,9 @@
             font-size: 1.5rem;
             transition: var(--transition);
         }
-
         .chatbot-toggle:hover {
             transform: scale(1.1);
         }
-
         .chatbot-container {
             position: fixed;
             bottom: 6rem;
@@ -548,13 +651,11 @@
             visibility: hidden;
             transition: var(--transition);
         }
-
         .chatbot-container.active {
             transform: translateY(0) scale(1);
             opacity: 1;
             visibility: visible;
         }
-
         .chatbot-header {
             padding: 1rem;
             border-bottom: 1px solid var(--border);
@@ -562,7 +663,6 @@
             text-align: center;
             background: var(--surface);
         }
-
         .chatbot-messages {
             flex: 1;
             padding: 1rem;
@@ -571,14 +671,12 @@
             flex-direction: column;
             gap: 1rem;
         }
-
         .message {
             max-width: 80%;
             padding: 0.75rem 1rem;
             border-radius: 1rem;
             animation: messageSlide 0.3s ease;
         }
-
         @keyframes messageSlide {
             from {
                 opacity: 0;
@@ -589,28 +687,24 @@
                 transform: translateY(0);
             }
         }
-
         .message.user {
             background: var(--primary);
             color: white;
             margin-left: auto;
             border-bottom-right-radius: 0.25rem;
         }
-
         .message.bot {
             background: var(--surface-hover);
             color: var(--text-primary);
             margin-right: auto;
             border-bottom-left-radius: 0.25rem;
         }
-
         .chatbot-input {
             padding: 1rem;
             border-top: 1px solid var(--border);
             display: flex;
             gap: 0.5rem;
         }
-
         .chatbot-input input {
             flex: 1;
             padding: 0.75rem;
@@ -620,12 +714,10 @@
             color: var(--text-primary);
             font-size: 0.875rem;
         }
-
         .chatbot-input input:focus {
             outline: none;
             border-color: var(--primary);
         }
-
         .chatbot-send {
             background: var(--primary);
             color: white;
@@ -639,11 +731,9 @@
             cursor: pointer;
             transition: var(--transition);
         }
-
         .chatbot-send:hover {
             background: var(--primary-dark);
         }
-
         /* Toast Notifications */
         .toast {
             position: fixed;
@@ -664,90 +754,74 @@
             transform: translateX(-50%) translateY(20px);
             transition: var(--transition);
         }
-
         .toast.show {
             opacity: 1;
             transform: translateX(-50%) translateY(0);
         }
-
         .toast.success {
             border-left: 4px solid var(--success);
         }
-
         .toast.error {
             border-left: 4px solid var(--danger);
         }
-
         .toast.info {
             border-left: 4px solid var(--info);
         }
-
         .toast-icon {
             font-size: 1.25rem;
         }
-
         .toast.success .toast-icon {
             color: var(--success);
         }
-
         .toast.error .toast-icon {
             color: var(--danger);
         }
-
         .toast.info .toast-icon {
             color: var(--info);
         }
-
         /* Responsive Design */
         @media (max-width: 768px) {
             .header-content {
                 padding: 1rem;
             }
-
             .container {
                 padding: 1rem;
             }
-
             .welcome-card {
                 padding: 2rem;
             }
-
             .welcome-title {
                 font-size: 2rem;
             }
-
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
-
             .nav-grid {
                 grid-template-columns: 1fr;
             }
-
             .materials-grid {
                 grid-template-columns: 1fr;
             }
-
             .chatbot-container {
                 right: 1rem;
                 left: 1rem;
                 max-width: none;
             }
-
             .header-actions {
                 gap: 0.5rem;
             }
-
             .btn {
                 padding: 0.5rem;
                 font-size: 0.75rem;
             }
-
             .btn span {
                 display: none;
             }
+            .modal {
+                width: 95%;
+                max-height: 95vh;
+            }
         }
-
         /* Utility Classes */
         .text-center { text-align: center; }
         .text-right { text-align: right; }
@@ -766,7 +840,6 @@
         .absolute { position: absolute; }
         .hidden { display: none; }
         .block { display: block; }
-
         /* Loading States */
         .loading-overlay {
             position: fixed;
@@ -783,42 +856,34 @@
             visibility: hidden;
             transition: var(--transition);
         }
-
         .loading-overlay.active {
             opacity: 1;
             visibility: visible;
         }
-
         .loading-content {
             background: var(--surface);
             padding: 2rem;
             border-radius: var(--radius);
             text-align: center;
         }
-
         /* Animations */
         .fade-in {
             animation: fadeIn 0.5s ease-in;
         }
-
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         .slide-in {
             animation: slideIn 0.5s ease-out;
         }
-
         @keyframes slideIn {
             from { transform: translateX(-100%); }
             to { transform: translateX(0); }
         }
-
         .bounce-in {
             animation: bounceIn 0.6s ease-out;
         }
-
         @keyframes bounceIn {
             0% { transform: scale(0.3); opacity: 0; }
             50% { transform: scale(1.05); }
@@ -832,7 +897,6 @@
     <div class="background-container">
         <div class="aurora-layer"></div>
     </div>
-
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-content">
@@ -840,7 +904,6 @@
             <p class="mt-4">Loading dashboard...</p>
         </div>
     </div>
-
     <!-- Header -->
     <header class="header">
         <div class="header-content">
@@ -865,7 +928,6 @@
             </div>
         </div>
     </header>
-
     <!-- Main Content -->
     <main class="container">
         <!-- Welcome Section -->
@@ -880,12 +942,10 @@
             </div>
             <div class="welcome-illustration"></div>
         </div>
-
         <!-- Dashboard Overview Cards -->
         <div class="dashboard-grid" id="dashboardGrid">
             <!-- Cards will be populated by JavaScript -->
         </div>
-
         <!-- Quick Access Navigation -->
         <div class="section-header">
             <h2 class="section-title">Quick Access</h2>
@@ -893,7 +953,6 @@
         <div class="nav-grid" id="navGrid">
             <!-- Navigation cards will be populated by JavaScript -->
         </div>
-
         <!-- Recently Accessed Materials -->
         <div class="section-header">
             <h2 class="section-title">Recently Accessed</h2>
@@ -906,7 +965,62 @@
             <!-- Materials will be populated by JavaScript -->
         </div>
     </main>
-
+    
+    <!-- Account Modal -->
+    <div class="modal-overlay" id="accountModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Account Details</h2>
+                <button class="modal-close" id="accountModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-tabs">
+                <button class="modal-tab active" data-tab="details">Account Details</button>
+                <button class="modal-tab" data-tab="paid">Paid Materials</button>
+                <button class="modal-tab" data-tab="downloaded">Downloaded Materials</button>
+            </div>
+            <div class="modal-content">
+                <div class="modal-pane active" id="details-pane">
+                    <div class="account-info">
+                        <div class="account-label">Name:</div>
+                        <div class="account-value" id="accountName">-</div>
+                    </div>
+                    <div class="account-info">
+                        <div class="account-label">Email:</div>
+                        <div class="account-value" id="accountEmail">-</div>
+                    </div>
+                    <div class="account-info">
+                        <div class="account-label">Branch:</div>
+                        <div class="account-value" id="accountBranch">-</div>
+                    </div>
+                    <div class="account-info">
+                        <div class="account-label">Semester:</div>
+                        <div class="account-value" id="accountSemester">-</div>
+                    </div>
+                    <div class="account-info">
+                        <div class="account-label">Admission No:</div>
+                        <div class="account-value" id="accountAdmissionNo">-</div>
+                    </div>
+                    <div class="account-info">
+                        <div class="account-label">Joined:</div>
+                        <div class="account-value" id="accountJoined">-</div>
+                    </div>
+                </div>
+                <div class="modal-pane" id="paid-pane">
+                    <div class="materials-list" id="paidMaterialsList">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+                <div class="modal-pane" id="downloaded-pane">
+                    <div class="materials-list" id="downloadedMaterialsList">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Chatbot -->
     <button class="chatbot-toggle" id="chatbotToggle">
         <i class="fas fa-robot"></i>
@@ -927,14 +1041,34 @@
             </button>
         </div>
     </div>
-
     <!-- Toast Container -->
     <div class="toast" id="toast">
         <i class="fas fa-check-circle toast-icon"></i>
         <span id="toastMessage">Notification message</span>
     </div>
-
     <script>
+        // Academic Data
+        const academicData = {
+            branches: {
+                "CSE": {"name":"Computer Science","color":"var(--cse-color)","icon":"fas fa-laptop-code","semesters":{"1":[{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus With MATLAB","credits":4},{"code":"U23PHY103B","name":"Engineering Physics","credits":3},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23BEE106A","name":"Basic Electrical and Electronics Engineering","credits":3},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1},{"code":"U23PHL110","name":"Engineering Physics Lab","credits":1},{"code":"U23BEEL113","name":"Basic Electrical and Electronics Engineering Lab","credits":1},{"code":"U23PPL112","name":"Python Programming Lab","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202B","name":"Discrete Mathematics","credits":4},{"code":"U23CHE204B","name":"Chemistry For Computer Science","credits":3},{"code":"U23CPR205B","name":"Programming In C","credits":3},{"code":"U23EGR207","name":"Engineering Graphics","credits":3},{"code":"U23EC203","name":"Digital Principles And System Design","credits":3},{"code":"U23CHL211","name":"Chemistry Lab","credits":1},{"code":"U23CPL212","name":"C programming Lab","credits":1},{"code":"U23TAM201","name":"Tamils And Technology","credits":1}],"3":[{"code":"U23MAT301D","name":"Probability and Statistics","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming","credits":3},{"code":"U23CS304","name":"Operating Systems","credits":3},{"code":"U23CS305","name":"Computer Information and Ethics","credits":3},{"code":"U23CS306","name":"Data Structures Lab","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Lab","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1},{"code":"Noc24-mg72","name":"NPTEL:design Thinking-A Primer","credits":1}],"4":[{"code":"U23MAT401B","name":"Numerical Methods","credits":4},{"code":"U23CS401","name":"Design And Analysis of Algorithms","credits":3},{"code":"U23CS402","name":"Software Engineering","credits":3},{"code":"U23CS403","name":"DataBase Management Systems","credits":3},{"code":"U23CS404","name":"Embedded System Design ","credits":3},{"code":"U23CS405","name":"Software Development Lab","credits":1},{"code":"U23CS403","name":"Database Management Systems Lab","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CS502","name":"Artificial Intelligence","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":" U23CS947 / U23CS903","name":"Professional Elective ","credits":3},{"code":"U23CS505","name":"Computer Networks Laboratory","credits":2},{"code":"U23CS506","name":"Artificial Intelligence and Machine Learning Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude -III","credits":1}],"6":[],"7":[],"8":[]}},
+                "IT": {"name":"Info. Technology","color":"var(--it-color)","icon":"fas fa-network-wired","semesters":{"1":[{"code":"U23IT101","name":"Programming Fundamentals","credits":4},{"code":"U23IT102","name":"Discrete Mathematics","credits":4},{"code":"U23IT103","name":"Digital Systems","credits":3},{"code":"U23IT104","name":"Computer Organization","credits":3},{"code":"U23IT105","name":"Communication Skills","credits":2},{"code":"U23IT106","name":"Programming Lab","credits":1},{"code":"U23IT107","name":"Digital Systems Lab","credits":1}],"2":[{"code":"U23IT201","name":"Data Structures","credits":4},{"code":"U23IT202","name":"Database Systems","credits":4},{"code":"U23IT203","name":"Operating Systems","credits":3},{"code":"U23IT204","name":"Computer Networks","credits":3},{"code":"U23IT205","name":"Web Technologies","credits":3},{"code":"U23IT206","name":"Data Structures Lab","credits":1},{"code":"U23IT207","name":"Web Technologies Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
+                "ECE": {"name":"Electronics & Comm","color":"var(--ece-color)","icon":"fas fa-satellite-dish","semesters":{"1":[{"code":"U23EC101","name":"Basic Electronics","credits":4},{"code":"U23EC102","name":"Circuit Theory","credits":4},{"code":"U23EC103","name":"Engineering Mathematics","credits":4},{"code":"U23EC104","name":"Programming in C","credits":3},{"code":"U23EC105","name":"Communication Skills","credits":2},{"code":"U23EC106","name":"Electronics Lab","credits":1},{"code":"U23EC107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EC201","name":"Analog Electronics","credits":4},{"code":"U23EC202","name":"Digital Electronics","credits":4},{"code":"U23EC203","name":"Signals and Systems","credits":4},{"code":"U23EC204","name":"Electromagnetic Theory","credits":3},{"code":"U23EC205","name":"Data Structures","credits":3},{"code":"U23EC206","name":"Analog Electronics Lab","credits":1},{"code":"U23EC207","name":"Digital Electronics Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
+                "EEE": {"name":"Electrical & Electronics","color":"var(--eee-color)","icon":"fas fa-bolt","semesters":{"1":[{"code":"U23EE101","name":"Basic Electrical Engineering","credits":4},{"code":"U23EE102","name":"Engineering Mathematics","credits":4},{"code":"U23EE103","name":"Electronics Engineering","credits":3},{"code":"U23EE104","name":"Programming in C","credits":3},{"code":"U23EE105","name":"Communication Skills","credits":2},{"code":"U23EE106","name":"Electrical Lab","credits":1},{"code":"U23EE107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EE201","name":"Circuit Theory","credits":4},{"code":"U23EE202","name":"Electromagnetic Theory","credits":4},{"code":"U23EE203","name":"Digital Electronics","credits":4},{"code":"U23EE204","name":"Electrical Machines","credits":3},{"code":"U23EE205","name":"Data Structures","credits":3},{"code":"U23EE206","name":"Circuit Theory Lab","credits":1},{"code":"U23EE207","name":"Digital Electronics Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
+                "MECH": {"name":"Mechanical","color":"var(--mech-color)","icon":"fas fa-cogs","semesters":{"1":[{"code":"U23ME101","name":"Engineering Mechanics","credits":4},{"code":"U23ME102","name":"Engineering Graphics","credits":4},{"code":"U23ME103","name":"Engineering Mathematics","credits":4},{"code":"U23ME104","name":"Basic Electrical Engineering","credits":3},{"code":"U23ME105","name":"Communication Skills","credits":2},{"code":"U23ME106","name":"Workshop Practice","credits":1},{"code":"U23ME107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23ME201","name":"Thermodynamics","credits":4},{"code":"U23ME202","name":"Mechanics of Materials","credits":4},{"code":"U23ME203","name":"Manufacturing Technology","credits":4},{"code":"U23ME204","name":"Fluid Mechanics","credits":3},{"code":"U23ME205","name":"Computer Programming","credits":3},{"code":"U23ME206","name":"Thermodynamics Lab","credits":1},{"code":"U23ME207","name":"Manufacturing Technology Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
+                "AIML": {"name":"AI & Machine Learning","color":"var(--aiml-color)","icon":"fas fa-brain","semesters":{"1":[{"code":"U23EG107","name":"Engineering Graphics","credits":3},{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus with MATLAB","credits":4},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23PHY103E","name":"Engineering Physics","credits":3},{"code":"U23PHL110","name":"Engineering Physics Laboratory","credits":1},{"code":"U23PPL112","name":"Python Programming Laboratory","credits":1},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202D","name":"Discrete Mathematics","credits":4},{"code":"U23BEEE206B","name":"Basics of Electrical and Electronics Engineering","credits":3},{"code":"U23CPR205","name":"Programming in C","credits":3},{"code":"U23CHE204C","name":"Applied Chemistry","credits":2},{"code":"U23EC203","name":"Digital Principles and System Design","credits":3},{"code":"U23CPL212","name":"C Programming Laboratory","credits":1},{"code":"U23CHL211","name":"Chemistry Laboratory","credits":1},{"code":"U23BEEL213B","name":"BEEE Laboratory","credits":1},{"code":"U23TAM201","name":"Tamils and Technology","credits":1}],"3":[{"code":"U23MAT301E","name":"Applied Probability and Statistics-I","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming Using Java","credits":3},{"code":"U23AML301","name":"Data Visualization","credits":3},{"code":"noc25-mg106","name":"NPTEL: Design Thinking - A Primer","credits":1},{"code":"U23CS306","name":"Data Structures Laboratory","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Using Java Laboratory","credits":1},{"code":"U23AML302","name":"Data Visualization Laboratory","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1}],"4":[{"code":"U23MAT401A","name":"Applied Probability and Statistics-II","credits":4},{"code":"U23CS403","name":"Database Management Systems","credits":3},{"code":"U23CS401","name":"Design and Analysis of Algorithms","credits":3},{"code":"U23AML401","name":"Artificial Intelligence","credits":3},{"code":"U23CSD402","name":"Operating Systems","credits":3},{"code":"U23AML402","name":"Artificial Intelligence Lab","credits":1},{"code":"U23CS405","name":"Database Management Systems Lab","credits":1},{"code":"U23GE401","name":"Soft Skills and Aptitude-II","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CSD502","name":"Software Engineering","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":"U19CS903","name":"Professional Elective - Agile Methodologies","credits":3},{"code":"U23AML501","name":"Machine Learning Laboratory","credits":2},{"code":"U23CSD504","name":"Software Development Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude -III","credits":1}],"6":[{"code":"U23CS601","name":"Computer Vision","credits":3},{"code":"U23CS602","name":"Reinforcement Learning","credits":3},{"code":"U23CS603","name":"Robotics","credits":3},{"code":"U23CS604","name":"Cyber Security","credits":3},{"code":"U23CS605","name":"Blockchain Technology","credits":3},{"code":"U23CS606","name":"Elective III","credits":3},{"code":"U23CS607","name":"Project Work II","credits":3}],"7":[{"code":"U23CS701","name":"Advanced Machine Learning","credits":3},{"code":"U23CS702","name":"AI Ethics and Governance","credits":3},{"code":"U23CS703","name":"Elective IV","credits":3},{"code":"U23CS704","name":"Project Work III","credits":3}],"8":[{"code":"U23CS801","name":"Industry Internship","credits":6},{"code":"U23CS802","name":"Project Work IV","credits":6}]}},
+                "CIVIL": {"name":"Civil Engineering","color":"var(--civil-color)","icon":"fas fa-building","semesters":{"1":[{"code":"U23CE101","name":"Engineering Mechanics","credits":4},{"code":"U23CE102","name":"Engineering Graphics","credits":4},{"code":"U23CE103","name":"Engineering Mathematics","credits":4},{"code":"U23CE104","name":"Basic Civil Engineering","credits":3},{"code":"U23CE105","name":"Communication Skills","credits":2},{"code":"U23CE106","name":"Surveying","credits":1},{"code":"U23CE107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23CE201","name":"Building Materials","credits":4},{"code":"U23CE202","name":"Structural Analysis","credits":4},{"code":"U23CE203","name":"Fluid Mechanics","credits":4},{"code":"U23CE204","name":"Surveying","credits":3},{"code":"U23CE205","name":"Computer Programming","credits":3},{"code":"U23CE206","name":"Building Materials Lab","credits":1},{"code":"U23CE207","name":"Surveying Lab","credits":1}]}},
+                "BME": {"name":"Bio Medical","color":"var(--bme-color)","icon":"fas fa-heartbeat","semesters":{"1":[{"code":"U23BM101","name":"Human Anatomy","credits":4},{"code":"U23BM102","name":"Engineering Mathematics","credits":4},{"code":"U23BM103","name":"Basic Electronics","credits":3},{"code":"U23BM104","name":"Programming in C","credits":3},{"code":"U23BM105","name":"Communication Skills","credits":2},{"code":"U23BM106","name":"Human Anatomy Lab","credits":1},{"code":"U23BM107","name":"Programming Lab","credits":1}],"2":[{"code":"U23BM201","name":"Human Physiology","credits":4},{"code":"U23BM202","name":"Biochemistry","credits":4},{"code":"U23BM203","name":"Medical Electronics","credits":4},{"code":"U23BM204","name":"Biomechanics","credits":3},{"code":"U23BM205","name":"Data Structures","credits":3},{"code":"U23BM206","name":"Human Physiology Lab","credits":1},{"code":"U23BM207","name":"Medical Electronics Lab","credits":1}]}},
+                "FT": {"name":"Fashion Technology","color":"var(--ft-color)","icon":"fas fa-tshirt","semesters":{"1":[{"code":"U23FT101","name":"Fiber Science","credits":4},{"code":"U23FT102","name":"Textile Chemistry","credits":4},{"code":"U23FT103","name":"Fashion Illustration","credits":3},{"code":"U23FT104","name":"Pattern Making","credits":3},{"code":"U23FT105","name":"Communication Skills","credits":2},{"code":"U23FT106","name":"Textile Chemistry Lab","credits":1},{"code":"U23FT107","name":"Pattern Making Lab","credits":1}],"2":[{"code":"U23FT201","name":"Textile Processing","credits":4},{"code":"U23FT202","name":"Apparel Manufacturing","credits":4},{"code":"U23FT203","name":"Fashion Design","credits":4},{"code":"U23FT204","name":"Garment Construction","credits":3},{"code":"U23FT205","name":"Computer Applications","credits":3},{"code":"U23FT206","name":"Apparel Manufacturing Lab","credits":1},{"code":"U23FT207","name":"Garment Construction Lab","credits":1}]}},
+                "MCT": {"name":"Mechatronics","color":"var(--mct-color)","icon":"fas fa-robot","semesters":{"1":[{"code":"U23MT101","name":"Engineering Mechanics","credits":4},{"code":"U23MT102","name":"Engineering Graphics","credits":4},{"code":"U23MT103","name":"Engineering Mathematics","credits":4},{"code":"U23MT104","name":"Basic Electronics","credits":3},{"code":"U23MT105","name":"Communication Skills","credits":2},{"code":"U23MT106","name":"Workshop Practice","credits":1},{"code":"U23MT107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23MT201","name":"Thermodynamics","credits":4},{"code":"U23MT202","name":"Mechanics of Materials","credits":4},{"code":"U23MT203","name":"Digital Electronics","credits":4},{"code":"U23MT204","name":"Fluid Mechanics","credits":3},{"code":"U23MT205","name":"Computer Programming","credits":3},{"code":"U23MT206","name":"Thermodynamics Lab","credits":1},{"code":"U23MT207","name":"Digital Electronics Lab","credits":1}]}},
+                "CSD": {"name":"CS & Design","color":"var(--csd-color)","icon":"fas fa-paint-brush","semesters":{"1":[{"code":"U23CD101","name":"Design Fundamentals","credits":4},{"code":"U23CD102","name":"Programming Basics","credits":4},{"code":"U23CD103","name":"Visual Communication","credits":3},{"code":"U23CD104","name":"Mathematics for Design","credits":3},{"code":"U23CD105","name":"Communication Skills","credits":2},{"code":"U23CD106","name":"Design Studio","credits":1},{"code":"U23CD107","name":"Programming Lab","credits":1}],"2":[{"code":"U23CD201","name":"User Interface Design","credits":4},{"code":"U23CD202","name":"Data Structures","credits":4},{"code":"U23CD203","name":"Web Design","credits":4},{"code":"U23CD204","name":"Digital Illustration","credits":3},{"code":"U23CD205","name":"Human-Computer Interaction","credits":3},{"code":"U23CD206","name":"UI Design Lab","credits":1},{"code":"U23CD207","name":"Web Design Lab","credits":1}]}},
+                "ADS": {"name":"AI & Data Science","color":"var(--ads-color)","icon":"fas fa-database","semesters":{"1":[{"code":"U23DS101","name":"Programming Fundamentals","credits":4},{"code":"U23DS102","name":"Linear Algebra","credits":4},{"code":"U23DS103","name":"Statistics Basics","credits":3},{"code":"U23DS104","name":"Computational Thinking","credits":3},{"code":"U23DS105","name":"Communication Skills","credits":2},{"code":"U23DS106","name":"Programming Lab","credits":1},{"code":"U23DS107","name":"Statistics Lab","credits":1}],"2":[{"code":"U23DS201","name":"Data Structures","credits":4},{"code":"U23DS202","name":"Probability and Statistics","credits":4},{"code":"U23DS203","name":"Database Systems","credits":4},{"code":"U23DS204","name":"Data Visualization","credits":3},{"code":"U23DS205","name":"Python Programming","credits":3},{"code":"U23DS206","name":"Data Structures Lab","credits":1},{"code":"U23DS207","name":"Database Lab","credits":1}]}},
+                "EFE": {"name":"Electrical & Computer","color":"var(--efe-color)","icon":"fas fa-microchip","semesters":{"1":[{"code":"U23EF101","name":"Circuit Theory","credits":4},{"code":"U23EF102","name":"Programming Fundamentals","credits":4},{"code":"U23EF103","name":"Digital Electronics","credits":3},{"code":"U23EF104","name":"Engineering Mathematics","credits":3},{"code":"U23EF105","name":"Communication Skills","credits":2},{"code":"U23EF106","name":"Circuit Theory Lab","credits":1},{"code":"U23EF107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EF201","name":"Signals and Systems","credits":4},{"code":"U23EF202","name":"Data Structures","credits":4},{"code":"U23EF203","name":"Analog Electronics","credits":4},{"code":"U23EF204","name":"Electromagnetic Theory","credits":3},{"code":"U23EF205","name":"Computer Organization","credits":3},{"code":"U23EF206","name":"Analog Electronics Lab","credits":1},{"code":"U23EF207","name":"Data Structures Lab","credits":1}]}},
+                "EXE": {"name":"Electronics & Computer","color":"var(--exe-color)","icon":"fas fa-desktop","semesters":{"1":[{"code":"U23EX101","name":"Basic Electronics","credits":4},{"code":"U23EX102","name":"Programming Fundamentals","credits":4},{"code":"U23EX103","name":"Digital Logic Design","credits":3},{"code":"U23EX104","name":"Engineering Mathematics","credits":3},{"code":"U23EX105","name":"Communication Skills","credits":2},{"code":"U23EX106","name":"Electronics Lab","credits":1},{"code":"U23EX107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EX201","name":"Data Structures","credits":4},{"code":"U23EX202","name":"Analog Electronics","credits":4},{"code":"U23EX203","name":"Computer Organization","credits":4},{"code":"U23EX204","name":"Signals and Systems","credits":3},{"code":"U23EX205","name":"Database Systems","credits":3},{"code":"U23EX206","name":"Analog Electronics Lab","credits":1},{"code":"U23EX207","name":"Data Structures Lab","credits":1}]}}
+            }
+        };
+
+        const gradePoints = { "O": 10, "A+": 9, "A": 8, "B+": 7, "B": 6, "C": 5, "U": 0 };
+
         // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao",
@@ -944,18 +1078,15 @@
             messagingSenderId: "272865877510",
             appId: "1:272865877510:web:0875a2502ae55bbf9ead87"
         };
-
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
         const realtimeDb = firebase.database();
-
         // Global Variables
         let currentUser = null;
         let dashboardData = null;
         let unsubscribeFunctions = [];
-
         // DOM Elements
         const loadingOverlay = document.getElementById('loadingOverlay');
         const userName = document.getElementById('userName');
@@ -966,6 +1097,12 @@
         const themeIcon = document.getElementById('themeIcon');
         const logoutBtn = document.getElementById('logoutBtn');
         const accountBtn = document.getElementById('accountBtn');
+        const accountModal = document.getElementById('accountModal');
+        const accountModalClose = document.getElementById('accountModalClose');
+        const modalTabs = document.querySelectorAll('.modal-tab');
+        const modalPanes = document.querySelectorAll('.modal-pane');
+        const paidMaterialsList = document.getElementById('paidMaterialsList');
+        const downloadedMaterialsList = document.getElementById('downloadedMaterialsList');
         const chatbotToggle = document.getElementById('chatbotToggle');
         const chatbotContainer = document.getElementById('chatbotContainer');
         const chatbotMessages = document.getElementById('chatbotMessages');
@@ -973,14 +1110,12 @@
         const chatbotSend = document.getElementById('chatbotSend');
         const toast = document.getElementById('toast');
         const toastMessage = document.getElementById('toastMessage');
-
         // Theme Management
         function initTheme() {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
             updateThemeIcon(savedTheme);
         }
-
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
@@ -988,11 +1123,9 @@
             localStorage.setItem('theme', newTheme);
             updateThemeIcon(newTheme);
         }
-
         function updateThemeIcon(theme) {
             themeIcon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
         }
-
         // Toast Notifications
         function showToast(message, type = 'success') {
             toastMessage.textContent = message;
@@ -1004,21 +1137,17 @@
                 type === 'error' ? 'fa-exclamation-circle' :
                 'fa-info-circle'
             }`;
-
             setTimeout(() => {
                 toast.classList.remove('show');
             }, 3000);
         }
-
         // Loading Management
         function showLoading() {
             loadingOverlay.classList.add('active');
         }
-
         function hideLoading() {
             loadingOverlay.classList.remove('active');
         }
-
         // Dashboard Cards
         function createDashboardCards() {
             const cards = [
@@ -1052,7 +1181,6 @@
                     description: 'Total expenditure'
                 }
             ];
-
             dashboardGrid.innerHTML = cards.map(card => `
                 <div class="card bounce-in">
                     <div class="card-header">
@@ -1071,7 +1199,6 @@
                 </div>
             `).join('');
         }
-
         // Navigation Cards
         function createNavigationCards() {
             const navItems = [
@@ -1111,7 +1238,6 @@
                     href: '/cgpa.html'
                 }
             ];
-
             navGrid.innerHTML = navItems.map((item, index) => `
                 <a href="${item.href}" class="nav-card slide-in" style="animation-delay: ${index * 0.1}s;">
                     <div class="nav-card-content">
@@ -1124,7 +1250,6 @@
                 </a>
             `).join('');
         }
-
         // Materials Grid
         function createMaterialsGrid() {
             const materials = dashboardData?.recentMaterials || [];
@@ -1138,7 +1263,6 @@
                 `;
                 return;
             }
-
             materialsGrid.innerHTML = materials.map((material, index) => `
                 <div class="material-card fade-in" style="animation-delay: ${index * 0.1}s;">
                     <div class="material-thumbnail">
@@ -1154,7 +1278,6 @@
                 </div>
             `).join('');
         }
-
         // Load Dashboard Data
         function loadDashboardData() {
             showLoading();
@@ -1163,7 +1286,6 @@
                 hideLoading();
                 return;
             }
-
             // Load user data
             const userUnsubscribe = db.collection('users').doc(currentUser.uid).onSnapshot(doc => {
                 if (doc.exists) {
@@ -1185,9 +1307,7 @@
                 console.error('Error loading user data:', error);
                 showToast('Error loading user data', 'error');
             });
-
             unsubscribeFunctions.push(userUnsubscribe);
-
             // Load payments data
             const paymentsUnsubscribe = db.collection('payments')
                 .where('userId', '==', currentUser.uid)
@@ -1212,9 +1332,7 @@
                 }, error => {
                     console.error('Error loading payments:', error);
                 });
-
             unsubscribeFunctions.push(paymentsUnsubscribe);
-
             // Load recent activities
             const activitiesUnsubscribe = db.collection('userActivities')
                 .where('userId', '==', currentUser.uid)
@@ -1243,9 +1361,7 @@
                 }, error => {
                     console.error('Error loading recent activities:', error);
                 });
-
             unsubscribeFunctions.push(activitiesUnsubscribe);
-
             // Load stats from Realtime Database
             const statsRef = realtimeDb.ref(`stats/${currentUser.uid}`);
             statsRef.on('value', (snapshot) => {
@@ -1260,10 +1376,208 @@
                     }
                 };
             });
-
             hideLoading();
         }
-
+        // Load Account Details
+        function loadAccountDetails() {
+            if (!currentUser) return;
+            
+            // Load user details
+            db.collection('users').doc(currentUser.uid).get().then(doc => {
+                if (doc.exists) {
+                    const userData = doc.data();
+                    
+                    // Update account details
+                    document.getElementById('accountName').textContent = userData.name || 'N/A';
+                    document.getElementById('accountEmail').textContent = userData.email || 'N/A';
+                    document.getElementById('accountBranch').textContent = 
+                        userData.branch ? academicData.branches[userData.branch]?.name || userData.branch : 'N/A';
+                    document.getElementById('accountSemester').textContent = userData.semester || 'N/A';
+                    document.getElementById('accountAdmissionNo').textContent = userData.admissionNo || 'N/A';
+                    document.getElementById('accountJoined').textContent = 
+                        userData.createdAt ? formatTimestamp(userData.createdAt) : 'N/A';
+                }
+            }).catch(error => {
+                console.error('Error loading account details:', error);
+                showToast('Error loading account details', 'error');
+            });
+            
+            // Load paid materials
+            loadPaidMaterials();
+            
+            // Load downloaded materials
+            loadDownloadedMaterials();
+        }
+        // Load Paid Materials
+        function loadPaidMaterials() {
+            paidMaterialsList.innerHTML = '<div class="spinner"></div>';
+            
+            db.collection('payments')
+                .where('userId', '==', currentUser.uid)
+                .where('status', '==', 'completed')
+                .get()
+                .then(snapshot => {
+                    if (snapshot.empty) {
+                        paidMaterialsList.innerHTML = `
+                            <div class="empty-state">
+                                <i class="fas fa-shopping-cart"></i>
+                                <p>No paid materials yet</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    const materials = [];
+                    const materialIds = [];
+                    
+                    snapshot.forEach(doc => {
+                        const payment = doc.data();
+                        materialIds.push(payment.materialId);
+                        materials.push({
+                            id: doc.id,
+                            materialId: payment.materialId,
+                            title: payment.materialTitle || 'Untitled',
+                            type: payment.materialType || 'Material',
+                            amount: payment.amount || 0,
+                            timestamp: formatTimestamp(payment.createdAt)
+                        });
+                    });
+                    
+                    // Get material details
+                    if (materialIds.length > 0) {
+                        const promises = materialIds.map(id => {
+                            return db.collection('notes').doc(id).get()
+                                .then(doc => ({ id, ...doc.data(), collection: 'notes' }))
+                                .catch(() => null);
+                        });
+                        
+                        Promise.all(promises).then(results => {
+                            const materialDetails = {};
+                            results.forEach(result => {
+                                if (result) {
+                                    materialDetails[result.id] = result;
+                                }
+                            });
+                            
+                            paidMaterialsList.innerHTML = materials.map(material => {
+                                const details = materialDetails[material.materialId];
+                                const fileUrl = details?.fileUrl || details?.downloadUrl || '#';
+                                
+                                return `
+                                    <div class="material-item">
+                                        <div class="material-info">
+                                            <h4>${material.title}</h4>
+                                            <p>${material.type} • ₹${material.amount} • ${material.timestamp}</p>
+                                        </div>
+                                        <div class="material-actions">
+                                            <button class="btn btn-primary btn-sm" onclick="window.open('${fileUrl}', '_blank')">
+                                                <i class="fas fa-eye"></i> View
+                                            </button>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('');
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading paid materials:', error);
+                    paidMaterialsList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <p>Error loading materials</p>
+                        </div>
+                    `;
+                });
+        }
+        // Load Downloaded Materials
+        function loadDownloadedMaterials() {
+            downloadedMaterialsList.innerHTML = '<div class="spinner"></div>';
+            
+            // Check if user has downloaded materials
+            db.collection('users').doc(currentUser.uid).get()
+                .then(doc => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        const downloadedIds = userData.downloadedMaterials || [];
+                        
+                        if (downloadedIds.length === 0) {
+                            downloadedMaterialsList.innerHTML = `
+                                <div class="empty-state">
+                                    <i class="fas fa-download"></i>
+                                    <p>No downloaded materials yet</p>
+                                </div>
+                            `;
+                            return;
+                        }
+                        
+                        // Get material details
+                        const promises = downloadedIds.map(id => {
+                            return db.collection('notes').doc(id).get()
+                                .then(doc => ({ id, ...doc.data(), collection: 'notes' }))
+                                .catch(() => null);
+                        });
+                        
+                        Promise.all(promises).then(results => {
+                            const validMaterials = results.filter(material => material !== null);
+                            
+                            if (validMaterials.length === 0) {
+                                downloadedMaterialsList.innerHTML = `
+                                    <div class="empty-state">
+                                        <i class="fas fa-download"></i>
+                                        <p>No downloaded materials found</p>
+                                    </div>
+                                `;
+                                return;
+                            }
+                            
+                            downloadedMaterialsList.innerHTML = validMaterials.map(material => {
+                                const fileUrl = material.fileUrl || material.downloadUrl || '#';
+                                const isMobile = window.innerWidth <= 768;
+                                
+                                return `
+                                    <div class="material-item">
+                                        <div class="material-info">
+                                            <h4>${material.title || 'Untitled'}</h4>
+                                            <p>${material.collection || 'Material'}</p>
+                                        </div>
+                                        <div class="material-actions">
+                                            ${isMobile ? 
+                                                `<button class="btn btn-primary btn-sm" onclick="window.open('${fileUrl}', '_blank')">
+                                                    <i class="fas fa-eye"></i> View
+                                                </button>` :
+                                                `<button class="btn btn-primary btn-sm" onclick="downloadMaterial('${fileUrl}', '${material.title}')">
+                                                    <i class="fas fa-download"></i> Download
+                                                </button>`
+                                            }
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('');
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading downloaded materials:', error);
+                    downloadedMaterialsList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <p>Error loading materials</p>
+                        </div>
+                    `;
+                });
+        }
+        // Download Material
+        function downloadMaterial(url, title) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = title || 'material';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast('Download started', 'success');
+        }
         // Utility Functions
         function formatTimestamp(timestamp) {
             if (!timestamp) return 'N/A';
@@ -1283,7 +1597,6 @@
                 year: 'numeric'
             });
         }
-
         function calculateDaysRemaining(expiresTimestamp) {
             if (!expiresTimestamp) return 0;
             
@@ -1292,7 +1605,6 @@
             const diffTime = expiresDate - today;
             return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         }
-
         // Chatbot Functionality
         function initChatbot() {
             const botResponses = {
@@ -1303,7 +1615,6 @@
                 'gpa': 'Use the "GPA/CGPA Calculator" to calculate your academic performance. Enter your grades and credits to get your GPA.',
                 'default': 'I can help you with information about materials, PYQs, seminars, quizzes, and GPA calculator. What would you like to know?'
             };
-
             function addMessage(text, sender) {
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `message ${sender}`;
@@ -1311,7 +1622,6 @@
                 chatbotMessages.appendChild(messageDiv);
                 chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
             }
-
             function getBotResponse(userInput) {
                 const input = userInput.toLowerCase();
                 
@@ -1329,26 +1639,21 @@
                 
                 return botResponses.default;
             }
-
             function sendMessage() {
                 const message = chatbotInput.value.trim();
                 if (!message) return;
-
                 addMessage(message, 'user');
                 chatbotInput.value = '';
-
                 setTimeout(() => {
                     const response = getBotResponse(message);
                     addMessage(response, 'bot');
                 }, 500);
             }
-
             chatbotSend.addEventListener('click', sendMessage);
             chatbotInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') sendMessage();
             });
         }
-
         // Authentication
         function initAuth() {
             auth.onAuthStateChanged(user => {
@@ -1362,7 +1667,6 @@
                 }
             });
         }
-
         // Event Listeners
         themeToggle.addEventListener('click', toggleTheme);
         
@@ -1386,18 +1690,48 @@
                     });
             }
         });
-
+        
         accountBtn.addEventListener('click', () => {
-            showToast('Account settings coming soon!', 'info');
+            accountModal.classList.add('active');
+            loadAccountDetails();
         });
-
+        
+        accountModalClose.addEventListener('click', () => {
+            accountModal.classList.remove('active');
+        });
+        
+        accountModal.addEventListener('click', (e) => {
+            if (e.target === accountModal) {
+                accountModal.classList.remove('active');
+            }
+        });
+        
+        // Modal tabs
+        modalTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.getAttribute('data-tab');
+                
+                // Update active tab
+                modalTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Update active pane
+                modalPanes.forEach(pane => {
+                    if (pane.id === `${tabName}-pane`) {
+                        pane.classList.add('active');
+                    } else {
+                        pane.classList.remove('active');
+                    }
+                });
+            });
+        });
+        
         chatbotToggle.addEventListener('click', () => {
             chatbotContainer.classList.toggle('active');
             if (chatbotContainer.classList.contains('active')) {
                 chatbotInput.focus();
             }
         });
-
         // Initialize Application
         document.addEventListener('DOMContentLoaded', () => {
             initTheme();
@@ -1405,7 +1739,6 @@
             initChatbot();
             createNavigationCards();
         });
-
         // Cleanup on page unload
         window.addEventListener('beforeunload', () => {
             unsubscribeFunctions.forEach(unsubscribe => {
