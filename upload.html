@@ -119,6 +119,7 @@
             backdrop-filter: blur(20px); 
             border-radius: 15px; 
             border: 1px solid var(--border-color); 
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
         
         .brand-logo { 
@@ -511,6 +512,7 @@
             transform: scale(0.95); 
             transition: transform 0.3s ease; 
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow-y: auto;
         }
         
         .modal-overlay.active .modal-content { 
@@ -1050,6 +1052,229 @@
             color: var(--text-secondary);
         }
         
+        /* --- Premium Enhancements --- */
+        .premium-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), rgba(0, 162, 255, 0.05));
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .premium-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow));
+        }
+        
+        .premium-input {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .premium-input:focus {
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        .premium-button {
+            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
+            color: var(--dark-bg);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .premium-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .premium-button:hover::before {
+            left: 100%;
+        }
+        
+        .premium-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.4);
+        }
+        
+        .premium-modal {
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.95), rgba(20, 20, 20, 0.95));
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        
+        .premium-modal-header {
+            background: linear-gradient(90deg, rgba(255, 215, 0, 0.1), rgba(0, 162, 255, 0.1));
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .premium-modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .premium-option {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .premium-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .premium-option:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .premium-option:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-glow);
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
+        }
+        
+        .premium-option.selected {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: var(--primary-glow);
+        }
+        
+        .premium-option.selected::before {
+            transform: scaleX(1);
+        }
+        
+        .premium-option-icon {
+            font-size: 3rem;
+            color: var(--primary-glow);
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
+        }
+        
+        .premium-option-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .premium-option-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                max-height: 85vh;
+                padding: 20px;
+            }
+            
+            .content-type-grid, .exam-type-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .content-type-option, .exam-type-option {
+                padding: 15px;
+            }
+            
+            .content-type-option i, .exam-type-option i {
+                font-size: 2rem;
+            }
+            
+            .content-type-option h3, .exam-type-option h3 {
+                font-size: 1.1rem;
+            }
+            
+            .storage-options {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .storage-option {
+                padding: 12px;
+            }
+            
+            .storage-option i {
+                font-size: 1.8rem;
+            }
+            
+            .storage-option h4 {
+                font-size: 0.95rem;
+            }
+            
+            .storage-option p {
+                font-size: 0.75rem;
+            }
+            
+            .upload-form {
+                padding: 25px;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+            }
+            
+            .page-header {
+                padding: 12px 20px;
+                margin: 15px;
+            }
+            
+            .brand-title {
+                font-size: 1.2rem;
+            }
+            
+            .header-logo-svg {
+                width: 35px;
+            }
+        }
+        
         @media (min-width: 768px) {
             .page-header { flex-direction: row; }
             .upload-form { padding: 40px; }
@@ -1249,33 +1474,33 @@
     
     <!-- Content Type Selection Modal -->
     <div id="content-type-modal" class="modal-overlay">
-        <div class="modal-content">
+        <div class="modal-content premium-modal">
             <button id="content-type-modal-close-btn" class="modal-close">&times;</button>
-            <div class="modal-header">
-                <h2>Select Content Type</h2>
+            <div class="modal-header premium-modal-header">
+                <h2 class="premium-modal-title">Select Content Type</h2>
                 <p class="modal-description">Choose the type of content you want to upload</p>
             </div>
             
             <div class="content-type-grid">
-                <div class="content-type-option" data-type="materials">
-                    <i class="fas fa-book-open"></i>
-                    <h3>Study Material</h3>
-                    <p>Notes, textbooks, and other learning resources</p>
+                <div class="content-type-option premium-option" data-type="materials">
+                    <i class="fas fa-book-open premium-option-icon"></i>
+                    <h3 class="premium-option-title">Study Material</h3>
+                    <p class="premium-option-description">Notes, textbooks, and other learning resources</p>
                 </div>
-                <div class="content-type-option" data-type="pyqs">
-                    <i class="fas fa-file-alt"></i>
-                    <h3>PYQ / Question Bank</h3>
-                    <p>Previous year questions and practice papers</p>
+                <div class="content-type-option premium-option" data-type="pyqs">
+                    <i class="fas fa-file-alt premium-option-icon"></i>
+                    <h3 class="premium-option-title">PYQ / Question Bank</h3>
+                    <p class="premium-option-description">Previous year questions and practice papers</p>
                 </div>
-                <div class="content-type-option" data-type="seminars">
-                    <i class="fab fa-youtube"></i>
-                    <h3>Seminar</h3>
-                    <p>YouTube videos of seminars and talks</p>
+                <div class="content-type-option premium-option" data-type="seminars">
+                    <i class="fab fa-youtube premium-option-icon"></i>
+                    <h3 class="premium-option-title">Seminar</h3>
+                    <p class="premium-option-description">YouTube videos of seminars and talks</p>
                 </div>
-                <div class="content-type-option" data-type="quizzes">
-                    <i class="fas fa-question-circle"></i>
-                    <h3>Quiz</h3>
-                    <p>Google Form quizzes and assessments</p>
+                <div class="content-type-option premium-option" data-type="quizzes">
+                    <i class="fas fa-question-circle premium-option-icon"></i>
+                    <h3 class="premium-option-title">Quiz</h3>
+                    <p class="premium-option-description">Google Form quizzes and assessments</p>
                 </div>
             </div>
         </div>
@@ -1283,33 +1508,33 @@
     
     <!-- Exam Type Selection Modal (for PYQs) -->
     <div id="exam-type-modal" class="modal-overlay">
-        <div class="modal-content">
+        <div class="modal-content premium-modal">
             <button id="exam-type-modal-close-btn" class="modal-close">&times;</button>
-            <div class="modal-header">
-                <h2>Select Exam Type</h2>
+            <div class="modal-header premium-modal-header">
+                <h2 class="premium-modal-title">Select Exam Type</h2>
                 <p class="modal-description">Choose the type of exam for these questions</p>
             </div>
             
             <div class="exam-type-grid">
-                <div class="exam-type-option" data-exam="CIE 1">
-                    <i class="fas fa-clipboard-list"></i>
-                    <h3>CIE 1</h3>
-                    <p>Continuous Internal Examination 1</p>
+                <div class="exam-type-option premium-option" data-exam="CIE 1">
+                    <i class="fas fa-clipboard-list premium-option-icon"></i>
+                    <h3 class="premium-option-title">CIE 1</h3>
+                    <p class="premium-option-description">Continuous Internal Examination 1</p>
                 </div>
-                <div class="exam-type-option" data-exam="CIE 2">
-                    <i class="fas fa-clipboard-list"></i>
-                    <h3>CIE 2</h3>
-                    <p>Continuous Internal Examination 2</p>
+                <div class="exam-type-option premium-option" data-exam="CIE 2">
+                    <i class="fas fa-clipboard-list premium-option-icon"></i>
+                    <h3 class="premium-option-title">CIE 2</h3>
+                    <p class="premium-option-description">Continuous Internal Examination 2</p>
                 </div>
-                <div class="exam-type-option" data-exam="CIE 3">
-                    <i class="fas fa-clipboard-list"></i>
-                    <h3>CIE 3</h3>
-                    <p>Continuous Internal Examination 3</p>
+                <div class="exam-type-option premium-option" data-exam="CIE 3">
+                    <i class="fas fa-clipboard-list premium-option-icon"></i>
+                    <h3 class="premium-option-title">CIE 3</h3>
+                    <p class="premium-option-description">Continuous Internal Examination 3</p>
                 </div>
-                <div class="exam-type-option" data-exam="Semester End">
-                    <i class="fas fa-graduation-cap"></i>
-                    <h3>Semester End Exam</h3>
-                    <p>End of semester examination</p>
+                <div class="exam-type-option premium-option" data-exam="Semester End">
+                    <i class="fas fa-graduation-cap premium-option-icon"></i>
+                    <h3 class="premium-option-title">Semester End Exam</h3>
+                    <p class="premium-option-description">End of semester examination</p>
                 </div>
             </div>
         </div>
@@ -1317,10 +1542,10 @@
     
     <!-- FILTER SELECTION MODAL -->
     <div id="filter-modal" class="modal-overlay">
-        <div class="modal-content">
+        <div class="modal-content premium-modal">
             <button id="filter-modal-close-btn" class="modal-close">&times;</button>
-            <div class="modal-header">
-                <h2>Select the Course</h2>
+            <div class="modal-header premium-modal-header">
+                <h2 class="premium-modal-title">Select the Course</h2>
                 <p class="modal-description">Choose the department, semester, and course for this material.</p>
                 
                 <div class="progress-indicator">
@@ -1463,6 +1688,84 @@
                         "3": [], "4": [], "5": [], "6": [], "7": [], "8": []
                     }
                 },
+                "ECE": {
+                    "name": "Electronics & Comm",
+                    "color": "var(--ece-color)",
+                    "icon": "fas fa-satellite-dish",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23EC101", "name": "Basic Electronics", "credits": 4},
+                            {"code": "U23EC102", "name": "Circuit Theory", "credits": 4},
+                            {"code": "U23EC103", "name": "Engineering Mathematics", "credits": 4},
+                            {"code": "U23EC104", "name": "Programming in C", "credits": 3},
+                            {"code": "U23EC105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23EC106", "name": "Electronics Lab", "credits": 1},
+                            {"code": "U23EC107", "name": "Programming Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23EC201", "name": "Analog Electronics", "credits": 4},
+                            {"code": "U23EC202", "name": "Digital Electronics", "credits": 4},
+                            {"code": "U23EC203", "name": "Signals and Systems", "credits": 4},
+                            {"code": "U23EC204", "name": "Electromagnetic Theory", "credits": 3},
+                            {"code": "U23EC205", "name": "Data Structures", "credits": 3},
+                            {"code": "U23EC206", "name": "Analog Electronics Lab", "credits": 1},
+                            {"code": "U23EC207", "name": "Digital Electronics Lab", "credits": 1}
+                        ],
+                        "3": [], "4": [], "5": [], "6": [], "7": [], "8": []
+                    }
+                },
+                "EEE": {
+                    "name": "Electrical & Electronics",
+                    "color": "var(--eee-color)",
+                    "icon": "fas fa-bolt",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23EE101", "name": "Basic Electrical Engineering", "credits": 4},
+                            {"code": "U23EE102", "name": "Engineering Mathematics", "credits": 4},
+                            {"code": "U23EE103", "name": "Electronics Engineering", "credits": 3},
+                            {"code": "U23EE104", "name": "Programming in C", "credits": 3},
+                            {"code": "U23EE105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23EE106", "name": "Electrical Lab", "credits": 1},
+                            {"code": "U23EE107", "name": "Programming Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23EE201", "name": "Circuit Theory", "credits": 4},
+                            {"code": "U23EE202", "name": "Electromagnetic Theory", "credits": 4},
+                            {"code": "U23EE203", "name": "Digital Electronics", "credits": 4},
+                            {"code": "U23EE204", "name": "Electrical Machines", "credits": 3},
+                            {"code": "U23EE205", "name": "Data Structures", "credits": 3},
+                            {"code": "U23EE206", "name": "Circuit Theory Lab", "credits": 1},
+                            {"code": "U23EE207", "name": "Digital Electronics Lab", "credits": 1}
+                        ],
+                        "3": [], "4": [], "5": [], "6": [], "7": [], "8": []
+                    }
+                },
+                "MECH": {
+                    "name": "Mechanical",
+                    "color": "var(--mech-color)",
+                    "icon": "fas fa-cogs",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23ME101", "name": "Engineering Mechanics", "credits": 4},
+                            {"code": "U23ME102", "name": "Engineering Graphics", "credits": 4},
+                            {"code": "U23ME103", "name": "Engineering Mathematics", "credits": 4},
+                            {"code": "U23ME104", "name": "Basic Electrical Engineering", "credits": 3},
+                            {"code": "U23ME105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23ME106", "name": "Workshop Practice", "credits": 1},
+                            {"code": "U23ME107", "name": "Engineering Graphics Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23ME201", "name": "Thermodynamics", "credits": 4},
+                            {"code": "U23ME202", "name": "Mechanics of Materials", "credits": 4},
+                            {"code": "U23ME203", "name": "Manufacturing Technology", "credits": 4},
+                            {"code": "U23ME204", "name": "Fluid Mechanics", "credits": 3},
+                            {"code": "U23ME205", "name": "Computer Programming", "credits": 3},
+                            {"code": "U23ME206", "name": "Thermodynamics Lab", "credits": 1},
+                            {"code": "U23ME207", "name": "Manufacturing Technology Lab", "credits": 1}
+                        ],
+                        "3": [], "4": [], "5": [], "6": [], "7": [], "8": []
+                    }
+                },
                 "AIML": {
                     "name": "AI & Machine Learning",
                     "color": "var(--aiml-color)",
@@ -1541,6 +1844,206 @@
                         "8": [
                             {"code": "U23CS801", "name": "Industry Internship", "credits": 6},
                             {"code": "U23CS802", "name": "Project Work IV", "credits": 6}
+                        ]
+                    }
+                },
+                "CIVIL": {
+                    "name": "Civil Engineering",
+                    "color": "var(--civil-color)",
+                    "icon": "fas fa-building",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23CE101", "name": "Engineering Mechanics", "credits": 4},
+                            {"code": "U23CE102", "name": "Engineering Graphics", "credits": 4},
+                            {"code": "U23CE103", "name": "Engineering Mathematics", "credits": 4},
+                            {"code": "U23CE104", "name": "Basic Civil Engineering", "credits": 3},
+                            {"code": "U23CE105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23CE106", "name": "Surveying", "credits": 1},
+                            {"code": "U23CE107", "name": "Engineering Graphics Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23CE201", "name": "Building Materials", "credits": 4},
+                            {"code": "U23CE202", "name": "Structural Analysis", "credits": 4},
+                            {"code": "U23CE203", "name": "Fluid Mechanics", "credits": 4},
+                            {"code": "U23CE204", "name": "Surveying", "credits": 3},
+                            {"code": "U23CE205", "name": "Computer Programming", "credits": 3},
+                            {"code": "U23CE206", "name": "Building Materials Lab", "credits": 1},
+                            {"code": "U23CE207", "name": "Surveying Lab", "credits": 1}
+                        ]
+                    }
+                },
+                "BME": {
+                    "name": "Bio Medical",
+                    "color": "var(--bme-color)",
+                    "icon": "fas fa-heartbeat",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23BM101", "name": "Human Anatomy", "credits": 4},
+                            {"code": "U23BM102", "name": "Engineering Mathematics", "credits": 4},
+                            {"code": "U23BM103", "name": "Basic Electronics", "credits": 3},
+                            {"code": "U23BM104", "name": "Programming in C", "credits": 3},
+                            {"code": "U23BM105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23BM106", "name": "Human Anatomy Lab", "credits": 1},
+                            {"code": "U23BM107", "name": "Programming Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23BM201", "name": "Human Physiology", "credits": 4},
+                            {"code": "U23BM202", "name": "Biochemistry", "credits": 4},
+                            {"code": "U23BM203", "name": "Medical Electronics", "credits": 4},
+                            {"code": "U23BM204", "name": "Biomechanics", "credits": 3},
+                            {"code": "U23BM205", "name": "Data Structures", "credits": 3},
+                            {"code": "U23BM206", "name": "Human Physiology Lab", "credits": 1},
+                            {"code": "U23BM207", "name": "Medical Electronics Lab", "credits": 1}
+                        ]
+                    }
+                },
+                "FT": {
+                    "name": "Fashion Technology",
+                    "color": "var(--ft-color)",
+                    "icon": "fas fa-tshirt",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23FT101", "name": "Fiber Science", "credits": 4},
+                            {"code": "U23FT102", "name": "Textile Chemistry", "credits": 4},
+                            {"code": "U23FT103", "name": "Fashion Illustration", "credits": 3},
+                            {"code": "U23FT104", "name": "Pattern Making", "credits": 3},
+                            {"code": "U23FT105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23FT106", "name": "Textile Chemistry Lab", "credits": 1},
+                            {"code": "U23FT107", "name": "Pattern Making Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23FT201", "name": "Textile Processing", "credits": 4},
+                            {"code": "U23FT202", "name": "Apparel Manufacturing", "credits": 4},
+                            {"code": "U23FT203", "name": "Fashion Design", "credits": 4},
+                            {"code": "U23FT204", "name": "Garment Construction", "credits": 3},
+                            {"code": "U23FT205", "name": "Computer Applications", "credits": 3},
+                            {"code": "U23FT206", "name": "Apparel Manufacturing Lab", "credits": 1},
+                            {"code": "U23FT207", "name": "Garment Construction Lab", "credits": 1}
+                        ]
+                    }
+                },
+                "MCT": {
+                    "name": "Mechatronics",
+                    "color": "var(--mct-color)",
+                    "icon": "fas fa-robot",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23MT101", "name": "Engineering Mechanics", "credits": 4},
+                            {"code": "U23MT102", "name": "Engineering Graphics", "credits": 4},
+                            {"code": "U23MT103", "name": "Engineering Mathematics", "credits": 4},
+                            {"code": "U23MT104", "name": "Basic Electronics", "credits": 3},
+                            {"code": "U23MT105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23MT106", "name": "Workshop Practice", "credits": 1},
+                            {"code": "U23MT107", "name": "Engineering Graphics Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23MT201", "name": "Thermodynamics", "credits": 4},
+                            {"code": "U23MT202", "name": "Mechanics of Materials", "credits": 4},
+                            {"code": "U23MT203", "name": "Digital Electronics", "credits": 4},
+                            {"code": "U23MT204", "name": "Fluid Mechanics", "credits": 3},
+                            {"code": "U23MT205", "name": "Computer Programming", "credits": 3},
+                            {"code": "U23MT206", "name": "Thermodynamics Lab", "credits": 1},
+                            {"code": "U23MT207", "name": "Digital Electronics Lab", "credits": 1}
+                        ]
+                    }
+                },
+                "CSD": {
+                    "name": "CS & Design",
+                    "color": "var(--csd-color)",
+                    "icon": "fas fa-paint-brush",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23CD101", "name": "Design Fundamentals", "credits": 4},
+                            {"code": "U23CD102", "name": "Programming Basics", "credits": 4},
+                            {"code": "U23CD103", "name": "Visual Communication", "credits": 3},
+                            {"code": "U23CD104", "name": "Mathematics for Design", "credits": 3},
+                            {"code": "U23CD105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23CD106", "name": "Design Studio", "credits": 1},
+                            {"code": "U23CD107", "name": "Programming Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23CD201", "name": "User Interface Design", "credits": 4},
+                            {"code": "U23CD202", "name": "Data Structures", "credits": 4},
+                            {"code": "U23CD203", "name": "Web Design", "credits": 4},
+                            {"code": "U23CD204", "name": "Digital Illustration", "credits": 3},
+                            {"code": "U23CD205", "name": "Human-Computer Interaction", "credits": 3},
+                            {"code": "U23CD206", "name": "UI Design Lab", "credits": 1},
+                            {"code": "U23CD207", "name": "Web Design Lab", "credits": 1}
+                        ]
+                    }
+                },
+                "ADS": {
+                    "name": "AI & Data Science",
+                    "color": "var(--ads-color)",
+                    "icon": "fas fa-database",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23DS101", "name": "Programming Fundamentals", "credits": 4},
+                            {"code": "U23DS102", "name": "Linear Algebra", "credits": 4},
+                            {"code": "U23DS103", "name": "Statistics Basics", "credits": 3},
+                            {"code": "U23DS104", "name": "Computational Thinking", "credits": 3},
+                            {"code": "U23DS105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23DS106", "name": "Programming Lab", "credits": 1},
+                            {"code": "U23DS107", "name": "Statistics Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23DS201", "name": "Data Structures", "credits": 4},
+                            {"code": "U23DS202", "name": "Probability and Statistics", "credits": 4},
+                            {"code": "U23DS203", "name": "Database Systems", "credits": 4},
+                            {"code": "U23DS204", "name": "Data Visualization", "credits": 3},
+                            {"code": "U23DS205", "name": "Python Programming", "credits": 3},
+                            {"code": "U23DS206", "name": "Data Structures Lab", "credits": 1},
+                            {"code": "U23DS207", "name": "Database Lab", "credits": 1}
+                        ]
+                    }
+                },
+                "EFE": {
+                    "name": "Electrical & Computer",
+                    "color": "var(--efe-color)",
+                    "icon": "fas fa-microchip",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23EF101", "name": "Circuit Theory", "credits": 4},
+                            {"code": "U23EF102", "name": "Programming Fundamentals", "credits": 4},
+                            {"code": "U23EF103", "name": "Digital Electronics", "credits": 3},
+                            {"code": "U23EF104", "name": "Engineering Mathematics", "credits": 3},
+                            {"code": "U23EF105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23EF106", "name": "Circuit Theory Lab", "credits": 1},
+                            {"code": "U23EF107", "name": "Programming Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23EF201", "name": "Signals and Systems", "credits": 4},
+                            {"code": "U23EF202", "name": "Data Structures", "credits": 4},
+                            {"code": "U23EF203", "name": "Analog Electronics", "credits": 4},
+                            {"code": "U23EF204", "name": "Electromagnetic Theory", "credits": 3},
+                            {"code": "U23EF205", "name": "Computer Organization", "credits": 3},
+                            {"code": "U23EF206", "name": "Analog Electronics Lab", "credits": 1},
+                            {"code": "U23EF207", "name": "Data Structures Lab", "credits": 1}
+                        ]
+                    }
+                },
+                "EXE": {
+                    "name": "Electronics & Computer",
+                    "color": "var(--exe-color)",
+                    "icon": "fas fa-desktop",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23EX101", "name": "Basic Electronics", "credits": 4},
+                            {"code": "U23EX102", "name": "Programming Fundamentals", "credits": 4},
+                            {"code": "U23EX103", "name": "Digital Logic Design", "credits": 3},
+                            {"code": "U23EX104", "name": "Engineering Mathematics", "credits": 3},
+                            {"code": "U23EX105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23EX106", "name": "Electronics Lab", "credits": 1},
+                            {"code": "U23EX107", "name": "Programming Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23EX201", "name": "Data Structures", "credits": 4},
+                            {"code": "U23EX202", "name": "Analog Electronics", "credits": 4},
+                            {"code": "U23EX203", "name": "Computer Organization", "credits": 4},
+                            {"code": "U23EX204", "name": "Signals and Systems", "credits": 3},
+                            {"code": "U23EX205", "name": "Database Systems", "credits": 3},
+                            {"code": "U23EX206", "name": "Analog Electronics Lab", "credits": 1},
+                            {"code": "U23EX207", "name": "Data Structures Lab", "credits": 1}
                         ]
                     }
                 }
