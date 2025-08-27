@@ -3,9 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="IB STUDIOZ - Online Learning Platform Login">
+    <meta name="keywords" content="education, learning, materials, courses, login">
+    <meta name="author" content="IB STUDIOZ">
+    <meta name="theme-color" content="#FFD700">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <title>Welcome | IB STUDIOZ</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         :root { 
             --primary: #FFC300; 
@@ -19,8 +27,35 @@
             --danger: #ff416c; 
             --google: #DB4437;
             --microsoft: #0078D7;
+            --info: #3498db;
         }
+        
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        /* Dark mode styles */
+        body.dark-mode {
+            --dark: #f5f5f5;
+            --text-primary: #121212;
+            --text-secondary: rgba(0, 0, 0, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --border-color: rgba(255, 195, 0, 0.5);
+        }
+        
+        body.dark-mode .auth-card {
+            background: var(--card-bg);
+            color: var(--text-primary);
+        }
+        
+        body.dark-mode input, 
+        body.dark-mode select {
+            background-color: rgba(0, 0, 0, 0.1);
+            color: var(--text-primary);
+        }
+        
+        body.dark-mode .btn-secondary {
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--text-primary);
+        }
         
         /* --- KEYFRAME ANIMATIONS --- */
         @keyframes background-pan { 
@@ -65,6 +100,7 @@
             line-height: 1.6; 
             background-attachment: fixed;
             overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
         /* --- AURORA BACKGROUND ENHANCED --- */
@@ -157,7 +193,34 @@
             background: rgba(255, 255, 255, 0.1); 
             transform: translateY(-2px);
         }
+        .btn-info {
+            background: var(--info);
+            color: white;
+        }
         .btn-small { padding: 8px 15px; font-size: 0.9rem; }
+        
+        /* Dark mode toggle */
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
         
         /* Social login buttons */
         .btn-google { background: var(--google); color: white; }
@@ -249,8 +312,69 @@
         .message { min-height: 20px; margin-bottom: 15px; font-weight: 500; font-size: 0.9rem; }
         .message.error { color: var(--danger); } 
         .message.success { color: var(--success); }
+        .message.info { color: var(--info); }
+        
+        /* Password strength indicator */
+        .password-strength {
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .strength-bar {
+            height: 4px;
+            background: #ddd;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+        
+        .strength-fill {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .strength-weak { background: #ff416c; width: 25%; }
+        .strength-medium { background: #ffc107; width: 50%; }
+        .strength-strong { background: #00b09b; width: 75%; }
+        .strength-very-strong { background: #28a745; width: 100%; }
+        
+        .strength-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
         .spinner-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; }
         .spinner { width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: var(--primary); animation: spin 1s ease-in-out infinite; }
+        
+        /* Button loading state */
+        .btn-loading {
+            position: relative;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        
+        .btn-loading .btn-text {
+            visibility: hidden;
+        }
+        
+        .btn-loading .btn-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: block;
+        }
+        
+        .btn-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
         
         /* Divider */
         .divider {
@@ -345,6 +469,57 @@
             transform: rotate(90deg);
         }
         
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            max-width: 350px;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+        
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+        
+        .toast.info {
+            border-left: 4px solid var(--info);
+        }
+        
+        .toast i {
+            font-size: 1.2rem;
+        }
+        
+        .toast.success i {
+            color: var(--success);
+        }
+        
+        .toast.error i {
+            color: var(--danger);
+        }
+        
+        .toast.info i {
+            color: var(--info);
+        }
+        
         /* --- RESPONSIVE DESIGN --- */
         @media (max-width: 480px) {
             .auth-card { padding: 25px; }
@@ -352,6 +527,10 @@
             .brand-title-animated { font-size: 1.5rem; }
             .container { padding: 15px; margin: 15px auto; }
             .modal { padding: 20px; }
+            .dark-mode-toggle {
+                width: 40px;
+                height: 40px;
+            }
         }
         
         .email-display {
@@ -410,10 +589,28 @@
         .page-transition.active {
             transform: translateY(0);
         }
+        
+        /* Loading skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
     </style>
 </head>
 <body>
     <div class="aurora-background"></div>
+    
+    <!-- Dark mode toggle -->
+    <button class="dark-mode-toggle" id="dark-mode-toggle" title="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+    </button>
+    
     <div class="container auth-container">
         <div class="auth-card">
             <div class="brand-logo">
@@ -465,6 +662,12 @@
                     <label for="password"><i class="fas fa-lock"></i> Password</label>
                     <input type="password" id="password" placeholder="Minimum 6 characters" required>
                     <div class="error-message" id="password-error"></div>
+                    <div class="password-strength" id="password-strength">
+                        <div class="strength-bar">
+                            <div class="strength-fill" id="strength-fill"></div>
+                        </div>
+                        <div class="strength-text" id="strength-text">Password strength</div>
+                    </div>
                 </div>
                 
                 <!-- Additional fields for registration -->
@@ -511,7 +714,10 @@
                     <a id="forgot-password-link">Forgot Password?</a>
                 </div>
                 <div id="message-area" class="message"></div>
-                <button type="submit" class="btn btn-primary" id="submit-btn">Login</button>
+                <button type="submit" class="btn btn-primary" id="submit-btn">
+                    <span class="btn-text">Login</span>
+                    <div class="btn-spinner"></div>
+                </button>
                 
                 <div class="divider">
                     <span>OR</span>
@@ -543,7 +749,10 @@
                 <div class="error-message" id="reset-email-error"></div>
             </div>
             <div id="reset-message" class="message"></div>
-            <button class="btn btn-primary" id="send-reset-btn">Send Reset Link</button>
+            <button class="btn btn-primary" id="send-reset-btn">
+                <span class="btn-text">Send Reset Link</span>
+                <div class="btn-spinner"></div>
+            </button>
         </div>
     </div>
     
@@ -552,9 +761,14 @@
     <!-- Page transition element -->
     <div class="page-transition" id="page-transition"></div>
     
+    <!-- Toast container -->
+    <div id="toast-container"></div>
+    
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-google-auth-provider.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-microsoft-auth-provider.js"></script>
     <script>
         // Initialize Firebase
         const firebaseConfig = {
@@ -587,11 +801,35 @@
         const resetEmailError = document.getElementById('reset-email-error');
         const googleLoginBtn = document.getElementById('google-login');
         const microsoftLoginBtn = document.getElementById('microsoft-login');
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const passwordInput = document.getElementById('password');
+        const passwordStrength = document.getElementById('password-strength');
+        const strengthFill = document.getElementById('strength-fill');
+        const strengthText = document.getElementById('strength-text');
+        const submitBtn = document.getElementById('submit-btn');
+        const submitBtnText = submitBtn.querySelector('.btn-text');
+        const submitBtnSpinner = submitBtn.querySelector('.btn-spinner');
+        const sendResetBtnText = sendResetBtn.querySelector('.btn-text');
+        const sendResetBtnSpinner = sendResetBtn.querySelector('.btn-spinner');
         
         // State variables
         let isLogin = true;
         let isSocialSignup = false;
         let socialUserData = null;
+        
+        // Load saved theme
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+        
+        // Dark mode toggle
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+            darkModeToggle.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        });
         
         // Page transition effect
         function navigateToPage(url) {
@@ -599,6 +837,75 @@
             setTimeout(() => {
                 window.location.href = url;
             }, 500);
+        }
+        
+        // Toast notification function
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            let icon = 'fa-info-circle';
+            if (type === 'success') icon = 'fa-check-circle';
+            if (type === 'error') icon = 'fa-exclamation-circle';
+            
+            toast.innerHTML = `
+                <i class="fas ${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.getElementById('toast-container').appendChild(toast);
+            
+            // Trigger animation
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            // Remove toast after 4 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 4000);
+        }
+        
+        // Password strength checker
+        passwordInput.addEventListener('input', (e) => {
+            const password = e.target.value;
+            if (password.length === 0) {
+                passwordStrength.style.display = 'none';
+                return;
+            }
+            
+            passwordStrength.style.display = 'block';
+            const strength = checkPasswordStrength(password);
+            
+            // Remove all strength classes
+            strengthFill.className = 'strength-fill';
+            
+            if (strength <= 1) {
+                strengthFill.classList.add('strength-weak');
+                strengthText.textContent = 'Weak password';
+            } else if (strength === 2) {
+                strengthFill.classList.add('strength-medium');
+                strengthText.textContent = 'Medium password';
+            } else if (strength === 3) {
+                strengthFill.classList.add('strength-strong');
+                strengthText.textContent = 'Strong password';
+            } else {
+                strengthFill.classList.add('strength-very-strong');
+                strengthText.textContent = 'Very strong password';
+            }
+        });
+        
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (password.match(/[a-z]+/)) strength++;
+            if (password.match(/[A-Z]+/)) strength++;
+            if (password.match(/[0-9]+/)) strength++;
+            if (password.match(/[$@#&!]+/)) strength++;
+            return strength;
         }
         
         // AUTH GUARD: Checks if user is already logged in and redirects them
@@ -633,11 +940,12 @@
                 authForm.reset(); 
                 clearErrors();
                 messageArea.textContent = '';
+                passwordStrength.style.display = 'none';
                 document.getElementById('form-title').innerText = isLogin ? 'Login' : 'Register';
                 document.getElementById('name-group').style.display = isLogin ? 'none' : 'block';
                 document.getElementById('admission-group').style.display = isLogin ? 'none' : 'block';
                 document.getElementById('registration-fields').style.display = isLogin ? 'none' : 'block';
-                document.getElementById('submit-btn').innerText = isLogin ? 'Login' : 'Register';
+                submitBtnText.innerText = isLogin ? 'Login' : 'Register';
                 document.getElementById('toggle-text').innerText = isLogin ? "Don't have an account?" : 'Already have an account?';
                 document.getElementById('toggle-link').innerText = isLogin ? 'Register Now' : 'Login';
                 
@@ -726,56 +1034,70 @@
         }
         
         // Handles form submission for both Login and Register
-        authForm.addEventListener('submit', (e) => {
+        authForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             if (!validateForm()) {
                 return;
             }
             
-            spinner.style.display = 'flex';
+            // Show loading state
+            submitBtn.classList.add('btn-loading');
+            submitBtnText.style.visibility = 'hidden';
+            submitBtnSpinner.style.display = 'block';
+            
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             
-            if (isLogin) {
-                // Login with email and password
-                auth.signInWithEmailAndPassword(email, password)
-                    .then(userCredential => {
-                        // The onAuthStateChanged listener above will handle redirection
-                    })
-                    .catch(handleAuthError);
-            } else {
-                const name = document.getElementById('name').value.trim();
-                const admissionNo = document.getElementById('admissionNo').value.trim();
-                const branch = document.getElementById('branch').value;
-                const semester = document.getElementById('semester').value;
-                
-                // Create user with the actual email they provided
-                auth.createUserWithEmailAndPassword(email, password)
-                    .then(userCredential => {
-                        // Store user data with the actual email
-                        const userData = { 
-                            name: name, 
-                            admissionNo: admissionNo, 
-                            email: email,
-                            role: 'student',
-                            branch: branch,
-                            semester: semester,
-                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                        };
-                        
-                        return db.collection('users').doc(userCredential.user.uid).set(userData);
-                    })
-                    .then(() => {
-                        spinner.style.display = 'none';
-                        messageArea.className = 'message success';
-                        messageArea.textContent = 'Registration successful! Please login.';
-                        
-                        // Auto switch to login after successful registration
-                        setTimeout(() => {
-                            toggleLink.click();
-                        }, 1500);
-                    }).catch(handleAuthError);
+            try {
+                if (isLogin) {
+                    // Login with email and password
+                    const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                    // The onAuthStateChanged listener above will handle redirection
+                    
+                    // Update last login
+                    await db.collection('users').doc(userCredential.user.uid).update({
+                        lastLoginAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        loginCount: firebase.firestore.FieldValue.increment(1)
+                    });
+                    
+                } else {
+                    const name = document.getElementById('name').value.trim();
+                    const admissionNo = document.getElementById('admissionNo').value.trim();
+                    const branch = document.getElementById('branch').value;
+                    const semester = document.getElementById('semester').value;
+                    
+                    // Create user with the actual email they provided
+                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                    
+                    // Store user data with the actual email
+                    const userData = { 
+                        name: name, 
+                        admissionNo: admissionNo, 
+                        email: email,
+                        role: 'student',
+                        branch: branch,
+                        semester: semester,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        lastLoginAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        loginCount: 1
+                    };
+                    
+                    await db.collection('users').doc(userCredential.user.uid).set(userData);
+                    
+                    showToast('Registration successful! Please login.', 'success');
+                    
+                    // Auto switch to login after successful registration
+                    setTimeout(() => {
+                        toggleLink.click();
+                    }, 1500);
+                }
+            } catch (error) {
+                handleAuthError(error);
+            } finally {
+                submitBtn.classList.remove('btn-loading');
+                submitBtnText.style.visibility = 'visible';
+                submitBtnSpinner.style.display = 'none';
             }
         });
         
@@ -794,6 +1116,8 @@
                 errorMessage = 'Password is too weak. Please use a stronger password';
             } else if (error.code === 'auth/invalid-email') {
                 errorMessage = 'Please enter a valid email address';
+            } else if (error.code === 'auth/network-request-failed') {
+                errorMessage = 'Network error. Please check your connection and try again';
             }
             
             messageArea.textContent = errorMessage;
@@ -823,7 +1147,7 @@
         });
         
         // Send password reset email
-        sendResetBtn.addEventListener('click', () => {
+        sendResetBtn.addEventListener('click', async () => {
             const email = resetEmail.value.trim();
             
             if (!email) {
@@ -836,91 +1160,136 @@
                 return;
             }
             
-            spinner.style.display = 'flex';
-            resetMessage.textContent = '';
+            // Show loading state
+            sendResetBtn.classList.add('btn-loading');
+            sendResetBtnText.style.visibility = 'hidden';
+            sendResetBtnSpinner.style.display = 'block';
             
-            // Use Firebase's built-in password reset with the email
-            auth.sendPasswordResetEmail(email)
-                .then(() => {
-                    spinner.style.display = 'none';
-                    resetMessage.textContent = 'Password reset email sent! Check your inbox.';
-                    resetMessage.className = 'message success';
-                    
-                    // Close modal after 3 seconds
-                    setTimeout(() => {
-                        forgotPasswordModal.classList.remove('active');
-                    }, 3000);
-                })
-                .catch(error => {
-                    spinner.style.display = 'none';
-                    let errorMessage = error.message;
-                    
-                    // More user-friendly error messages
-                    if (error.code === 'auth/user-not-found') {
-                        errorMessage = 'No account found with this email address';
-                    } else if (error.code === 'auth/invalid-email') {
-                        errorMessage = 'Please enter a valid email address';
-                    }
-                    
-                    resetMessage.textContent = errorMessage;
-                    resetMessage.className = 'message error';
-                });
+            try {
+                await auth.sendPasswordResetEmail(email);
+                
+                resetMessage.textContent = 'Password reset email sent! Check your inbox.';
+                resetMessage.className = 'message success';
+                
+                // Close modal after 3 seconds
+                setTimeout(() => {
+                    forgotPasswordModal.classList.remove('active');
+                }, 3000);
+            } catch (error) {
+                let errorMessage = error.message;
+                
+                // More user-friendly error messages
+                if (error.code === 'auth/user-not-found') {
+                    errorMessage = 'No account found with this email address';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Please enter a valid email address';
+                } else if (error.code === 'auth/network-request-failed') {
+                    errorMessage = 'Network error. Please check your connection and try again';
+                }
+                
+                resetMessage.textContent = errorMessage;
+                resetMessage.className = 'message error';
+            } finally {
+                sendResetBtn.classList.remove('btn-loading');
+                sendResetBtnText.style.visibility = 'visible';
+                sendResetBtnSpinner.style.display = 'none';
+            }
         });
         
         // Google Sign-In
-        googleLoginBtn.addEventListener('click', () => {
+        googleLoginBtn.addEventListener('click', async () => {
             spinner.style.display = 'flex';
             
-            // For demo purposes, we'll simulate Google sign-in
-            // In a real implementation, you would use:
-            // const provider = new firebase.auth.GoogleAuthProvider();
-            // auth.signInWithPopup(provider)
-            
-            setTimeout(() => {
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                const result = await auth.signInWithPopup(provider);
+                
+                // Check if user exists in Firestore
+                const userDoc = await db.collection('users').doc(result.user.uid).get();
+                
+                if (!userDoc.exists) {
+                    // New user, show registration form
+                    isSocialSignup = true;
+                    socialUserData = {
+                        name: result.user.displayName || "Google User",
+                        email: result.user.email,
+                        provider: "Google"
+                    };
+                    
+                    // Change form to registration mode if not already
+                    if (isLogin) {
+                        toggleLink.click();
+                    }
+                    
+                    // Pre-fill form fields
+                    document.getElementById('name').value = socialUserData.name;
+                    document.getElementById('email').value = socialUserData.email;
+                    document.getElementById('email').disabled = true;
+                    
+                    showToast('Please complete your registration with Google', 'info');
+                } else {
+                    // Existing user, update login info
+                    await db.collection('users').doc(result.user.uid).update({
+                        lastLoginAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        loginCount: firebase.firestore.FieldValue.increment(1)
+                    });
+                }
+            } catch (error) {
+                console.error("Google sign-in error:", error);
+                showToast('Google sign-in failed. Please try again.', 'error');
+            } finally {
                 spinner.style.display = 'none';
-                simulateSocialLogin('Google');
-            }, 1000);
+            }
         });
         
         // Microsoft Sign-In
-        microsoftLoginBtn.addEventListener('click', () => {
+        microsoftLoginBtn.addEventListener('click', async () => {
             spinner.style.display = 'flex';
             
-            // For demo purposes, we'll simulate Microsoft sign-in
-            // In a real implementation, you would use:
-            // const provider = new firebase.auth.OAuthProvider('microsoft.com');
-            // auth.signInWithPopup(provider)
-            
-            setTimeout(() => {
+            try {
+                const provider = new firebase.auth.OAuthProvider('microsoft.com');
+                const result = await auth.signInWithPopup(provider);
+                
+                // Check if user exists in Firestore
+                const userDoc = await db.collection('users').doc(result.user.uid).get();
+                
+                if (!userDoc.exists) {
+                    // New user, show registration form
+                    isSocialSignup = true;
+                    socialUserData = {
+                        name: result.user.displayName || "Microsoft User",
+                        email: result.user.email,
+                        provider: "Microsoft"
+                    };
+                    
+                    // Change form to registration mode if not already
+                    if (isLogin) {
+                        toggleLink.click();
+                    }
+                    
+                    // Pre-fill form fields
+                    document.getElementById('name').value = socialUserData.name;
+                    document.getElementById('email').value = socialUserData.email;
+                    document.getElementById('email').disabled = true;
+                    
+                    showToast('Please complete your registration with Microsoft', 'info');
+                } else {
+                    // Existing user, update login info
+                    await db.collection('users').doc(result.user.uid).update({
+                        lastLoginAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        loginCount: firebase.firestore.FieldValue.increment(1)
+                    });
+                }
+            } catch (error) {
+                console.error("Microsoft sign-in error:", error);
+                showToast('Microsoft sign-in failed. Please try again.', 'error');
+            } finally {
                 spinner.style.display = 'none';
-                simulateSocialLogin('Microsoft');
-            }, 1000);
+            }
         });
         
-        // Function to simulate social login (for demo purposes)
-        function simulateSocialLogin(provider) {
-            isSocialSignup = true;
-            socialUserData = {
-                name: "Social User",
-                email: `user${Math.floor(Math.random() * 10000)}@example.com`,
-                provider: provider
-            };
-            
-            // Change form to registration mode if not already
-            if (isLogin) {
-                toggleLink.click();
-            }
-            
-            // Pre-fill email field
-            document.getElementById('email').value = socialUserData.email;
-            document.getElementById('email').disabled = true;
-            
-            messageArea.className = 'message success';
-            messageArea.textContent = `Please complete your registration with ${provider}`;
-        }
-        
         // Handle social registration completion
-        document.getElementById('submit-btn').addEventListener('click', function(e) {
+        document.getElementById('submit-btn').addEventListener('click', async function(e) {
             if (isSocialSignup) {
                 e.preventDefault();
                 
@@ -936,13 +1305,24 @@
                 
                 spinner.style.display = 'flex';
                 
-                // In a real implementation, you would create the user in Firebase Auth
-                // and then add to Firestore
-                
-                setTimeout(() => {
-                    spinner.style.display = 'none';
-                    messageArea.className = 'message success';
-                    messageArea.textContent = 'Social registration successful!';
+                try {
+                    // Update user document with additional info
+                    const userData = {
+                        name: name,
+                        admissionNo: admissionNo,
+                        email: email,
+                        role: 'student',
+                        branch: branch,
+                        semester: semester,
+                        provider: socialUserData.provider,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        lastLoginAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        loginCount: 1
+                    };
+                    
+                    await db.collection('users').doc(auth.currentUser.uid).set(userData);
+                    
+                    showToast('Social registration successful!', 'success');
                     
                     // Reset form
                     isSocialSignup = false;
@@ -952,7 +1332,11 @@
                     setTimeout(() => {
                         navigateToPage('/studentdashboard.html');
                     }, 1500);
-                }, 1500);
+                } catch (error) {
+                    console.error("Social registration error:", error);
+                    showToast('Registration failed. Please try again.', 'error');
+                    spinner.style.display = 'none';
+                }
             }
         });
         
@@ -965,6 +1349,33 @@
                 e.preventDefault();
                 document.getElementById('submit-btn').click();
             }
+        });
+        
+        // Performance monitoring
+        if ('PerformanceObserver' in window) {
+            const perfObserver = new PerformanceObserver((list) => {
+                list.getEntries().forEach(entry => {
+                    if (entry.duration > 1000) {
+                        console.warn('Slow operation:', entry.name, entry.duration);
+                    }
+                });
+            });
+            perfObserver.observe({ entryTypes: ['measure'] });
+        }
+        
+        // Error boundary
+        window.addEventListener('error', (e) => {
+            console.error('Global error:', e.error);
+            showToast('An error occurred. Please refresh the page.', 'error');
+        });
+        
+        // Network status monitoring
+        window.addEventListener('online', () => {
+            showToast('Connection restored', 'success');
+        });
+        
+        window.addEventListener('offline', () => {
+            showToast('You are offline. Some features may not work.', 'error');
         });
     </script>
 </body>
