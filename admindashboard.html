@@ -6,13 +6,11 @@
     <title>Admin Dashboard | IB STUDIOZ</title>
     
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23FFD700' d='M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z' /%3E%3Cg fill='%230A0A0A'%3E%3Cpath d='M28,25 h10 v50 h-10 Z' /%3E%3Cpath d='M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z' /%3E%3C/g%3E%3C/svg%3E">
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
         :root {
             --primary-glow: #FFD700; --secondary-glow: #00A2FF; --dark-bg: #0A0A0A;
@@ -29,15 +27,12 @@
             animation: page-fade-in 0.5s ease-out forwards;
         }
         @keyframes page-fade-in { to { opacity: 1; } }
-
         .background-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
         .aurora-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 10% 20%, var(--primary-glow) 0%, transparent 25%), radial-gradient(circle at 80% 30%, var(--secondary-glow) 0%, transparent 30%), radial-gradient(circle at 50% 80%, var(--primary-glow) 0%, transparent 25%); animation: aurora-morph 40s linear infinite alternate; filter: blur(120px); opacity: 0.2; }
         @keyframes aurora-morph { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1.8); } }
         .noise-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>'); opacity: 0.015; }
-
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         .hidden { display: none !important; }
-
         .page-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; margin: 20px; background: rgba(16,16,16,0.6); backdrop-filter: blur(20px); border-radius: 15px; border: 1px solid var(--border-color); }
         .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; }
         .header-logo-svg { width: 45px; height: auto; }
@@ -46,7 +41,6 @@
         .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 10px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; }
         .btn-secondary:hover { background: var(--primary-glow); color: var(--dark-bg); border-color: var(--primary-glow); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
         .btn-secondary .fas { margin-right: 8px; }
-
         .welcome-header-pro { padding: 40px 0; margin-bottom: 40px; text-align: left; border-left: 4px solid; border-image: linear-gradient(to bottom, var(--primary-glow), var(--secondary-glow)) 1; padding-left: 30px; }
         .welcome-header-pro h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.2; margin-bottom: 10px; }
         #admin-name { color: var(--primary-glow); }
@@ -71,7 +65,8 @@
         .modal-overlay.active .modal { transform: scale(1); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
         .modal-header h2 { font-size: 1.5rem; }
-        .modal-close { background: none; border: none; color: var(--text-primary); font-size: 1.8rem; cursor: pointer; }
+        .modal-close { background: none; border: none; color: var(--text-primary); font-size: 1.8rem; cursor: pointer; transition: transform 0.3s ease; }
+        .modal-close:hover { transform: rotate(90deg); }
         .list-container { max-height: 60vh; overflow-y: auto; }
         .list-item { display: grid; grid-template-columns: 1fr auto; gap: 15px; align-items: center; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .list-item-content { display: flex; align-items: center; }
@@ -104,24 +99,39 @@
         .details-grid dt { font-weight: 600; color: var(--text-secondary); text-align: right; }
         .details-grid dd { font-weight: 500; color: var(--text-primary); }
         .details-grid dd .fas { margin-right: 8px; color: var(--primary-glow); }
-
         .analytics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
         .stat-card { background: rgba(0,0,0,0.2); padding: 20px; border-radius: 10px; border: 1px solid var(--border-color); text-align: center; }
         .stat-card .stat-number { font-size: 2.5rem; font-weight: 700; color: var(--primary-glow); line-height: 1; }
         .stat-card .stat-label { font-size: 0.9rem; color: var(--text-secondary); margin-top: 5px; }
-
+        
+        /* Loading spinner */
+        .spinner-container { display: flex; justify-content: center; align-items: center; height: 100px; }
+        .spinner { width: 40px; height: 40px; border: 4px solid rgba(255, 255, 255, 0.1); border-radius: 50%; border-top-color: var(--primary-glow); animation: spin 1s ease-in-out infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* Toast notification */
+        .toast { position: fixed; bottom: 20px; right: 20px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 3000; display: flex; align-items: center; transform: translateY(100px); opacity: 0; transition: all 0.3s ease; }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
+        .toast.info { border-left: 4px solid var(--info); }
+        .toast i { margin-right: 10px; font-size: 1.2rem; }
+        .toast.success i { color: var(--success); }
+        .toast.error i { color: var(--danger); }
+        .toast.info i { color: var(--info); }
+        
         @media (max-width: 768px) {
             .page-header { flex-direction: column; gap: 20px; margin: 15px; }
             .welcome-header-pro { padding-left: 20px; margin-bottom: 30px; }
             .list-item { grid-template-columns: 1fr; text-align: center; }
             .btn-group { justify-content: center; }
             .details-grid dt { text-align: left; }
+            .toast { left: 20px; right: 20px; }
         }
     </style>
 </head>
 <body>
     <div class="background-container"><div class="aurora-layer"></div><div class="noise-layer"></div></div>
-
     <main>
         <header class="page-header">
             <a href="/admindashboard.html" class="brand-logo">
@@ -130,7 +140,6 @@
             </a>
             <button id="logout-btn" class="btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
         </header>
-
         <div class="container">
             <div class="welcome-header-pro">
                 <h1>Admin Control Panel</h1>
@@ -144,23 +153,31 @@
                 <div id="view-analytics-card" class="nav-card" style="--card-color: #A18CD1;"><div class="nav-card-header"><div class="nav-card-icon"><i class="fas fa-chart-bar"></i></div><span class="nav-card-arrow">→</span></div><h3>View Analytics</h3><p>Check resource usage and platform stats.</p></div>
             </section>
         </div>
-
+        
         <!-- Manage Users Modal -->
         <div id="users-modal" class="modal-overlay">
              <div class="modal">
                 <div class="modal-header"><h2>Manage Student Users</h2><button id="users-modal-close-btn" class="modal-close">&times;</button></div>
-                <div class="list-container" id="users-list-container"></div>
+                <div class="list-container" id="users-list-container">
+                    <div class="spinner-container">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
             </div>
         </div>
-
+        
         <!-- Manage Payments Modal -->
         <div id="payments-modal" class="modal-overlay">
              <div class="modal">
                 <div class="modal-header"><h2>Payment History</h2><button id="payments-modal-close-btn" class="modal-close">&times;</button></div>
-                <div class="list-container" id="payments-list-container"></div>
+                <div class="list-container" id="payments-list-container">
+                    <div class="spinner-container">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
             </div>
         </div>
-
+        
         <!-- Grant Access Modal -->
         <div id="grant-access-modal" class="modal-overlay">
             <div class="modal" style="max-width: 500px;">
@@ -180,8 +197,8 @@
                 </form>
             </div>
         </div>
-
-        <!-- User Details Modal (No Changes) -->
+        
+        <!-- User Details Modal -->
         <div id="user-details-modal" class="modal-overlay">
             <div class="modal">
                 <div class="modal-header"><h2 id="user-details-title">User Details</h2><button id="user-details-modal-close-btn" class="modal-close">&times;</button></div>
@@ -196,16 +213,20 @@
                 </dl>
             </div>
         </div>
-
-        <!-- Manage Content Modal (No Changes) -->
+        
+        <!-- Manage Content Modal -->
         <div id="content-modal" class="modal-overlay">
             <div class="modal">
                 <div class="modal-header"><h2>Manage Platform Content</h2><button id="content-modal-close-btn" class="modal-close">&times;</button></div>
-                <div class="list-container" id="content-list-container"></div>
+                <div class="list-container" id="content-list-container">
+                    <div class="spinner-container">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
             </div>
         </div>
         
-        <!-- Edit User Modal (No Changes) -->
+        <!-- Edit User Modal -->
         <div id="edit-user-modal" class="modal-overlay">
             <div class="modal">
                 <div class="modal-header"><h2>Modify User</h2><button id="edit-user-modal-close-btn" class="modal-close">&times;</button></div>
@@ -217,8 +238,8 @@
                 </form>
             </div>
         </div>
-
-        <!-- Edit Content Modal (No Changes) -->
+        
+        <!-- Edit Content Modal -->
         <div id="edit-content-modal" class="modal-overlay">
             <div class="modal">
                 <div class="modal-header"><h2>Edit Content</h2><button id="edit-content-modal-close-btn" class="modal-close">&times;</button></div>
@@ -235,119 +256,194 @@
                 </form>
             </div>
         </div>
-
-        <!-- Analytics Modal (No Changes) -->
+        
+        <!-- Analytics Modal -->
         <div id="analytics-modal" class="modal-overlay">
             <div class="modal">
                 <div class="modal-header"><h2>Platform Analytics</h2><button id="analytics-modal-close-btn" class="modal-close">&times;</button></div>
-                <div class="list-container" id="analytics-content-container"></div>
+                <div class="list-container" id="analytics-content-container">
+                    <div class="spinner-container">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
             </div>
         </div>
+        
+        <!-- Toast notification -->
+        <div id="toast" class="toast">
+            <i class="fas fa-check-circle"></i>
+            <span id="toast-message">Notification message</span>
+        </div>
     </main>
-
+    
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-functions.js"></script>
     <script>
-        function smoothNavigate(url) {
-    document.body.style.transition = 'opacity 0.4s';
-    document.body.style.opacity = '0';
-    setTimeout(() => { window.location.href = url; }, 400);
-}
-function isLoggedIn() {
-    return sessionStorage.getItem('loggedIn') === 'true';
-}
-function setLoggedIn() {
-    sessionStorage.setItem('loggedIn', 'true');
-}
-function logout() {
-    sessionStorage.removeItem('loggedIn');
-    smoothNavigate('/index.html');
-}
-document.addEventListener('DOMContentLoaded', () => {
-    if (!isLoggedIn()) {
-        smoothNavigate('/index.html');
-    } else {
-        initializePage();
-    }
-    document.getElementById('logout-btn').addEventListener('click', e => {
-        e.preventDefault();
-        logout();
-    });
-});
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const firebaseConfig = { apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao", authDomain: "student-portal-free.firebaseapp.com", projectId: "student-portal-free", storageBucket: "student-portal-free.appspot.com", messagingSenderId: "272865877510", appId: "1:272865877510:web:0875a2502ae55bbf9ead87" };
-            firebase.initializeApp(firebaseConfig);
-            const auth = firebase.auth();
-            const db = firebase.firestore();
-            const functions = firebase.functions();
+        // Initialize Firebase
+        const firebaseConfig = { 
+            apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao", 
+            authDomain: "student-portal-free.firebaseapp.com", 
+            projectId: "student-portal-free", 
+            storageBucket: "student-portal-free.appspot.com", 
+            messagingSenderId: "272865877510", 
+            appId: "1:272865877510:web:0875a2502ae55bbf9ead87" 
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const functions = firebase.functions();
+        
+        // DOM Elements
+        const adminNameEl = document.getElementById('admin-name');
+        const logoutBtn = document.getElementById('logout-btn');
+        
+        // Cards
+        const manageUsersCard = document.getElementById('manage-users-card');
+        const manageContentCard = document.getElementById('manage-content-card');
+        const viewAnalyticsCard = document.getElementById('view-analytics-card');
+        const managePaymentsCard = document.getElementById('manage-payments-card');
+        
+        // Modals
+        const usersModal = document.getElementById('users-modal');
+        const userDetailsModal = document.getElementById('user-details-modal');
+        const contentModal = document.getElementById('content-modal');
+        const analyticsModal = document.getElementById('analytics-modal');
+        const editUserModal = document.getElementById('edit-user-modal');
+        const editContentModal = document.getElementById('edit-content-modal');
+        const paymentsModal = document.getElementById('payments-modal');
+        const grantAccessModal = document.getElementById('grant-access-modal');
+        
+        // Modal Close Buttons
+        const usersModalCloseBtn = document.getElementById('users-modal-close-btn');
+        const userDetailsModalCloseBtn = document.getElementById('user-details-modal-close-btn');
+        const contentModalCloseBtn = document.getElementById('content-modal-close-btn');
+        const analyticsModalCloseBtn = document.getElementById('analytics-modal-close-btn');
+        const editUserModalCloseBtn = document.getElementById('edit-user-modal-close-btn');
+        const editContentModalCloseBtn = document.getElementById('edit-content-modal-close-btn');
+        const paymentsModalCloseBtn = document.getElementById('payments-modal-close-btn');
+        const grantAccessModalCloseBtn = document.getElementById('grant-access-modal-close-btn');
+        
+        // Containers & Forms
+        const usersListContainer = document.getElementById('users-list-container');
+        const contentListContainer = document.getElementById('content-list-container');
+        const analyticsContentContainer = document.getElementById('analytics-content-container');
+        const paymentsListContainer = document.getElementById('payments-list-container');
+        const editUserForm = document.getElementById('edit-user-form');
+        const editContentForm = document.getElementById('edit-content-form');
+        const grantAccessForm = document.getElementById('grant-access-form');
+        
+        // Toast notification
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+        
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            toastMessage.textContent = message;
+            toast.className = `toast ${type} show`;
             
-            // --- ALL ELEMENT SELECTORS ---
-            const adminNameEl = document.getElementById('admin-name');
-            const logoutBtn = document.getElementById('logout-btn');
+            // Update icon based on type
+            const icon = toast.querySelector('i');
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'info') {
+                icon.className = 'fas fa-info-circle';
+            }
             
-            // Cards
-            const manageUsersCard = document.getElementById('manage-users-card');
-            const manageContentCard = document.getElementById('manage-content-card');
-            const viewAnalyticsCard = document.getElementById('view-analytics-card');
-            const managePaymentsCard = document.getElementById('manage-payments-card');
-
-            // Modals
-            const usersModal = document.getElementById('users-modal');
-            const userDetailsModal = document.getElementById('user-details-modal');
-            const contentModal = document.getElementById('content-modal');
-            const analyticsModal = document.getElementById('analytics-modal');
-            const editUserModal = document.getElementById('edit-user-modal');
-            const editContentModal = document.getElementById('edit-content-modal');
-            const paymentsModal = document.getElementById('payments-modal');
-            const grantAccessModal = document.getElementById('grant-access-modal');
-
-            // Modal Close Buttons
-            const usersModalCloseBtn = document.getElementById('users-modal-close-btn');
-            const userDetailsModalCloseBtn = document.getElementById('user-details-modal-close-btn');
-            const contentModalCloseBtn = document.getElementById('content-modal-close-btn');
-            const analyticsModalCloseBtn = document.getElementById('analytics-modal-close-btn');
-            const editUserModalCloseBtn = document.getElementById('edit-user-modal-close-btn');
-            const editContentModalCloseBtn = document.getElementById('edit-content-modal-close-btn');
-            const paymentsModalCloseBtn = document.getElementById('payments-modal-close-btn');
-            const grantAccessModalCloseBtn = document.getElementById('grant-access-modal-close-btn');
-            
-            // Containers & Forms
-            const usersListContainer = document.getElementById('users-list-container');
-            const contentListContainer = document.getElementById('content-list-container');
-            const analyticsContentContainer = document.getElementById('analytics-content-container');
-            const paymentsListContainer = document.getElementById('payments-list-container');
-            const editUserForm = document.getElementById('edit-user-form');
-            const editContentForm = document.getElementById('edit-content-form');
-            const grantAccessForm = document.getElementById('grant-access-form');
-            
-            // --- AUTHENTICATION & INITIALIZATION ---
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    db.collection('users').doc(user.uid).get().then(doc => {
+            // Hide after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Format timestamp
+        function formatTimestamp(timestamp) {
+            if (!timestamp || !timestamp.toDate) return 'N/A';
+            const date = timestamp.toDate();
+            return date.toLocaleString('en-US', { 
+                weekday: 'short', 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric', 
+                hour: 'numeric', 
+                minute: '2-digit', 
+                hour12: true 
+            });
+        }
+        
+        // Check authentication and initialize page
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // Check if user is admin
+                db.collection('users').doc(user.uid).get()
+                    .then(doc => {
                         if (doc.exists && doc.data().role === 'admin') {
                             adminNameEl.textContent = doc.data().name.split(' ')[0];
-                        } else { window.location.replace('/studentdashboard.html'); }
-                    }).catch(() => auth.signOut());
-                } else { window.location.replace('/index.html'); }
+                            initializePage();
+                        } else {
+                            // Redirect to student dashboard if not admin
+                            window.location.replace('/studentdashboard.html');
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error checking user role:", error);
+                        auth.signOut();
+                        window.location.replace('/index.html');
+                    });
+            } else {
+                // Redirect to login if not authenticated
+                window.location.replace('/index.html');
+            }
+        });
+        
+        // Initialize page after authentication
+        function initializePage() {
+            // Event listeners
+            logoutBtn.addEventListener('click', () => {
+                auth.signOut().then(() => {
+                    window.location.replace('/index.html');
+                }).catch(error => {
+                    console.error("Logout error:", error);
+                    showToast("Logout failed. Please try again.", "error");
+                });
             });
-
-            // --- ALL EVENT LISTENERS ---
-            logoutBtn.addEventListener('click', () => auth.signOut());
             
-            // Modal Openers
-            manageUsersCard.addEventListener('click', () => { loadUsers(); usersModal.classList.add('active'); });
-            manageContentCard.addEventListener('click', () => { loadAllContent(); contentModal.classList.add('active'); });
-            viewAnalyticsCard.addEventListener('click', () => { loadAnalytics(); analyticsModal.classList.add('active'); });
-            managePaymentsCard.addEventListener('click', () => { loadPayments(); paymentsModal.classList.add('active'); });
-
-            // Modal Closers
+            // Modal openers
+            manageUsersCard.addEventListener('click', () => {
+                usersModal.classList.add('active');
+                loadUsers();
+            });
+            
+            manageContentCard.addEventListener('click', () => {
+                contentModal.classList.add('active');
+                loadAllContent();
+            });
+            
+            viewAnalyticsCard.addEventListener('click', () => {
+                analyticsModal.classList.add('active');
+                loadAnalytics();
+            });
+            
+            managePaymentsCard.addEventListener('click', () => {
+                paymentsModal.classList.add('active');
+                loadPayments();
+            });
+            
+            // Modal closers
             const allModals = document.querySelectorAll('.modal-overlay');
             allModals.forEach(modal => {
-                modal.querySelector('.modal-close').addEventListener('click', () => modal.classList.remove('active'));
-                modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('active'); });
+                modal.querySelector('.modal-close').addEventListener('click', () => {
+                    modal.classList.remove('active');
+                });
+                
+                modal.addEventListener('click', e => {
+                    if (e.target === modal) {
+                        modal.classList.remove('active');
+                    }
+                });
             });
             
             // Form & List Listeners
@@ -357,73 +453,91 @@ document.addEventListener('DOMContentLoaded', () => {
             editUserForm.addEventListener('submit', handleEditUserSubmit);
             editContentForm.addEventListener('submit', handleEditContentSubmit);
             grantAccessForm.addEventListener('submit', handleGrantAccessSubmit);
-
-
-            // --- HELPER FUNCTIONS ---
-            function formatTimestamp(timestamp) {
-                if (!timestamp || !timestamp.toDate) return 'N/A';
-                const date = timestamp.toDate();
-                return date.toLocaleString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true });
-            }
-
-            // --- USER MANAGEMENT FUNCTIONS ---
-            async function loadUsers() {
-                usersListContainer.innerHTML = '<p style="text-align: center;">Loading users...</p>';
-                try {
-                    const snapshot = await db.collection('users').where('role', '==', 'student').orderBy('createdAt', 'desc').get();
-                    if (snapshot.empty) {
-                        usersListContainer.innerHTML = '<p style="text-align: center;">No student users found.</p>';
-                        return;
-                    }
-                    usersListContainer.innerHTML = '';
-                    snapshot.forEach(doc => {
-                        const user = doc.data();
-                        const userEl = document.createElement('div');
-                        userEl.className = 'list-item';
-                        userEl.innerHTML = `
-                            <div class="user-info-grid">
-                                <span class="item-title">${user.name}</span>
-                                <span class="item-details"><i class="fas fa-envelope"></i> ${user.email}</span>
-                                <span class="item-details"><i class="fas fa-id-card"></i> ${user.admissionNo || 'Not Set'}</span>
-                                <span class="item-details"><i class="fas fa-clock"></i> Last Login: ${formatTimestamp(user.lastLoginAt)}</span>
-                                <span class="item-details"><i class="fas fa-sign-in-alt"></i> Logins: ${user.loginCount || 0}</span>
-                            </div>
-                            <div class="btn-group">
-                                <button class="btn-sm btn-success" data-user-email="${user.email}" data-user-name="${user.name}">Grant</button>
-                                <button class="btn-sm btn-details" data-uid="${doc.id}">Details</button>
-                                <button class="btn-sm btn-info" data-uid="${doc.id}">Modify</button>
-                                <button class="btn-sm btn-danger" data-uid="${doc.id}">Remove</button>
-                            </div>`;
-                        usersListContainer.appendChild(userEl);
-                    });
-                } catch (error) {
-                    console.error("Error loading users:", error);
-                    usersListContainer.innerHTML = `<p style="text-align: center; color: var(--danger);">Error loading users. (Have you created the required Firestore index?)</p>`;
+        }
+        
+        // --- USER MANAGEMENT FUNCTIONS ---
+        async function loadUsers() {
+            usersListContainer.innerHTML = `
+                <div class="spinner-container">
+                    <div class="spinner"></div>
+                </div>
+            `;
+            
+            try {
+                const snapshot = await db.collection('users')
+                    .where('role', '==', 'student')
+                    .orderBy('createdAt', 'desc')
+                    .get();
+                
+                if (snapshot.empty) {
+                    usersListContainer.innerHTML = '<p style="text-align: center;">No student users found.</p>';
+                    return;
                 }
+                
+                usersListContainer.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const user = doc.data();
+                    const userEl = document.createElement('div');
+                    userEl.className = 'list-item';
+                    userEl.innerHTML = `
+                        <div class="user-info-grid">
+                            <span class="item-title">${user.name}</span>
+                            <span class="item-details"><i class="fas fa-envelope"></i> ${user.email}</span>
+                            <span class="item-details"><i class="fas fa-id-card"></i> ${user.admissionNo || 'Not Set'}</span>
+                            <span class="item-details"><i class="fas fa-clock"></i> Last Login: ${formatTimestamp(user.lastLoginAt)}</span>
+                            <span class="item-details"><i class="fas fa-sign-in-alt"></i> Logins: ${user.loginCount || 0}</span>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-sm btn-success" data-user-email="${user.email}" data-user-name="${user.name}">Grant</button>
+                            <button class="btn-sm btn-details" data-uid="${doc.id}">Details</button>
+                            <button class="btn-sm btn-info" data-uid="${doc.id}">Modify</button>
+                            <button class="btn-sm btn-danger" data-uid="${doc.id}">Remove</button>
+                        </div>
+                    `;
+                    usersListContainer.appendChild(userEl);
+                });
+            } catch (error) {
+                console.error("Error loading users:", error);
+                usersListContainer.innerHTML = `<p style="text-align: center; color: var(--danger);">Error loading users. (Have you created the required Firestore index?)</p>`;
             }
-
-            async function handleUserActions(e) {
-                const button = e.target.closest('button');
-                if (!button) return;
-                const uid = button.dataset.uid;
-
-                if (button.classList.contains('btn-success')) {
-                    document.getElementById('grant-user-name').textContent = button.dataset.userName;
-                    document.getElementById('grant-user-email').value = button.dataset.userEmail;
-                    grantAccessForm.reset();
-                    grantAccessModal.classList.add('active');
-                } else if (button.classList.contains('btn-danger')) {
-                    if (confirm(`Are you sure you want to remove this user's record? This cannot be undone.`)) {
-                        await db.collection('users').doc(uid).delete(); loadUsers();
+        }
+        
+        async function handleUserActions(e) {
+            const button = e.target.closest('button');
+            if (!button) return;
+            
+            const uid = button.dataset.uid;
+            
+            if (button.classList.contains('btn-success')) {
+                document.getElementById('grant-user-name').textContent = button.dataset.userName;
+                document.getElementById('grant-user-email').value = button.dataset.userEmail;
+                grantAccessForm.reset();
+                grantAccessModal.classList.add('active');
+            } else if (button.classList.contains('btn-danger')) {
+                if (confirm(`Are you sure you want to remove this user's record? This cannot be undone.`)) {
+                    try {
+                        await db.collection('users').doc(uid).delete();
+                        showToast("User removed successfully.");
+                        loadUsers();
+                    } catch (error) {
+                        console.error("Error removing user:", error);
+                        showToast("Failed to remove user. Please try again.", "error");
                     }
-                } else if (button.classList.contains('btn-info')) {
+                }
+            } else if (button.classList.contains('btn-info')) {
+                try {
                     const userDoc = await db.collection('users').doc(uid).get();
                     const userData = userDoc.data();
                     document.getElementById('edit-user-uid').value = uid;
                     document.getElementById('edit-user-name').value = userData.name;
                     document.getElementById('edit-user-admissionNo').value = userData.admissionNo || '';
                     editUserModal.classList.add('active');
-                } else if (button.classList.contains('btn-details')) {
+                } catch (error) {
+                    console.error("Error loading user data:", error);
+                    showToast("Failed to load user data. Please try again.", "error");
+                }
+            } else if (button.classList.contains('btn-details')) {
+                try {
                     const userDoc = await db.collection('users').doc(uid).get();
                     const user = userDoc.data();
                     document.getElementById('user-details-title').textContent = `${user.name}'s Details`;
@@ -434,101 +548,540 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('detail-user-lastLoginAt').textContent = formatTimestamp(user.lastLoginAt);
                     document.getElementById('detail-user-loginCount').textContent = user.loginCount || 'N/A';
                     userDetailsModal.classList.add('active');
-                }
-            }
-
-            async function handleEditUserSubmit(e) {
-                e.preventDefault();
-                const uid = document.getElementById('edit-user-uid').value;
-                const newName = document.getElementById('edit-user-name').value;
-                const newAdmissionNo = document.getElementById('edit-user-admissionNo').value;
-                await db.collection('users').doc(uid).update({ name: newName, admissionNo: newAdmissionNo });
-                editUserModal.classList.remove('active');
-                loadUsers();
-            }
-
-            async function handleGrantAccessSubmit(e) {
-                e.preventDefault();
-                const userEmail = document.getElementById('grant-user-email').value;
-                const materialId = document.getElementById('grant-material-id').value.trim();
-                const materialTitle = document.getElementById('grant-material-title').value.trim();
-
-                if (!confirm(`Grant ${userEmail} access to material ID: ${materialId}?`)) return;
-
-                const grantAccessManually = functions.httpsCallable('grantAccessManually');
-                try {
-                    const result = await grantAccessManually({ userEmail, materialId, materialTitle });
-                    alert(result.data.message);
-                    grantAccessModal.classList.remove('active');
                 } catch (error) {
-                    console.error("Error granting access:", error);
-                    alert(`Failed: ${error.message}`);
+                    console.error("Error loading user details:", error);
+                    showToast("Failed to load user details. Please try again.", "error");
                 }
             }
+        }
+        
+        async function handleEditUserSubmit(e) {
+            e.preventDefault();
             
-            // --- PAYMENT MANAGEMENT FUNCTIONS ---
-            async function loadPayments() {
-                paymentsListContainer.innerHTML = '<p style="text-align: center;">Loading payment history...</p>';
+            const uid = document.getElementById('edit-user-uid').value;
+            const newName = document.getElementById('edit-user-name').value;
+            const newAdmissionNo = document.getElementById('edit-user-admissionNo').value;
+            
+            try {
+                await db.collection('users').doc(uid).update({
+                    name: newName,
+                    admissionNo: newAdmissionNo
+                });
+                
+                editUserModal.classList.remove('active');
+                showToast("User updated successfully.");
+                loadUsers();
+            } catch (error) {
+                console.error("Error updating user:", error);
+                showToast("Failed to update user. Please try again.", "error");
+            }
+        }
+        
+        async function handleGrantAccessSubmit(e) {
+            e.preventDefault();
+            
+            const userEmail = document.getElementById('grant-user-email').value;
+            const materialId = document.getElementById('grant-material-id').value.trim();
+            const materialTitle = document.getElementById('grant-material-title').value.trim();
+            
+            if (!confirm(`Grant ${userEmail} access to material ID: ${materialId}?`)) return;
+            
+            const grantAccessManually = functions.httpsCallable('grantAccessManually');
+            
+            try {
+                const result = await grantAccessManually({
+                    userEmail,
+                    materialId,
+                    materialTitle
+                });
+                
+                showToast(result.data.message);
+                grantAccessModal.classList.remove('active');
+            } catch (error) {
+                console.error("Error granting access:", error);
+                showToast(`Failed: ${error.message}`, "error");
+            }
+        }
+        
+        // --- PAYMENT MANAGEMENT FUNCTIONS ---
+        async function loadPayments() {
+            paymentsListContainer.innerHTML = `
+                <div class="spinner-container">
+                    <div class="spinner"></div>
+                </div>
+            `;
+            
+            try {
+                const snapshot = await db.collection('orders')
+                    .where('status', '==', 'success')
+                    .orderBy('createdAt', 'desc')
+                    .get();
+                
+                if (snapshot.empty) {
+                    paymentsListContainer.innerHTML = '<p style="text-align: center;">No successful payments found.</p>';
+                    return;
+                }
+                
+                paymentsListContainer.innerHTML = '';
+                
+                for (const doc of snapshot.docs) {
+                    const order = doc.data();
+                    const userDoc = await db.collection('users').doc(order.userId).get();
+                    const userName = userDoc.exists ? userDoc.data().name : 'Unknown User';
+                    
+                    const paymentEl = document.createElement('div');
+                    paymentEl.className = 'list-item';
+                    paymentEl.innerHTML = `
+                        <div>
+                            <span class="item-title">${order.materialTitle}</span><br>
+                            <span class="item-details">User: ${userName} (${order.userId})</span><br>
+                            <span class="item-details" style="font-size: 0.8rem;">Date: ${formatTimestamp(order.createdAt)}</span>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-sm btn-warning" data-user-id="${order.userId}" data-material-id="${order.materialId}">Revoke Access</button>
+                        </div>
+                    `;
+                    paymentsListContainer.appendChild(paymentEl);
+                }
+            } catch (error) {
+                console.error("Error loading payments:", error);
+                paymentsListContainer.innerHTML = `<p style="text-align: center; color: var(--danger);">Could not load payment history.</p>`;
+            }
+        }
+        
+        async function handlePaymentActions(e) {
+            const button = e.target.closest('button');
+            if (!button || !button.classList.contains('btn-warning')) return;
+            
+            const userId = button.dataset.userId;
+            const materialId = button.dataset.materialId;
+            
+            if (confirm(`Are you SURE you want to revoke this user's access to this material?`)) {
+                const revokeAccessManually = functions.httpsCallable('revokeAccessManually');
+                
                 try {
-                    const snapshot = await db.collection('orders')
-                                           .where('status', '==', 'success')
-                                           .orderBy('createdAt', 'desc')
-                                           .get();
-                    if (snapshot.empty) {
-                        paymentsListContainer.innerHTML = '<p style="text-align: center;">No successful payments found.</p>';
-                        return;
-                    }
-                    paymentsListContainer.innerHTML = '';
-                    for (const doc of snapshot.docs) {
-                        const order = doc.data();
-                        const userDoc = await db.collection('users').doc(order.userId).get();
-                        const userName = userDoc.exists ? userDoc.data().name : 'Unknown User';
-                        
-                        const paymentEl = document.createElement('div');
-                        paymentEl.className = 'list-item';
-                        paymentEl.innerHTML = `
-                            <div>
-                                <span class="item-title">${order.materialTitle}</span><br>
-                                <span class="item-details">User: ${userName} (${order.userId})</span><br>
-                                <span class="item-details" style="font-size: 0.8rem;">Date: ${formatTimestamp(order.createdAt)}</span>
+                    const result = await revokeAccessManually({
+                        userId,
+                        materialId
+                    });
+                    
+                    showToast(result.data.message);
+                    loadPayments();
+                } catch (error) {
+                    console.error("Error revoking access:", error);
+                    showToast(`Failed: ${error.message}`, "error");
+                }
+            }
+        }
+        
+        // --- CONTENT MANAGEMENT FUNCTIONS ---
+        async function loadAllContent() {
+            contentListContainer.innerHTML = `
+                <div class="spinner-container">
+                    <div class="spinner"></div>
+                </div>
+            `;
+            
+            try {
+                // Load notes
+                const notesSnapshot = await db.collection('notes').orderBy('createdAt', 'desc').get();
+                
+                // Load PYQs
+                const pyqsSnapshot = await db.collection('pyqs').orderBy('createdAt', 'desc').get();
+                
+                // Load seminars
+                const seminarsSnapshot = await db.collection('seminars').orderBy('createdAt', 'desc').get();
+                
+                contentListContainer.innerHTML = '';
+                
+                // Add notes section
+                if (!notesSnapshot.empty) {
+                    const notesCategory = document.createElement('div');
+                    notesCategory.className = 'list-category';
+                    notesCategory.textContent = 'Notes';
+                    contentListContainer.appendChild(notesCategory);
+                    
+                    notesSnapshot.forEach(doc => {
+                        const note = doc.data();
+                        const noteEl = document.createElement('div');
+                        noteEl.className = 'list-item';
+                        noteEl.innerHTML = `
+                            <div class="list-item-content">
+                                ${note.thumbnailUrl ? 
+                                    `<img src="${note.thumbnailUrl}" alt="Thumbnail" class="list-item-thumb">` : 
+                                    `<div class="list-item-no-thumb"><i class="fas fa-sticky-note"></i></div>`
+                                }
+                                <div>
+                                    <span class="item-title">${note.title}</span><br>
+                                    <span class="item-details">${note.details || 'No details'}</span>
+                                </div>
                             </div>
                             <div class="btn-group">
-                                <button class="btn-sm btn-warning" data-user-id="${order.userId}" data-material-id="${order.materialId}">Revoke Access</button>
-                            </div>`;
-                        paymentsListContainer.appendChild(paymentEl);
-                    }
-                } catch (error) {
-                    console.error("Error loading payments:", error);
-                    paymentsListContainer.innerHTML = `<p style="text-align: center; color: var(--danger);">Could not load payment history.</p>`;
+                                <button class="btn-sm btn-info" data-collection="notes" data-doc-id="${doc.id}">Edit</button>
+                                <button class="btn-sm btn-danger" data-collection="notes" data-doc-id="${doc.id}">Delete</button>
+                            </div>
+                        `;
+                        contentListContainer.appendChild(noteEl);
+                    });
                 }
+                
+                // Add PYQs section
+                if (!pyqsSnapshot.empty) {
+                    const pyqsCategory = document.createElement('div');
+                    pyqsCategory.className = 'list-category';
+                    pyqsCategory.textContent = 'Previous Year Questions';
+                    contentListContainer.appendChild(pyqsCategory);
+                    
+                    pyqsSnapshot.forEach(doc => {
+                        const pyq = doc.data();
+                        const pyqEl = document.createElement('div');
+                        pyqEl.className = 'list-item';
+                        pyqEl.innerHTML = `
+                            <div class="list-item-content">
+                                ${pyq.thumbnailUrl ? 
+                                    `<img src="${pyq.thumbnailUrl}" alt="Thumbnail" class="list-item-thumb">` : 
+                                    `<div class="list-item-no-thumb"><i class="fas fa-file-alt"></i></div>`
+                                }
+                                <div>
+                                    <span class="item-title">${pyq.title}</span><br>
+                                    <span class="item-details">${pyq.details || 'No details'}</span>
+                                </div>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn-sm btn-info" data-collection="pyqs" data-doc-id="${doc.id}">Edit</button>
+                                <button class="btn-sm btn-danger" data-collection="pyqs" data-doc-id="${doc.id}">Delete</button>
+                            </div>
+                        `;
+                        contentListContainer.appendChild(pyqEl);
+                    });
+                }
+                
+                // Add seminars section
+                if (!seminarsSnapshot.empty) {
+                    const seminarsCategory = document.createElement('div');
+                    seminarsCategory.className = 'list-category';
+                    seminarsCategory.textContent = 'Seminars';
+                    contentListContainer.appendChild(seminarsCategory);
+                    
+                    seminarsSnapshot.forEach(doc => {
+                        const seminar = doc.data();
+                        const seminarEl = document.createElement('div');
+                        seminarEl.className = 'list-item';
+                        seminarEl.innerHTML = `
+                            <div class="list-item-content">
+                                ${seminar.thumbnailUrl ? 
+                                    `<img src="${seminar.thumbnailUrl}" alt="Thumbnail" class="list-item-thumb">` : 
+                                    `<div class="list-item-no-thumb"><i class="fas fa-video"></i></div>`
+                                }
+                                <div>
+                                    <span class="item-title">${seminar.title}</span><br>
+                                    <span class="item-details">${seminar.details || 'No details'}</span>
+                                </div>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn-sm btn-info" data-collection="seminars" data-doc-id="${doc.id}">Edit</button>
+                                <button class="btn-sm btn-danger" data-collection="seminars" data-doc-id="${doc.id}">Delete</button>
+                            </div>
+                        `;
+                        contentListContainer.appendChild(seminarEl);
+                    });
+                }
+                
+                if (notesSnapshot.empty && pyqsSnapshot.empty && seminarsSnapshot.empty) {
+                    contentListContainer.innerHTML = '<p style="text-align: center;">No content found.</p>';
+                }
+            } catch (error) {
+                console.error("Error loading content:", error);
+                contentListContainer.innerHTML = `<p style="text-align: center; color: var(--danger);">Could not load content.</p>`;
             }
-
-            async function handlePaymentActions(e) {
-                const button = e.target.closest('button');
-                if (!button || !button.classList.contains('btn-warning')) return;
-                const userId = button.dataset.userId;
-                const materialId = button.dataset.materialId;
-                if (confirm(`Are you SURE you want to revoke this user's access to this material?`)) {
-                    const revokeAccessManually = functions.httpsCallable('revokeAccessManually');
+        }
+        
+        async function handleContentActions(e) {
+            const button = e.target.closest('button');
+            if (!button) return;
+            
+            const collection = button.dataset.collection;
+            const docId = button.dataset.docId;
+            
+            if (button.classList.contains('btn-danger')) {
+                if (confirm(`Are you sure you want to delete this content? This cannot be undone.`)) {
                     try {
-                        const result = await revokeAccessManually({ userId, materialId });
-                        alert(result.data.message);
-                        loadPayments();
+                        await db.collection(collection).doc(docId).delete();
+                        showToast("Content deleted successfully.");
+                        loadAllContent();
                     } catch (error) {
-                        console.error("Error revoking access:", error);
-                        alert(`Failed: ${error.message}`);
+                        console.error("Error deleting content:", error);
+                        showToast("Failed to delete content. Please try again.", "error");
                     }
                 }
+            } else if (button.classList.contains('btn-info')) {
+                try {
+                    const doc = await db.collection(collection).doc(docId).get();
+                    const data = doc.data();
+                    
+                    document.getElementById('edit-content-collection').value = collection;
+                    document.getElementById('edit-content-docId').value = docId;
+                    document.getElementById('edit-content-title').value = data.title;
+                    document.getElementById('edit-content-details').value = data.details || '';
+                    
+                    // Show thumbnail field for notes and pyqs
+                    if (collection === 'notes' || collection === 'pyqs') {
+                        document.getElementById('edit-thumbnail-group').style.display = 'block';
+                        document.getElementById('edit-content-thumbnail').value = data.thumbnailUrl || '';
+                    } else {
+                        document.getElementById('edit-thumbnail-group').style.display = 'none';
+                    }
+                    
+                    editContentModal.classList.add('active');
+                } catch (error) {
+                    console.error("Error loading content data:", error);
+                    showToast("Failed to load content data. Please try again.", "error");
+                }
             }
-
-            // --- CONTENT MANAGEMENT FUNCTIONS ---
-            async function loadAllContent() { /* ... unchanged ... */ }
-            async function handleContentActions(e) { /* ... unchanged ... */ }
-            async function handleEditContentSubmit(e) { /* ... unchanged ... */ }
-
-            // --- ANALYTICS FUNCTIONS ---
-            async function loadAnalytics() { /* ... unchanged ... */ }
-        });
+        }
+        
+        async function handleEditContentSubmit(e) {
+            e.preventDefault();
+            
+            const collection = document.getElementById('edit-content-collection').value;
+            const docId = document.getElementById('edit-content-docId').value;
+            const title = document.getElementById('edit-content-title').value;
+            const details = document.getElementById('edit-content-details').value;
+            const thumbnailUrl = document.getElementById('edit-content-thumbnail').value;
+            
+            try {
+                const updateData = {
+                    title,
+                    details
+                };
+                
+                // Add thumbnail URL if applicable
+                if ((collection === 'notes' || collection === 'pyqs') && thumbnailUrl) {
+                    updateData.thumbnailUrl = thumbnailUrl;
+                }
+                
+                await db.collection(collection).doc(docId).update(updateData);
+                
+                editContentModal.classList.remove('active');
+                showToast("Content updated successfully.");
+                loadAllContent();
+            } catch (error) {
+                console.error("Error updating content:", error);
+                showToast("Failed to update content. Please try again.", "error");
+            }
+        }
+        
+        // --- ANALYTICS FUNCTIONS ---
+        async function loadAnalytics() {
+            analyticsContentContainer.innerHTML = `
+                <div class="spinner-container">
+                    <div class="spinner"></div>
+                </div>
+            `;
+            
+            try {
+                // Get user counts
+                const usersSnapshot = await db.collection('users').get();
+                const totalUsers = usersSnapshot.size;
+                const studentUsers = usersSnapshot.docs.filter(doc => doc.data().role === 'student').length;
+                const adminUsers = usersSnapshot.docs.filter(doc => doc.data().role === 'admin').length;
+                
+                // Get content counts
+                const notesSnapshot = await db.collection('notes').get();
+                const pyqsSnapshot = await db.collection('pyqs').get();
+                const seminarsSnapshot = await db.collection('seminars').get();
+                
+                const totalNotes = notesSnapshot.size;
+                const totalPyqs = pyqsSnapshot.size;
+                const totalSeminars = seminarsSnapshot.size;
+                
+                // Get payment counts
+                const paymentsSnapshot = await db.collection('orders').get();
+                const totalPayments = paymentsSnapshot.size;
+                const successfulPayments = paymentsSnapshot.docs.filter(doc => doc.data().status === 'success').length;
+                
+                // Create analytics HTML
+                analyticsContentContainer.innerHTML = `
+                    <div class="analytics-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">${totalUsers}</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${studentUsers}</div>
+                            <div class="stat-label">Students</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${adminUsers}</div>
+                            <div class="stat-label">Admins</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${totalNotes}</div>
+                            <div class="stat-label">Notes</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${totalPyqs}</div>
+                            <div class="stat-label">PYQs</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${totalSeminars}</div>
+                            <div class="stat-label">Seminars</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${totalPayments}</div>
+                            <div class="stat-label">Total Payments</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${successfulPayments}</div>
+                            <div class="stat-label">Successful Payments</div>
+                        </div>
+                    </div>
+                    
+                    <div class="list-category">Recent Activity</div>
+                    <div id="recent-activity">
+                        <div class="spinner-container">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                `;
+                
+                // Load recent activity
+                loadRecentActivity();
+            } catch (error) {
+                console.error("Error loading analytics:", error);
+                analyticsContentContainer.innerHTML = `<p style="text-align: center; color: var(--danger);">Could not load analytics.</p>`;
+            }
+        }
+        
+        async function loadRecentActivity() {
+            const recentActivityContainer = document.getElementById('recent-activity');
+            
+            try {
+                // Get recent user registrations
+                const recentUsers = await db.collection('users')
+                    .orderBy('createdAt', 'desc')
+                    .limit(5)
+                    .get();
+                
+                // Get recent content uploads
+                const recentNotes = await db.collection('notes')
+                    .orderBy('createdAt', 'desc')
+                    .limit(3)
+                    .get();
+                
+                const recentPyqs = await db.collection('pyqs')
+                    .orderBy('createdAt', 'desc')
+                    .limit(3)
+                    .get();
+                
+                const recentSeminars = await db.collection('seminars')
+                    .orderBy('createdAt', 'desc')
+                    .limit(3)
+                    .get();
+                
+                // Get recent payments
+                const recentPayments = await db.collection('orders')
+                    .orderBy('createdAt', 'desc')
+                    .limit(5)
+                    .get();
+                
+                // Combine and sort all activities
+                const activities = [];
+                
+                // Add user registrations
+                recentUsers.forEach(doc => {
+                    const user = doc.data();
+                    activities.push({
+                        type: 'user',
+                        title: `New user: ${user.name}`,
+                        details: `Registered at ${formatTimestamp(user.createdAt)}`,
+                        timestamp: user.createdAt
+                    });
+                });
+                
+                // Add content uploads
+                recentNotes.forEach(doc => {
+                    const note = doc.data();
+                    activities.push({
+                        type: 'content',
+                        title: `New Note: ${note.title}`,
+                        details: `Uploaded at ${formatTimestamp(note.createdAt)}`,
+                        timestamp: note.createdAt
+                    });
+                });
+                
+                recentPyqs.forEach(doc => {
+                    const pyq = doc.data();
+                    activities.push({
+                        type: 'content',
+                        title: `New PYQ: ${pyq.title}`,
+                        details: `Uploaded at ${formatTimestamp(pyq.createdAt)}`,
+                        timestamp: pyq.createdAt
+                    });
+                });
+                
+                recentSeminars.forEach(doc => {
+                    const seminar = doc.data();
+                    activities.push({
+                        type: 'content',
+                        title: `New Seminar: ${seminar.title}`,
+                        details: `Uploaded at ${formatTimestamp(seminar.createdAt)}`,
+                        timestamp: seminar.createdAt
+                    });
+                });
+                
+                // Add payments
+                recentPayments.forEach(doc => {
+                    const payment = doc.data();
+                    activities.push({
+                        type: 'payment',
+                        title: `Payment: ${payment.materialTitle}`,
+                        details: `${payment.status} at ${formatTimestamp(payment.createdAt)}`,
+                        timestamp: payment.createdAt
+                    });
+                });
+                
+                // Sort activities by timestamp (newest first)
+                activities.sort((a, b) => {
+                    return b.timestamp.toDate() - a.timestamp.toDate();
+                });
+                
+                // Take the top 10 activities
+                const topActivities = activities.slice(0, 10);
+                
+                // Display activities
+                if (topActivities.length > 0) {
+                    recentActivityContainer.innerHTML = '';
+                    
+                    topActivities.forEach(activity => {
+                        const activityEl = document.createElement('div');
+                        activityEl.className = 'list-item';
+                        
+                        let iconClass = '';
+                        if (activity.type === 'user') iconClass = 'fas fa-user-plus';
+                        else if (activity.type === 'content') iconClass = 'fas fa-file-upload';
+                        else if (activity.type === 'payment') iconClass = 'fas fa-money-bill-wave';
+                        
+                        activityEl.innerHTML = `
+                            <div>
+                                <span class="item-title">${activity.title}</span><br>
+                                <span class="item-details">${activity.details}</span>
+                            </div>
+                            <div>
+                                <i class="${iconClass}" style="font-size: 1.5rem; color: var(--primary-glow);"></i>
+                            </div>
+                        `;
+                        
+                        recentActivityContainer.appendChild(activityEl);
+                    });
+                } else {
+                    recentActivityContainer.innerHTML = '<p style="text-align: center;">No recent activity found.</p>';
+                }
+            } catch (error) {
+                console.error("Error loading recent activity:", error);
+                recentActivityContainer.innerHTML = '<p style="text-align: center; color: var(--danger);">Could not load recent activity.</p>';
+            }
+        }
     </script>
 </body>
 </html>
