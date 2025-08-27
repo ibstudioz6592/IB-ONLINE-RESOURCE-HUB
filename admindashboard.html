@@ -74,6 +74,38 @@
         }
         @keyframes rgb-text-flow { to { background-position: 400% 0; } }
         
+        /* ADMIN Button with RGB Blinking Effect */
+        .btn-admin {
+            background: linear-gradient(135deg, #ff00ff, #00ffea, #ffdd00, #ff6b6b, #ff00ff);
+            background-size: 400% 100%; 
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: rgb-text-flow 2s linear infinite;
+            border: 2px solid;
+            border-image: linear-gradient(135deg, #ff00ff, #00ffea, #ffdd00, #ff6b6b, #ff00ff) 1;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 800;
+            cursor: not-allowed;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+        .btn-admin::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
         /* Enhanced Buttons */
         .btn-secondary { 
             background: var(--glass-bg); border: 1px solid var(--glass-border); 
@@ -539,9 +571,12 @@
                 </svg>
                 <h1 class="brand-title">IB STUDIOZ</h1>
             </a>
-            <button id="logout-btn" class="btn-secondary">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <button id="admin-btn" class="btn-admin">ADMIN</button>
+                <button id="logout-btn" class="btn-secondary">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
         </header>
         
         <div class="container">
@@ -983,6 +1018,7 @@
         // DOM Elements
         const adminNameEl = document.getElementById('admin-name');
         const logoutBtn = document.getElementById('logout-btn');
+        const adminBtn = document.getElementById('admin-btn');
         
         // Overview counters
         const totalUsersCount = document.getElementById('totalUsersCount');
@@ -1085,6 +1121,11 @@
                         showToast("Logout failed. Please try again.", "error");
                     });
                 }
+            });
+            
+            // ADMIN button functionality (non-functional as requested)
+            adminBtn.addEventListener('click', () => {
+                showToast("You're already in admin mode!", "info");
             });
             
             // Quick Actions Menu
@@ -1278,7 +1319,8 @@
                     
                     snapshot.forEach(doc => {
                         const data = doc.data();
-                        if (data.lastLoginAt && data.lastLoginAt.toDate() > weekAgo) {
+                        // Check if lastLoginAt exists and is a valid timestamp
+                        if (data.lastLoginAt && data.lastLoginAt.toDate && data.lastLoginAt.toDate() > weekAgo) {
                             activeCount++;
                         }
                     });
@@ -1345,8 +1387,15 @@
                 db.collection('users').get().then(snapshot => {
                     usersData = snapshot.docs.map(doc => {
                         const user = { id: doc.id, ...doc.data() };
+                        // Ensure these properties exist
                         user.totalPurchases = 0;
                         user.totalSpent = 0;
+                        user.name = user.name || 'Unknown User';
+                        user.email = user.email || 'No email';
+                        user.admissionNo = user.admissionNo || 'Not provided';
+                        user.createdAt = user.createdAt || null;
+                        user.lastLoginAt = user.lastLoginAt || null;
+                        user.loginCount = user.loginCount || 0;
                         return user;
                     });
                     
@@ -1379,6 +1428,12 @@
                             const user = { id: doc.id, ...doc.data() };
                             user.totalPurchases = 0;
                             user.totalSpent = 0;
+                            user.name = user.name || 'Unknown User';
+                            user.email = user.email || 'No email';
+                            user.admissionNo = user.admissionNo || 'Not provided';
+                            user.createdAt = user.createdAt || null;
+                            user.lastLoginAt = user.lastLoginAt || null;
+                            user.loginCount = user.loginCount || 0;
                             return user;
                         });
                         
@@ -1483,7 +1538,7 @@
         
         // Get online status indicator
         function getOnlineStatus(lastLogin) {
-            if (!lastLogin) return 'status-offline';
+            if (!lastLogin || !lastLogin.toDate) return 'status-offline';
             
             const now = new Date();
             const loginDate = lastLogin.toDate();
@@ -1583,10 +1638,15 @@
                 const promises = collections.map(collectionName => {
                     return db.collection(collectionName).get().then(snapshot => {
                         snapshot.docs.forEach(doc => {
+                            const data = doc.data();
                             contentData.push({
                                 id: doc.id,
                                 collection: collectionName,
-                                ...doc.data()
+                                title: data.title || 'Untitled',
+                                details: data.details || data.description || 'No description',
+                                createdAt: data.createdAt || null,
+                                downloadCount: data.downloadCount || 0,
+                                ...data
                             });
                         });
                     });
@@ -1612,10 +1672,15 @@
                             
                             // Add new
                             snapshot.docs.forEach(doc => {
+                                const data = doc.data();
                                 contentData.push({
                                     id: doc.id,
                                     collection: collectionName,
-                                    ...doc.data()
+                                    title: data.title || 'Untitled',
+                                    details: data.details || data.description || 'No description',
+                                    createdAt: data.createdAt || null,
+                                    downloadCount: data.downloadCount || 0,
+                                    ...data
                                 });
                             });
                             
@@ -1713,7 +1778,7 @@
                         const amount = parseFloat(payment.amount) || 0;
                         totalRevenue += amount;
                         
-                        if (payment.createdAt && payment.createdAt.toDate() >= currentMonth) {
+                        if (payment.createdAt && payment.createdAt.toDate && payment.createdAt.toDate() >= currentMonth) {
                             monthlyRevenue += amount;
                         }
                     }
@@ -1724,7 +1789,7 @@
                 lastMonth.setMonth(lastMonth.getMonth() - 1);
                 const newUsersThisMonth = usersSnapshot.docs.filter(doc => {
                     const data = doc.data();
-                    return data.createdAt && data.createdAt.toDate() >= currentMonth;
+                    return data.createdAt && data.createdAt.toDate && data.createdAt.toDate() >= currentMonth;
                 }).length;
                 
                 // Most popular content
@@ -1756,6 +1821,16 @@
                     console.error('Error getting popular content:', error);
                 }
                 
+                // Calculate active users in the last 7 days
+                const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+                let activeUsersCount = 0;
+                usersSnapshot.docs.forEach(doc => {
+                    const data = doc.data();
+                    if (data.lastLoginAt && data.lastLoginAt.toDate && data.lastLoginAt.toDate() > weekAgo) {
+                        activeUsersCount++;
+                    }
+                });
+                
                 const analyticsHtml = `
                     <div class="settings-grid">
                         <div class="setting-category">
@@ -1777,8 +1852,12 @@
                                 <span style="color: var(--secondary-glow); font-weight: 700;">${usersSnapshot.size}</span>
                             </div>
                             <div class="setting-item">
+                                <label>Active Users (7 days)</label>
+                                <span style="color: var(--primary-glow); font-weight: 700;">${activeUsersCount}</span>
+                            </div>
+                            <div class="setting-item">
                                 <label>New This Month</label>
-                                <span style="color: var(--primary-glow); font-weight: 700;">${newUsersThisMonth}</span>
+                                <span style="color: var(--info); font-weight: 700;">${newUsersThisMonth}</span>
                             </div>
                         </div>
                         
@@ -1848,13 +1927,13 @@
                     case 'active':
                         const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
                         filteredUsers = filteredUsers.filter(user => 
-                            user.lastLoginAt && user.lastLoginAt.toDate() > weekAgo
+                            user.lastLoginAt && user.lastLoginAt.toDate && user.lastLoginAt.toDate() > weekAgo
                         );
                         break;
                     case 'new':
                         const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
                         filteredUsers = filteredUsers.filter(user => 
-                            user.createdAt && user.createdAt.toDate() > monthAgo
+                            user.createdAt && user.createdAt.toDate && user.createdAt.toDate() > monthAgo
                         );
                         break;
                     case 'no-purchases':
@@ -1902,7 +1981,7 @@
                 
                 if (cutoffDate) {
                     filteredPayments = filteredPayments.filter(payment => 
-                        payment.createdAt && payment.createdAt.toDate() >= cutoffDate
+                        payment.createdAt && payment.createdAt.toDate && payment.createdAt.toDate() >= cutoffDate
                     );
                 }
             }
@@ -2169,7 +2248,7 @@
                         targetUsers = usersSnapshot.docs
                             .filter(doc => {
                                 const data = doc.data();
-                                return data.lastLoginAt && data.lastLoginAt.toDate() > weekAgo;
+                                return data.lastLoginAt && data.lastLoginAt.toDate && data.lastLoginAt.toDate() > weekAgo;
                             })
                             .map(doc => doc.data().email);
                         break;
