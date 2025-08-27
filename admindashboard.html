@@ -95,6 +95,25 @@
             transform: translateY(-2px);
         }
         
+        /* Modern Dashboard Cards */
+        .dashboard-cards { display: flex; flex-wrap: wrap; gap: 24px; margin-bottom: 32px; }
+        .card {
+            flex: 1; min-width: 220px; background: #fff; border-radius: 12px;
+            box-shadow: 0 2px 8px #0001; padding: 24px; display: flex;
+            flex-direction: column; align-items: center; transition: box-shadow 0.2s;
+        }
+        .card:hover { box-shadow: 0 4px 16px #007bff22; }
+        .spinner-container { display: flex; justify-content: center; align-items: center; height: 80px; }
+        .spinner {
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        
         /* Dashboard Overview Cards */
         .dashboard-overview {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
@@ -526,24 +545,24 @@
         </header>
         
         <div class="container">
-            <!-- Dashboard Overview Cards -->
-            <div class="dashboard-overview" id="dashboard-overview">
-                <div class="overview-card">
-                    <div class="overview-number" id="total-users-count">0</div>
-                    <div class="overview-label">Total Users</div>
-                </div>
-                <div class="overview-card">
-                    <div class="overview-number" id="total-content-count">0</div>
-                    <div class="overview-label">Content Items</div>
-                </div>
-                <div class="overview-card">
-                    <div class="overview-number" id="total-payments-count">0</div>
-                    <div class="overview-label">Transactions</div>
-                </div>
-                <div class="overview-card">
-                    <div class="overview-number" id="active-users-count">0</div>
-                    <div class="overview-label">Active This Week</div>
-                </div>
+            <!-- Modern Dashboard Cards -->
+            <div class="dashboard-cards" style="display:flex;flex-wrap:wrap;gap:24px;margin-bottom:32px;">
+              <div class="card" style="flex:1;min-width:220px;background:#fff;border-radius:12px;box-shadow:0 2px 8px #0001;padding:24px;display:flex;flex-direction:column;align-items:center;">
+                <span style="font-size:2.2rem;font-weight:700;color:#007bff;" id="totalUsersCount">0</span>
+                <span style="color:#555;font-size:1.1rem;">Total Users</span>
+              </div>
+              <div class="card" style="flex:1;min-width:220px;background:#fff;border-radius:12px;box-shadow:0 2px 8px #0001;padding:24px;display:flex;flex-direction:column;align-items:center;">
+                <span style="font-size:2.2rem;font-weight:700;color:#28a745;" id="activeUsersCount">0</span>
+                <span style="color:#555;font-size:1.1rem;">Active Users (7d)</span>
+              </div>
+              <div class="card" style="flex:1;min-width:220px;background:#fff;border-radius:12px;box-shadow:0 2px 8px #0001;padding:24px;display:flex;flex-direction:column;align-items:center;">
+                <span style="font-size:2.2rem;font-weight:700;color:#17a2b8;" id="totalContentCount">0</span>
+                <span style="color:#555;font-size:1.1rem;">Total Content</span>
+              </div>
+              <div class="card" style="flex:1;min-width:220px;background:#fff;border-radius:12px;box-shadow:0 2px 8px #0001;padding:24px;display:flex;flex-direction:column;align-items:center;">
+                <span style="font-size:2.2rem;font-weight:700;color:#ffc107;" id="totalPaymentsCount">0</span>
+                <span style="color:#555;font-size:1.1rem;">Payments</span>
+              </div>
             </div>
             
             <div class="welcome-header-pro">
@@ -1241,30 +1260,39 @@
         
         // Load dashboard overview data in real-time
         function loadDashboardData() {
-            // Users and active count
-            db.collection('users').onSnapshot(snapshot => {
-                totalUsersCount.textContent = snapshot.size;
-                const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-                const active = snapshot.docs.filter(doc => {
+            try {
+                // Show spinners initially
+                document.getElementById('totalUsersCount').textContent = '...';
+                document.getElementById('activeUsersCount').textContent = '...';
+                document.getElementById('totalContentCount').textContent = '...';
+                document.getElementById('totalPaymentsCount').textContent = '...';
+                // Users and active count
+                db.collection('users').onSnapshot(snapshot => {
+                  document.getElementById('totalUsersCount').textContent = snapshot.size;
+                  const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+                  const active = snapshot.docs.filter(doc => {
                     const data = doc.data();
                     return data.lastLoginAt && data.lastLoginAt.toDate() > weekAgo;
-                }).length;
-                activeUsersCount.textContent = active;
-            });
-
-            // Content count
-            let notesCount = 0, pyqsCount = 0, seminarsCount = 0;
-            const updateTotalContent = () => {
-                totalContentCount.textContent = notesCount + pyqsCount + seminarsCount;
-            };
-            db.collection('notes').onSnapshot(s => { notesCount = s.size; updateTotalContent(); });
-            db.collection('pyqs').onSnapshot(s => { pyqsCount = s.size; updateTotalContent(); });
-            db.collection('seminars').onSnapshot(s => { seminarsCount = s.size; updateTotalContent(); });
-
-            // Payments count
-            db.collection('payments').onSnapshot(s => {
-                totalPaymentsCount.textContent = s.size;
-            });
+                  }).length;
+                  document.getElementById('activeUsersCount').textContent = active;
+                }, err => {
+                  showDashboardError('Failed to load users: ' + err.message);
+                });
+                // Content count
+                let notesCount = 0, pyqsCount = 0, seminarsCount = 0;
+                const updateTotalContent = () => {
+                  document.getElementById('totalContentCount').textContent = notesCount + pyqsCount + seminarsCount;
+                };
+                db.collection('notes').onSnapshot(s => { notesCount = s.size; updateTotalContent(); }, err => showDashboardError('Failed to load notes: ' + err.message));
+                db.collection('pyqs').onSnapshot(s => { pyqsCount = s.size; updateTotalContent(); }, err => showDashboardError('Failed to load pyqs: ' + err.message));
+                db.collection('seminars').onSnapshot(s => { seminarsCount = s.size; updateTotalContent(); }, err => showDashboardError('Failed to load seminars: ' + err.message));
+                // Payments count
+                db.collection('payments').onSnapshot(s => {
+                  document.getElementById('totalPaymentsCount').textContent = s.size;
+                }, err => showDashboardError('Failed to load payments: ' + err.message));
+              } catch (e) {
+                showDashboardError('Dashboard error: ' + e.message);
+              }
         }
         
         // Load users with real-time updates
@@ -1674,6 +1702,15 @@
                     }, 2000);
                 }
             });
+        }
+        
+        // Error handling for dashboard data
+        function showDashboardError(msg) {
+          const errDiv = document.createElement('div');
+          errDiv.textContent = msg;
+          errDiv.style = 'color:#c00;background:#fee;padding:12px;border-radius:8px;margin-bottom:16px;text-align:center;';
+          document.body.prepend(errDiv);
+          setTimeout(() => errDiv.remove(), 5000);
         }
         
         // Filter functions
@@ -2217,6 +2254,7 @@
     </script>
 </body>
 </html>
+
 
 
 
