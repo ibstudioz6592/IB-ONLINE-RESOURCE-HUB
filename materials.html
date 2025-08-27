@@ -6,19 +6,18 @@
     <title>Study Materials | IB STUDIOZ</title>
     
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23FFD700' d='M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z' /%3E%3Cg fill='%230A0A0A'%3E%3Cpath d='M28,25 h10 v50 h-10 Z' /%3E%3Cpath d='M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z' /%3E%3C/g%3E%3C/svg%3E">
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
         :root {
             --primary-glow: #FFD700; --secondary-glow: #00A2FF; --dark-bg: #0A0A0A;
             --text-primary: #F0F0F0; --text-secondary: #A0A0A0; --card-bg: rgba(22, 22, 22, 0.8);
             --border-color: rgba(255, 215, 0, 0.2); --shadow-color: rgba(0, 0, 0, 0.5);
             --primary-glow-transparent: rgba(255, 215, 0, 0.15);
+            --success-color: #10B981; --error-color: #EF4444; --info-color: #3B82F6;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
@@ -46,6 +45,9 @@
         .btn, .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 10px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
         .btn-secondary:hover { background: var(--primary-glow); color: var(--dark-bg); border-color: var(--primary-glow); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
         .btn-secondary .fas { margin-right: 8px; }
+        .btn-primary { background: var(--primary-glow); color: var(--dark-bg); border: none; padding: 12px 25px; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .btn-primary:hover { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); transform: translateY(-2px); }
+        .btn-primary .fas { margin-right: 10px; }
         
         .filter-bar {
             display: flex; flex-wrap: wrap; justify-content: space-between;
@@ -63,7 +65,6 @@
         }
         #open-filter-modal-btn:hover { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); transform: translateY(-2px); }
         #open-filter-modal-btn .fas { margin-right: 10px; }
-
         .materials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
         .material-card {
             background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 15px; 
@@ -132,7 +133,124 @@
         /* JS-driven slide for mobile */
         .filter-columns.show-semesters { transform: translateX(-33.333%); }
         .filter-columns.show-courses { transform: translateX(-66.666%); }
-
+        
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .toast {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-width: 300px;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease-out forwards;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .toast.fade-out {
+            animation: fadeOut 0.3s ease-out forwards;
+        }
+        
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+        
+        .toast-success {
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .toast-error {
+            border-left: 4px solid var(--error-color);
+        }
+        
+        .toast-info {
+            border-left: 4px solid var(--info-color);
+        }
+        
+        .toast-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-grow: 1;
+        }
+        
+        .toast-icon {
+            font-size: 1.2rem;
+        }
+        
+        .toast-success .toast-icon {
+            color: var(--success-color);
+        }
+        
+        .toast-error .toast-icon {
+            color: var(--error-color);
+        }
+        
+        .toast-info .toast-icon {
+            color: var(--info-color);
+        }
+        
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .toast-close:hover {
+            color: var(--text-primary);
+        }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #FFD700;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
         /* Media Query for Desktop Layout */
         @media (min-width: 768px) {
             .filter-columns-container { overflow: visible; }
@@ -151,20 +269,82 @@
             .filter-column:last-child { border-right: none; }
             .filter-back-btn { display: none; } /* Hide back buttons on desktop */
         }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .materials-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            #search-input {
+                max-width: 100%;
+                margin: 10px 0;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+            
+            .material-card {
+                margin-bottom: 15px;
+            }
+            
+            .toast-container {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+            }
+            
+            .toast {
+                min-width: auto;
+                max-width: none;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="background-container"><div class="aurora-layer"></div><div class="noise-layer"></div></div>
-
+    <div class="background-container">
+        <div class="aurora-layer"></div>
+        <div class="noise-layer"></div>
+    </div>
+    
+    <div class="toast-container" id="toast-container"></div>
+    
     <main>
         <header class="page-header">
             <a href="/studentdashboard.html" class="brand-logo">
-                <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" /><g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g></svg>
+                <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" />
+                    <g fill="var(--dark-bg)">
+                        <path d="M28,25 h10 v50 h-10 Z" />
+                        <path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" />
+                    </g>
+                </svg>
                 <h1 class="brand-title">IB STUDIOZ</h1>
             </a>
             <a href="#" id="logout-btn" class="btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</a>
         </header>
+        
         <div class="container">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+                <div style="display:flex;flex-wrap:wrap;gap:10px;">
+                    <button id="lang-toggle" class="btn btn-secondary"><i class="fas fa-language"></i> Language</button>
+                    <button id="show-trending" class="btn btn-secondary"><i class="fas fa-fire"></i> Trending</button>
+                    <button id="show-recent" class="btn btn-secondary"><i class="fas fa-history"></i> Recently Viewed</button>
+                    <button id="show-favorites" class="btn btn-secondary"><i class="fas fa-star"></i> Favorites</button>
+                </div>
+                <div>
+                    <button id="upload-material-btn" class="btn btn-primary"><i class="fas fa-upload"></i> Upload Material</button>
+                </div>
+            </div>
+            
+            <div id="calendar-view" style="margin-bottom:20px;display:none;"></div>
             
             <div class="filter-bar">
                 <div id="current-selection-display">
@@ -173,22 +353,26 @@
                 <button id="open-filter-modal-btn">
                     <i class="fas fa-filter"></i> Select Course
                 </button>
+                <input type="text" id="search-input" placeholder="Search by title or tags..." style="flex:1;max-width:350px;margin-left:15px;">
+                <button id="request-material-btn" class="btn btn-secondary" style="margin-left:10px;"><i class="fas fa-plus"></i> Request Material</button>
             </div>
-
+            
             <div id="materials-grid" class="materials-grid">
                 <div class="empty-state">
                     <i class="fas fa-hand-pointer"></i>
                     <p>Use the 'Select Course' button to find your materials.</p>
                 </div>
             </div>
+            
+            <div id="pagination-bar" style="margin-top:30px;text-align:center;"></div>
         </div>
     </main>
-
-    <div id="filter-modal" class="modal-overlay">
+    
+    <div id="filter-modal" class="modal-overlay" role="dialog" aria-labelledby="filter-modal-title" aria-hidden="true">
         <div class="modal-content">
-            <button id="filter-modal-close-btn" class="modal-close">&times;</button>
+            <button id="filter-modal-close-btn" class="modal-close" aria-label="Close">&times;</button>
             <div class="modal-header">
-                <h2>Find Your Study Materials</h2>
+                <h2 id="filter-modal-title">Find Your Study Materials</h2>
                 <p class="modal-description">Select your department, semester, and course to begin.</p>
             </div>
             <!-- Wrapper for the columns to handle overflow -->
@@ -218,273 +402,1331 @@
             </div>
         </div>
     </div>
-
-    <div id="details-modal" class="modal-overlay">
+    
+    <div id="details-modal" class="modal-overlay" role="dialog" aria-labelledby="details-modal-title" aria-hidden="true">
         <div class="modal-content">
-            <button id="details-modal-close-btn" class="modal-close">&times;</button>
+            <button id="details-modal-close-btn" class="modal-close" aria-label="Close">&times;</button>
             <div class="modal-header">
                 <h2 id="modal-title"></h2>
                 <p><strong>Course:</strong> <span id="modal-courseCode"></span></p>
                 <p id="modal-description"></p>
+                <p id="modal-uploader"></p>
+                <p id="modal-upload-date"></p>
+                <div id="modal-payment-status"></div>
             </div>
             <div class="modal-body">
-                <iframe id="modal-embed-preview" src="" width="100%" height="500" frameborder="0"></iframe>
+                <iframe id="modal-embed-preview" src="" width="100%" height="500" frameborder="0" style="display:none;"></iframe>
+                <img id="modal-image-preview" src="" alt="Preview" style="max-width:100%;max-height:500px;display:none;" />
+                <div id="modal-rating-comments"></div>
             </div>
             <a id="modal-download-btn" href="#" target="_blank" class="btn btn-primary">
                 <i class="fas fa-download"></i> Download File
             </a>
         </div>
     </div>
-
+    
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     
     <script>
+        // Academic Data
         const academicData = {
-            branches: {"CSE":{"name":"Computer Science","color":"var(--cse-color)","icon":"fas fa-laptop-code","semesters":{"1":[{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus With MATLAB","credits":4},{"code":"U23PHY103B","name":"Engineering Physics","credits":3},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23BEE106A","name":"Basic Electrical and Electronics Engineering","credits":3},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1},{"code":"U23PHL110","name":"Engineering Physics Lab","credits":1},{"code":"U23BEEL113","name":"Basic Electrical and Electronics Engineering Lab","credits":1},{"code":"U23PPL112","name":"Python Programming Lab","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202B","name":"Discrete Mathematics","credits":4},{"code":"U23CHE204B","name":"Chemistry For Computer Science","credits":3},{"code":"U23CPR205B","name":"Programming In C","credits":3},{"code":"U23EGR207","name":"Engineering Graphics","credits":3},{"code":"U23EC203","name":"Digital Principles And System Design","credits":3},{"code":"U23CHL211","name":"Chemistry Lab","credits":1},{"code":"U23CPL212","name":"C programming Lab","credits":1},{"code":"U23TAM201","name":"Tamils And Technology","credits":1}],"3":[{"code":"U23MAT301D","name":"Probability and Statistics","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming","credits":3},{"code":"U23CS304","name":"Operating Systems","credits":3},{"code":"U23CS305","name":"Computer Information and Ethics","credits":3},{"code":"U23CS306","name":"Data Structures Lab","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Lab","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1},{"code":"Noc24-mg72","name":"NPTEL:design Thinking-A Primer","credits":1}],"4":[{"code":"U23MAT401B","name":"Numerical Methods","credits":4},{"code":"U23CS401","name":"Design And Analysis of Algorithms","credits":3},{"code":"U23CS402","name":"Software Engineering","credits":3},{"code":"U23CS403","name":"DataBase Management Systems","credits":3},{"code":"U23CS404","name":"Embedded System Design ","credits":3},{"code":"U23CS405","name":"Software Development Lab","credits":1},{"code":"U23CS403","name":"Database Management Systems Lab","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CS502","name":"Artificial Intelligence","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":" U23CS947 / U23CS903","name":"Professional Elective ","credits":3},{"code":"U23CS505","name":"Computer Networks Laboratory","credits":2},{"code":"U23CS506","name":"Artificial Intelligence and Machine Learning Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude -III","credits":1}],"6":[],"7":[],"8":[]}},
-            "IT":{"name":"Info. Technology","color":"var(--it-color)","icon":"fas fa-network-wired","semesters":{"1":[{"code":"U23IT101","name":"Programming Fundamentals","credits":4},{"code":"U23IT102","name":"Discrete Mathematics","credits":4},{"code":"U23IT103","name":"Digital Systems","credits":3},{"code":"U23IT104","name":"Computer Organization","credits":3},{"code":"U23IT105","name":"Communication Skills","credits":2},{"code":"U23IT106","name":"Programming Lab","credits":1},{"code":"U23IT107","name":"Digital Systems Lab","credits":1}],"2":[{"code":"U23IT201","name":"Data Structures","credits":4},{"code":"U23IT202","name":"Database Systems","credits":4},{"code":"U23IT203","name":"Operating Systems","credits":3},{"code":"U23IT204","name":"Computer Networks","credits":3},{"code":"U23IT205","name":"Web Technologies","credits":3},{"code":"U23IT206","name":"Data Structures Lab","credits":1},{"code":"U23IT207","name":"Web Technologies Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
-            "ECE":{"name":"Electronics & Comm","color":"var(--ece-color)","icon":"fas fa-satellite-dish","semesters":{"1":[{"code":"U23EC101","name":"Basic Electronics","credits":4},{"code":"U23EC102","name":"Circuit Theory","credits":4},{"code":"U23EC103","name":"Engineering Mathematics","credits":4},{"code":"U23EC104","name":"Programming in C","credits":3},{"code":"U23EC105","name":"Communication Skills","credits":2},{"code":"U23EC106","name":"Electronics Lab","credits":1},{"code":"U23EC107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EC201","name":"Analog Electronics","credits":4},{"code":"U23EC202","name":"Digital Electronics","credits":4},{"code":"U23EC203","name":"Signals and Systems","credits":4},{"code":"U23EC204","name":"Electromagnetic Theory","credits":3},{"code":"U23EC205","name":"Data Structures","credits":3},{"code":"U23EC206","name":"Analog Electronics Lab","credits":1},{"code":"U23EC207","name":"Digital Electronics Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
-            "EEE":{"name":"Electrical & Electronics","color":"var(--eee-color)","icon":"fas fa-bolt","semesters":{"1":[{"code":"U23EE101","name":"Basic Electrical Engineering","credits":4},{"code":"U23EE102","name":"Engineering Mathematics","credits":4},{"code":"U23EE103","name":"Electronics Engineering","credits":3},{"code":"U23EE104","name":"Programming in C","credits":3},{"code":"U23EE105","name":"Communication Skills","credits":2},{"code":"U23EE106","name":"Electrical Lab","credits":1},{"code":"U23EE107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EE201","name":"Circuit Theory","credits":4},{"code":"U23EE202","name":"Electromagnetic Theory","credits":4},{"code":"U23EE203","name":"Digital Electronics","credits":4},{"code":"U23EE204","name":"Electrical Machines","credits":3},{"code":"U23EE205","name":"Data Structures","credits":3},{"code":"U23EE206","name":"Circuit Theory Lab","credits":1},{"code":"U23EE207","name":"Digital Electronics Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
-            "MECH":{"name":"Mechanical","color":"var(--mech-color)","icon":"fas fa-cogs","semesters":{"1":[{"code":"U23ME101","name":"Engineering Mechanics","credits":4},{"code":"U23ME102","name":"Engineering Graphics","credits":4},{"code":"U23ME103","name":"Engineering Mathematics","credits":4},{"code":"U23ME104","name":"Basic Electrical Engineering","credits":3},{"code":"U23ME105","name":"Communication Skills","credits":2},{"code":"U23ME106","name":"Workshop Practice","credits":1},{"code":"U23ME107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23ME201","name":"Thermodynamics","credits":4},{"code":"U23ME202","name":"Mechanics of Materials","credits":4},{"code":"U23ME203","name":"Manufacturing Technology","credits":4},{"code":"U23ME204","name":"Fluid Mechanics","credits":3},{"code":"U23ME205","name":"Computer Programming","credits":3},{"code":"U23ME206","name":"Thermodynamics Lab","credits":1},{"code":"U23ME207","name":"Manufacturing Technology Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
-            "AIML":{"name":"AI & Machine Learning","color":"var(--aiml-color)","icon":"fas fa-brain","semesters":{"1":[{"code":"U23EG107","name":"Engineering Graphics","credits":3},{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus with MATLAB","credits":4},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23PHY103E","name":"Engineering Physics","credits":3},{"code":"U23PHL110","name":"Engineering Physics Laboratory","credits":1},{"code":"U23PPL112","name":"Python Programming Laboratory","credits":1},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202D","name":"Discrete Mathematics","credits":4},{"code":"U23BEEE206B","name":"Basics of Electrical and Electronics Engineering","credits":3},{"code":"U23CPR205","name":"Programming in C","credits":3},{"code":"U23CHE204C","name":"Applied Chemistry","credits":2},{"code":"U23EC203","name":"Digital Principles and System Design","credits":3},{"code":"U23CPL212","name":"C Programming Laboratory","credits":1},{"code":"U23CHL211","name":"Chemistry Laboratory","credits":1},{"code":"U23BEEL213B","name":"BEEE Laboratory","credits":1},{"code":"U23TAM201","name":"Tamils and Technology","credits":1}],"3":[{"code":"U23MAT301E","name":"Applied Probability and Statistics-I","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming Using Java","credits":3},{"code":"U23AML301","name":"Data Visualization","credits":3},{"code":"noc25-mg106","name":"NPTEL: Design Thinking - A Primer","credits":1},{"code":"U23CS306","name":"Data Structures Laboratory","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Using Java Laboratory","credits":1},{"code":"U23AML302","name":"Data Visualization Laboratory","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1}],"4":[{"code":"U23MAT401A","name":"Applied Probability and Statistics-II","credits":4},{"code":"U23CS403","name":"Database Management Systems","credits":3},{"code":"U23CS401","name":"Design and Analysis of Algorithms","credits":3},{"code":"U23AML401","name":"Artificial Intelligence","credits":3},{"code":"U23CSD402","name":"Operating Systems","credits":3},{"code":"U23AML402","name":"Artificial Intelligence Lab","credits":1},{"code":"U23CS405","name":"Database Management Systems Lab","credits":1},{"code":"U23GE401","name":"Soft Skills and Aptitude-II","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CSD502","name":"Software Engineering","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":"U19CS903","name":"Professional Elective - Agile Methodologies","credits":3},{"code":"U23AML501","name":"Machine Learning Laboratory","credits":2},{"code":"U23CSD504","name":"Software Development Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude -III","credits":1}],"6":[{"code":"U23CS601","name":"Computer Vision","credits":3},{"code":"U23CS602","name":"Reinforcement Learning","credits":3},{"code":"U23CS603","name":"Robotics","credits":3},{"code":"U23CS604","name":"Cyber Security","credits":3},{"code":"U23CS605","name":"Blockchain Technology","credits":3},{"code":"U23CS606","name":"Elective III","credits":3},{"code":"U23CS607","name":"Project Work II","credits":3}],"7":[{"code":"U23CS701","name":"Advanced Machine Learning","credits":3},{"code":"U23CS702","name":"AI Ethics and Governance","credits":3},{"code":"U23CS703","name":"Elective IV","credits":3},{"code":"U23CS704","name":"Project Work III","credits":3}],"8":[{"code":"U23CS801","name":"Industry Internship","credits":6},{"code":"U23CS802","name":"Project Work IV","credits":6}]}},
-            "CIVIL":{"name":"Civil Engineering","color":"var(--civil-color)","icon":"fas fa-building","semesters":{"1":[{"code":"U23CE101","name":"Engineering Mechanics","credits":4},{"code":"U23CE102","name":"Engineering Graphics","credits":4},{"code":"U23CE103","name":"Engineering Mathematics","credits":4},{"code":"U23CE104","name":"Basic Civil Engineering","credits":3},{"code":"U23CE105","name":"Communication Skills","credits":2},{"code":"U23CE106","name":"Surveying","credits":1},{"code":"U23CE107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23CE201","name":"Building Materials","credits":4},{"code":"U23CE202","name":"Structural Analysis","credits":4},{"code":"U23CE203","name":"Fluid Mechanics","credits":4},{"code":"U23CE204","name":"Surveying","credits":3},{"code":"U23CE205","name":"Computer Programming","credits":3},{"code":"U23CE206","name":"Building Materials Lab","credits":1},{"code":"U23CE207","name":"Surveying Lab","credits":1}]}},
-            "BME":{"name":"Bio Medical","color":"var(--bme-color)","icon":"fas fa-heartbeat","semesters":{"1":[{"code":"U23BM101","name":"Human Anatomy","credits":4},{"code":"U23BM102","name":"Engineering Mathematics","credits":4},{"code":"U23BM103","name":"Basic Electronics","credits":3},{"code":"U23BM104","name":"Programming in C","credits":3},{"code":"U23BM105","name":"Communication Skills","credits":2},{"code":"U23BM106","name":"Human Anatomy Lab","credits":1},{"code":"U23BM107","name":"Programming Lab","credits":1}],"2":[{"code":"U23BM201","name":"Human Physiology","credits":4},{"code":"U23BM202","name":"Biochemistry","credits":4},{"code":"U23BM203","name":"Medical Electronics","credits":4},{"code":"U23BM204","name":"Biomechanics","credits":3},{"code":"U23BM205","name":"Data Structures","credits":3},{"code":"U23BM206","name":"Human Physiology Lab","credits":1},{"code":"U23BM207","name":"Medical Electronics Lab","credits":1}]}},
-            "FT":{"name":"Fashion Technology","color":"var(--ft-color)","icon":"fas fa-tshirt","semesters":{"1":[{"code":"U23FT101","name":"Fiber Science","credits":4},{"code":"U23FT102","name":"Textile Chemistry","credits":4},{"code":"U23FT103","name":"Fashion Illustration","credits":3},{"code":"U23FT104","name":"Pattern Making","credits":3},{"code":"U23FT105","name":"Communication Skills","credits":2},{"code":"U23FT106","name":"Textile Chemistry Lab","credits":1},{"code":"U23FT107","name":"Pattern Making Lab","credits":1}],"2":[{"code":"U23FT201","name":"Textile Processing","credits":4},{"code":"U23FT202","name":"Apparel Manufacturing","credits":4},{"code":"U23FT203","name":"Fashion Design","credits":4},{"code":"U23FT204","name":"Garment Construction","credits":3},{"code":"U23FT205","name":"Computer Applications","credits":3},{"code":"U23FT206","name":"Apparel Manufacturing Lab","credits":1},{"code":"U23FT207","name":"Garment Construction Lab","credits":1}]}},
-            "MCT":{"name":"Mechatronics","color":"var(--mct-color)","icon":"fas fa-robot","semesters":{"1":[{"code":"U23MT101","name":"Engineering Mechanics","credits":4},{"code":"U23MT102","name":"Engineering Graphics","credits":4},{"code":"U23MT103","name":"Engineering Mathematics","credits":4},{"code":"U23MT104","name":"Basic Electronics","credits":3},{"code":"U23MT105","name":"Communication Skills","credits":2},{"code":"U23MT106","name":"Workshop Practice","credits":1},{"code":"U23MT107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23MT201","name":"Thermodynamics","credits":4},{"code":"U23MT202","name":"Mechanics of Materials","credits":4},{"code":"U23MT203","name":"Digital Electronics","credits":4},{"code":"U23MT204","name":"Fluid Mechanics","credits":3},{"code":"U23MT205","name":"Computer Programming","credits":3},{"code":"U23MT206","name":"Thermodynamics Lab","credits":1},{"code":"U23MT207","name":"Digital Electronics Lab","credits":1}]}},
-            "CSD":{"name":"CS & Design","color":"var(--csd-color)","icon":"fas fa-paint-brush","semesters":{"1":[{"code":"U23CD101","name":"Design Fundamentals","credits":4},{"code":"U23CD102","name":"Programming Basics","credits":4},{"code":"U23CD103","name":"Visual Communication","credits":3},{"code":"U23CD104","name":"Mathematics for Design","credits":3},{"code":"U23CD105","name":"Communication Skills","credits":2},{"code":"U23CD106","name":"Design Studio","credits":1},{"code":"U23CD107","name":"Programming Lab","credits":1}],"2":[{"code":"U23CD201","name":"User Interface Design","credits":4},{"code":"U23CD202","name":"Data Structures","credits":4},{"code":"U23CD203","name":"Web Design","credits":4},{"code":"U23CD204","name":"Digital Illustration","credits":3},{"code":"U23CD205","name":"Human-Computer Interaction","credits":3},{"code":"U23CD206","name":"UI Design Lab","credits":1},{"code":"U23CD207","name":"Web Design Lab","credits":1}]}},
-            "ADS":{"name":"AI & Data Science","color":"var(--ads-color)","icon":"fas fa-database","semesters":{"1":[{"code":"U23DS101","name":"Programming Fundamentals","credits":4},{"code":"U23DS102","name":"Linear Algebra","credits":4},{"code":"U23DS103","name":"Statistics Basics","credits":3},{"code":"U23DS104","name":"Computational Thinking","credits":3},{"code":"U23DS105","name":"Communication Skills","credits":2},{"code":"U23DS106","name":"Programming Lab","credits":1},{"code":"U23DS107","name":"Statistics Lab","credits":1}],"2":[{"code":"U23DS201","name":"Data Structures","credits":4},{"code":"U23DS202","name":"Probability and Statistics","credits":4},{"code":"U23DS203","name":"Database Systems","credits":4},{"code":"U23DS204","name":"Data Visualization","credits":3},{"code":"U23DS205","name":"Python Programming","credits":3},{"code":"U23DS206","name":"Data Structures Lab","credits":1},{"code":"U23DS207","name":"Database Lab","credits":1}]}},
-            "EFE":{"name":"Electrical & Computer","color":"var(--efe-color)","icon":"fas fa-microchip","semesters":{"1":[{"code":"U23EF101","name":"Circuit Theory","credits":4},{"code":"U23EF102","name":"Programming Fundamentals","credits":4},{"code":"U23EF103","name":"Digital Electronics","credits":3},{"code":"U23EF104","name":"Engineering Mathematics","credits":3},{"code":"U23EF105","name":"Communication Skills","credits":2},{"code":"U23EF106","name":"Circuit Theory Lab","credits":1},{"code":"U23EF107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EF201","name":"Signals and Systems","credits":4},{"code":"U23EF202","name":"Data Structures","credits":4},{"code":"U23EF203","name":"Analog Electronics","credits":4},{"code":"U23EF204","name":"Electromagnetic Theory","credits":3},{"code":"U23EF205","name":"Computer Organization","credits":3},{"code":"U23EF206","name":"Analog Electronics Lab","credits":1},{"code":"U23EF207","name":"Data Structures Lab","credits":1}]}},
-            "EXE":{"name":"Electronics & Computer","color":"var(--exe-color)","icon":"fas fa-desktop","semesters":{"1":[{"code":"U23EX101","name":"Basic Electronics","credits":4},{"code":"U23EX102","name":"Programming Fundamentals","credits":4},{"code":"U23EX103","name":"Digital Logic Design","credits":3},{"code":"U23EX104","name":"Engineering Mathematics","credits":3},{"code":"U23EX105","name":"Communication Skills","credits":2},{"code":"U23EX106","name":"Electronics Lab","credits":1},{"code":"U23EX107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EX201","name":"Data Structures","credits":4},{"code":"U23EX202","name":"Analog Electronics","credits":4},{"code":"U23EX203","name":"Computer Organization","credits":4},{"code":"U23EX204","name":"Signals and Systems","credits":3},{"code":"U23EX205","name":"Database Systems","credits":3},{"code":"U23EX206","name":"Analog Electronics Lab","credits":1},{"code":"U23EX207","name":"Data Structures Lab","credits":1}]}}}
-        };
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const grid = document.getElementById('materials-grid');
-            const detailsModal = document.getElementById('details-modal');
-            const filterModal = document.getElementById('filter-modal');
-            
-            const openFilterBtn = document.getElementById('open-filter-modal-btn');
-            const closeFilterBtn = document.getElementById('filter-modal-close-btn');
-            const closeDetailsBtn = document.getElementById('details-modal-close-btn');
-
-            const filterColumns = document.querySelector('.filter-columns');
-            const deptCol = document.getElementById('department-col');
-            const semCol = document.getElementById('semester-col');
-            const courseCol = document.getElementById('course-col');
-            const selectionDisplay = document.getElementById('current-selection-display');
-
-            let selectedDept = { code: null, name: null };
-            let selectedSem = { code: null, name: null };
-            let selectedCourse = { code: null, name: null };
-
-            const firebaseConfig = { apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao", authDomain: "student-portal-free.firebaseapp.com", projectId: "student-portal-free", storageBucket: "student-portal-free.appspot.com", messagingSenderId: "272865877510", appId: "1:272865877510:web:0875a2502ae55bbf9ead87" };
-            firebase.initializeApp(firebaseConfig);
-            const auth = firebase.auth();
-            const db = firebase.firestore();
-
-            auth.onAuthStateChanged(user => user ? initializePage() : window.location.replace('/index.html'));
-            
-            function initializePage() {
-                setupEventListeners();
-                populateDepartments();
-            }
-
-            function setupEventListeners() {
-                openFilterBtn.addEventListener('click', () => {
-                    // Reset view to the first column when opening
-                    filterColumns.classList.remove('show-semesters', 'show-courses');
-                    filterModal.classList.add('active');
-                });
-                closeFilterBtn.addEventListener('click', () => filterModal.classList.remove('active'));
-                closeDetailsBtn.addEventListener('click', () => detailsModal.classList.remove('active'));
-                
-                filterModal.addEventListener('click', e => e.target === filterModal && filterModal.classList.remove('active'));
-                detailsModal.addEventListener('click', e => e.target === detailsModal && detailsModal.classList.remove('active'));
-
-                deptCol.addEventListener('click', handleDeptSelection);
-                semCol.addEventListener('click', handleSemSelection);
-                courseCol.addEventListener('click', handleCourseSelection);
-
-                // Add event listeners for new back buttons
-                document.querySelectorAll('.filter-back-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        if (btn.dataset.target === 'department') {
-                            filterColumns.classList.remove('show-semesters', 'show-courses');
-                        } else if (btn.dataset.target === 'semester') {
-                            filterColumns.classList.remove('show-courses');
-                        }
-                    });
-                });
-                
-                document.getElementById('logout-btn').addEventListener('click', e => {
-                    e.preventDefault();
-                    auth.signOut();
-                });
-            }
-
-            function populateDepartments() {
-                const deptList = deptCol.querySelector('.filter-column-list');
-                deptList.innerHTML = '';
-                Object.keys(academicData.branches).forEach(branchCode => {
-                    const branch = academicData.branches[branchCode];
-                    const item = document.createElement('div');
-                    item.className = 'filter-item';
-                    item.textContent = branch.name;
-                    item.dataset.code = branchCode;
-                    item.dataset.name = branch.name;
-                    deptList.appendChild(item);
-                });
-            }
-
-            function populateSemesters() {
-                const semList = semCol.querySelector('.filter-column-list');
-                semList.innerHTML = '';
-                const branchData = academicData.branches[selectedDept.code];
-                Object.keys(branchData.semesters).forEach(sem => {
-                    const item = document.createElement('div');
-                    item.className = 'filter-item';
-                    item.textContent = `Semester ${sem}`;
-                    item.dataset.code = sem;
-                    semList.appendChild(item);
-                });
-                semCol.classList.remove('disabled');
-            }
-
-            function populateCourses() {
-                const courseList = courseCol.querySelector('.filter-column-list');
-                courseList.innerHTML = '';
-                const subjects = academicData.branches[selectedDept.code].semesters[selectedSem.code];
-                if (subjects && subjects.length > 0) {
-                    subjects.forEach(subject => {
-                        const item = document.createElement('div');
-                        item.className = 'filter-item';
-                        item.textContent = `${subject.code} - ${subject.name}`;
-                        item.dataset.code = subject.code;
-                        item.dataset.name = subject.name;
-                        courseList.appendChild(item);
-                    });
-                } else {
-                    courseList.innerHTML = '<p style="padding: 12px 15px;">No courses found.</p>';
-                }
-                courseCol.classList.remove('disabled');
-            }
-
-            function handleDeptSelection(e) {
-                if (!e.target.classList.contains('filter-item')) return;
-                
-                selectedDept = { code: e.target.dataset.code, name: e.target.dataset.name };
-
-                updateSelectedUI(deptCol, e.target);
-                semCol.querySelector('.filter-column-list').innerHTML = '';
-                courseCol.querySelector('.filter-column-list').innerHTML = '';
-                semCol.classList.add('disabled');
-                courseCol.classList.add('disabled');
-
-                populateSemesters();
-                filterColumns.classList.add('show-semesters'); // Slide to next view
-            }
-
-            function handleSemSelection(e) {
-                if (!e.target.classList.contains('filter-item')) return;
-                
-                selectedSem = { code: e.target.dataset.code, name: e.target.textContent };
-                updateSelectedUI(semCol, e.target);
-                courseCol.querySelector('.filter-column-list').innerHTML = '';
-                courseCol.classList.add('disabled');
-                
-                populateCourses();
-                filterColumns.classList.add('show-courses'); // Slide to next view
-            }
-
-            function handleCourseSelection(e) {
-                if (!e.target.classList.contains('filter-item')) return;
-                
-                selectedCourse = { code: e.target.dataset.code, name: e.target.dataset.name };
-                updateSelectedUI(courseCol, e.target);
-                
-                filterModal.classList.remove('active');
-                
-                selectionDisplay.innerHTML = `Viewing: <strong>${selectedCourse.code} - ${selectedCourse.name}</strong>`;
-                loadMaterials(selectedDept.code, selectedSem.code, selectedCourse.code);
-            }
-
-            function updateSelectedUI(column, selectedElement) {
-                [...column.querySelectorAll('.filter-item')].forEach(item => item.classList.remove('selected'));
-                selectedElement.classList.add('selected');
-            }
-
-            async function loadMaterials(department, semester, courseCode) {
-                 grid.innerHTML = `<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading materials...</p></div>`;
-                
-                let courseName = selectedCourse.name || '';
-                
-                try {
-                    const snapshot = await db.collection('materials')
-                                           .where('department', '==', department)
-                                           .where('semester', '==', semester)
-                                           .where('courseCode', '==', courseCode)
-                                           .orderBy('uploadedAt', 'desc')
-                                           .get();
-
-                    if (snapshot.empty) {
-                        grid.innerHTML = `<div class="empty-state"><i class="fas fa-box-open"></i><p>No study materials found for this course.</p></div>`;
-                        return;
+            branches: {
+                "CSE": {
+                    "name": "Computer Science",
+                    "color": "var(--cse-color)",
+                    "icon": "fas fa-laptop-code",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23ENG101A", "name": "Communication Skills in English", "credits": 3},
+                            {"code": "U23MAT102A", "name": "Linear Algebra and Calculus With MATLAB", "credits": 4},
+                            {"code": "U23PHY103B", "name": "Engineering Physics", "credits": 3},
+                            {"code": "U23PPR105", "name": "Problem Solving using Python Programming", "credits": 3},
+                            {"code": "U23BEE106A", "name": "Basic Electrical and Electronics Engineering", "credits": 3},
+                            {"code": "U23TAM101", "name": "Heritage of Tamils", "credits": 1},
+                            {"code": "U23PHL110", "name": "Engineering Physics Lab", "credits": 1},
+                            {"code": "U23BEEL113", "name": "Basic Electrical and Electronics Engineering Lab", "credits": 1},
+                            {"code": "U23PPL112", "name": "Python Programming Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23ENG201A", "name": "Technical English", "credits": 2},
+                            {"code": "U23MAT202B", "name": "Discrete Mathematics", "credits": 4},
+                            {"code": "U23CHE204B", "name": "Chemistry For Computer Science", "credits": 3},
+                            {"code": "U23CPR205B", "name": "Programming In C", "credits": 3},
+                            {"code": "U23EGR207", "name": "Engineering Graphics", "credits": 3},
+                            {"code": "U23EC203", "name": "Digital Principles And System Design", "credits": 3},
+                            {"code": "U23CHL211", "name": "Chemistry Lab", "credits": 1},
+                            {"code": "U23CPL212", "name": "C programming Lab", "credits": 1},
+                            {"code": "U23TAM201", "name": "Tamils And Technology", "credits": 1}
+                        ],
+                        "3": [
+                            {"code": "U23MAT301D", "name": "Probability and Statistics", "credits": 4},
+                            {"code": "U23CS301", "name": "Data Structures", "credits": 3},
+                            {"code": "U23CS302", "name": "Computer Architecture", "credits": 3},
+                            {"code": "U23CS303", "name": "Object Oriented Programming", "credits": 3},
+                            {"code": "U23CS304", "name": "Operating Systems", "credits": 3},
+                            {"code": "U23CS305", "name": "Computer Information and Ethics", "credits": 3},
+                            {"code": "U23CS306", "name": "Data Structures Lab", "credits": 1},
+                            {"code": "U23CS307", "name": "Object Oriented Programming Lab", "credits": 1},
+                            {"code": "U23GE301", "name": "Soft Skills and Aptitude-I", "credits": 1},
+                            {"code": "Noc24-mg72", "name": "NPTEL:design Thinking-A Primer", "credits": 1}
+                        ],
+                        "4": [
+                            {"code": "U23MAT401B", "name": "Numerical Methods", "credits": 4},
+                            {"code": "U23CS401", "name": "Design And Analysis of Algorithms", "credits": 3},
+                            {"code": "U23CS402", "name": "Software Engineering", "credits": 3},
+                            {"code": "U23CS403", "name": "DataBase Management Systems", "credits": 3},
+                            {"code": "U23CS404", "name": "Embedded System Design ", "credits": 3},
+                            {"code": "U23CS405", "name": "Software Development Lab", "credits": 1},
+                            {"code": "U23CS403", "name": "Database Management Systems Lab", "credits": 1}
+                        ],
+                        "5": [
+                            {"code": "U23CS504", "name": "Machine Learning", "credits": 3},
+                            {"code": "U23CS501", "name": "Computer Networks", "credits": 3},
+                            {"code": "U23CS502", "name": "Artificial Intelligence", "credits": 3},
+                            {"code": "U23CS503", "name": "Theory of Computation", "credits": 3},
+                            {"code": "noc25-cs135", "name": "Elective NPTEL", "credits": 3},
+                            {"code": " U23CS947 / U23CS903", "name": "Professional Elective ", "credits": 3},
+                            {"code": "U23CS505", "name": "Computer Networks Laboratory", "credits": 2},
+                            {"code": "U23CS506", "name": "Artificial Intelligence and Machine Learning Laboratory", "credits": 1},
+                            {"code": "U23GE501", "name": "Soft Skills and Aptitude -III", "credits": 1}
+                        ],
+                        "6": [], "7": [], "8": []
                     }
-
-                    grid.innerHTML = '';
-                    snapshot.forEach(doc => {
-                        const material = doc.data();
-                        const card = document.createElement('div');
-                        card.className = 'material-card';
-
-                        const courseDisplayName = courseName ? `${material.courseCode} - ${courseName}` : material.courseCode;
-
-                        card.innerHTML = `
-                            <div class="card-thumbnail">
-                                <img src="${material.thumbnailURL || 'https://via.placeholder.com/400x180.png?text=No+Preview'}" alt="${material.title} preview" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x180.png?text=No+Preview';">
-                            </div>
-                            <div class="card-content-wrapper">
-                                <div class="material-info">
-                                    <h3 class="material-title">${material.title || 'No Title'}</h3>
-                                    <p class="material-meta">Course: ${courseDisplayName}</p>
-                                </div>
-                                <div class="material-footer">
-                                    <span class="tag ${material.isPaid ? 'tag-premium' : 'tag-free'}">${material.isPaid ? 'Premium' : 'Free'}</span>
-                                    <i class="fas ${material.isPaid ? 'fa-lock' : 'fa-eye'} material-action-icon"></i>
-                                </div>
-                            </div>
-                        `;
-
-                        card.addEventListener('click', () => {
-                            if (material.isPaid) {
-                                alert('This is a premium resource! Please contact the admin for access.');
-                                return;
-                            }
-                            
-                            document.getElementById('modal-title').textContent = material.title || 'No Title';
-                            document.getElementById('modal-courseCode').textContent = courseDisplayName;
-                            document.getElementById('modal-description').textContent = material.description || 'No description available.';
-                            document.getElementById('modal-download-btn').href = material.downloadURL;
-                            
-                            const embedUrl = getGoogleDriveEmbedUrl(material.downloadURL);
-                            document.getElementById('modal-embed-preview').src = embedUrl;
-                            detailsModal.classList.add('active');
-                        });
-                        
-                        grid.appendChild(card);
-                    });
-                } catch (err) {
-                    console.error("Error loading materials:", err);
-                    grid.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Could not load materials. Please check your Firestore rules and try again.</p></div>`;
+                },
+                "IT": {
+                    "name": "Info. Technology",
+                    "color": "var(--it-color)",
+                    "icon": "fas fa-network-wired",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23IT101", "name": "Programming Fundamentals", "credits": 4},
+                            {"code": "U23IT102", "name": "Discrete Mathematics", "credits": 4},
+                            {"code": "U23IT103", "name": "Digital Systems", "credits": 3},
+                            {"code": "U23IT104", "name": "Computer Organization", "credits": 3},
+                            {"code": "U23IT105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23IT106", "name": "Programming Lab", "credits": 1},
+                            {"code": "U23IT107", "name": "Digital Systems Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23IT201", "name": "Data Structures", "credits": 4},
+                            {"code": "U23IT202", "name": "Database Systems", "credits": 4},
+                            {"code": "U23IT203", "name": "Operating Systems", "credits": 3},
+                            {"code": "U23IT204", "name": "Computer Networks", "credits": 3},
+                            {"code": "U23IT205", "name": "Web Technologies", "credits": 3},
+                            {"code": "U23IT206", "name": "Data Structures Lab", "credits": 1},
+                            {"code": "U23IT207", "name": "Web Technologies Lab", "credits": 1}
+                        ],
+                        "3": [], "4": [], "5": [], "6": [], "7": [], "8": []
+                    }
+                },
+                "ECE": {
+                    "name": "Electronics & Comm",
+                    "color": "var(--ece-color)",
+                    "icon": "fas fa-satellite-dish",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23EC101", "name": "Basic Electronics", "credits": 4},
+                            {"code": "U23EC102", "name": "Circuit Theory", "credits": 4},
+                            {"code": "U23EC103", "name": "Engineering Mathematics", "credits": 4},
+                            {"code": "U23EC104", "name": "Programming in C", "credits": 3},
+                            {"code": "U23EC105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23EC106", "name": "Electronics Lab", "credits": 1},
+                            {"code": "U23EC107", "name": "Programming Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23EC201", "name": "Analog Electronics", "credits": 4},
+                            {"code": "U23EC202", "name": "Digital Electronics", "credits": 4},
+                            {"code": "U23EC203", "name": "Signals and Systems", "credits": 4},
+                            {"code": "U23EC204", "name": "Electromagnetic Theory", "credits": 3},
+                            {"code": "U23EC205", "name": "Data Structures", "credits": 3},
+                            {"code": "U23EC206", "name": "Analog Electronics Lab", "credits": 1},
+                            {"code": "U23EC207", "name": "Digital Electronics Lab", "credits": 1}
+                        ],
+                        "3": [], "4": [], "5": [], "6": [], "7": [], "8": []
+                    }
+                },
+                "EEE": {
+                    "name": "Electrical & Electronics",
+                    "color": "var(--eee-color)",
+                    "icon": "fas fa-bolt",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23EE101", "name": "Basic Electrical Engineering", "credits": 4},
+                            {"code": "U23EE102", "name": "Engineering Mathematics", "credits": 4},
+                            {"code": "U23EE103", "name": "Electronics Engineering", "credits": 3},
+                            {"code": "U23EE104", "name": "Programming in C", "credits": 3},
+                            {"code": "U23EE105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23EE106", "name": "Electrical Lab", "credits": 1},
+                            {"code": "U23EE107", "name": "Programming Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23EE201", "name": "Circuit Theory", "credits": 4},
+                            {"code": "U23EE202", "name": "Electromagnetic Theory", "credits": 4},
+                            {"code": "U23EE203", "name": "Digital Electronics", "credits": 4},
+                            {"code": "U23EE204", "name": "Electrical Machines", "credits": 3},
+                            {"code": "U23EE205", "name": "Data Structures", "credits": 3},
+                            {"code": "U23EE206", "name": "Circuit Theory Lab", "credits": 1},
+                            {"code": "U23EE207", "name": "Digital Electronics Lab", "credits": 1}
+                        ],
+                        "3": [], "4": [], "5": [], "6": [], "7": [], "8": []
+                    }
+                },
+                "MECH": {
+                    "name": "Mechanical",
+                    "color": "var(--mech-color)",
+                    "icon": "fas fa-cogs",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23ME101", "name": "Engineering Mechanics", "credits": 4},
+                            {"code": "U23ME102", "name": "Engineering Graphics", "credits": 4},
+                            {"code": "U23ME103", "name": "Engineering Mathematics", "credits": 4},
+                            {"code": "U23ME104", "name": "Basic Electrical Engineering", "credits": 3},
+                            {"code": "U23ME105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23ME106", "name": "Workshop Practice", "credits": 1},
+                            {"code": "U23ME107", "name": "Engineering Graphics Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23ME201", "name": "Thermodynamics", "credits": 4},
+                            {"code": "U23ME202", "name": "Mechanics of Materials", "credits": 4},
+                            {"code": "U23ME203", "name": "Manufacturing Technology", "credits": 4},
+                            {"code": "U23ME204", "name": "Fluid Mechanics", "credits": 3},
+                            {"code": "U23ME205", "name": "Computer Programming", "credits": 3},
+                            {"code": "U23ME206", "name": "Thermodynamics Lab", "credits": 1},
+                            {"code": "U23ME207", "name": "Manufacturing Technology Lab", "credits": 1}
+                        ],
+                        "3": [], "4": [], "5": [], "6": [], "7": [], "8": []
+                    }
+                },
+                "AIML": {
+                    "name": "AI & Machine Learning",
+                    "color": "var(--aiml-color)",
+                    "icon": "fas fa-brain",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23EG107", "name": "Engineering Graphics", "credits": 3},
+                            {"code": "U23ENG101A", "name": "Communication Skills in English", "credits": 3},
+                            {"code": "U23MAT102A", "name": "Linear Algebra and Calculus with MATLAB", "credits": 4},
+                            {"code": "U23PPR105", "name": "Problem Solving using Python Programming", "credits": 3},
+                            {"code": "U23PHY103E", "name": "Engineering Physics", "credits": 3},
+                            {"code": "U23PHL110", "name": "Engineering Physics Laboratory", "credits": 1},
+                            {"code": "U23PPL112", "name": "Python Programming Laboratory", "credits": 1},
+                            {"code": "U23TAM101", "name": "Heritage of Tamils", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23ENG201A", "name": "Technical English", "credits": 2},
+                            {"code": "U23MAT202D", "name": "Discrete Mathematics", "credits": 4},
+                            {"code": "U23BEEE206B", "name": "Basics of Electrical and Electronics Engineering", "credits": 3},
+                            {"code": "U23CPR205", "name": "Programming in C", "credits": 3},
+                            {"code": "U23CHE204C", "name": "Applied Chemistry", "credits": 2},
+                            {"code": "U23EC203", "name": "Digital Principles and System Design", "credits": 3},
+                            {"code": "U23CPL212", "name": "C Programming Laboratory", "credits": 1},
+                            {"code": "U23CHL211", "name": "Chemistry Laboratory", "credits": 1},
+                            {"code": "U23BEEL213B", "name": "BEEE Laboratory", "credits": 1},
+                            {"code": "U23TAM201", "name": "Tamils and Technology", "credits": 1}
+                        ],
+                        "3": [
+                            {"code": "U23MAT301E", "name": "Applied Probability and Statistics-I", "credits": 4},
+                            {"code": "U23CS301", "name": "Data Structures", "credits": 3},
+                            {"code": "U23CS302", "name": "Computer Architecture", "credits": 3},
+                            {"code": "U23CS303", "name": "Object Oriented Programming Using Java", "credits": 3},
+                            {"code": "U23AML301", "name": "Data Visualization", "credits": 3},
+                            {"code": "noc25-mg106", "name": "NPTEL: Design Thinking - A Primer", "credits": 1},
+                            {"code": "U23CS306", "name": "Data Structures Laboratory", "credits": 1},
+                            {"code": "U23CS307", "name": "Object Oriented Programming Using Java Laboratory", "credits": 1},
+                            {"code": "U23AML302", "name": "Data Visualization Laboratory", "credits": 1},
+                            {"code": "U23GE301", "name": "Soft Skills and Aptitude-I", "credits": 1}
+                        ],
+                        "4": [
+                            {"code": "U23MAT401A", "name": "Applied Probability and Statistics-II", "credits": 4},
+                            {"code": "U23CS403", "name": "Database Management Systems", "credits": 3},
+                            {"code": "U23CS401", "name": "Design and Analysis of Algorithms", "credits": 3},
+                            {"code": "U23AML401", "name": "Artificial Intelligence", "credits": 3},
+                            {"code": "U23CSD402", "name": "Operating Systems", "credits": 3},
+                            {"code": "U23AML402", "name": "Artificial Intelligence Lab", "credits": 1},
+                            {"code": "U23CS405", "name": "Database Management Systems Lab", "credits": 1},
+                            {"code": "U23GE401", "name": "Soft Skills and Aptitude-II", "credits": 1}
+                        ],
+                        "5": [
+                            {"code": "U23CS504", "name": "Machine Learning", "credits": 3},
+                            {"code": "U23CS501", "name": "Computer Networks", "credits": 3},
+                            {"code": "U23CSD502", "name": "Software Engineering", "credits": 3},
+                            {"code": "U23CS503", "name": "Theory of Computation", "credits": 3},
+                            {"code": "noc25-cs135", "name": "Elective NPTEL", "credits": 3},
+                            {"code": "U19CS903", "name": "Professional Elective - Agile Methodologies", "credits": 3},
+                            {"code": "U23AML501", "name": "Machine Learning Laboratory", "credits": 2},
+                            {"code": "U23CSD504", "name": "Software Development Laboratory", "credits": 1},
+                            {"code": "U23GE501", "name": "Soft Skills and Aptitude -III", "credits": 1}
+                        ],
+                        "6": [
+                            {"code": "U23CS601", "name": "Computer Vision", "credits": 3},
+                            {"code": "U23CS602", "name": "Reinforcement Learning", "credits": 3},
+                            {"code": "U23CS603", "name": "Robotics", "credits": 3},
+                            {"code": "U23CS604", "name": "Cyber Security", "credits": 3},
+                            {"code": "U23CS605", "name": "Blockchain Technology", "credits": 3},
+                            {"code": "U23CS606", "name": "Elective III", "credits": 3},
+                            {"code": "U23CS607", "name": "Project Work II", "credits": 3}
+                        ],
+                        "7": [
+                            {"code": "U23CS701", "name": "Advanced Machine Learning", "credits": 3},
+                            {"code": "U23CS702", "name": "AI Ethics and Governance", "credits": 3},
+                            {"code": "U23CS703", "name": "Elective IV", "credits": 3},
+                            {"code": "U23CS704", "name": "Project Work III", "credits": 3}
+                        ],
+                        "8": [
+                            {"code": "U23CS801", "name": "Industry Internship", "credits": 6},
+                            {"code": "U23CS802", "name": "Project Work IV", "credits": 6}
+                        ]
+                    }
+                },
+                "CIVIL": {
+                    "name": "Civil Engineering",
+                    "color": "var(--civil-color)",
+                    "icon": "fas fa-building",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23CE101", "name": "Engineering Mechanics", "credits": 4},
+                            {"code": "U23CE102", "name": "Engineering Graphics", "credits": 4},
+                            {"code": "U23CE103", "name": "Engineering Mathematics", "credits": 4},
+                            {"code": "U23CE104", "name": "Basic Civil Engineering", "credits": 3},
+                            {"code": "U23CE105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23CE106", "name": "Surveying", "credits": 1},
+                            {"code": "U23CE107", "name": "Engineering Graphics Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23CE201", "name": "Building Materials", "credits": 4},
+                            {"code": "U23CE202", "name": "Structural Analysis", "credits": 4},
+                            {"code": "U23CE203", "name": "Fluid Mechanics", "credits": 4},
+                            {"code": "U23CE204", "name": "Surveying", "credits": 3},
+                            {"code": "U23CE205", "name": "Computer Programming", "credits": 3},
+                            {"code": "U23CE206", "name": "Building Materials Lab", "credits": 1},
+                            {"code": "U23CE207", "name": "Surveying Lab", "credits": 1}
+                        ]
+                    }
+                },
+                "BME": {
+                    "name": "Bio Medical",
+                    "color": "var(--bme-color)",
+                    "icon": "fas fa-heartbeat",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23BM101", "name": "Human Anatomy", "credits": 4},
+                            {"code": "U23BM102", "name": "Engineering Mathematics", "credits": 4},
+                            {"code": "U23BM103", "name": "Basic Electronics", "credits": 3},
+                            {"code": "U23BM104", "name": "Programming in C", "credits": 3},
+                            {"code": "U23BM105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23BM106", "name": "Human Anatomy Lab", "credits": 1},
+                            {"code": "U23BM107", "name": "Programming Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23BM201", "name": "Human Physiology", "credits": 4},
+                            {"code": "U23BM202", "name": "Biochemistry", "credits": 4},
+                            {"code": "U23BM203", "name": "Medical Electronics", "credits": 4},
+                            {"code": "U23BM204", "name": "Biomechanics", "credits": 3},
+                            {"code": "U23BM205", "name": "Data Structures", "credits": 3},
+                            {"code": "U23BM206", "name": "Human Physiology Lab", "credits": 1},
+                            {"code": "U23BM207", "name": "Medical Electronics Lab", "credits": 1}
+                        ]
+                    }
+                },
+                "FT": {
+                    "name": "Fashion Technology",
+                    "color": "var(--ft-color)",
+                    "icon": "fas fa-tshirt",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23FT101", "name": "Fiber Science", "credits": 4},
+                            {"code": "U23FT102", "name": "Textile Chemistry", "credits": 4},
+                            {"code": "U23FT103", "name": "Fashion Illustration", "credits": 3},
+                            {"code": "U23FT104", "name": "Pattern Making", "credits": 3},
+                            {"code": "U23FT105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23FT106", "name": "Textile Chemistry Lab", "credits": 1},
+                            {"code": "U23FT107", "name": "Pattern Making Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23FT201", "name": "Textile Processing", "credits": 4},
+                            {"code": "U23FT202", "name": "Apparel Manufacturing", "credits": 4},
+                            {"code": "U23FT203", "name": "Fashion Design", "credits": 4},
+                            {"code": "U23FT204", "name": "Garment Construction", "credits": 3},
+                            {"code": "U23FT205", "name": "Computer Applications", "credits": 3},
+                            {"code": "U23FT206", "name": "Apparel Manufacturing Lab", "credits": 1},
+                            {"code": "U23FT207", "name": "Garment Construction Lab", "credits": 1}
+                        ]
+                    }
+                },
+                "MCT": {
+                    "name": "Mechatronics",
+                    "color": "var(--mct-color)",
+                    "icon": "fas fa-robot",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23MT101", "name": "Engineering Mechanics", "credits": 4},
+                            {"code": "U23MT102", "name": "Engineering Graphics", "credits": 4},
+                            {"code": "U23MT103", "name": "Engineering Mathematics", "credits": 4},
+                            {"code": "U23MT104", "name": "Basic Electronics", "credits": 3},
+                            {"code": "U23MT105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23MT106", "name": "Workshop Practice", "credits": 1},
+                            {"code": "U23MT107", "name": "Engineering Graphics Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23MT201", "name": "Thermodynamics", "credits": 4},
+                            {"code": "U23MT202", "name": "Mechanics of Materials", "credits": 4},
+                            {"code": "U23MT203", "name": "Digital Electronics", "credits": 4},
+                            {"code": "U23MT204", "name": "Fluid Mechanics", "credits": 3},
+                            {"code": "U23MT205", "name": "Computer Programming", "credits": 3},
+                            {"code": "U23MT206", "name": "Thermodynamics Lab", "credits": 1},
+                            {"code": "U23MT207", "name": "Digital Electronics Lab", "credits": 1}
+                        ]
+                    }
+                },
+                "CSD": {
+                    "name": "CS & Design",
+                    "color": "var(--csd-color)",
+                    "icon": "fas fa-paint-brush",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23CD101", "name": "Design Fundamentals", "credits": 4},
+                            {"code": "U23CD102", "name": "Programming Basics", "credits": 4},
+                            {"code": "U23CD103", "name": "Visual Communication", "credits": 3},
+                            {"code": "U23CD104", "name": "Mathematics for Design", "credits": 3},
+                            {"code": "U23CD105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23CD106", "name": "Design Studio", "credits": 1},
+                            {"code": "U23CD107", "name": "Programming Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23CD201", "name": "User Interface Design", "credits": 4},
+                            {"code": "U23CD202", "name": "Data Structures", "credits": 4},
+                            {"code": "U23CD203", "name": "Web Design", "credits": 4},
+                            {"code": "U23CD204", "name": "Digital Illustration", "credits": 3},
+                            {"code": "U23CD205", "name": "Human-Computer Interaction", "credits": 3},
+                            {"code": "U23CD206", "name": "UI Design Lab", "credits": 1},
+                            {"code": "U23CD207", "name": "Web Design Lab", "credits": 1}
+                        ]
+                    }
+                },
+                "ADS": {
+                    "name": "AI & Data Science",
+                    "color": "var(--ads-color)",
+                    "icon": "fas fa-database",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23DS101", "name": "Programming Fundamentals", "credits": 4},
+                            {"code": "U23DS102", "name": "Linear Algebra", "credits": 4},
+                            {"code": "U23DS103", "name": "Statistics Basics", "credits": 3},
+                            {"code": "U23DS104", "name": "Computational Thinking", "credits": 3},
+                            {"code": "U23DS105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23DS106", "name": "Programming Lab", "credits": 1},
+                            {"code": "U23DS107", "name": "Statistics Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23DS201", "name": "Data Structures", "credits": 4},
+                            {"code": "U23DS202", "name": "Probability and Statistics", "credits": 4},
+                            {"code": "U23DS203", "name": "Database Systems", "credits": 4},
+                            {"code": "U23DS204", "name": "Data Visualization", "credits": 3},
+                            {"code": "U23DS205", "name": "Python Programming", "credits": 3},
+                            {"code": "U23DS206", "name": "Data Structures Lab", "credits": 1},
+                            {"code": "U23DS207", "name": "Database Lab", "credits": 1}
+                        ]
+                    }
+                },
+                "EFE": {
+                    "name": "Electrical & Computer",
+                    "color": "var(--efe-color)",
+                    "icon": "fas fa-microchip",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23EF101", "name": "Circuit Theory", "credits": 4},
+                            {"code": "U23EF102", "name": "Programming Fundamentals", "credits": 4},
+                            {"code": "U23EF103", "name": "Digital Electronics", "credits": 3},
+                            {"code": "U23EF104", "name": "Engineering Mathematics", "credits": 3},
+                            {"code": "U23EF105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23EF106", "name": "Circuit Theory Lab", "credits": 1},
+                            {"code": "U23EF107", "name": "Programming Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23EF201", "name": "Signals and Systems", "credits": 4},
+                            {"code": "U23EF202", "name": "Data Structures", "credits": 4},
+                            {"code": "U23EF203", "name": "Analog Electronics", "credits": 4},
+                            {"code": "U23EF204", "name": "Electromagnetic Theory", "credits": 3},
+                            {"code": "U23EF205", "name": "Computer Organization", "credits": 3},
+                            {"code": "U23EF206", "name": "Analog Electronics Lab", "credits": 1},
+                            {"code": "U23EF207", "name": "Data Structures Lab", "credits": 1}
+                        ]
+                    }
+                },
+                "EXE": {
+                    "name": "Electronics & Computer",
+                    "color": "var(--exe-color)",
+                    "icon": "fas fa-desktop",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23EX101", "name": "Basic Electronics", "credits": 4},
+                            {"code": "U23EX102", "name": "Programming Fundamentals", "credits": 4},
+                            {"code": "U23EX103", "name": "Digital Logic Design", "credits": 3},
+                            {"code": "U23EX104", "name": "Engineering Mathematics", "credits": 3},
+                            {"code": "U23EX105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23EX106", "name": "Electronics Lab", "credits": 1},
+                            {"code": "U23EX107", "name": "Programming Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23EX201", "name": "Data Structures", "credits": 4},
+                            {"code": "U23EX202", "name": "Analog Electronics", "credits": 4},
+                            {"code": "U23EX203", "name": "Computer Organization", "credits": 4},
+                            {"code": "U23EX204", "name": "Signals and Systems", "credits": 3},
+                            {"code": "U23EX205", "name": "Database Systems", "credits": 3},
+                            {"code": "U23EX206", "name": "Analog Electronics Lab", "credits": 1},
+                            {"code": "U23EX207", "name": "Data Structures Lab", "credits": 1}
+                        ]
+                    }
                 }
             }
-
-            function getGoogleDriveEmbedUrl(shareUrl) {
-                if (!shareUrl) return '';
-                const fileIdMatch = shareUrl.match(/d\/([a-zA-Z0-9_-]{25,})/);
-                return fileIdMatch && fileIdMatch[1] ? `https://drive.google.com/file/d/${fileIdMatch[1]}/preview` : shareUrl;
+        };
+        
+        // Translations for multi-language support
+        const translations = {
+            en: {
+                selectCourse: "Select a course to begin",
+                freeMaterials: "Free Materials",
+                paidMaterials: "Paid Materials",
+                loading: "Loading materials...",
+                noMaterials: "No study materials found for this course.",
+                errorLoading: "Could not load materials. Please try again later.",
+                notAuthenticated: "Please log in to access materials.",
+                missingParams: "Please select a department, semester, and course.",
+                permissionDenied: "You do not have permission to access these materials.",
+                addedToFavorites: "Added to favorites!",
+                linkCopied: "Material link copied!",
+                reportSubmitted: "Report submitted!",
+                commentPosted: "Comment posted!",
+                requestSubmitted: "Request submitted!",
+                uploadSubmitted: "Upload submitted for admin approval!",
+                payToAccess: "This is a paid material. Please pay to unlock access.",
+                trending: "Trending Materials",
+                recentlyViewed: "Recently Viewed",
+                favorites: "Favorites",
+                uploadMaterial: "Upload Material",
+                requestMaterial: "Request New Material",
+                title: "Title",
+                course: "Course Code/Name",
+                file: "File",
+                description: "Description",
+                upload: "Upload",
+                request: "Submit Request",
+                searchPlaceholder: "Search by title or tags...",
+                relatedMaterials: "Related/Recommended Materials",
+                noRelatedMaterials: "No related materials found.",
+                ratings: "Ratings",
+                comments: "Comments",
+                addComment: "Add a comment...",
+                post: "Post",
+                uploadedBy: "Uploaded by",
+                uploaded: "Uploaded",
+                paidUnlocked: "Paid: Unlocked",
+                paidLocked: "Locked: Pay to Access"
+            },
+            es: {
+                selectCourse: "Selecciona un curso para comenzar",
+                freeMaterials: "Materiales Gratuitos",
+                paidMaterials: "Materiales de Pago",
+                loading: "Cargando materiales...",
+                noMaterials: "No se encontraron materiales de estudio para este curso.",
+                errorLoading: "No se pudieron cargar los materiales. Por favor, inténtalo de nuevo más tarde.",
+                notAuthenticated: "Por favor inicia sesión para acceder a los materiales.",
+                missingParams: "Por favor selecciona un departamento, semestre y curso.",
+                permissionDenied: "No tienes permiso para acceder a estos materiales.",
+                addedToFavorites: "¡Agregado a favoritos!",
+                linkCopied: "¡Enlace del material copiado!",
+                reportSubmitted: "¡Reporte enviado!",
+                commentPosted: "¡Comentario publicado!",
+                requestSubmitted: "¡Solicitud enviada!",
+                uploadSubmitted: "¡Subida enviada para aprobación de administrador!",
+                payToAccess: "Este es un material de pago. Por favor paga para desbloquear el acceso.",
+                trending: "Materiales Populares",
+                recentlyViewed: "Vistos Recientemente",
+                favorites: "Favoritos",
+                uploadMaterial: "Subir Material",
+                requestMaterial: "Solicitar Nuevo Material",
+                title: "Título",
+                course: "Código/Nombre del Curso",
+                file: "Archivo",
+                description: "Descripción",
+                upload: "Subir",
+                request: "Enviar Solicitud",
+                searchPlaceholder: "Buscar por título o etiquetas...",
+                relatedMaterials: "Materiales Relacionados/Recomendados",
+                noRelatedMaterials: "No se encontraron materiales relacionados.",
+                ratings: "Calificaciones",
+                comments: "Comentarios",
+                addComment: "Añadir un comentario...",
+                post: "Publicar",
+                uploadedBy: "Subido por",
+                uploaded: "Subido",
+                paidUnlocked: "Pagado: Desbloqueado",
+                paidLocked: "Bloqueado: Paga para Acceder"
             }
+        };
+        
+        let currentLanguage = 'en';
+        
+        // Utility functions
+        function sanitizeInput(input) {
+            const div = document.createElement('div');
+            div.textContent = input;
+            return div.innerHTML;
+        }
+        
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+        
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            let iconClass = 'fa-info-circle';
+            if (type === 'success') iconClass = 'fa-check-circle';
+            if (type === 'error') iconClass = 'fa-exclamation-circle';
+            
+            toast.innerHTML = `
+                <div class="toast-content">
+                    <i class="fas ${iconClass} toast-icon"></i>
+                    <span>${sanitizeInput(message)}</span>
+                </div>
+                <button class="toast-close">&times;</button>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                toast.classList.add('fade-out');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+            
+            toast.querySelector('.toast-close').addEventListener('click', () => toast.remove());
+        }
+        
+        function updateUILanguage() {
+            document.getElementById('current-selection-display').innerHTML = 
+                `<strong>${translations[currentLanguage].selectCourse}</strong>`;
+            
+            // Update search placeholder
+            document.getElementById('search-input').placeholder = translations[currentLanguage].searchPlaceholder;
+            
+            // Update other text elements with data-translate attribute
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[currentLanguage][key]) {
+                    element.textContent = translations[currentLanguage][key];
+                }
+            });
+        }
+        
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao",
+            authDomain: "student-portal-free.firebaseapp.com",
+            projectId: "student-portal-free",
+            storageBucket: "student-portal-free.appspot.com",
+            messagingSenderId: "272865877510",
+            appId: "1:272865877510:web:0875a2502ae55bbf9ead87"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        
+        // Global variables
+        let selectedDept = { code: null, name: null };
+        let selectedSem = { code: null, name: null };
+        let selectedCourse = { code: null, name: null };
+        let allMaterials = [];
+        let recentlyViewed = [];
+        let favorites = [];
+        let currentPage = 1;
+        let pageSize = 8;
+        let requestModal = null;
+        
+        // DOM elements
+        const grid = document.getElementById('materials-grid');
+        const detailsModal = document.getElementById('details-modal');
+        const filterModal = document.getElementById('filter-modal');
+        const openFilterBtn = document.getElementById('open-filter-modal-btn');
+        const closeFilterBtn = document.getElementById('filter-modal-close-btn');
+        const closeDetailsBtn = document.getElementById('details-modal-close-btn');
+        const filterColumns = document.querySelector('.filter-columns');
+        const deptCol = document.getElementById('department-col');
+        const semCol = document.getElementById('semester-col');
+        const courseCol = document.getElementById('course-col');
+        const selectionDisplay = document.getElementById('current-selection-display');
+        const searchInput = document.getElementById('search-input');
+        const requestBtn = document.getElementById('request-material-btn');
+        const paginationBar = document.getElementById('pagination-bar');
+        const modalUploader = document.getElementById('modal-uploader');
+        const modalUploadDate = document.getElementById('modal-upload-date');
+        const modalPaymentStatus = document.getElementById('modal-payment-status');
+        const modalRatingComments = document.getElementById('modal-rating-comments');
+        const modalEmbedPreview = document.getElementById('modal-embed-preview');
+        const modalImagePreview = document.getElementById('modal-image-preview');
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check authentication state
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    initializePage();
+                } else {
+                    window.location.replace('/index.html');
+                }
+            });
         });
+        
+        function initializePage() {
+            setupEventListeners();
+            populateDepartments();
+            updateUILanguage();
+        }
+        
+        function setupEventListeners() {
+            // Language toggle
+            document.getElementById('lang-toggle').onclick = () => {
+                currentLanguage = currentLanguage === 'en' ? 'es' : 'en';
+                updateUILanguage();
+                showToast(currentLanguage === 'en' ? 'Language changed to English' : 'Idioma cambiado a Español', 'success');
+            };
+            
+            // Trending materials
+            document.getElementById('show-trending').onclick = () => {
+                const trending = [...allMaterials]
+                    .sort((a, b) => ((b.views || 0) + (b.downloads || 0)) - ((a.views || 0) + (a.downloads || 0)))
+                    .slice(0, 5);
+                
+                grid.innerHTML = `<h2>${translations[currentLanguage].trending}</h2>`;
+                trending.forEach(mat => grid.appendChild(createMaterialCard(mat, mat.isPaid)));
+            };
+            
+            // Recently viewed
+            document.getElementById('show-recent').onclick = () => {
+                grid.innerHTML = `<h2>${translations[currentLanguage].recentlyViewed}</h2>`;
+                recentlyViewed.slice(-5).forEach(id => {
+                    const mat = allMaterials.find(m => m.id === id);
+                    if (mat) grid.appendChild(createMaterialCard(mat, mat.isPaid));
+                });
+            };
+            
+            // Favorites
+            document.getElementById('show-favorites').onclick = () => {
+                grid.innerHTML = `<h2>${translations[currentLanguage].favorites}</h2>`;
+                favorites.forEach(id => {
+                    const mat = allMaterials.find(m => m.id === id);
+                    if (mat) grid.appendChild(createMaterialCard(mat, mat.isPaid));
+                });
+            };
+            
+            // Upload material
+            document.getElementById('upload-material-btn').onclick = () => {
+                if (!requestModal) {
+                    requestModal = document.createElement('div');
+                    requestModal.className = 'modal-overlay active';
+                    requestModal.innerHTML = `
+                        <div class="modal-content">
+                            <button class="modal-close" id="upload-close">&times;</button>
+                            <div class="modal-header">
+                                <h2>${translations[currentLanguage].uploadMaterial}</h2>
+                            </div>
+                            <form id="upload-form" style="display:flex;flex-direction:column;gap:15px;">
+                                <input type="text" name="title" placeholder="${translations[currentLanguage].title}" required>
+                                <input type="text" name="course" placeholder="${translations[currentLanguage].course}" required>
+                                <input type="file" name="file" required>
+                                <textarea name="desc" placeholder="${translations[currentLanguage].description}" required></textarea>
+                                <button type="submit" class="btn btn-primary">${translations[currentLanguage].upload}</button>
+                            </form>
+                        </div>
+                    `;
+                    document.body.appendChild(requestModal);
+                    
+                    requestModal.querySelector('#upload-close').onclick = () => requestModal.remove();
+                    requestModal.onclick = e => { if (e.target === requestModal) requestModal.remove(); };
+                    
+                    requestModal.querySelector('#upload-form').onsubmit = async function(e) {
+                        e.preventDefault();
+                        showToast(translations[currentLanguage].uploadSubmitted, 'success');
+                        requestModal.remove();
+                    };
+                }
+            };
+            
+            // Request material
+            requestBtn.addEventListener('click', () => {
+                if (!requestModal) {
+                    requestModal = document.createElement('div');
+                    requestModal.className = 'modal-overlay active';
+                    requestModal.innerHTML = `
+                        <div class="modal-content">
+                            <button class="modal-close" id="request-close">&times;</button>
+                            <div class="modal-header">
+                                <h2>${translations[currentLanguage].requestMaterial}</h2>
+                            </div>
+                            <form id="request-form" style="display:flex;flex-direction:column;gap:15px;">
+                                <input type="text" name="title" placeholder="${translations[currentLanguage].title}" required>
+                                <input type="text" name="course" placeholder="${translations[currentLanguage].course}" required>
+                                <textarea name="desc" placeholder="${translations[currentLanguage].description}" required></textarea>
+                                <button type="submit" class="btn btn-primary">${translations[currentLanguage].request}</button>
+                            </form>
+                        </div>
+                    `;
+                    document.body.appendChild(requestModal);
+                    
+                    requestModal.querySelector('#request-close').onclick = () => requestModal.remove();
+                    requestModal.onclick = e => { if (e.target === requestModal) requestModal.remove(); };
+                    
+                    requestModal.querySelector('#request-form').onsubmit = async function(e) {
+                        e.preventDefault();
+                        showToast(translations[currentLanguage].requestSubmitted, 'success');
+                        requestModal.remove();
+                    };
+                }
+            });
+            
+            // Search with debouncing
+            searchInput.addEventListener('input', debounce(() => {
+                renderMaterials();
+            }, 300));
+            
+            // Filter modal
+            openFilterBtn.addEventListener('click', () => {
+                // Reset view to the first column when opening
+                filterColumns.classList.remove('show-semesters', 'show-courses');
+                filterModal.classList.add('active');
+            });
+            
+            closeFilterBtn.addEventListener('click', () => filterModal.classList.remove('active'));
+            
+            // Details modal
+            closeDetailsBtn.addEventListener('click', () => detailsModal.classList.remove('active'));
+            
+            // Modal backdrop clicks
+            filterModal.addEventListener('click', e => e.target === filterModal && filterModal.classList.remove('active'));
+            detailsModal.addEventListener('click', e => e.target === detailsModal && detailsModal.classList.remove('active'));
+            
+            // Filter column selections
+            deptCol.addEventListener('click', handleDeptSelection);
+            semCol.addEventListener('click', handleSemSelection);
+            courseCol.addEventListener('click', handleCourseSelection);
+            
+            // Back buttons in filter modal
+            document.querySelectorAll('.filter-back-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (btn.dataset.target === 'department') {
+                        filterColumns.classList.remove('show-semesters', 'show-courses');
+                    } else if (btn.dataset.target === 'semester') {
+                        filterColumns.classList.remove('show-courses');
+                    }
+                });
+            });
+            
+            // Logout
+            document.getElementById('logout-btn').addEventListener('click', e => {
+                e.preventDefault();
+                auth.signOut();
+            });
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                // ESC key closes modals
+                if (e.key === 'Escape') {
+                    if (filterModal.classList.contains('active')) {
+                        filterModal.classList.remove('active');
+                    }
+                    if (detailsModal.classList.contains('active')) {
+                        detailsModal.classList.remove('active');
+                    }
+                }
+                
+                // Ctrl/Cmd + K focuses search
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    searchInput.focus();
+                }
+            });
+        }
+        
+        function populateDepartments() {
+            const deptList = deptCol.querySelector('.filter-column-list');
+            deptList.innerHTML = '';
+            
+            Object.keys(academicData.branches).forEach(branchCode => {
+                const branch = academicData.branches[branchCode];
+                const item = document.createElement('div');
+                item.className = 'filter-item';
+                item.textContent = branch.name;
+                item.dataset.code = branchCode;
+                item.dataset.name = branch.name;
+                deptList.appendChild(item);
+            });
+        }
+        
+        function populateSemesters() {
+            const semList = semCol.querySelector('.filter-column-list');
+            semList.innerHTML = '';
+            
+            const branchData = academicData.branches[selectedDept.code];
+            Object.keys(branchData.semesters).forEach(sem => {
+                const item = document.createElement('div');
+                item.className = 'filter-item';
+                item.textContent = `Semester ${sem}`;
+                item.dataset.code = sem;
+                semList.appendChild(item);
+            });
+            
+            semCol.classList.remove('disabled');
+        }
+        
+        function populateCourses() {
+            const courseList = courseCol.querySelector('.filter-column-list');
+            courseList.innerHTML = '';
+            
+            const subjects = academicData.branches[selectedDept.code].semesters[selectedSem.code];
+            if (subjects && subjects.length > 0) {
+                subjects.forEach(subject => {
+                    const item = document.createElement('div');
+                    item.className = 'filter-item';
+                    item.textContent = `${subject.code} - ${subject.name}`;
+                    item.dataset.code = subject.code;
+                    item.dataset.name = subject.name;
+                    courseList.appendChild(item);
+                });
+            } else {
+                courseList.innerHTML = '<p style="padding: 12px 15px;">No courses found.</p>';
+            }
+            
+            courseCol.classList.remove('disabled');
+        }
+        
+        function handleDeptSelection(e) {
+            if (!e.target.classList.contains('filter-item')) return;
+            
+            selectedDept = { code: e.target.dataset.code, name: e.target.dataset.name };
+            updateSelectedUI(deptCol, e.target);
+            
+            semCol.querySelector('.filter-column-list').innerHTML = '';
+            courseCol.querySelector('.filter-column-list').innerHTML = '';
+            semCol.classList.add('disabled');
+            courseCol.classList.add('disabled');
+            
+            populateSemesters();
+            filterColumns.classList.add('show-semesters'); // Slide to next view
+        }
+        
+        function handleSemSelection(e) {
+            if (!e.target.classList.contains('filter-item')) return;
+            
+            selectedSem = { code: e.target.dataset.code, name: e.target.textContent };
+            updateSelectedUI(semCol, e.target);
+            
+            courseCol.querySelector('.filter-column-list').innerHTML = '';
+            courseCol.classList.add('disabled');
+            
+            populateCourses();
+            filterColumns.classList.add('show-courses'); // Slide to next view
+        }
+        
+        function handleCourseSelection(e) {
+            if (!e.target.classList.contains('filter-item')) return;
+            
+            selectedCourse = { code: e.target.dataset.code, name: e.target.dataset.name };
+            updateSelectedUI(courseCol, e.target);
+            
+            filterModal.classList.remove('active');
+            
+            selectionDisplay.innerHTML = `Viewing: <strong>${selectedCourse.code} - ${selectedCourse.name}</strong>`;
+            loadMaterials(selectedDept.code, selectedSem.code, selectedCourse.code);
+        }
+        
+        function updateSelectedUI(column, selectedElement) {
+            [...column.querySelectorAll('.filter-item')].forEach(item => item.classList.remove('selected'));
+            selectedElement.classList.add('selected');
+        }
+        
+        async function loadMaterials(department, semester, courseCode) {
+            try {
+                // Show loading state
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="loading-spinner"></div>
+                        <p>${translations[currentLanguage].loading}</p>
+                    </div>
+                `;
+                
+                // Check if user is authenticated
+                if (!auth.currentUser) {
+                    throw new Error('User not authenticated');
+                }
+                
+                // Validate inputs
+                if (!department || !semester || !courseCode) {
+                    throw new Error('Missing required parameters');
+                }
+                
+                const snapshot = await db.collection('materials')
+                    .where('department', '==', department)
+                    .where('semester', '==', semester)
+                    .where('courseCode', '==', courseCode)
+                    .orderBy('uploadedAt', 'desc')
+                    .get();
+                
+                if (snapshot.empty) {
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-box-open"></i>
+                            <p>${translations[currentLanguage].noMaterials}</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Process materials
+                allMaterials = [];
+                snapshot.forEach(doc => {
+                    const material = doc.data();
+                    material.id = doc.id;
+                    allMaterials.push(material);
+                });
+                
+                renderMaterials();
+                
+            } catch (error) {
+                console.error("Error loading materials:", error);
+                
+                let errorMessage = translations[currentLanguage].errorLoading;
+                
+                if (error.message === 'User not authenticated') {
+                    errorMessage = translations[currentLanguage].notAuthenticated;
+                } else if (error.message === 'Missing required parameters') {
+                    errorMessage = translations[currentLanguage].missingParams;
+                } else if (error.code === 'permission-denied') {
+                    errorMessage = translations[currentLanguage].permissionDenied;
+                }
+                
+                showToast(errorMessage, 'error');
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>${errorMessage}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function renderMaterials() {
+            const query = searchInput.value.trim().toLowerCase();
+            let filtered = allMaterials.filter(mat => {
+                return !query || 
+                    (mat.title && mat.title.toLowerCase().includes(query)) || 
+                    (mat.tags && mat.tags.join(' ').toLowerCase().includes(query));
+            });
+            
+            grid.innerHTML = '';
+            
+            const start = (currentPage - 1) * pageSize;
+            const end = start + pageSize;
+            const pageMaterials = filtered.slice(start, end);
+            
+            const freeMaterials = pageMaterials.filter(m => !m.isPaid);
+            const paidMaterials = pageMaterials.filter(m => m.isPaid);
+            
+            if (freeMaterials.length > 0) {
+                const freeTitle = document.createElement('h2');
+                freeTitle.textContent = translations[currentLanguage].freeMaterials;
+                freeTitle.style.gridColumn = '1/-1';
+                grid.appendChild(freeTitle);
+                freeMaterials.forEach(mat => grid.appendChild(createMaterialCard(mat, false)));
+            }
+            
+            if (paidMaterials.length > 0) {
+                const paidTitle = document.createElement('h2');
+                paidTitle.textContent = translations[currentLanguage].paidMaterials;
+                paidTitle.style.gridColumn = '1/-1';
+                grid.appendChild(paidTitle);
+                paidMaterials.forEach(mat => grid.appendChild(createMaterialCard(mat, true)));
+            }
+            
+            renderPagination(filtered.length);
+        }
+        
+        function createMaterialCard(material, isPaidSection) {
+            const card = document.createElement('div');
+            card.className = 'material-card';
+            
+            const courseName = selectedCourse.name || '';
+            const courseDisplayName = courseName ? `${material.courseCode} - ${courseName}` : material.courseCode;
+            
+            card.dataset.title = material.title || 'No Title';
+            card.dataset.courseCode = courseDisplayName;
+            card.dataset.description = material.description || 'No description available.';
+            card.dataset.downloadUrl = material.downloadURL;
+            card.dataset.embedUrl = getGoogleDriveEmbedUrl(material.downloadURL);
+            card.dataset.isPaid = material.isPaid || false;
+            card.dataset.isUnlocked = material.isUnlocked || false;
+            
+            const thumbnailSrc = material.thumbnailURL || 'https://via.placeholder.com/400x180.png?text=No+Preview';
+            
+            let actionBtn = '';
+            if (isPaidSection) {
+                if (material.isUnlocked) {
+                    actionBtn = `<button class="btn btn-primary view-in-account-btn"><i class="fas fa-eye"></i> Download in Account</button>`;
+                } else {
+                    actionBtn = `<button class="btn btn-secondary pay-to-access-btn"><i class="fas fa-lock"></i> Pay to Access</button>`;
+                }
+            } else {
+                actionBtn = `<button class="btn btn-primary view-in-account-btn"><i class="fas fa-eye"></i> Download in Account</button>`;
+            }
+            
+            card.innerHTML = `
+                <div class="card-thumbnail">
+                    <img src="${thumbnailSrc}" alt="${material.title} preview" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x180.png?text=No+Preview';">
+                </div>
+                <div class="card-content-wrapper">
+                    <div class="material-info">
+                        <h3 class="material-title">${material.title || 'No Title'}</h3>
+                        <p class="material-meta">Course: ${courseDisplayName}</p>
+                        <p class="material-meta"><i class="fas fa-eye"></i> Views: ${material.views || 0} &nbsp; <i class="fas fa-download"></i> Downloads: ${material.downloads || 0}</p>
+                    </div>
+                    <div class="material-footer">
+                        <span class="tag ${isPaidSection ? 'tag-premium' : 'tag-free'}">${isPaidSection ? 'Paid' : 'Free'}</span>
+                        ${actionBtn}
+                    </div>
+                </div>
+            `;
+            
+            // Add favorite button
+            const favBtn = document.createElement('button');
+            favBtn.className = 'btn btn-secondary';
+            favBtn.innerHTML = `<i class="fas fa-star"></i> Favorite`;
+            favBtn.onclick = (ev) => {
+                ev.stopPropagation();
+                if (!favorites.includes(material.id)) {
+                    favorites.push(material.id);
+                    showToast(translations[currentLanguage].addedToFavorites, 'success');
+                }
+            };
+            card.querySelector('.material-footer').appendChild(favBtn);
+            
+            // Add share button
+            const shareBtn = document.createElement('button');
+            shareBtn.className = 'btn btn-secondary';
+            shareBtn.innerHTML = `<i class="fas fa-share"></i> Share`;
+            shareBtn.onclick = (ev) => {
+                ev.stopPropagation();
+                navigator.clipboard.writeText(window.location.href + '?material=' + material.id);
+                showToast(translations[currentLanguage].linkCopied, 'success');
+            };
+            card.querySelector('.material-footer').appendChild(shareBtn);
+            
+            // Add report button
+            const reportBtn = document.createElement('button');
+            reportBtn.className = 'btn btn-secondary';
+            reportBtn.innerHTML = `<i class="fas fa-flag"></i> Report`;
+            reportBtn.onclick = (ev) => {
+                ev.stopPropagation();
+                showToast(translations[currentLanguage].reportSubmitted, 'success');
+            };
+            card.querySelector('.material-footer').appendChild(reportBtn);
+            
+            // View in account button
+            card.querySelector('.view-in-account-btn')?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                // Add to recently viewed
+                if (!recentlyViewed.includes(material.id)) {
+                    recentlyViewed.push(material.id);
+                }
+                
+                // Update modal content
+                document.getElementById('modal-title').textContent = card.dataset.title;
+                document.getElementById('modal-courseCode').textContent = card.dataset.courseCode;
+                document.getElementById('modal-description').textContent = card.dataset.description;
+                
+                // Uploader info
+                modalUploader.textContent = material.uploader ? 
+                    `${translations[currentLanguage].uploadedBy}: ${material.uploader}` : '';
+                
+                // Upload date
+                modalUploadDate.textContent = material.uploadedAt ? 
+                    `${translations[currentLanguage].uploaded}: ${new Date(material.uploadedAt.seconds*1000).toLocaleDateString()}` : '';
+                
+                // Payment status
+                if (material.isPaid) {
+                    modalPaymentStatus.innerHTML = material.isUnlocked ? 
+                        `<span style="color:var(--success-color)">${translations[currentLanguage].paidUnlocked}</span>` : 
+                        `<span style="color:var(--error-color)">${translations[currentLanguage].paidLocked}</span>`;
+                } else {
+                    modalPaymentStatus.innerHTML = '';
+                }
+                
+                // Preview logic
+                modalEmbedPreview.style.display = 'none';
+                modalImagePreview.style.display = 'none';
+                
+                if (material.downloadURL) {
+                    if (material.downloadURL.match(/\.pdf($|\?)/i)) {
+                        modalEmbedPreview.src = getGoogleDriveEmbedUrl(material.downloadURL);
+                        modalEmbedPreview.style.display = 'block';
+                    } else if (material.downloadURL.match(/\.(jpg|jpeg|png|gif|webp)($|\?)/i)) {
+                        modalImagePreview.src = material.downloadURL;
+                        modalImagePreview.style.display = 'block';
+                    } else if (material.downloadURL.match(/\.(mp4|webm|ogg)($|\?)/i)) {
+                        // Add video preview
+                        const videoPreview = document.createElement('video');
+                        videoPreview.src = material.downloadURL;
+                        videoPreview.controls = true;
+                        videoPreview.style.width = '100%';
+                        videoPreview.style.maxHeight = '500px';
+                        
+                        const previewContainer = document.querySelector('.modal-body');
+                        previewContainer.innerHTML = '';
+                        previewContainer.appendChild(videoPreview);
+                    } else if (material.downloadURL.match(/\.(mp3|wav|ogg)($|\?)/i)) {
+                        // Add audio preview
+                        const audioPreview = document.createElement('audio');
+                        audioPreview.src = material.downloadURL;
+                        audioPreview.controls = true;
+                        audioPreview.style.width = '100%';
+                        
+                        const previewContainer = document.querySelector('.modal-body');
+                        previewContainer.innerHTML = '';
+                        previewContainer.appendChild(audioPreview);
+                    }
+                }
+                
+                // Ratings/comments
+                loadRatingsComments(material.id);
+                
+                // Hide download button for now (would be implemented with actual download logic)
+                document.getElementById('modal-download-btn').style.display = 'none';
+                
+                // Related/recommended materials
+                const related = allMaterials.filter(m => 
+                    m.id !== material.id && (
+                        m.courseCode === material.courseCode || 
+                        (m.tags && material.tags && m.tags.some(tag => material.tags.includes(tag)))
+                    )
+                );
+                
+                const relatedHtml = `
+                    <div style="margin-top:20px">
+                        <strong>${translations[currentLanguage].relatedMaterials}:</strong>
+                        <ul>
+                            ${related.length === 0 ? 
+                                `<li>${translations[currentLanguage].noRelatedMaterials}</li>` : 
+                                related.slice(0, 5).map(rm => 
+                                    `<li><a href="#" class="related-link" data-id="${rm.id}">${rm.title}</a></li>`
+                                ).join('')
+                            }
+                        </ul>
+                    </div>
+                `;
+                
+                modalRatingComments.insertAdjacentHTML('beforeend', relatedHtml);
+                
+                // Related material click
+                document.querySelectorAll('.related-link').forEach(link => {
+                    link.onclick = function(ev) {
+                        ev.preventDefault();
+                        const rel = allMaterials.find(m => m.id === this.dataset.id);
+                        if (rel) {
+                            detailsModal.classList.remove('active');
+                            setTimeout(() => {
+                                grid.appendChild(createMaterialCard(rel, rel.isPaid));
+                                grid.lastChild.querySelector('.view-in-account-btn').click();
+                            }, 200);
+                        }
+                    };
+                });
+                
+                detailsModal.classList.add('active');
+            });
+            
+            // Pay to access button
+            card.querySelector('.pay-to-access-btn')?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showToast(translations[currentLanguage].payToAccess, 'error');
+            });
+            
+            return card;
+        }
+        
+        function renderPagination(total) {
+            const totalPages = Math.ceil(total / pageSize);
+            paginationBar.innerHTML = '';
+            
+            if (totalPages <= 1) return;
+            
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.textContent = i;
+                btn.className = 'btn btn-secondary';
+                if (i === currentPage) btn.style.background = 'var(--primary-glow)';
+                btn.onclick = () => { 
+                    currentPage = i; 
+                    renderMaterials(); 
+                };
+                paginationBar.appendChild(btn);
+            }
+        }
+        
+        function getGoogleDriveEmbedUrl(shareUrl) {
+            if (!shareUrl) return '';
+            const fileIdMatch = shareUrl.match(/d\/([a-zA-Z0-9_-]{25,})/);
+            return fileIdMatch && fileIdMatch[1] ? 
+                `https://drive.google.com/file/d/${fileIdMatch[1]}/preview` : 
+                shareUrl;
+        }
+        
+        async function loadRatingsComments(materialId) {
+            modalRatingComments.innerHTML = '<div><div class="loading-spinner"></div> Loading ratings & comments...</div>';
+            
+            try {
+                // In a real implementation, you would fetch from Firestore:
+                // const snapshot = await db.collection('ratings').where('materialId', '==', materialId).get();
+                
+                // For demo, we'll use static data
+                setTimeout(() => {
+                    modalRatingComments.innerHTML = `
+                        <div>
+                            <strong>${translations[currentLanguage].ratings}:</strong> 
+                            ⭐⭐⭐⭐☆ (4.0/5)
+                        </div>
+                        <div>
+                            <strong>${translations[currentLanguage].comments}:</strong>
+                            <ul>
+                                <li>Very helpful!</li>
+                                <li>Good explanations.</li>
+                            </ul>
+                            <form id="comment-form" style="margin-top:15px;">
+                                <input type="text" name="comment" placeholder="${translations[currentLanguage].addComment}" required style="padding:8px;border-radius:5px;border:1px solid var(--border-color);background:var(--card-bg);color:var(--text-primary);width:100%;max-width:300px;">
+                                <button type="submit" class="btn btn-secondary" style="margin-left:10px;">${translations[currentLanguage].post}</button>
+                            </form>
+                        </div>
+                    `;
+                    
+                    document.getElementById('comment-form').onsubmit = function(e) {
+                        e.preventDefault();
+                        showToast(translations[currentLanguage].commentPosted, 'success');
+                        this.reset();
+                    };
+                }, 500);
+            } catch (error) {
+                console.error("Error loading ratings/comments:", error);
+                modalRatingComments.innerHTML = `<p>Could not load ratings and comments.</p>`;
+            }
+        }
     </script>
 </body>
 </html>
