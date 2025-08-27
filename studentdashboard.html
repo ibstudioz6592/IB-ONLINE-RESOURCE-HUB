@@ -177,6 +177,23 @@
             align-items: center;
             justify-content: center;
             color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
         .header-actions {
             display: flex;
@@ -609,6 +626,37 @@
             margin-bottom: 1rem;
             opacity: 0.5;
         }
+        /* Branch/Semester Selection Modal */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .form-select, .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--background);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            transition: var(--transition);
+        }
+        .form-select:focus, .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
         /* Chatbot */
         .chatbot-toggle {
             position: fixed;
@@ -956,7 +1004,7 @@
         <!-- Recently Accessed Materials -->
         <div class="section-header">
             <h2 class="section-title">Recently Accessed</h2>
-            <a href="#" class="btn btn-outline">
+            <a href="#" class="btn btn-outline" id="viewAllMaterialsBtn">
                 View All
                 <i class="fas fa-arrow-right"></i>
             </a>
@@ -991,6 +1039,10 @@
                         <div class="account-value" id="accountEmail">-</div>
                     </div>
                     <div class="account-info">
+                        <div class="account-label">Phone:</div>
+                        <div class="account-value" id="accountPhone">-</div>
+                    </div>
+                    <div class="account-info">
                         <div class="account-label">Branch:</div>
                         <div class="account-value" id="accountBranch">-</div>
                     </div>
@@ -1006,6 +1058,14 @@
                         <div class="account-label">Joined:</div>
                         <div class="account-value" id="accountJoined">-</div>
                     </div>
+                    <div class="account-info">
+                        <div class="account-label">Last Login:</div>
+                        <div class="account-value" id="accountLastLogin">-</div>
+                    </div>
+                    <div class="account-info">
+                        <div class="account-label">Account Status:</div>
+                        <div class="account-value" id="accountStatus">Active</div>
+                    </div>
                 </div>
                 <div class="modal-pane" id="paid-pane">
                     <div class="materials-list" id="paidMaterialsList">
@@ -1017,6 +1077,61 @@
                         <div class="spinner"></div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Branch/Semester Selection Modal -->
+    <div class="modal-overlay" id="branchSemesterModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Complete Your Profile</h2>
+                <button class="modal-close" id="branchSemesterModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <p>Please select your branch and semester to continue using the dashboard.</p>
+                <form id="branchSemesterForm">
+                    <div class="form-group">
+                        <label class="form-label" for="branchSelect">Branch</label>
+                        <select class="form-select" id="branchSelect" required>
+                            <option value="">Select Branch</option>
+                            <option value="CSE">Computer Science Engineering</option>
+                            <option value="IT">Information Technology</option>
+                            <option value="ECE">Electronics & Communication</option>
+                            <option value="EEE">Electrical & Electronics</option>
+                            <option value="MECH">Mechanical</option>
+                            <option value="AIML">AI & Machine Learning</option>
+                            <option value="CIVIL">Civil Engineering</option>
+                            <option value="BME">Bio Medical</option>
+                            <option value="FT">Fashion Technology</option>
+                            <option value="MCT">Mechatronics</option>
+                            <option value="CSD">CS & Design</option>
+                            <option value="ADS">AI & Data Science</option>
+                            <option value="EFE">Electrical & Computer</option>
+                            <option value="EXE">Electronics & Computer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="semesterSelect">Semester</label>
+                        <select class="form-select" id="semesterSelect" required>
+                            <option value="">Select Semester</option>
+                            <option value="1">1st Semester</option>
+                            <option value="2">2nd Semester</option>
+                            <option value="3">3rd Semester</option>
+                            <option value="4">4th Semester</option>
+                            <option value="5">5th Semester</option>
+                            <option value="6">6th Semester</option>
+                            <option value="7">7th Semester</option>
+                            <option value="8">8th Semester</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" id="cancelBranchSemesterBtn">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -1066,9 +1181,7 @@
                 "EXE": {"name":"Electronics & Computer","color":"var(--exe-color)","icon":"fas fa-desktop","semesters":{"1":[{"code":"U23EX101","name":"Basic Electronics","credits":4},{"code":"U23EX102","name":"Programming Fundamentals","credits":4},{"code":"U23EX103","name":"Digital Logic Design","credits":3},{"code":"U23EX104","name":"Engineering Mathematics","credits":3},{"code":"U23EX105","name":"Communication Skills","credits":2},{"code":"U23EX106","name":"Electronics Lab","credits":1},{"code":"U23EX107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EX201","name":"Data Structures","credits":4},{"code":"U23EX202","name":"Analog Electronics","credits":4},{"code":"U23EX203","name":"Computer Organization","credits":4},{"code":"U23EX204","name":"Signals and Systems","credits":3},{"code":"U23EX205","name":"Database Systems","credits":3},{"code":"U23EX206","name":"Analog Electronics Lab","credits":1},{"code":"U23EX207","name":"Data Structures Lab","credits":1}]}}
             }
         };
-
         const gradePoints = { "O": 10, "A+": 9, "A": 8, "B+": 7, "B": 6, "C": 5, "U": 0 };
-
         // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao",
@@ -1110,6 +1223,11 @@
         const chatbotSend = document.getElementById('chatbotSend');
         const toast = document.getElementById('toast');
         const toastMessage = document.getElementById('toastMessage');
+        const viewAllMaterialsBtn = document.getElementById('viewAllMaterialsBtn');
+        const branchSemesterModal = document.getElementById('branchSemesterModal');
+        const branchSemesterModalClose = document.getElementById('branchSemesterModalClose');
+        const branchSemesterForm = document.getElementById('branchSemesterForm');
+        const cancelBranchSemesterBtn = document.getElementById('cancelBranchSemesterBtn');
         // Theme Management
         function initTheme() {
             const savedTheme = localStorage.getItem('theme') || 'light';
@@ -1292,12 +1410,20 @@
                     const userData = doc.data();
                     userName.textContent = userData.name || 'Student';
                     
+                    // Check if branch and semester are set
+                    if (!userData.branch || !userData.semester) {
+                        // Show branch/semester modal
+                        branchSemesterModal.classList.add('active');
+                        hideLoading();
+                        return;
+                    }
+                    
                     // Update dashboard data
                     dashboardData = {
                         ...dashboardData,
                         userName: userData.name || 'Student',
                         userBranch: userData.branch || 'Student',
-                        lastLogin: userData.lastLoginAt ? formatTimestamp(userData.lastLoginAt) : 'Today',
+                        lastLogin: userData.lastLoginAt ? formatDetailedTimestamp(userData.lastLoginAt) : 'Today',
                         accessDays: userData.accessExpires ? calculateDaysRemaining(userData.accessExpires) : 0
                     };
                     
@@ -1390,12 +1516,17 @@
                     // Update account details
                     document.getElementById('accountName').textContent = userData.name || 'N/A';
                     document.getElementById('accountEmail').textContent = userData.email || 'N/A';
+                    document.getElementById('accountPhone').textContent = userData.phone || 'N/A';
                     document.getElementById('accountBranch').textContent = 
                         userData.branch ? academicData.branches[userData.branch]?.name || userData.branch : 'N/A';
                     document.getElementById('accountSemester').textContent = userData.semester || 'N/A';
                     document.getElementById('accountAdmissionNo').textContent = userData.admissionNo || 'N/A';
                     document.getElementById('accountJoined').textContent = 
                         userData.createdAt ? formatTimestamp(userData.createdAt) : 'N/A';
+                    document.getElementById('accountLastLogin').textContent = 
+                        userData.lastLoginAt ? formatDetailedTimestamp(userData.lastLoginAt) : 'N/A';
+                    document.getElementById('accountStatus').textContent = 
+                        userData.accessExpires && new Date() > new Date(userData.accessExpires.toDate()) ? 'Expired' : 'Active';
                 }
             }).catch(error => {
                 console.error('Error loading account details:', error);
@@ -1597,6 +1728,22 @@
                 year: 'numeric'
             });
         }
+        
+        function formatDetailedTimestamp(timestamp) {
+            if (!timestamp) return 'N/A';
+            
+            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            
+            return date.toLocaleDateString('en-US', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
         function calculateDaysRemaining(expiresTimestamp) {
             if (!expiresTimestamp) return 0;
             
@@ -1732,6 +1879,52 @@
                 chatbotInput.focus();
             }
         });
+        
+        // View All Materials Button
+        viewAllMaterialsBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Redirect to materials page with filter for recent materials
+            window.location.href = '/materials.html?filter=recent';
+        });
+        
+        // Branch/Semester Modal
+        branchSemesterModalClose.addEventListener('click', () => {
+            branchSemesterModal.classList.remove('active');
+        });
+        
+        cancelBranchSemesterBtn.addEventListener('click', () => {
+            branchSemesterModal.classList.remove('active');
+        });
+        
+        branchSemesterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const branch = document.getElementById('branchSelect').value;
+            const semester = document.getElementById('semesterSelect').value;
+            
+            if (!branch || !semester) {
+                showToast('Please select both branch and semester', 'error');
+                return;
+            }
+            
+            // Update user data in Firebase
+            db.collection('users').doc(currentUser.uid).update({
+                branch: branch,
+                semester: semester,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                showToast('Profile updated successfully', 'success');
+                branchSemesterModal.classList.remove('active');
+                // Reload dashboard data
+                loadDashboardData();
+            })
+            .catch(error => {
+                console.error('Error updating profile:', error);
+                showToast('Error updating profile', 'error');
+            });
+        });
+        
         // Initialize Application
         document.addEventListener('DOMContentLoaded', () => {
             initTheme();
