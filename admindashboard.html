@@ -985,10 +985,10 @@
         const logoutBtn = document.getElementById('logout-btn');
         
         // Overview counters
-        const totalUsersCount = document.getElementById('total-users-count');
-        const totalContentCount = document.getElementById('total-content-count');
-        const totalPaymentsCount = document.getElementById('total-payments-count');
-        const activeUsersCount = document.getElementById('active-users-count');
+        const totalUsersCount = document.getElementById('totalUsersCount');
+        const totalContentCount = document.getElementById('totalContentCount');
+        const totalPaymentsCount = document.getElementById('totalPaymentsCount');
+        const activeUsersCount = document.getElementById('activeUsersCount');
         
         // Cards
         const manageUsersCard = document.getElementById('manage-users-card');
@@ -1266,33 +1266,63 @@
                 document.getElementById('activeUsersCount').textContent = '...';
                 document.getElementById('totalContentCount').textContent = '...';
                 document.getElementById('totalPaymentsCount').textContent = '...';
+                
                 // Users and active count
                 db.collection('users').onSnapshot(snapshot => {
-                  document.getElementById('totalUsersCount').textContent = snapshot.size;
-                  const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-                  const active = snapshot.docs.filter(doc => {
-                    const data = doc.data();
-                    return data.lastLoginAt && data.lastLoginAt.toDate() > weekAgo;
-                  }).length;
-                  document.getElementById('activeUsersCount').textContent = active;
+                    document.getElementById('totalUsersCount').textContent = snapshot.size;
+                    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+                    const active = snapshot.docs.filter(doc => {
+                        const data = doc.data();
+                        return data.lastLoginAt && data.lastLoginAt.toDate() > weekAgo;
+                    }).length;
+                    document.getElementById('activeUsersCount').textContent = active;
                 }, err => {
-                  showDashboardError('Failed to load users: ' + err.message);
+                    console.error('Failed to load users:', err);
+                    document.getElementById('totalUsersCount').textContent = 'Error';
+                    document.getElementById('activeUsersCount').textContent = 'Error';
                 });
+                
                 // Content count
                 let notesCount = 0, pyqsCount = 0, seminarsCount = 0;
                 const updateTotalContent = () => {
-                  document.getElementById('totalContentCount').textContent = notesCount + pyqsCount + seminarsCount;
+                    document.getElementById('totalContentCount').textContent = notesCount + pyqsCount + seminarsCount;
                 };
-                db.collection('notes').onSnapshot(s => { notesCount = s.size; updateTotalContent(); }, err => showDashboardError('Failed to load notes: ' + err.message));
-                db.collection('pyqs').onSnapshot(s => { pyqsCount = s.size; updateTotalContent(); }, err => showDashboardError('Failed to load pyqs: ' + err.message));
-                db.collection('seminars').onSnapshot(s => { seminarsCount = s.size; updateTotalContent(); }, err => showDashboardError('Failed to load seminars: ' + err.message));
+                
+                db.collection('notes').onSnapshot(s => { 
+                    notesCount = s.size; 
+                    updateTotalContent(); 
+                }, err => {
+                    console.error('Failed to load notes:', err);
+                    document.getElementById('totalContentCount').textContent = 'Error';
+                });
+                
+                db.collection('pyqs').onSnapshot(s => { 
+                    pyqsCount = s.size; 
+                    updateTotalContent(); 
+                }, err => {
+                    console.error('Failed to load pyqs:', err);
+                    document.getElementById('totalContentCount').textContent = 'Error';
+                });
+                
+                db.collection('seminars').onSnapshot(s => { 
+                    seminarsCount = s.size; 
+                    updateTotalContent(); 
+                }, err => {
+                    console.error('Failed to load seminars:', err);
+                    document.getElementById('totalContentCount').textContent = 'Error';
+                });
+                
                 // Payments count
                 db.collection('payments').onSnapshot(s => {
-                  document.getElementById('totalPaymentsCount').textContent = s.size;
-                }, err => showDashboardError('Failed to load payments: ' + err.message));
-              } catch (e) {
-                showDashboardError('Dashboard error: ' + e.message);
-              }
+                    document.getElementById('totalPaymentsCount').textContent = s.size;
+                }, err => {
+                    console.error('Failed to load payments:', err);
+                    document.getElementById('totalPaymentsCount').textContent = 'Error';
+                });
+            } catch (e) {
+                console.error('Dashboard error:', e);
+                showToast('Dashboard loading error', 'error');
+            }
         }
         
         // Load users with real-time updates
@@ -1303,22 +1333,20 @@
             try {
                 usersData = [];
                 
-                const unsubscribeUsers = db.collection('users').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                // First load users data
+                db.collection('users').orderBy('createdAt', 'desc').get().then(snapshot => {
                     usersData = snapshot.docs.map(doc => {
                         const user = { id: doc.id, ...doc.data() };
                         user.totalPurchases = 0;
                         user.totalSpent = 0;
                         return user;
                     });
-                    displayUsers(usersData);
-                    filterUsers();
-                });
-                
-                usersModal.unsubscribeUsers = unsubscribeUsers;
-                
-                const unsubscribePayments = db.collection('payments').onSnapshot(snapshot => {
+                    
+                    // Then load payments data
+                    return db.collection('payments').get();
+                }).then(paymentsSnapshot => {
                     const paymentsByEmail = {};
-                    snapshot.docs.forEach(doc => {
+                    paymentsSnapshot.docs.forEach(doc => {
                         const data = doc.data();
                         const email = data.userEmail;
                         if (!paymentsByEmail[email]) paymentsByEmail[email] = { purchases: 0, spent: 0 };
@@ -1326,21 +1354,70 @@
                         if (data.status === 'completed') paymentsByEmail[email].spent += parseFloat(data.amount || 0);
                     });
                     
-                    if (usersData.length > 0) {
+                    // Update user data with payment information
+                    usersData.forEach(user => {
+                        const payInfo = paymentsByEmail[user.email] || { purchases: 0, spent: 0 };
+                        user.totalPurchases = payInfo.purchases;
+                        user.totalSpent = payInfo.spent;
+                    });
+                    
+                    // Display the users
+                    displayUsers(usersData);
+                    filterUsers();
+                    
+                    // Set up real-time listeners
+                    const unsubscribeUsers = db.collection('users').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                        usersData = snapshot.docs.map(doc => {
+                            const user = { id: doc.id, ...doc.data() };
+                            user.totalPurchases = 0;
+                            user.totalSpent = 0;
+                            return user;
+                        });
+                        
+                        // Re-apply payment information
                         usersData.forEach(user => {
                             const payInfo = paymentsByEmail[user.email] || { purchases: 0, spent: 0 };
                             user.totalPurchases = payInfo.purchases;
                             user.totalSpent = payInfo.spent;
                         });
+                        
                         displayUsers(usersData);
                         filterUsers();
-                    }
+                    });
+                    
+                    usersModal.unsubscribeUsers = unsubscribeUsers;
+                    
+                    const unsubscribePayments = db.collection('payments').onSnapshot(snapshot => {
+                        const paymentsByEmail = {};
+                        snapshot.docs.forEach(doc => {
+                            const data = doc.data();
+                            const email = data.userEmail;
+                            if (!paymentsByEmail[email]) paymentsByEmail[email] = { purchases: 0, spent: 0 };
+                            paymentsByEmail[email].purchases += 1;
+                            if (data.status === 'completed') paymentsByEmail[email].spent += parseFloat(data.amount || 0);
+                        });
+                        
+                        if (usersData.length > 0) {
+                            usersData.forEach(user => {
+                                const payInfo = paymentsByEmail[user.email] || { purchases: 0, spent: 0 };
+                                user.totalPurchases = payInfo.purchases;
+                                user.totalSpent = payInfo.spent;
+                            });
+                            displayUsers(usersData);
+                            filterUsers();
+                        }
+                    });
+                    
+                    usersModal.unsubscribePayments = unsubscribePayments;
+                    
+                }).catch(error => {
+                    console.error('Error loading users:', error);
+                    container.innerHTML = '<p style="text-align: center; color: var(--danger);">Failed to load users: ' + error.message + '</p>';
+                    showToast('Failed to load users', 'error');
                 });
                 
-                usersModal.unsubscribePayments = unsubscribePayments;
-                
             } catch (error) {
-                console.error('Error loading users:', error);
+                console.error('Error in loadUsers:', error);
                 container.innerHTML = '<p style="text-align: center; color: var(--danger);">Failed to load users</p>';
                 showToast('Failed to load users', 'error');
             }
@@ -1467,7 +1544,8 @@
                         ${payment.status === 'pending' ? `<button class="btn-sm btn-success" onclick="approvePayment('${payment.id}')">
                             <i class="fas fa-check"></i> Approve
                         </button>` : ''}
-                    </div                </div>
+                    </div>
+                </div>
             `).join('');
             
             container.innerHTML = html;
@@ -1493,12 +1571,9 @@
                 const collections = ['notes', 'pyqs', 'seminars'];
                 const unsubscribes = [];
                 
-                for (const collectionName of collections) {
-                    const unsubscribe = db.collection(collectionName).onSnapshot(snapshot => {
-                        // Remove old data from this collection
-                        contentData = contentData.filter(item => item.collection !== collectionName);
-                        
-                        // Add new
+                // First load all content data
+                const promises = collections.map(collectionName => {
+                    return db.collection(collectionName).get().then(snapshot => {
                         snapshot.docs.forEach(doc => {
                             contentData.push({
                                 id: doc.id,
@@ -1506,24 +1581,57 @@
                                 ...doc.data()
                             });
                         });
-                        
-                        // Sort all
-                        contentData.sort((a, b) => {
-                            const aDate = a.createdAt ? a.createdAt.toDate() : new Date(0);
-                            const bDate = b.createdAt ? b.createdAt.toDate() : new Date(0);
-                            return bDate - aDate;
-                        });
-                        
-                        displayContent(contentData);
-                        filterContent();
                     });
-                    unsubscribes.push(unsubscribe);
-                }
+                });
                 
-                contentModal.unsubscribes = unsubscribes;
-                
+                Promise.all(promises).then(() => {
+                    // Sort all content
+                    contentData.sort((a, b) => {
+                        const aDate = a.createdAt ? a.createdAt.toDate() : new Date(0);
+                        const bDate = b.createdAt ? b.createdAt.toDate() : new Date(0);
+                        return bDate - aDate;
+                    });
+                    
+                    // Display the content
+                    displayContent(contentData);
+                    filterContent();
+                    
+                    // Set up real-time listeners
+                    for (const collectionName of collections) {
+                        const unsubscribe = db.collection(collectionName).onSnapshot(snapshot => {
+                            // Remove old data from this collection
+                            contentData = contentData.filter(item => item.collection !== collectionName);
+                            
+                            // Add new
+                            snapshot.docs.forEach(doc => {
+                                contentData.push({
+                                    id: doc.id,
+                                    collection: collectionName,
+                                    ...doc.data()
+                                });
+                            });
+                            
+                            // Sort all
+                            contentData.sort((a, b) => {
+                                const aDate = a.createdAt ? a.createdAt.toDate() : new Date(0);
+                                const bDate = b.createdAt ? b.createdAt.toDate() : new Date(0);
+                                return bDate - aDate;
+                            });
+                            
+                            displayContent(contentData);
+                            filterContent();
+                        });
+                        unsubscribes.push(unsubscribe);
+                    }
+                    
+                    contentModal.unsubscribes = unsubscribes;
+                }).catch(error => {
+                    console.error('Error loading content:', error);
+                    container.innerHTML = '<p style="text-align: center; color: var(--danger);">Failed to load content</p>';
+                    showToast('Failed to load content', 'error');
+                });
             } catch (error) {
-                console.error('Error loading content:', error);
+                console.error('Error in loadAllContent:', error);
                 container.innerHTML = '<p style="text-align: center; color: var(--danger);">Failed to load content</p>';
                 showToast('Failed to load content', 'error');
             }
@@ -1594,10 +1702,11 @@
                 paymentsSnapshot.docs.forEach(doc => {
                     const payment = doc.data();
                     if (payment.status === 'completed' && payment.amount) {
-                        totalRevenue += parseFloat(payment.amount);
+                        const amount = parseFloat(payment.amount) || 0;
+                        totalRevenue += amount;
                         
                         if (payment.createdAt && payment.createdAt.toDate() >= currentMonth) {
-                            monthlyRevenue += parseFloat(payment.amount);
+                            monthlyRevenue += amount;
                         }
                     }
                 });
@@ -1618,14 +1727,18 @@
                     let popularItem = null;
                     
                     for (const collection of collections) {
-                        const snapshot = await db.collection(collection).get();
-                        snapshot.docs.forEach(doc => {
-                            const data = doc.data();
-                            if (data.downloadCount && data.downloadCount > maxDownloads) {
-                                maxDownloads = data.downloadCount;
-                                popularItem = { ...data, collection };
-                            }
-                        });
+                        try {
+                            const snapshot = await db.collection(collection).get();
+                            snapshot.docs.forEach(doc => {
+                                const data = doc.data();
+                                if (data.downloadCount && data.downloadCount > maxDownloads) {
+                                    maxDownloads = data.downloadCount;
+                                    popularItem = { ...data, collection };
+                                }
+                            });
+                        } catch (collectionError) {
+                            console.error(`Error loading collection ${collection}:`, collectionError);
+                        }
                     }
                     
                     if (popularItem) {
@@ -1679,7 +1792,7 @@
                 
             } catch (error) {
                 console.error('Error loading analytics:', error);
-                container.innerHTML = '<p style="text-align: center; color: var(--danger);">Failed to load analytics</p>';
+                container.innerHTML = '<p style="text-align: center; color: var(--danger);">Failed to load analytics: ' + error.message + '</p>';
                 showToast('Failed to load analytics', 'error');
             }
         }
@@ -1702,15 +1815,6 @@
                     }, 2000);
                 }
             });
-        }
-        
-        // Error handling for dashboard data
-        function showDashboardError(msg) {
-          const errDiv = document.createElement('div');
-          errDiv.textContent = msg;
-          errDiv.style = 'color:#c00;background:#fee;padding:12px;border-radius:8px;margin-bottom:16px;text-align:center;';
-          document.body.prepend(errDiv);
-          setTimeout(() => errDiv.remove(), 5000);
         }
         
         // Filter functions
@@ -2161,19 +2265,6 @@
             }, 30);
         }
         
-        // Initialize counters animation when data loads
-        function updateOverviewCounts() {
-            // These will be called from loadDashboardData
-            setTimeout(() => {
-                const counters = document.querySelectorAll('.overview-number');
-                counters.forEach(counter => {
-                    const target = parseInt(counter.textContent);
-                    counter.textContent = '0';
-                    animateCounter(counter, target);
-                });
-            }, 500);
-        }
-        
         // Error handling for network issues
         window.addEventListener('online', () => {
             showToast('Connection restored', 'success');
@@ -2206,13 +2297,6 @@
                 loadDashboardData();
             }
         }, 5 * 60 * 1000);
-        
-        // Update overview counts after data loads
-        const originalLoadDashboardData = loadDashboardData;
-        loadDashboardData = function() {
-            originalLoadDashboardData();
-            updateOverviewCounts();
-        };
         
         // Console welcome message
         console.log('%cIB STUDIOZ Admin Dashboard', 'color: #FFD700; font-size: 24px; font-weight: bold;');
@@ -2254,7 +2338,4 @@
     </script>
 </body>
 </html>
-
-
-
 
