@@ -135,7 +135,32 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
+function smoothNavigate(url) {
+    document.body.style.transition = 'opacity 0.4s';
+    document.body.style.opacity = '0';
+    setTimeout(() => { window.location.href = url; }, 400);
+}
+function isLoggedIn() {
+    return sessionStorage.getItem('loggedIn') === 'true';
+}
+function setLoggedIn() {
+    sessionStorage.setItem('loggedIn', 'true');
+}
+function logout() {
+    sessionStorage.removeItem('loggedIn');
+    smoothNavigate('/index.html');
+}
+document.addEventListener('DOMContentLoaded', () => {
+    if (!isLoggedIn()) {
+        smoothNavigate('/index.html');
+    } else {
+        initializePage();
+    }
+    document.getElementById('logout-btn').addEventListener('click', e => {
+        e.preventDefault();
+        logout();
+    });
+    
         const userNameEl = document.getElementById('user-name');
         const welcomeCard = document.getElementById('welcome-card');
         
