@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Study Materials | IB STUDIOZ</title>
-    
+    <meta name="description" content="Find and download study materials for all engineering branches. Powered by IB STUDIOZ.">
+    <meta property="og:title" content="Study Materials | IB STUDIOZ">
+    <meta property="og:description" content="Find and download study materials for all engineering branches. Powered by IB STUDIOZ.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ibstudioz.com/studymaterials">
+    <meta property="og:image" content="/logo.png">
+
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23FFD700' d='M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z' /%3E%3Cg fill='%230A0A0A'%3E%3Cpath d='M28,25 h10 v50 h-10 Z' /%3E%3Cpath d='M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z' /%3E%3C/g%3E%3C/svg%3E">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -151,9 +157,60 @@
             .filter-column:last-child { border-right: none; }
             .filter-back-btn { display: none; } /* Hide back buttons on desktop */
         }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #222;
+            color: #FFD700;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 2000;
+            transition: opacity 0.4s, bottom 0.4s;
+        }
+        .toast.show {
+            opacity: 1;
+            pointer-events: auto;
+            bottom: 60px;
+        }
+        .spinner-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 3000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .spinner-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .spinner {
+            border: 6px solid #FFD700;
+            border-top: 6px solid #222;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
+    <div class="spinner-overlay" id="spinner-overlay"><div class="spinner"></div></div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
     <div class="background-container"><div class="aurora-layer"></div><div class="noise-layer"></div></div>
 
     <main>
@@ -302,26 +359,6 @@
             const auth = firebase.auth();
             const db = firebase.firestore();
 
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    initializePage();
-                } else {
-                    // Prevent infinite reload: show modal instead of redirect
-                    const unauthModal = document.createElement('div');
-                    unauthModal.className = 'modal-overlay active';
-                    unauthModal.setAttribute('role', 'dialog');
-                    unauthModal.setAttribute('aria-modal', 'true');
-                    unauthModal.innerHTML = `<div class=\"modal-content\"><div class=\"modal-header\"><h2>Authentication Required</h2></div><div style=\"padding:20px;text-align:center;\">You are not logged in.<br><a href=\"/login.html\" class=\"btn btn-primary\" style=\"margin-top:20px;\">Go to Login</a></div></div>`;
-                    document.body.appendChild(unauthModal);
-                    unauthModal.onclick = e => { if (e.target === unauthModal) unauthModal.remove(); };
-                    // In auth.onAuthStateChanged unauthenticated modal, add smooth navigation for login link
-                    unauthModal.querySelector('a').onclick = function(e) {
-                        e.preventDefault();
-                        smoothNavigate('/login.html');
-                    };
-                }
-            });
-            
             function initializePage() {
                 setupEventListeners();
                 populateDepartments();
@@ -366,7 +403,7 @@
                     uploadModal.onclick = e => { if (e.target === uploadModal) uploadModal.remove(); };
                     uploadModal.querySelector('#upload-form').onsubmit = async function(e) {
                         e.preventDefault();
-                        alert('Upload submitted for admin approval!');
+                        showToast('Upload submitted for admin approval!');
                         uploadModal.remove();
                     };
                 };
@@ -395,8 +432,7 @@
                         requestModal.onclick = e => { if (e.target === requestModal) requestModal.remove(); };
                         requestModal.querySelector('#request-form').onsubmit = async function(e) {
                             e.preventDefault();
-                            // You can add Firestore logic here to save request
-                            alert('Request submitted!');
+                            showToast('Request submitted!');
                             requestModal.remove();
                         };
                     }
@@ -410,7 +446,7 @@
                     modalRatingComments.innerHTML = `<div><strong>Ratings:</strong> ⭐⭐⭐⭐☆ (4.0/5)</div><div><strong>Comments:</strong><ul><li>Very helpful!</li><li>Good explanations.</li></ul><form id="comment-form"><input type="text" name="comment" placeholder="Add a comment..." required><button type="submit" class="btn btn-secondary">Post</button></form></div>`;
                     document.getElementById('comment-form').onsubmit = function(e) {
                         e.preventDefault();
-                        alert('Comment posted!');
+                        showToast('Comment posted!');
                     };
                 }
 
@@ -629,7 +665,7 @@
                         favBtn.onclick = (ev) => {
                             ev.stopPropagation();
                             if (!favorites.includes(material.id)) favorites.push(material.id);
-                            alert('Added to favorites!');
+                            showToast('Added to favorites!');
                         };
                         card.querySelector('.material-footer').appendChild(favBtn);
                         // Share button
@@ -639,7 +675,7 @@
                         shareBtn.onclick = (ev) => {
                             ev.stopPropagation();
                             navigator.clipboard.writeText(window.location.href + '?material=' + material.id);
-                            alert('Material link copied!');
+                            showToast('Material link copied!');
                         };
                         card.querySelector('.material-footer').appendChild(shareBtn);
                         // Report button
@@ -648,7 +684,7 @@
                         reportBtn.innerHTML = `<i class="fas fa-flag"></i> Report`;
                         reportBtn.onclick = (ev) => {
                             ev.stopPropagation();
-                            alert('Report submitted!');
+                            showToast('Report submitted!');
                         };
                         card.querySelector('.material-footer').appendChild(reportBtn);
                         // Add to recently viewed
@@ -778,8 +814,23 @@
                 }
             }
 
+            // Toast notification function
+            function showToast(msg) {
+                const toast = document.getElementById('toast');
+                toast.textContent = msg;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2500);
+            }
+            // Spinner functions
+            function showSpinner() {
+                document.getElementById('spinner-overlay').classList.add('show');
+            }
+            function hideSpinner() {
+                document.getElementById('spinner-overlay').classList.remove('show');
+            }
             // Smooth page shifting (fade out on navigation)
             function smoothNavigate(url) {
+                showSpinner();
                 document.body.style.transition = 'opacity 0.4s';
                 document.body.style.opacity = '0';
                 setTimeout(() => { window.location.href = url; }, 400);
@@ -790,6 +841,19 @@
                 const fileIdMatch = shareUrl.match(/d\/([a-zA-Z0-9_-]{25,})/);
                 return fileIdMatch && fileIdMatch[1] ? `https://drive.google.com/file/d/${fileIdMatch[1]}/preview` : shareUrl;
             }
+
+            // Accessibility: Add ARIA roles to modals
+            const modals = document.querySelectorAll('.modal-overlay');
+            modals.forEach(modal => {
+                modal.setAttribute('role', 'dialog');
+                modal.setAttribute('aria-modal', 'true');
+            });
+
+            // Lazy-load images
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                img.setAttribute('loading', 'lazy');
+            });
         });
     </script>
 </body>
