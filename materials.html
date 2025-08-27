@@ -242,6 +242,36 @@
             color: var(--primary);
         }
         
+        .btn-special {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-special::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+        
+        .btn-special:hover::before {
+            transform: translateX(0);
+        }
+        
+        .btn-special:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
         .theme-toggle {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -258,6 +288,139 @@
         .theme-toggle:hover {
             background: var(--surface-hover);
             border-color: var(--primary);
+        }
+        
+        /* Account Dropdown */
+        .account-dropdown {
+            position: relative;
+        }
+        
+        .account-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            width: 300px;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: var(--transition);
+        }
+        
+        .account-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .account-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .account-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .account-info h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .account-info p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .account-content {
+            padding: 1rem;
+        }
+        
+        .account-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .account-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .account-section-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .account-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .account-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            border-radius: calc(var(--radius) / 2);
+            transition: var(--transition);
+        }
+        
+        .account-item:hover {
+            background: var(--surface-hover);
+        }
+        
+        .account-item-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface-hover);
+            color: var(--text-secondary);
+        }
+        
+        .account-item-info {
+            flex: 1;
+        }
+        
+        .account-item-title {
+            font-weight: 500;
+            font-size: 0.875rem;
+            margin-bottom: 0.125rem;
+        }
+        
+        .account-item-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        .account-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: center;
         }
         
         /* Main Container */
@@ -377,6 +540,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
         
         .materials-title {
@@ -703,6 +868,23 @@
             gap: 1rem;
         }
         
+        /* Filter Modal */
+        .filter-modal .modal-content {
+            padding: 0;
+        }
+        
+        .filter-modal-body {
+            padding: 1.5rem;
+        }
+        
+        .filter-modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        
         /* Chatbot */
         .chatbot-toggle {
             position: fixed;
@@ -933,6 +1115,15 @@
                 width: 95%;
                 max-height: 95vh;
             }
+            
+            .account-menu {
+                width: 280px;
+            }
+            
+            .materials-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
@@ -953,7 +1144,12 @@
             </a>
             
             <nav class="nav-links">
-                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="dashboard.html" class="nav-link">
+                    <button class="btn btn-special">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </button>
+                </a>
                 <a href="materials.html" class="nav-link active">Materials</a>
                 <a href="pyq.html" class="nav-link">PYQs</a>
                 <a href="seminar.html" class="nav-link">Seminars</a>
@@ -962,16 +1158,62 @@
             </nav>
             
             <div class="header-actions">
-                <button class="btn btn-outline" id="accountBtn">
-                    <i class="fas fa-user"></i>
-                    <span>Account</span>
-                </button>
+                <div class="account-dropdown">
+                    <button class="btn btn-outline" id="accountBtn">
+                        <i class="fas fa-user"></i>
+                        <span>Account</span>
+                    </button>
+                    <div class="account-menu" id="accountMenu">
+                        <div class="account-header">
+                            <div class="account-avatar" id="accountAvatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="account-info">
+                                <h3 id="accountName">Loading...</h3>
+                                <p id="accountEmail">Loading...</p>
+                            </div>
+                        </div>
+                        <div class="account-content">
+                            <div class="account-section">
+                                <div class="account-section-title">Downloaded Materials</div>
+                                <div class="account-list" id="downloadedMaterials">
+                                    <div class="loading">
+                                        <div class="spinner"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="account-section">
+                                <div class="account-section-title">Account Settings</div>
+                                <div class="account-list">
+                                    <div class="account-item">
+                                        <div class="account-item-icon">
+                                            <i class="fas fa-user-edit"></i>
+                                        </div>
+                                        <div class="account-item-info">
+                                            <div class="account-item-title">Edit Profile</div>
+                                        </div>
+                                    </div>
+                                    <div class="account-item">
+                                        <div class="account-item-icon">
+                                            <i class="fas fa-cog"></i>
+                                        </div>
+                                        <div class="account-item-info">
+                                            <div class="account-item-title">Preferences</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="account-footer">
+                            <button class="btn btn-primary" id="accountLogout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 <button class="theme-toggle" id="themeToggle">
                     <i class="fas fa-moon" id="themeIcon"></i>
-                </button>
-                <button class="btn btn-outline" id="logoutBtn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Logout</span>
                 </button>
             </div>
         </div>
@@ -999,6 +1241,10 @@
             <div class="filter-header">
                 <h2 class="filter-title">Filter Materials</h2>
                 <div class="filter-actions">
+                    <button class="btn btn-outline" id="openFilterModal">
+                        <i class="fas fa-filter"></i>
+                        Advanced Filters
+                    </button>
                     <button class="btn btn-outline" id="resetFilters">
                         <i class="fas fa-redo"></i>
                         Reset
@@ -1008,26 +1254,9 @@
             
             <div class="filter-grid">
                 <div class="filter-group">
-                    <label class="filter-label">Branch</label>
-                    <select class="filter-select" id="branchFilter">
-                        <option value="">All Branches</option>
-                    </select>
+                    <label class="filter-label">Search</label>
+                    <input type="text" class="filter-input" id="searchFilter" placeholder="Search materials...">
                 </div>
-                
-                <div class="filter-group">
-                    <label class="filter-label">Semester</label>
-                    <select class="filter-select" id="semesterFilter">
-                        <option value="">All Semesters</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label class="filter-label">Course</label>
-                    <select class="filter-select" id="courseFilter">
-                        <option value="">All Courses</option>
-                    </select>
-                </div>
-                
                 <div class="filter-group">
                     <label class="filter-label">Material Type</label>
                     <select class="filter-select" id="typeFilter">
@@ -1039,11 +1268,6 @@
                         <option value="lab">Lab Manuals</option>
                         <option value="project">Projects</option>
                     </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label class="filter-label">Search</label>
-                    <input type="text" class="filter-input" id="searchFilter" placeholder="Search materials...">
                 </div>
             </div>
         </div>
@@ -1137,6 +1361,66 @@
         </div>
     </div>
     
+    <!-- Filter Modal -->
+    <div class="modal-overlay filter-modal" id="filterModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Advanced Filters</h2>
+                <button class="modal-close" id="filterModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="filter-modal-body">
+                    <div class="filter-grid">
+                        <div class="filter-group">
+                            <label class="filter-label">Branch</label>
+                            <select class="filter-select" id="branchFilter">
+                                <option value="">All Branches</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Semester</label>
+                            <select class="filter-select" id="semesterFilter">
+                                <option value="">All Semesters</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Course</label>
+                            <select class="filter-select" id="courseFilter">
+                                <option value="">All Courses</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Material Type</label>
+                            <select class="filter-select" id="modalTypeFilter">
+                                <option value="">All Types</option>
+                                <option value="notes">Notes</option>
+                                <option value="ebook">E-Books</option>
+                                <option value="slides">Slides</option>
+                                <option value="video">Videos</option>
+                                <option value="lab">Lab Manuals</option>
+                                <option value="project">Projects</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Search</label>
+                            <input type="text" class="filter-input" id="modalSearchFilter" placeholder="Search materials...">
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-modal-footer">
+                    <button type="button" class="btn btn-outline" id="cancelFilter">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="applyFilter">Apply Filters</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Chatbot -->
     <button class="chatbot-toggle" id="chatbotToggle">
         <i class="fas fa-robot"></i>
@@ -1205,13 +1489,18 @@
         let currentUser = null;
         let materials = [];
         let filteredMaterials = [];
+        let downloadedMaterials = [];
         let unsubscribeFunctions = [];
         
         // DOM Elements
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
-        const logoutBtn = document.getElementById('logoutBtn');
         const accountBtn = document.getElementById('accountBtn');
+        const accountMenu = document.getElementById('accountMenu');
+        const accountAvatar = document.getElementById('accountAvatar');
+        const accountName = document.getElementById('accountName');
+        const accountEmail = document.getElementById('accountEmail');
+        const accountLogout = document.getElementById('accountLogout');
         const uploadBtn = document.getElementById('uploadBtn');
         const uploadModal = document.getElementById('uploadModal');
         const uploadModalClose = document.getElementById('uploadModalClose');
@@ -1223,11 +1512,19 @@
         const semesterFilter = document.getElementById('semesterFilter');
         const courseFilter = document.getElementById('courseFilter');
         const typeFilter = document.getElementById('typeFilter');
+        const modalTypeFilter = document.getElementById('modalTypeFilter');
         const searchFilter = document.getElementById('searchFilter');
+        const modalSearchFilter = document.getElementById('modalSearchFilter');
         const resetFilters = document.getElementById('resetFilters');
         const materialBranch = document.getElementById('materialBranch');
         const materialSemester = document.getElementById('materialSemester');
         const materialCourse = document.getElementById('materialCourse');
+        const openFilterModal = document.getElementById('openFilterModal');
+        const filterModal = document.getElementById('filterModal');
+        const filterModalClose = document.getElementById('filterModalClose');
+        const cancelFilter = document.getElementById('cancelFilter');
+        const applyFilter = document.getElementById('applyFilter');
+        const downloadedMaterialsList = document.getElementById('downloadedMaterials');
         const chatbotToggle = document.getElementById('chatbotToggle');
         const chatbotContainer = document.getElementById('chatbotContainer');
         const chatbotMessages = document.getElementById('chatbotMessages');
@@ -1292,11 +1589,46 @@
             branchFilter.addEventListener('change', updateSemesterFilter);
             semesterFilter.addEventListener('change', updateCourseFilter);
             typeFilter.addEventListener('change', applyFilters);
+            modalTypeFilter.addEventListener('change', applyFilters);
             searchFilter.addEventListener('input', applyFilters);
-            resetFilters.addEventListener('click', resetAllFilters);
+            modalSearchFilter.addEventListener('input', applyFilters);
+            resetFilters.addEventListener('reset', resetAllFilters);
             
             materialBranch.addEventListener('change', updateMaterialSemesterFilter);
             materialSemester.addEventListener('change', updateMaterialCourseFilter);
+            
+            // Filter modal event listeners
+            openFilterModal.addEventListener('click', () => {
+                filterModal.classList.add('active');
+                // Sync filter values
+                branchFilter.value = document.getElementById('branchFilter').value;
+                semesterFilter.value = document.getElementById('semesterFilter').value;
+                courseFilter.value = document.getElementById('courseFilter').value;
+                modalTypeFilter.value = typeFilter.value;
+                modalSearchFilter.value = searchFilter.value;
+            });
+            
+            filterModalClose.addEventListener('click', () => {
+                filterModal.classList.remove('active');
+            });
+            
+            cancelFilter.addEventListener('click', () => {
+                filterModal.classList.remove('active');
+            });
+            
+            applyFilter.addEventListener('click', () => {
+                // Apply filter values from modal
+                typeFilter.value = modalTypeFilter.value;
+                searchFilter.value = modalSearchFilter.value;
+                applyFilters();
+                filterModal.classList.remove('active');
+            });
+            
+            filterModal.addEventListener('click', (e) => {
+                if (e.target === filterModal) {
+                    filterModal.classList.remove('active');
+                }
+            });
         }
         
         function updateSemesterFilter() {
@@ -1369,8 +1701,8 @@
             const branch = branchFilter.value;
             const semester = semesterFilter.value;
             const course = courseFilter.value;
-            const type = typeFilter.value;
-            const search = searchFilter.value.toLowerCase();
+            const type = typeFilter.value || modalTypeFilter.value;
+            const search = (searchFilter.value || modalSearchFilter.value).toLowerCase();
             
             filteredMaterials = materials.filter(material => {
                 // Branch filter
@@ -1402,7 +1734,9 @@
             semesterFilter.value = '';
             courseFilter.value = '';
             typeFilter.value = '';
+            modalTypeFilter.value = '';
             searchFilter.value = '';
+            modalSearchFilter.value = '';
             
             updateSemesterFilter();
             updateCourseFilter();
@@ -1423,6 +1757,11 @@
                 
                 filteredMaterials = [...materials];
                 renderMaterials();
+                
+                // Load user's downloaded materials
+                if (currentUser) {
+                    loadDownloadedMaterials();
+                }
             }).catch(error => {
                 console.error('Error loading materials:', error);
                 showToast('Error loading materials', 'error');
@@ -1434,6 +1773,109 @@
                     </div>
                 `;
             });
+        }
+        
+        // Load Downloaded Materials
+        function loadDownloadedMaterials() {
+            if (!currentUser) return;
+            
+            downloadedMaterialsList.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+            
+            db.collection('userActivities')
+                .where('userId', '==', currentUser.uid)
+                .where('action', '==', 'download')
+                .get()
+                .then(snapshot => {
+                    downloadedMaterials = [];
+                    const materialIds = new Set();
+                    
+                    snapshot.forEach(doc => {
+                        const activity = doc.data();
+                        if (activity.materialId && !materialIds.has(activity.materialId)) {
+                            materialIds.add(activity.materialId);
+                            downloadedMaterials.push(activity.materialId);
+                        }
+                    });
+                    
+                    renderDownloadedMaterials();
+                })
+                .catch(error => {
+                    console.error('Error loading downloaded materials:', error);
+                    downloadedMaterialsList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon"><i class="fas fa-exclamation-circle"></i></div>
+                            <p class="empty-description">Error loading downloads</p>
+                        </div>
+                    `;
+                });
+        }
+        
+        function renderDownloadedMaterials() {
+            if (downloadedMaterials.length === 0) {
+                downloadedMaterialsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="fas fa-download"></i></div>
+                        <p class="empty-description">No downloaded materials yet</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Get material details for each downloaded material
+            const materialPromises = downloadedMaterials.map(materialId => {
+                return db.collection('materials').doc(materialId).get();
+            });
+            
+            Promise.all(materialPromises)
+                .then(snapshots => {
+                    const materialsData = [];
+                    
+                    snapshots.forEach(snapshot => {
+                        if (snapshot.exists) {
+                            const material = snapshot.data();
+                            material.id = snapshot.id;
+                            materialsData.push(material);
+                        }
+                    });
+                    
+                    downloadedMaterialsList.innerHTML = materialsData.map(material => {
+                        const branch = academicData.branches[material.branch];
+                        const branchColor = branch ? branch.color : 'var(--primary)';
+                        
+                        return `
+                            <div class="account-item" data-id="${material.id}">
+                                <div class="account-item-icon" style="background-color: ${branchColor}20; color: ${branchColor}">
+                                    <i class="fas ${getMaterialIcon(material.type)}"></i>
+                                </div>
+                                <div class="account-item-info">
+                                    <div class="account-item-title">${material.title}</div>
+                                    <div class="account-item-meta">${material.type} • ${branch ? branch.name : material.branch}</div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    // Add click event listeners to downloaded materials
+                    document.querySelectorAll('#downloadedMaterials .account-item').forEach(item => {
+                        item.addEventListener('click', () => {
+                            const materialId = item.dataset.id;
+                            const material = materials.find(m => m.id === materialId);
+                            if (material) {
+                                viewMaterial(material);
+                                accountMenu.classList.remove('active');
+                            }
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.error('Error getting material details:', error);
+                    downloadedMaterialsList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon"><i class="fas fa-exclamation-circle"></i></div>
+                            <p class="empty-description">Error loading materials</p>
+                        </div>
+                    `;
+                });
         }
         
         // Render Materials
@@ -1574,6 +2016,11 @@
                             type: material.type
                         },
                         timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    }).then(() => {
+                        // Refresh downloaded materials list if account menu is open
+                        if (accountMenu.classList.contains('active')) {
+                            loadDownloadedMaterials();
+                        }
                     });
                 }
             } else {
@@ -1824,11 +2271,49 @@
             });
         }
         
+        // Account Management
+        function initAccount() {
+            accountBtn.addEventListener('click', () => {
+                accountMenu.classList.toggle('active');
+            });
+            
+            accountLogout.addEventListener('click', () => {
+                if (confirm('Are you sure you want to logout?')) {
+                    auth.signOut().then(() => {
+                        showToast('Logged out successfully', 'success');
+                        window.location.href = '/index.html';
+                    }).catch(error => {
+                        console.error('Logout error:', error);
+                        showToast('Logout failed', 'error');
+                    });
+                }
+            });
+            
+            // Close account menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!accountBtn.contains(e.target) && !accountMenu.contains(e.target)) {
+                    accountMenu.classList.remove('active');
+                }
+            });
+        }
+        
         // Authentication
         function initAuth() {
             auth.onAuthStateChanged(user => {
                 if (user) {
                     currentUser = user;
+                    
+                    // Update account info
+                    accountName.textContent = user.displayName || 'User';
+                    accountEmail.textContent = user.email;
+                    
+                    // Set avatar with user initial
+                    if (user.displayName) {
+                        accountAvatar.textContent = user.displayName.charAt(0).toUpperCase();
+                    } else {
+                        accountAvatar.innerHTML = '<i class="fas fa-user"></i>';
+                    }
+                    
                     loadMaterials();
                 } else {
                     // Redirect to login page
@@ -1839,22 +2324,6 @@
         
         // Event Listeners
         themeToggle.addEventListener('click', toggleTheme);
-        
-        logoutBtn.addEventListener('click', () => {
-            if (confirm('Are you sure you want to logout?')) {
-                auth.signOut().then(() => {
-                    showToast('Logged out successfully', 'success');
-                    window.location.href = '/index.html';
-                }).catch(error => {
-                    console.error('Logout error:', error);
-                    showToast('Logout failed', 'error');
-                });
-            }
-        });
-        
-        accountBtn.addEventListener('click', () => {
-            window.location.href = '/account.html';
-        });
         
         uploadBtn.addEventListener('click', openUploadModal);
         
@@ -1872,6 +2341,7 @@
             initFilters();
             initUploadForm();
             initChatbot();
+            initAccount();
         });
     </script>
 </body>
