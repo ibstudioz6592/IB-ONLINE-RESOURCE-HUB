@@ -12,9 +12,9 @@
             --dark: #121212; 
             --text-primary: #ffffff; 
             --text-secondary: rgba(255, 255, 255, 0.7); 
-            --card-bg: rgba(20, 20, 20, 0.5); 
-            --border-color: rgba(255, 195, 0, 0.2); 
-            --shadow-color: rgba(0, 0, 0, 0.3); 
+            --card-bg: rgba(20, 20, 20, 0.7); 
+            --border-color: rgba(255, 195, 0, 0.3); 
+            --shadow-color: rgba(0, 0, 0, 0.4); 
             --success: #00b09b; 
             --danger: #ff416c; 
             --google: #DB4437;
@@ -23,36 +23,77 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         /* --- KEYFRAME ANIMATIONS --- */
-        @keyframes background-pan { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        
-        /* --- AURORA SHIMMER EFFECT --- */
+        @keyframes background-pan { 
+            0% { background-position: 0% 50%; } 
+            50% { background-position: 100% 50%; } 
+            100% { background-position: 0% 50%; } 
+        }
+        @keyframes spin { 
+            to { transform: rotate(360deg); } 
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
         @keyframes aurora-shimmer {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
         body { 
             font-family: "Poppins", sans-serif; 
             background-color: var(--dark); 
             color: var(--text-primary); 
             min-height: 100vh; 
             line-height: 1.6; 
-            background-attachment: fixed; 
+            background-attachment: fixed;
+            overflow-x: hidden;
         }
+        
+        /* --- AURORA BACKGROUND ENHANCED --- */
         .aurora-background { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; 
             background: radial-gradient(ellipse at 10% 10%, var(--primary) 0%, rgba(255, 195, 0, 0) 40%), 
-                        radial-gradient(ellipse at 90% 85%, #444 0%, rgba(68, 68, 68, 0) 35%); 
+                        radial-gradient(ellipse at 90% 85%, #444 0%, rgba(68, 68, 68, 0) 35%),
+                        radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
             animation: background-pan 45s linear infinite; 
-            opacity: 0.2; 
+            opacity: 0.3; 
         }
+        
         .container { max-width: 1200px; margin: 30px auto; padding: 30px; }
-        .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; color: var(--text-primary); }
+        
+        /* --- IB LOGO ENHANCED --- */
+        .brand-logo { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            text-decoration: none; 
+            color: var(--text-primary);
+            transition: transform 0.3s ease;
+        }
+        .brand-logo:hover {
+            transform: scale(1.03);
+        }
         .brand-logo img { width: 50px; height: auto; }
         .brand-logo h1 { font-size: 1.5rem; font-weight: 600; margin: 0; }
-
+        
         /* --- BRANDING STYLING --- */
         .brand-title-animated {
             font-size: 1.8rem;
@@ -63,14 +104,59 @@
             -webkit-background-clip: text;
             background-clip: text;
             animation: aurora-shimmer 8s ease-in-out infinite;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
-
-        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 12px 30px; border-radius: 10px; border: none; font-size: 1rem; font-weight: 500; cursor: pointer; text-align: center; transition: all 0.3s ease; text-decoration: none; }
-        .btn-primary { background: var(--primary); color: var(--dark); box-shadow: 0 4px 15px rgba(255, 195, 0, 0.3); }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 195, 0, 0.5); }
-        .btn-secondary { background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); }
-        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
+        
+        .btn { 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 12px 30px; 
+            border-radius: 10px; 
+            border: none; 
+            font-size: 1rem; 
+            font-weight: 500; 
+            cursor: pointer; 
+            text-align: center; 
+            transition: all 0.3s ease; 
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary { 
+            background: var(--primary); 
+            color: var(--dark); 
+            box-shadow: 0 4px 15px rgba(255, 195, 0, 0.3); 
+        }
+        .btn-primary:hover { 
+            transform: translateY(-3px) scale(1.02); 
+            box-shadow: 0 6px 20px rgba(255, 195, 0, 0.5); 
+        }
+        .btn-secondary { 
+            background: transparent; 
+            color: var(--text-primary); 
+            border: 1px solid var(--border-color); 
+        }
+        .btn-secondary:hover { 
+            background: rgba(255, 255, 255, 0.1); 
+            transform: translateY(-2px);
+        }
         .btn-small { padding: 8px 15px; font-size: 0.9rem; }
         
         /* Social login buttons */
@@ -79,20 +165,90 @@
         .btn-social { margin: 8px 0; width: 100%; }
         .btn-social i { margin-right: 10px; }
         
-        .auth-container { display: flex; justify-content: center; align-items: center; min-height: 90vh; }
-        .auth-card { width: 100%; max-width: 450px; text-align: center; background: var(--card-bg); backdrop-filter: blur(15px); border-radius: 15px; border: 1px solid var(--border-color); padding: 40px; box-shadow: 0 8px 32px 0 var(--shadow-color); }
+        .auth-container { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 90vh;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .auth-card { 
+            width: 100%; 
+            max-width: 450px; 
+            text-align: center; 
+            background: var(--card-bg); 
+            backdrop-filter: blur(20px);
+            border-radius: 15px; 
+            border: 1px solid var(--border-color); 
+            padding: 40px; 
+            box-shadow: 0 8px 32px 0 var(--shadow-color);
+            transition: all 0.5s ease;
+        }
+        
+        .auth-card:hover {
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+            transform: translateY(-5px);
+        }
+        
         .auth-card .brand-logo { justify-content: center; margin-bottom: 5px; }
         .auth-subtitle { color: var(--text-secondary); margin-bottom: 30px; font-size: 1rem; }
-        #authForm h2 { margin-bottom: 25px; font-weight: 600; }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { text-align: left; display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-secondary); }
-        input, select { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border-color); background-color: rgba(0, 0, 0, 0.2); color: var(--text-primary); font-size: 1rem; transition: box-shadow 0.3s ease; }
-        input:focus, select:focus { outline: none; box-shadow: 0 0 0 3px var(--primary); border-color: var(--primary); }
+        
+        #authForm h2 { 
+            margin-bottom: 25px; 
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group { 
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeInUp 0.5s ease forwards;
+        }
+        
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        .form-group:nth-child(5) { animation-delay: 0.5s; }
+        
+        .form-group label { 
+            text-align: left; 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 500; 
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+        
+        .form-group:hover label {
+            color: var(--primary);
+        }
+        
+        input, select { 
+            width: 100%; 
+            padding: 12px 15px; 
+            border-radius: 8px; 
+            border: 1px solid var(--border-color); 
+            background-color: rgba(0, 0, 0, 0.3); 
+            color: var(--text-primary); 
+            font-size: 1rem; 
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus { 
+            outline: none; 
+            box-shadow: 0 0 0 3px rgba(255, 195, 0, 0.3); 
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        
         .auth-card .btn { width: 100%; margin-top: 10px; }
         .toggle-auth { margin-top: 25px; color: var(--text-secondary); }
         .toggle-auth a { color: var(--primary); font-weight: 600; text-decoration: none; cursor: pointer; }
         .message { min-height: 20px; margin-bottom: 15px; font-weight: 500; font-size: 0.9rem; }
-        .message.error { color: var(--danger); } .message.success { color: var(--success); }
+        .message.error { color: var(--danger); } 
+        .message.success { color: var(--success); }
         .spinner-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; }
         .spinner { width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: var(--primary); animation: spin 1s ease-in-out infinite; }
         
@@ -124,9 +280,11 @@
             font-size: 0.9rem; 
             text-decoration: none; 
             cursor: pointer;
+            transition: all 0.3s ease;
         }
         .forgot-password a:hover { 
-            text-decoration: underline; 
+            text-decoration: underline;
+            transform: translateX(3px);
         }
         
         /* Modal Styles */
@@ -151,7 +309,7 @@
         }
         .modal {
             background: var(--card-bg);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(20px);
             border-radius: 15px;
             border: 1px solid var(--border-color);
             width: 90%;
@@ -181,6 +339,10 @@
             color: var(--text-primary);
             font-size: 1.5rem;
             cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .modal-close:hover {
+            transform: rotate(90deg);
         }
         
         /* --- RESPONSIVE DESIGN --- */
@@ -191,7 +353,7 @@
             .container { padding: 15px; margin: 15px auto; }
             .modal { padding: 20px; }
         }
-
+        
         .email-display {
             background: rgba(255, 195, 0, 0.1);
             border: 1px solid var(--primary);
@@ -218,7 +380,9 @@
         .form-group.error input, 
         .form-group.error select {
             border-color: var(--danger);
+            animation: shake 0.5s ease;
         }
+        
         .error-message {
             color: var(--danger);
             font-size: 0.8rem;
@@ -229,6 +393,23 @@
         .form-group.error .error-message {
             display: block;
         }
+        
+        /* Page transition effect */
+        .page-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            z-index: 9999;
+            transform: translateY(-100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .page-transition.active {
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
@@ -236,18 +417,29 @@
     <div class="container auth-container">
         <div class="auth-card">
             <div class="brand-logo">
-                <!-- Improved IB STUDIOZ logo with better "B" -->
+                <!-- Enhanced IB STUDIOZ logo -->
                 <svg width="50" height="50" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stop-color="#FFD700" />
                             <stop offset="100%" stop-color="#FFA500" />
                         </linearGradient>
+                        <filter id="glow">
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
                     </defs>
-                    <circle cx="50" cy="50" r="45" fill="url(#goldGradient)" />
-                    <!-- Improved "B" letter -->
-                    <path d="M30,30 L45,30 C50,30 55,35 55,40 L55,60 C55,65 50,70 45,70 L30,70 Z M35,40 L45,40 C47,40 48,41 48,43 C48,45 47,46 45,46 L35,46 Z M35,54 L45,54 C47,54 48,55 48,57 C48,59 47,60 45,60 L35,60 Z" fill="#121212" />
-                    <path d="M60,30 L70,30 L70,45 L65,45 L65,40 L60,40 Z M60,55 L70,55 L70,70 L60,70 Z" fill="#121212" />
+                    <circle cx="50" cy="50" r="45" fill="url(#goldGradient)" filter="url(#glow)" />
+                    <!-- Redesigned IB letters -->
+                    <g fill="#121212" filter="url(#glow)">
+                        <!-- Letter I -->
+                        <rect x="30" y="25" width="12" height="50" rx="2" />
+                        <!-- Letter B -->
+                        <path d="M50,25 L50,75 L65,75 C75,75 80,70 80,62 C80,55 75,50 68,50 C75,50 80,45 80,38 C80,30 75,25 65,25 Z M55,35 L65,35 C68,35 70,37 70,40 C70,43 68,45 65,45 L55,45 Z M55,55 L65,55 C68,55 70,57 70,60 C70,63 68,65 65,65 L55,65 Z" />
+                    </g>
                 </svg>
                 <h1 class="brand-title-animated">IB STUDIOZ</h1>
             </div>
@@ -357,10 +549,14 @@
     
     <div id="spinner" class="spinner-overlay" style="display: none;"><div class="spinner"></div></div>
     
+    <!-- Page transition element -->
+    <div class="page-transition" id="page-transition"></div>
+    
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script>
+        // Initialize Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao",
             authDomain: "student-portal-free.firebaseapp.com",
@@ -369,18 +565,42 @@
             messagingSenderId: "272865877510",
             appId: "1:272865877510:web:0875a2502ae55bbf9ead87"
         };
+        
+        // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        const authForm = document.getElementById('authForm'),
-              messageArea = document.getElementById('message-area'),
-              spinner = document.getElementById('spinner'),
-              toggleLink = document.getElementById('toggle-link'),
-              registrationFields = document.getElementById('registration-fields');
+        
+        // DOM Elements
+        const authForm = document.getElementById('authForm');
+        const messageArea = document.getElementById('message-area');
+        const spinner = document.getElementById('spinner');
+        const toggleLink = document.getElementById('toggle-link');
+        const registrationFields = document.getElementById('registration-fields');
+        const pageTransition = document.getElementById('page-transition');
+        const forgotPasswordLink = document.getElementById('forgot-password-link');
+        const forgotPasswordModal = document.getElementById('forgot-password-modal');
+        const modalClose = document.getElementById('modal-close');
+        const sendResetBtn = document.getElementById('send-reset-btn');
+        const resetMessage = document.getElementById('reset-message');
+        const resetEmail = document.getElementById('reset-email');
+        const resetEmailError = document.getElementById('reset-email-error');
+        const googleLoginBtn = document.getElementById('google-login');
+        const microsoftLoginBtn = document.getElementById('microsoft-login');
+        
+        // State variables
         let isLogin = true;
         let isSocialSignup = false;
         let socialUserData = null;
-
+        
+        // Page transition effect
+        function navigateToPage(url) {
+            pageTransition.classList.add('active');
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
+        }
+        
         // AUTH GUARD: Checks if user is already logged in and redirects them
         auth.onAuthStateChanged(user => {
             if (user) {
@@ -388,34 +608,49 @@
                 db.collection('users').doc(user.uid).get().then(doc => {
                     if (doc.exists) {
                         const path = doc.data().role === 'admin' ? '/admindashboard.html' : '/studentdashboard.html';
-                        window.location.replace(path);
+                        navigateToPage(path);
                     } else {
                         // User is in auth but not DB, log them out to be safe
                         auth.signOut();
                         spinner.style.display = 'none';
                     }
+                }).catch(error => {
+                    console.error("Error checking user role:", error);
+                    auth.signOut();
+                    spinner.style.display = 'none';
                 });
             }
         });
-
-        // Toggles between Login and Register views
+        
+        // Toggles between Login and Register views with animation
         toggleLink.addEventListener('click', () => {
-            isLogin = !isLogin; 
-            authForm.reset(); 
-            clearErrors();
-            messageArea.textContent = '';
-            document.getElementById('form-title').innerText = isLogin ? 'Login' : 'Register';
-            document.getElementById('name-group').style.display = isLogin ? 'none' : 'block';
-            document.getElementById('admission-group').style.display = isLogin ? 'none' : 'block';
-            document.getElementById('registration-fields').style.display = isLogin ? 'none' : 'block';
-            document.getElementById('submit-btn').innerText = isLogin ? 'Login' : 'Register';
-            document.getElementById('toggle-text').innerText = isLogin ? "Don't have an account?" : 'Already have an account?';
-            document.getElementById('toggle-link').innerText = isLogin ? 'Register Now' : 'Login';
+            // Add fade out effect
+            authForm.style.opacity = '0';
+            authForm.style.transform = 'translateY(20px)';
             
-            // Hide social signup fields when toggling
-            isSocialSignup = false;
+            setTimeout(() => {
+                isLogin = !isLogin; 
+                authForm.reset(); 
+                clearErrors();
+                messageArea.textContent = '';
+                document.getElementById('form-title').innerText = isLogin ? 'Login' : 'Register';
+                document.getElementById('name-group').style.display = isLogin ? 'none' : 'block';
+                document.getElementById('admission-group').style.display = isLogin ? 'none' : 'block';
+                document.getElementById('registration-fields').style.display = isLogin ? 'none' : 'block';
+                document.getElementById('submit-btn').innerText = isLogin ? 'Login' : 'Register';
+                document.getElementById('toggle-text').innerText = isLogin ? "Don't have an account?" : 'Already have an account?';
+                document.getElementById('toggle-link').innerText = isLogin ? 'Register Now' : 'Login';
+                
+                // Hide social signup fields when toggling
+                isSocialSignup = false;
+                document.getElementById('email').disabled = false;
+                
+                // Add fade in effect
+                authForm.style.opacity = '1';
+                authForm.style.transform = 'translateY(0)';
+            }, 300);
         });
-
+        
         // Form validation
         function validateForm() {
             clearErrors();
@@ -489,7 +724,7 @@
             const formGroups = document.querySelectorAll('.form-group');
             formGroups.forEach(group => group.classList.remove('error'));
         }
-
+        
         // Handles form submission for both Login and Register
         authForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -501,7 +736,7 @@
             spinner.style.display = 'flex';
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
-
+            
             if (isLogin) {
                 // Login with email and password
                 auth.signInWithEmailAndPassword(email, password)
@@ -535,29 +770,40 @@
                         spinner.style.display = 'none';
                         messageArea.className = 'message success';
                         messageArea.textContent = 'Registration successful! Please login.';
-                        toggleLink.click();
+                        
+                        // Auto switch to login after successful registration
+                        setTimeout(() => {
+                            toggleLink.click();
+                        }, 1500);
                     }).catch(handleAuthError);
             }
         });
-
+        
         function handleAuthError(error) {
             console.error("Auth Error:", error);
-            messageArea.textContent = error.message;
+            let errorMessage = error.message;
+            
+            // More user-friendly error messages
+            if (error.code === 'auth/user-not-found') {
+                errorMessage = 'No account found with this email address';
+            } else if (error.code === 'auth/wrong-password') {
+                errorMessage = 'Incorrect password. Please try again';
+            } else if (error.code === 'auth/email-already-in-use') {
+                errorMessage = 'This email is already registered. Please login instead';
+            } else if (error.code === 'auth/weak-password') {
+                errorMessage = 'Password is too weak. Please use a stronger password';
+            } else if (error.code === 'auth/invalid-email') {
+                errorMessage = 'Please enter a valid email address';
+            }
+            
+            messageArea.textContent = errorMessage;
             messageArea.className = 'message error';
             spinner.style.display = 'none';
         }
         
         // Forgot Password Implementation
-        const forgotPasswordLink = document.getElementById('forgot-password-link');
-        const forgotPasswordModal = document.getElementById('forgot-password-modal');
-        const modalClose = document.getElementById('modal-close');
-        const sendResetBtn = document.getElementById('send-reset-btn');
-        const resetMessage = document.getElementById('reset-message');
-        const resetEmail = document.getElementById('reset-email');
-        const resetEmailError = document.getElementById('reset-email-error');
-        
-        // Open modal when Forgot Password is clicked
-        forgotPasswordLink.addEventListener('click', () => {
+        forgotPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
             forgotPasswordModal.classList.add('active');
             resetMessage.textContent = '';
             resetEmail.value = '';
@@ -567,6 +813,13 @@
         // Close modal
         modalClose.addEventListener('click', () => {
             forgotPasswordModal.classList.remove('active');
+        });
+        
+        // Close modal when clicking outside
+        forgotPasswordModal.addEventListener('click', (e) => {
+            if (e.target === forgotPasswordModal) {
+                forgotPasswordModal.classList.remove('active');
+            }
         });
         
         // Send password reset email
@@ -584,46 +837,38 @@
             }
             
             spinner.style.display = 'flex';
+            resetMessage.textContent = '';
             
-            // First check if the email exists in the database
-            db.collection('users')
-                .where('email', '==', email)
-                .get()
-                .then((querySnapshot) => {
-                    if (querySnapshot.empty) {
-                        spinner.style.display = 'none';
-                        resetMessage.textContent = 'No account found with this email address';
-                        resetMessage.className = 'message error';
-                        return;
+            // Use Firebase's built-in password reset with the email
+            auth.sendPasswordResetEmail(email)
+                .then(() => {
+                    spinner.style.display = 'none';
+                    resetMessage.textContent = 'Password reset email sent! Check your inbox.';
+                    resetMessage.className = 'message success';
+                    
+                    // Close modal after 3 seconds
+                    setTimeout(() => {
+                        forgotPasswordModal.classList.remove('active');
+                    }, 3000);
+                })
+                .catch(error => {
+                    spinner.style.display = 'none';
+                    let errorMessage = error.message;
+                    
+                    // More user-friendly error messages
+                    if (error.code === 'auth/user-not-found') {
+                        errorMessage = 'No account found with this email address';
+                    } else if (error.code === 'auth/invalid-email') {
+                        errorMessage = 'Please enter a valid email address';
                     }
                     
-                    // Use Firebase's built-in password reset with the email
-                    auth.sendPasswordResetEmail(email)
-                        .then(() => {
-                            spinner.style.display = 'none';
-                            resetMessage.textContent = 'Password reset email sent! Check your inbox.';
-                            resetMessage.className = 'message success';
-                            
-                            // Close modal after 3 seconds
-                            setTimeout(() => {
-                                forgotPasswordModal.classList.remove('active');
-                            }, 3000);
-                        })
-                        .catch(error => {
-                            spinner.style.display = 'none';
-                            resetMessage.textContent = error.message;
-                            resetMessage.className = 'message error';
-                        });
-                })
-                .catch((error) => {
-                    spinner.style.display = 'none';
-                    resetMessage.textContent = 'Error finding account: ' + error.message;
+                    resetMessage.textContent = errorMessage;
                     resetMessage.className = 'message error';
                 });
         });
         
         // Google Sign-In
-        document.getElementById('google-login').addEventListener('click', () => {
+        googleLoginBtn.addEventListener('click', () => {
             spinner.style.display = 'flex';
             
             // For demo purposes, we'll simulate Google sign-in
@@ -638,7 +883,7 @@
         });
         
         // Microsoft Sign-In
-        document.getElementById('microsoft-login').addEventListener('click', () => {
+        microsoftLoginBtn.addEventListener('click', () => {
             spinner.style.display = 'flex';
             
             // For demo purposes, we'll simulate Microsoft sign-in
@@ -705,9 +950,20 @@
                     
                     // Simulate successful login
                     setTimeout(() => {
-                        window.location.href = '/studentdashboard.html';
+                        navigateToPage('/studentdashboard.html');
                     }, 1500);
                 }, 1500);
+            }
+        });
+        
+        // Add smooth transitions to form elements
+        authForm.style.transition = 'all 0.3s ease';
+        
+        // Prevent form submission on Enter key for social signup
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && isSocialSignup) {
+                e.preventDefault();
+                document.getElementById('submit-btn').click();
             }
         });
     </script>
