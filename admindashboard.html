@@ -503,7 +503,6 @@
     </style>
 </head>
 <body>
-    <body>
     <div class="background-container">
         <div class="aurora-layer"></div>
         <div class="noise-layer"></div>
@@ -1052,8 +1051,7 @@
             } else if (diffDays < 7) {
                 return `${diffDays} days ago`;
             } else {
-                window.location.replace('/index.html');
-                return '';
+                return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
             }
         }
         
@@ -1165,9 +1163,9 @@
         // Setup modal close functionality
         function setupModalClosers() {
             const modals = [
-                { modal: usersModal, closeBtn: 'users-modal-close-btn' },
-                { modal: paymentsModal, closeBtn: 'payments-modal-close-btn' },
-                { modal: contentModal, closeBtn: 'content-modal-close-btn' },
+                { modal: usersModal, closeBtn: 'users-modal-close-btn', unsubKeys: ['unsubscribeUsers', 'unsubscribePayments'] },
+                { modal: paymentsModal, closeBtn: 'payments-modal-close-btn', unsubKeys: ['unsubscribe'] },
+                { modal: contentModal, closeBtn: 'content-modal-close-btn', unsubKeys: ['unsubscribes'] },
                 { modal: analyticsModal, closeBtn: 'analytics-modal-close-btn' },
                 { modal: settingsModal, closeBtn: 'settings-modal-close-btn' },
                 { modal: userDetailsModal, closeBtn: 'user-details-modal-close-btn' },
@@ -1177,14 +1175,38 @@
                 { modal: broadcastModal, closeBtn: 'broadcast-modal-close-btn' }
             ];
             
-            modals.forEach(({ modal, closeBtn }) => {
+            modals.forEach(({ modal, closeBtn, unsubKeys }) => {
                 document.getElementById(closeBtn).addEventListener('click', () => {
                     modal.classList.remove('active');
+                    if (unsubKeys) {
+                        unsubKeys.forEach(key => {
+                            if (modal[key]) {
+                                if (Array.isArray(modal[key])) {
+                                    modal[key].forEach(unsub => unsub());
+                                } else {
+                                    modal[key]();
+                                }
+                                delete modal[key];
+                            }
+                        });
+                    }
                 });
                 
                 modal.addEventListener('click', (e) => {
                     if (e.target === modal) {
                         modal.classList.remove('active');
+                        if (unsubKeys) {
+                            unsubKeys.forEach(key => {
+                                if (modal[key]) {
+                                    if (Array.isArray(modal[key])) {
+                                        modal[key].forEach(unsub => unsub());
+                                    } else {
+                                        modal[key]();
+                                    }
+                                    delete modal[key];
+                                }
+                            });
+                        }
                     }
                 });
             });
@@ -1217,75 +1239,77 @@
             broadcastForm.addEventListener('submit', handleBroadcast);
         }
         
-        // Load dashboard overview data
-        async function loadDashboardData() {
-            try {
-                // Load users count
-                const usersSnapshot = await db.collection('users').get();
-                const totalUsers = usersSnapshot.size;
-                totalUsersCount.textContent = totalUsers;
-                
-                // Calculate active users (logged in within last 7 days)
-                const weekAgo = new Date();
-                weekAgo.setDate(weekAgo.getDate() - 7);
-                const activeUsers = usersSnapshot.docs.filter(doc => {
+        // Load dashboard overview data in real-time
+        function loadDashboardData() {
+            // Users and active count
+            db.collection('users').onSnapshot(snapshot => {
+                totalUsersCount.textContent = snapshot.size;
+                const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+                const active = snapshot.docs.filter(doc => {
                     const data = doc.data();
                     return data.lastLoginAt && data.lastLoginAt.toDate() > weekAgo;
                 }).length;
-                activeUsersCount.textContent = activeUsers;
-                
-                // Load content count from all collections
-                const collections = ['notes', 'pyqs', 'seminars'];
-                let totalContent = 0;
-                for (const collection of collections) {
-                    const snapshot = await db.collection(collection).get();
-                    totalContent += snapshot.size;
-                }
-                totalContentCount.textContent = totalContent;
-                
-                // Load payments count
-                const paymentsSnapshot = await db.collection('payments').get();
-                totalPaymentsCount.textContent = paymentsSnapshot.size;
-                
-            } catch (error) {
-                console.error('Error loading dashboard data:', error);
-                showToast('Failed to load dashboard data', 'error');
-            }
+                activeUsersCount.textContent = active;
+            });
+
+            // Content count
+            let notesCount = 0, pyqsCount = 0, seminarsCount = 0;
+            const updateTotalContent = () => {
+                totalContentCount.textContent = notesCount + pyqsCount + seminarsCount;
+            };
+            db.collection('notes').onSnapshot(s => { notesCount = s.size; updateTotalContent(); });
+            db.collection('pyqs').onSnapshot(s => { pyqsCount = s.size; updateTotalContent(); });
+            db.collection('seminars').onSnapshot(s => { seminarsCount = s.size; updateTotalContent(); });
+
+            // Payments count
+            db.collection('payments').onSnapshot(s => {
+                totalPaymentsCount.textContent = s.size;
+            });
         }
         
-        // Load users with real Firebase data
-        async function loadUsers() {
+        // Load users with real-time updates
+        function loadUsers() {
             const container = document.getElementById('users-list-container');
             container.innerHTML = '<div class="spinner-container"><div class="spinner"></div></div>';
             
             try {
-                const snapshot = await db.collection('users').orderBy('createdAt', 'desc').get();
                 usersData = [];
                 
-                const promises = snapshot.docs.map(async doc => {
-                    const userData = { id: doc.id, ...doc.data() };
-                    
-                    // Get user's payment history
-                    const paymentsSnapshot = await db.collection('payments')
-                        .where('userEmail', '==', userData.email)
-                        .get();
-                    
-                    let totalSpent = 0;
-                    paymentsSnapshot.docs.forEach(payDoc => {
-                        const payData = payDoc.data();
-                        if (payData.amount && payData.status === 'completed') {
-                            totalSpent += parseFloat(payData.amount);
-                        }
+                const unsubscribeUsers = db.collection('users').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                    usersData = snapshot.docs.map(doc => {
+                        const user = { id: doc.id, ...doc.data() };
+                        user.totalPurchases = 0;
+                        user.totalSpent = 0;
+                        return user;
                     });
-                    
-                    userData.totalPurchases = paymentsSnapshot.size;
-                    userData.totalSpent = totalSpent;
-                    
-                    return userData;
+                    displayUsers(usersData);
+                    filterUsers();
                 });
                 
-                usersData = await Promise.all(promises);
-                displayUsers(usersData);
+                usersModal.unsubscribeUsers = unsubscribeUsers;
+                
+                const unsubscribePayments = db.collection('payments').onSnapshot(snapshot => {
+                    const paymentsByEmail = {};
+                    snapshot.docs.forEach(doc => {
+                        const data = doc.data();
+                        const email = data.userEmail;
+                        if (!paymentsByEmail[email]) paymentsByEmail[email] = { purchases: 0, spent: 0 };
+                        paymentsByEmail[email].purchases += 1;
+                        if (data.status === 'completed') paymentsByEmail[email].spent += parseFloat(data.amount || 0);
+                    });
+                    
+                    if (usersData.length > 0) {
+                        usersData.forEach(user => {
+                            const payInfo = paymentsByEmail[user.email] || { purchases: 0, spent: 0 };
+                            user.totalPurchases = payInfo.purchases;
+                            user.totalSpent = payInfo.spent;
+                        });
+                        displayUsers(usersData);
+                        filterUsers();
+                    }
+                });
+                
+                usersModal.unsubscribePayments = unsubscribePayments;
                 
             } catch (error) {
                 console.error('Error loading users:', error);
@@ -1357,19 +1381,22 @@
             return 'status-offline';
         }
         
-        // Load payments with real Firebase data
-        async function loadPayments() {
+        // Load payments with real-time updates
+        function loadPayments() {
             const container = document.getElementById('payments-list-container');
             container.innerHTML = '<div class="spinner-container"><div class="spinner"></div></div>';
             
             try {
-                const snapshot = await db.collection('payments').orderBy('createdAt', 'desc').get();
-                paymentsData = snapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                }));
+                const unsubscribe = db.collection('payments').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                    paymentsData = snapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                    displayPayments(paymentsData);
+                    filterPayments();
+                });
                 
-                displayPayments(paymentsData);
+                paymentsModal.unsubscribe = unsubscribe;
                 
             } catch (error) {
                 console.error('Error loading payments:', error);
@@ -1412,8 +1439,7 @@
                         ${payment.status === 'pending' ? `<button class="btn-sm btn-success" onclick="approvePayment('${payment.id}')">
                             <i class="fas fa-check"></i> Approve
                         </button>` : ''}
-                    </div>
-                </div>
+                    </div                </div>
             `).join('');
             
             container.innerHTML = html;
@@ -1429,33 +1455,44 @@
             }
         }
         
-        // Load all content from Firebase
-        async function loadAllContent() {
+        // Load all content with real-time updates
+        function loadAllContent() {
             const container = document.getElementById('content-list-container');
             container.innerHTML = '<div class="spinner-container"><div class="spinner"></div></div>';
             
             try {
                 contentData = [];
                 const collections = ['notes', 'pyqs', 'seminars'];
+                const unsubscribes = [];
                 
                 for (const collectionName of collections) {
-                    const snapshot = await db.collection(collectionName).get();
-                    snapshot.docs.forEach(doc => {
-                        contentData.push({
-                            id: doc.id,
-                            collection: collectionName,
-                            ...doc.data()
+                    const unsubscribe = db.collection(collectionName).onSnapshot(snapshot => {
+                        // Remove old data from this collection
+                        contentData = contentData.filter(item => item.collection !== collectionName);
+                        
+                        // Add new
+                        snapshot.docs.forEach(doc => {
+                            contentData.push({
+                                id: doc.id,
+                                collection: collectionName,
+                                ...doc.data()
+                            });
                         });
+                        
+                        // Sort all
+                        contentData.sort((a, b) => {
+                            const aDate = a.createdAt ? a.createdAt.toDate() : new Date(0);
+                            const bDate = b.createdAt ? b.createdAt.toDate() : new Date(0);
+                            return bDate - aDate;
+                        });
+                        
+                        displayContent(contentData);
+                        filterContent();
                     });
+                    unsubscribes.push(unsubscribe);
                 }
                 
-                // Sort by creation date
-                contentData.sort((a, b) => {
-                    if (!a.createdAt || !b.createdAt) return 0;
-                    return b.createdAt.toDate() - a.createdAt.toDate();
-                });
-                
-                displayContent(contentData);
+                contentModal.unsubscribes = unsubscribes;
                 
             } catch (error) {
                 console.error('Error loading content:', error);
@@ -1789,7 +1826,6 @@
             try {
                 await db.collection('users').doc(userId).delete();
                 showToast('User deleted successfully', 'success');
-                loadUsers(); // Reload the list
             } catch (error) {
                 console.error('Error deleting user:', error);
                 showToast('Failed to delete user: ' + error.message, 'error');
@@ -1832,7 +1868,6 @@
             try {
                 await db.collection(collection).doc(docId).delete();
                 showToast('Content deleted successfully', 'success');
-                loadAllContent(); // Reload the list
             } catch (error) {
                 console.error('Error deleting content:', error);
                 showToast('Failed to delete content: ' + error.message, 'error');
@@ -1860,7 +1895,6 @@
                 });
                 
                 showToast('Payment approved successfully', 'success');
-                loadPayments(); // Reload the list
             } catch (error) {
                 console.error('Error approving payment:', error);
                 showToast('Failed to approve payment: ' + error.message, 'error');
@@ -1884,7 +1918,6 @@
                 await db.collection('users').doc(userId).update(updateData);
                 showToast('User updated successfully', 'success');
                 editUserModal.classList.remove('active');
-                loadUsers(); // Reload the list
             } catch (error) {
                 console.error('Error updating user:', error);
                 showToast('Failed to update user: ' + error.message, 'error');
@@ -1913,7 +1946,6 @@
                 await db.collection(collection).doc(docId).update(updateData);
                 showToast('Content updated successfully', 'success');
                 editContentModal.classList.remove('active');
-                loadAllContent(); // Reload the list
             } catch (error) {
                 console.error('Error updating content:', error);
                 showToast('Failed to update content: ' + error.message, 'error');
@@ -2140,8 +2172,8 @@
         
         // Update overview counts after data loads
         const originalLoadDashboardData = loadDashboardData;
-        loadDashboardData = async function() {
-            await originalLoadDashboardData();
+        loadDashboardData = function() {
+            originalLoadDashboardData();
             updateOverviewCounts();
         };
         
@@ -2152,6 +2184,7 @@
         
         // Enhanced authentication check
         auth.onAuthStateChanged(user => {
+            if (window._redirecting) return;
             if (user) {
                 db.collection('users').doc(user.uid).get()
                     .then(doc => {
@@ -2160,19 +2193,30 @@
                             initializePage();
                             loadDashboardData();
                         } else {
-                            window.location.replace('/studentdashboard.html');
+                            if (!window.location.pathname.endsWith('/studentdashboard.html')) {
+                                window._redirecting = true;
+                                window.location.replace('/studentdashboard.html');
+                            }
                         }
                     })
                     .catch(error => {
                         console.error("Error checking user role:", error);
                         auth.signOut();
-                        window.location.replace('/index.html');
+                        if (!window.location.pathname.endsWith('/index.html')) {
+                            window._redirecting = true;
+                            window.location.replace('/index.html');
+                        }
                     });
             } else {
-                window.location.replace('/index.html');
+                if (!window.location.pathname.endsWith('/index.html')) {
+                    window._redirecting = true;
+                    window.location.replace('/index.html');
+                }
             }
         });
     </script>
 </body>
 </html>
-    
+
+
+
