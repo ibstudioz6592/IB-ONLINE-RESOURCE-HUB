@@ -8,71 +8,319 @@
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23FFD700' d='M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z' /%3E%3Cg fill='%230A0A0A'%3E%3Cpath d='M28,25 h10 v50 h-10 Z' /%3E%3Cpath d='M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z' /%3E%3C/g%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-glow: #FFD700; --secondary-glow: #00A2FF; --dark-bg: #0A0A0A;
-            --text-primary: #F0F0F0; --text-secondary: #A0A0A0; --card-bg: rgba(22, 22, 22, 0.8);
-            --border-color: rgba(255, 215, 0, 0.2); --shadow-color: rgba(0, 0, 0, 0.5);
-            --success: #2ecc71; --danger: #e74c3c; --info: #3498db; --warning: #f39c12;
+            --primary-glow: #FFD700; 
+            --secondary-glow: #00A2FF; 
+            --dark-bg: #0A0A0A;
+            --text-primary: #F0F0F0; 
+            --text-secondary: #A0A0A0; 
+            --card-bg: rgba(22, 22, 22, 0.8);
+            --border-color: rgba(255, 215, 0, 0.2); 
+            --shadow-color: rgba(0, 0, 0, 0.5);
+            --success: #2ecc71; 
+            --danger: #e74c3c; 
+            --info: #3498db; 
+            --warning: #f39c12;
+            --cse-color: #3498db;
+            --it-color: #9b59b6;
+            --ece-color: #e74c3c;
+            --eee-color: #f39c12;
+            --mech-color: #34495e;
+            --aiml-color: #1abc9c;
+            --civil-color: #27ae60;
+            --bme-color: #e91e63;
+            --ft-color: #ff5722;
+            --mct-color: #00bcd4;
+            --csd-color: #ff9800;
+            --ads-color: #795548;
+            --efe-color: #607d8b;
+            --exe-color: #009688;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        html { 
+            scroll-behavior: smooth; 
+        }
+        
         body {
-            font-family: 'Inter', sans-serif; background-color: var(--dark-bg);
-            color: var(--text-primary); line-height: 1.6;
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--dark-bg);
+            color: var(--text-primary); 
+            line-height: 1.6;
             opacity: 0;
             animation: page-fade-in 0.5s ease-out forwards;
         }
-        @keyframes page-fade-in { to { opacity: 1; } }
-        .background-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
-        .aurora-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 10% 20%, var(--primary-glow) 0%, transparent 25%), radial-gradient(circle at 80% 30%, var(--secondary-glow) 0%, transparent 30%), radial-gradient(circle at 50% 80%, var(--primary-glow) 0%, transparent 25%); animation: aurora-morph 40s linear infinite alternate; filter: blur(120px); opacity: 0.2; }
-        @keyframes aurora-morph { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1.8); } }
-        .noise-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>'); opacity: 0.015; }
-        .container { max-width: 800px; margin: 30px auto; padding: 20px; }
         
-        .page-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; margin: 20px; background: rgba(16,16,16,0.6); backdrop-filter: blur(20px); border-radius: 15px; border: 1px solid var(--border-color); }
-        .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; }
-        .header-logo-svg { width: 45px; height: auto; }
-        .brand-title { position: relative; font-size: 1.5rem; font-weight: 700; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: rgb-text-flow 6s linear infinite; }
-        @keyframes rgb-text-flow { to { background-position: 400% 0; } }
+        @keyframes page-fade-in { 
+            to { opacity: 1; } 
+        }
         
-        .btn { padding: 10px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; border: none; position: relative; overflow: hidden; }
-        .btn::before { content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); transition: left 0.5s; }
-        .btn:hover::before { left: 100%; }
-        .btn-secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); }
-        .btn-secondary:hover { background: var(--primary-glow); color: var(--dark-bg); border-color: var(--primary-glow); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
-        .btn-primary { background: var(--primary-glow); color: var(--dark-bg); font-weight: 600; width: 100%; }
-        .btn-primary:hover { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); transform: translateY(-2px); }
-        .btn-primary:disabled { background: var(--text-secondary); cursor: not-allowed; transform: none; }
-        .btn-primary .spinner { display: none; width: 18px; height: 18px; border: 2px solid var(--dark-bg); border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto; }
-        .btn-primary.loading .spinner { display: block; }
-        .btn-primary.loading .btn-text { display: none; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .background-container { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: -2; 
+        }
         
-        .page-title { text-align: center; font-size: 2.2rem; margin-bottom: 30px; font-weight: 700; color: var(--text-primary); position: relative; display: inline-block; width: 100%; }
-        .page-title::after { content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 100px; height: 3px; background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow)); border-radius: 3px; }
+        .aurora-layer { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: radial-gradient(circle at 10% 20%, var(--primary-glow) 0%, transparent 25%), 
+                       radial-gradient(circle at 80% 30%, var(--secondary-glow) 0%, transparent 30%), 
+                       radial-gradient(circle at 50% 80%, var(--primary-glow) 0%, transparent 25%); 
+            animation: aurora-morph 40s linear infinite alternate; 
+            filter: blur(120px); 
+            opacity: 0.2; 
+        }
         
-        .upload-form { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 15px; padding: 40px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .upload-form:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); }
+        @keyframes aurora-morph { 
+            0% { transform: rotate(0deg) scale(1.2); } 
+            100% { transform: rotate(360deg) scale(1.8); } 
+        }
         
-        .form-group { margin-bottom: 25px; opacity: 0; animation: fadeInUp 0.5s ease forwards; }
-        .form-group:nth-child(1) { animation-delay: 0.1s; }
-        .form-group:nth-child(2) { animation-delay: 0.2s; }
-        .form-group:nth-child(3) { animation-delay: 0.3s; }
-        .form-group:nth-child(4) { animation-delay: 0.4s; }
-        .form-group:nth-child(5) { animation-delay: 0.5s; }
-        .form-group:nth-child(6) { animation-delay: 0.6s; }
+        .noise-layer { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: -1; 
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>'); 
+            opacity: 0.015; 
+        }
+        
+        .container { 
+            max-width: 800px; 
+            margin: 30px auto; 
+            padding: 20px; 
+        }
+        
+        .page-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 15px 30px; 
+            margin: 20px; 
+            background: rgba(16,16,16,0.6); 
+            backdrop-filter: blur(20px); 
+            border-radius: 15px; 
+            border: 1px solid var(--border-color); 
+        }
+        
+        .brand-logo { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            text-decoration: none; 
+        }
+        
+        .header-logo-svg { 
+            width: 45px; 
+            height: auto; 
+        }
+        
+        .brand-title { 
+            position: relative; 
+            font-size: 1.5rem; 
+            font-weight: 700; 
+            background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); 
+            background-size: 400% 100%; 
+            -webkit-background-clip: text; 
+            background-clip: text; 
+            color: transparent; 
+            animation: rgb-text-flow 6s linear infinite; 
+        }
+        
+        @keyframes rgb-text-flow { 
+            to { background-position: 400% 0; } 
+        }
+        
+        .btn { 
+            padding: 10px 20px; 
+            border-radius: 10px; 
+            font-size: 0.9rem; 
+            font-weight: 500; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            text-decoration: none; 
+            display: inline-block; 
+            border: none; 
+            position: relative; 
+            overflow: hidden; 
+        }
+        
+        .btn::before { 
+            content: ""; 
+            position: absolute; 
+            top: 0; 
+            left: -100%; 
+            width: 100%; 
+            height: 100%; 
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); 
+            transition: left 0.5s; 
+        }
+        
+        .btn:hover::before { 
+            left: 100%; 
+        }
+        
+        .btn-secondary { 
+            background: transparent; 
+            border: 1px solid var(--border-color); 
+            color: var(--text-secondary); 
+        }
+        
+        .btn-secondary:hover { 
+            background: var(--primary-glow); 
+            color: var(--dark-bg); 
+            border-color: var(--primary-glow); 
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); 
+        }
+        
+        .btn-primary { 
+            background: var(--primary-glow); 
+            color: var(--dark-bg); 
+            font-weight: 600; 
+            width: 100%; 
+        }
+        
+        .btn-primary:hover { 
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); 
+            transform: translateY(-2px); 
+        }
+        
+        .btn-primary:disabled { 
+            background: var(--text-secondary); 
+            cursor: not-allowed; 
+            transform: none; 
+        }
+        
+        .btn-primary .spinner { 
+            display: none; 
+            width: 18px; 
+            height: 18px; 
+            border: 2px solid var(--dark-bg); 
+            border-top-color: transparent; 
+            border-radius: 50%; 
+            animation: spin 1s linear infinite; 
+            margin: 0 auto; 
+        }
+        
+        .btn-primary.loading .spinner { 
+            display: block; 
+        }
+        
+        .btn-primary.loading .btn-text { 
+            display: none; 
+        }
+        
+        @keyframes spin { 
+            to { transform: rotate(360deg); } 
+        }
+        
+        .page-title { 
+            text-align: center; 
+            font-size: 2.2rem; 
+            margin-bottom: 30px; 
+            font-weight: 700; 
+            color: var(--text-primary); 
+            position: relative; 
+            display: inline-block; 
+            width: 100%; 
+        }
+        
+        .page-title::after { 
+            content: ''; 
+            position: absolute; 
+            bottom: -10px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            width: 100px; 
+            height: 3px; 
+            background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow)); 
+            border-radius: 3px; 
+        }
+        
+        .upload-form { 
+            background: var(--card-bg); 
+            backdrop-filter: blur(10px); 
+            border-radius: 15px; 
+            padding: 40px; 
+            border: 1px solid var(--border-color); 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+        }
+        
+        .upload-form:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); 
+        }
+        
+        .form-group { 
+            margin-bottom: 25px; 
+            opacity: 0; 
+            animation: fadeInUp 0.5s ease forwards; 
+        }
+        
+        .form-group:nth-child(1) { 
+            animation-delay: 0.1s; 
+        }
+        
+        .form-group:nth-child(2) { 
+            animation-delay: 0.2s; 
+        }
+        
+        .form-group:nth-child(3) { 
+            animation-delay: 0.3s; 
+        }
+        
+        .form-group:nth-child(4) { 
+            animation-delay: 0.4s; 
+        }
+        
+        .form-group:nth-child(5) { 
+            animation-delay: 0.5s; 
+        }
+        
+        .form-group:nth-child(6) { 
+            animation-delay: 0.6s; 
+        }
+        
         @keyframes fadeInUp { 
             from { opacity: 0; transform: translateY(20px); } 
             to { opacity: 1; transform: translateY(0); } 
         }
         
-        .form-group label { display: block; margin-bottom: 10px; font-weight: 500; color: var(--text-secondary); transition: color 0.3s ease; }
-        .form-group:hover label { color: var(--primary-glow); }
-        .form-group label .fas, .form-group label .fab { margin-right: 10px; color: var(--primary-glow); }
+        .form-group label { 
+            display: block; 
+            margin-bottom: 10px; 
+            font-weight: 500; 
+            color: var(--text-secondary); 
+            transition: color 0.3s ease; 
+        }
+        
+        .form-group:hover label { 
+            color: var(--primary-glow); 
+        }
+        
+        .form-group label .fas, .form-group label .fab { 
+            margin-right: 10px; 
+            color: var(--primary-glow); 
+        }
         
         input, select, textarea { 
             width: 100%; 
@@ -93,8 +341,15 @@
             transform: translateY(-2px);
         }
         
-        .checkbox-group { display: flex; align-items: center; gap: 12px; }
-        .checkbox-group input { width: auto; }
+        .checkbox-group { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+        }
+        
+        .checkbox-group input { 
+            width: auto; 
+        }
         
         .message { 
             text-align: center; 
@@ -107,16 +362,19 @@
             opacity: 0;
             transition: all 0.3s ease;
         }
+        
         .message.show { 
             display: block; 
             transform: translateY(0);
             opacity: 1;
         }
+        
         .message.success { 
             background-color: rgba(46, 204, 113, 0.15); 
             border: 1px solid var(--success); 
             color: var(--success); 
         }
+        
         .message.error { 
             background-color: rgba(231, 76, 60, 0.15); 
             border: 1px solid var(--danger); 
@@ -135,9 +393,18 @@
             transition: all 0.3s ease;
             cursor: pointer;
         }
-        .content-type-selector:hover { border-color: var(--primary-glow); }
-        #selected-content-type { color: var(--text-secondary); }
-        #selected-content-type strong { color: var(--text-primary); }
+        
+        .content-type-selector:hover { 
+            border-color: var(--primary-glow); 
+        }
+        
+        #selected-content-type { 
+            color: var(--text-secondary); 
+        }
+        
+        #selected-content-type strong { 
+            color: var(--text-primary); 
+        }
         
         /* --- Course Selector Bar --- */
         .course-selector-bar {
@@ -150,10 +417,24 @@
             align-items: center;
             transition: all 0.3s ease;
         }
-        .course-selector-bar:hover { border-color: var(--primary-glow); }
-        #selected-course-display { color: var(--text-secondary); }
-        #selected-course-display strong { color: var(--text-primary); }
-        #open-filter-modal-btn { width: auto; font-size: 0.9rem; padding: 8px 15px; }
+        
+        .course-selector-bar:hover { 
+            border-color: var(--primary-glow); 
+        }
+        
+        #selected-course-display { 
+            color: var(--text-secondary); 
+        }
+        
+        #selected-course-display strong { 
+            color: var(--text-primary); 
+        }
+        
+        #open-filter-modal-btn { 
+            width: auto; 
+            font-size: 0.9rem; 
+            padding: 8px 15px; 
+        }
         
         /* --- Thumbnail Preview --- */
         .thumbnail-preview {
@@ -164,11 +445,13 @@
             max-height: 200px;
             position: relative;
         }
+        
         .thumbnail-preview img {
             width: 100%;
             height: auto;
             display: block;
         }
+        
         .thumbnail-preview .remove-thumbnail {
             position: absolute;
             top: 10px;
@@ -185,6 +468,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
+        
         .thumbnail-preview .remove-thumbnail:hover {
             background: var(--danger);
             transform: scale(1.1);
@@ -207,10 +491,12 @@
             pointer-events: none; 
             transition: opacity 0.3s ease; 
         }
+        
         .modal-overlay.active { 
             opacity: 1; 
             pointer-events: auto; 
         }
+        
         .modal-content { 
             background: var(--dark-bg); 
             padding: 30px; 
@@ -226,9 +512,11 @@
             transition: transform 0.3s ease; 
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
+        
         .modal-overlay.active .modal-content { 
             transform: scale(1); 
         }
+        
         .modal-close { 
             position: absolute; 
             top: 15px; 
@@ -241,14 +529,17 @@
             z-index: 10; 
             transition: transform 0.3s ease;
         }
+        
         .modal-close:hover {
             transform: rotate(90deg);
             color: var(--danger);
         }
+        
         .modal-header { 
             text-align: center; 
             margin-bottom: 20px; 
         }
+        
         .modal-description {
             color: var(--text-secondary);
             margin-bottom: 20px;
@@ -261,6 +552,7 @@
             gap: 20px;
             margin-top: 20px;
         }
+        
         .content-type-option {
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border-color);
@@ -270,24 +562,29 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
+        
         .content-type-option:hover {
             transform: translateY(-5px);
             border-color: var(--primary-glow);
             box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2);
         }
+        
         .content-type-option.selected {
             background: rgba(255, 215, 0, 0.1);
             border-color: var(--primary-glow);
         }
+        
         .content-type-option i {
             font-size: 2.5rem;
             color: var(--primary-glow);
             margin-bottom: 15px;
         }
+        
         .content-type-option h3 {
             font-size: 1.2rem;
             margin-bottom: 10px;
         }
+        
         .content-type-option p {
             color: var(--text-secondary);
             font-size: 0.9rem;
@@ -300,6 +597,7 @@
             gap: 20px;
             margin-top: 20px;
         }
+        
         .exam-type-option {
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border-color);
@@ -309,24 +607,29 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
+        
         .exam-type-option:hover {
             transform: translateY(-5px);
             border-color: var(--primary-glow);
             box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2);
         }
+        
         .exam-type-option.selected {
             background: rgba(255, 215, 0, 0.1);
             border-color: var(--primary-glow);
         }
+        
         .exam-type-option i {
             font-size: 2.5rem;
             color: var(--primary-glow);
             margin-bottom: 15px;
         }
+        
         .exam-type-option h3 {
             font-size: 1.2rem;
             margin-bottom: 10px;
         }
+        
         .exam-type-option p {
             color: var(--text-secondary);
             font-size: 0.9rem;
@@ -337,27 +640,32 @@
             overflow: hidden; 
             width: 100%; 
         }
+        
         .filter-columns { 
             display: flex; 
             width: 300%; 
             transition: transform 0.4s ease-in-out; 
         }
+        
         .filter-column { 
             width: 100%; 
             padding: 0 10px; 
             display: flex; 
             flex-direction: column; 
         }
+        
         .filter-column-header { 
             display: flex; 
             align-items: center; 
             margin-bottom: 15px; 
         }
+        
         .filter-column-header h3 { 
             font-size: 1.2rem; 
             color: var(--primary-glow); 
             flex-grow: 1; 
         }
+        
         .filter-back-btn { 
             background: none; 
             border: 1px solid var(--border-color); 
@@ -368,26 +676,32 @@
             margin-right: 10px; 
             transition: all 0.3s ease;
         }
+        
         .filter-back-btn:hover {
             background: var(--primary-glow);
             color: var(--dark-bg);
             border-color: var(--primary-glow);
         }
+        
         .filter-column-list { 
             height: 50vh; 
             overflow-y: auto; 
             padding-right: 10px; 
         }
+        
         .filter-column-list::-webkit-scrollbar { 
             width: 6px; 
         }
+        
         .filter-column-list::-webkit-scrollbar-track { 
             background: transparent; 
         }
+        
         .filter-column-list::-webkit-scrollbar-thumb { 
             background: var(--border-color); 
             border-radius: 3px; 
         }
+        
         .filter-item { 
             padding: 12px 15px; 
             margin-bottom: 8px; 
@@ -396,15 +710,18 @@
             transition: all 0.2s ease; 
             font-size: 0.95rem; 
         }
+        
         .filter-item:hover { 
             background-color: rgba(255, 255, 255, 0.05); 
             transform: translateX(5px);
         }
+        
         .filter-item.selected { 
             background-color: var(--primary-glow); 
             color: var(--dark-bg); 
             font-weight: 600; 
         }
+        
         .filter-column.disabled { 
             opacity: 0.3; 
             pointer-events: none; 
@@ -413,6 +730,7 @@
         .filter-columns.show-semesters { 
             transform: translateX(-33.333%); 
         }
+        
         .filter-columns.show-courses { 
             transform: translateX(-66.666%); 
         }
@@ -424,6 +742,7 @@
             right: 20px;
             z-index: 2000;
         }
+        
         .toast {
             background: var(--card-bg);
             border-radius: 8px;
@@ -437,39 +756,50 @@
             transition: all 0.3s ease;
             max-width: 350px;
         }
+        
         .toast.show {
             transform: translateX(0);
             opacity: 1;
         }
+        
         .toast.success {
             border-left: 4px solid var(--success);
         }
+        
         .toast.error {
             border-left: 4px solid var(--danger);
         }
+        
         .toast.info {
             border-left: 4px solid var(--info);
         }
+        
         .toast i {
             font-size: 1.5rem;
             margin-right: 15px;
         }
+        
         .toast.success i {
             color: var(--success);
         }
+        
         .toast.error i {
             color: var(--danger);
         }
+        
         .toast.info i {
             color: var(--info);
         }
+        
         .toast-content {
             flex: 1;
         }
+        
         .toast-title {
             font-weight: 600;
             margin-bottom: 5px;
         }
+        
         .toast-message {
             font-size: 0.9rem;
             color: var(--text-secondary);
@@ -487,6 +817,7 @@
             transform: translateY(-100%);
             transition: transform 0.5s ease;
         }
+        
         .page-transition.active {
             transform: translateY(0);
         }
@@ -497,6 +828,7 @@
             justify-content: center;
             margin-bottom: 20px;
         }
+        
         .progress-step {
             width: 30px;
             height: 30px;
@@ -510,16 +842,19 @@
             position: relative;
             transition: all 0.3s ease;
         }
+        
         .progress-step.active {
             background: var(--primary-glow);
             border-color: var(--primary-glow);
             color: var(--dark-bg);
         }
+        
         .progress-step.completed {
             background: var(--success);
             border-color: var(--success);
             color: white;
         }
+        
         .progress-step::after {
             content: '';
             position: absolute;
@@ -530,11 +865,189 @@
             background: var(--border-color);
             transform: translateY(-50%);
         }
+        
         .progress-step:last-child::after {
             display: none;
         }
+        
         .progress-step.completed::after {
             background: var(--success);
+        }
+        
+        /* --- File Upload Area --- */
+        .file-upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .file-upload-area:hover {
+            border-color: var(--primary-glow);
+            background: rgba(255, 215, 0, 0.05);
+        }
+        
+        .file-upload-area.dragover {
+            border-color: var(--primary-glow);
+            background: rgba(255, 215, 0, 0.1);
+            transform: scale(1.02);
+        }
+        
+        .file-upload-icon {
+            font-size: 3rem;
+            color: var(--primary-glow);
+            margin-bottom: 15px;
+        }
+        
+        .file-upload-text {
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+        
+        .file-upload-button {
+            background: var(--primary-glow);
+            color: var(--dark-bg);
+            padding: 8px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload-button:hover {
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        /* --- File Preview --- */
+        .file-preview {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .file-preview.show {
+            display: block;
+        }
+        
+        .file-preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .file-preview-name {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .file-preview-size {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .file-preview-remove {
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .file-preview-remove:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+        }
+        
+        /* --- Upload Progress --- */
+        .upload-progress {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .upload-progress.show {
+            display: block;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow));
+            border-radius: 5px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* --- Storage Options --- */
+        .storage-options {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .storage-option {
+            flex: 1;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .storage-option:hover {
+            border-color: var(--primary-glow);
+            transform: translateY(-2px);
+        }
+        
+        .storage-option.selected {
+            border-color: var(--primary-glow);
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        .storage-option i {
+            font-size: 2rem;
+            color: var(--primary-glow);
+            margin-bottom: 10px;
+        }
+        
+        .storage-option h4 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+        
+        .storage-option p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
         }
         
         @media (min-width: 768px) {
@@ -563,10 +1076,12 @@
             visibility: hidden;
             transition: all 0.3s ease;
         }
+        
         .spinner-overlay.active {
             opacity: 1;
             visibility: visible;
         }
+        
         .spinner {
             width: 50px;
             height: 50px;
@@ -575,91 +1090,161 @@
             border-top-color: var(--primary-glow);
             animation: spin 1s ease-in-out infinite;
         }
+        
+        /* --- Skeleton Loader --- */
+        .skeleton {
+            background: linear-gradient(90deg, #eee 25%, #f3f3f3 50%, #eee 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.2s infinite linear;
+            border-radius: 8px;
+            min-height: 24px;
+            width: 100%;
+        }
+        
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
     </style>
 </head>
 <body>
-    <div class="background-container"><div class="aurora-layer"></div><div class="noise-layer"></div></div>
+    <div class="background-container">
+        <div class="aurora-layer"></div>
+        <div class="noise-layer"></div>
+    </div>
     
     <header class="page-header">
         <a href="/admindashboard.html" class="brand-logo">
-            <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" /><g fill="var(--dark-bg)"><path d="M28,25 h10 v50 h-10 Z" /><path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" /></g></svg>
+            <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" />
+                <g fill="var(--dark-bg)">
+                    <path d="M28,25 h10 v50 h-10 Z" />
+                    <path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" />
+                </g>
+            </svg>
             <h1 class="brand-title">IB STUDIOZ</h1>
         </a>
-        <button id="logout-btn" class="btn btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        <button id="logout-btn" class="btn btn-secondary">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
     </header>
     
     <main class="container">
         <h1 class="page-title">Upload New Content</h1>
-        <form id="upload-form" class="upload-form" novalidate>
+        
+        <form id="upload-form" class="upload-form">
+            <!-- Content Type Selection -->
             <div class="form-group">
-                <label for="contentType"><i class="fas fa-list"></i> Type of Content</label>
-                <div class="content-type-selector" id="content-type-selector">
-                    <span id="selected-content-type">No content type selected</span>
-                    <button type="button" id="open-content-type-modal-btn" class="btn">Select</button>
+                <label for="content-type-selector">
+                    <i class="fas fa-layer-group"></i> Content Type
+                </label>
+                <div id="content-type-selector" class="content-type-selector">
+                    <div id="selected-content-type">
+                        <strong>No content type selected</strong>
+                    </div>
+                    <button type="button" id="open-content-type-modal-btn" class="btn btn-secondary">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
                 </div>
             </div>
             
-            <div class="form-group">
-                <label for="title"><i class="fas fa-heading"></i> Title</label>
-                <input type="text" id="title" placeholder="e.g., Unit 1 Notes" required>
+            <!-- Course Selection -->
+            <div class="form-group" id="course-group" style="display: none;">
+                <label for="course-selector">
+                    <i class="fas fa-graduation-cap"></i> Course
+                </label>
+                <div id="course-selector" class="course-selector-bar">
+                    <div id="selected-course-display">
+                        <strong>No course selected</strong>
+                    </div>
+                    <button type="button" id="open-filter-modal-btn" class="btn btn-secondary">
+                        <i class="fas fa-filter"></i> Select
+                    </button>
+                </div>
             </div>
             
-            <!-- CONTAINER FOR ALL 'MATERIALS' SPECIFIC FIELDS -->
-            <div id="materials-fields" style="display:none;">
-                <div class="form-group">
-                    <label for="course-selector"><i class="fas fa-book-open"></i> Course for this Material</label>
-                    <div class="course-selector-bar">
-                        <span id="selected-course-display">No course selected</span>
-                        <button type="button" id="open-filter-modal-btn" class="btn">Select</button>
-                    </div>
+            <!-- Title -->
+            <div class="form-group">
+                <label for="title">
+                    <i class="fas fa-heading"></i> Title
+                </label>
+                <input type="text" id="title" name="title" placeholder="Enter content title" required>
+            </div>
+            
+            <!-- File Upload Area -->
+            <div class="form-group">
+                <label>
+                    <i class="fas fa-cloud-upload-alt"></i> Upload File
+                </label>
+                <div id="file-upload-area" class="file-upload-area">
+                    <i class="fas fa-cloud-upload-alt file-upload-icon"></i>
+                    <p class="file-upload-text">Drag and drop your file here or click to browse</p>
+                    <button type="button" class="file-upload-button">Choose File</button>
+                    <input type="file" id="file-input" style="display: none;">
                 </div>
                 
-                <div class="form-group">
-                    <label for="thumbnailURL"><i class="fas fa-image"></i> Thumbnail Image URL</label>
-                    <input type="url" id="thumbnailURL" placeholder="Paste public URL of the preview image">
-                    <div class="thumbnail-preview" id="thumbnail-preview">
-                        <img id="thumbnail-img" src="" alt="Thumbnail preview">
-                        <button type="button" class="remove-thumbnail" id="remove-thumbnail">
+                <!-- File Preview -->
+                <div id="file-preview" class="file-preview">
+                    <div class="file-preview-header">
+                        <div>
+                            <div class="file-preview-name" id="file-name"></div>
+                            <div class="file-preview-size" id="file-size"></div>
+                        </div>
+                        <button type="button" id="remove-file" class="file-preview-remove">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="description"><i class="fas fa-paragraph"></i> Description</label>
-                    <textarea id="description" rows="3" placeholder="A short description of the content..."></textarea>
-                </div>
-                
-                <div class="form-group checkbox-group">
-                    <input type="checkbox" id="isPaid">
-                    <label for="isPaid">This is a Premium / Paid resource</label>
+                <!-- Upload Progress -->
+                <div id="upload-progress" class="upload-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span id="progress-text">0%</span>
+                        <span id="progress-status">Uploading...</span>
+                    </div>
                 </div>
             </div>
             
-            <div class="form-group" id="details-group">
-                <label for="details" id="details-label"><i class="fas fa-info-circle"></i> Details</label>
-                <input type="text" id="details" placeholder="e.g., CS301 or Dr. Jane Doe" required>
-            </div>
-            
+            <!-- Storage Options -->
             <div class="form-group">
-                <label for="url" id="url-label"><i class="fas fa-link"></i> URL</label>
-                <input type="url" id="url" placeholder="Paste the full URL here" required>
+                <label>
+                    <i class="fas fa-database"></i> Storage Location
+                </label>
+                <div class="storage-options">
+                    <div class="storage-option selected" data-storage="firebase">
+                        <i class="fas fa-fire"></i>
+                        <h4>Firebase Storage</h4>
+                        <p>Fast and reliable cloud storage</p>
+                    </div>
+                    <div class="storage-option" data-storage="gdrive">
+                        <i class="fab fa-google-drive"></i>
+                        <h4>Google Drive</h4>
+                        <p>Integrated with Google Workspace</p>
+                    </div>
+                </div>
             </div>
             
-            <div class="form-group" id="year-group" style="display:none;">
-                <label for="year"><i class="fas fa-calendar-alt"></i> Year (for PYQs)</label>
-                <input type="number" id="year" placeholder="e.g., 2024">
+            <!-- Additional Fields (shown based on content type) -->
+            <div id="additional-fields"></div>
+            
+            <!-- Submit Button -->
+            <div class="form-group">
+                <button type="submit" id="submit-btn" class="btn btn-primary">
+                    <span class="btn-text">Upload Content</span>
+                    <div class="spinner"></div>
+                </button>
             </div>
             
-            <button type="submit" id="submit-btn" class="btn btn-primary">
-                <span class="btn-text">Upload Content</span>
-                <div class="spinner"></div>
-            </button>
-            
+            <!-- Message -->
             <div id="form-message" class="message"></div>
         </form>
         
-        <a href="/admindashboard.html" class="btn btn-secondary" style="width: 100%; text-align: center; margin-top: 20px;"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        <a href="/admindashboard.html" class="btn btn-secondary" style="width: 100%; text-align: center; margin-top: 20px;">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
     </main>
     
     <!-- Content Type Selection Modal -->
@@ -770,7 +1355,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- Toast Container -->
     <div class="toast-container" id="toast-container"></div>
     
@@ -781,26 +1366,185 @@
     
     <!-- Page Transition -->
     <div class="page-transition" id="page-transition"></div>
-
+    
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
     <script>
+        // Academic Data
         const academicData = {
-             branches: {"CSE":{"name":"Computer Science","color":"var(--cse-color)","icon":"fas fa-laptop-code","semesters":{"1":[{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus With MATLAB","credits":4},{"code":"U23PHY103B","name":"Engineering Physics","credits":3},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23BEE106A","name":"Basic Electrical and Electronics Engineering","credits":3},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1},{"code":"U23PHL110","name":"Engineering Physics Lab","credits":1},{"code":"U23BEEL113","name":"Basic Electrical and Electronics Engineering Lab","credits":1},{"code":"U23PPL112","name":"Python Programming Lab","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202B","name":"Discrete Mathematics","credits":4},{"code":"U23CHE204B","name":"Chemistry For Computer Science","credits":3},{"code":"U23CPR205B","name":"Programming In C","credits":3},{"code":"U23EGR207","name":"Engineering Graphics","credits":3},{"code":"U23EC203","name":"Digital Principles And System Design","credits":3},{"code":"U23CHL211","name":"Chemistry Lab","credits":1},{"code":"U23CPL212","name":"C programming Lab","credits":1},{"code":"U23TAM201","name":"Tamils And Technology","credits":1}],"3":[{"code":"U23MAT301D","name":"Probability and Statistics","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming","credits":3},{"code":"U23CS304","name":"Operating Systems","credits":3},{"code":"U23CS305","name":"Computer Information and Ethics","credits":3},{"code":"U23CS306","name":"Data Structures Lab","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Lab","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1},{"code":"Noc24-mg72","name":"NPTEL:design Thinking-A Primer","credits":1}],"4":[{"code":"U23MAT401B","name":"Numerical Methods","credits":4},{"code":"U23CS401","name":"Design And Analysis of Algorithms","credits":3},{"code":"U23CS402","name":"Software Engineering","credits":3},{"code":"U23CS403","name":"DataBase Management Systems","credits":3},{"code":"U23CS404","name":"Embedded System Design ","credits":3},{"code":"U23CS405","name":"Software Development Lab","credits":1},{"code":"U23CS403","name":"Database Management Systems Lab","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CS502","name":"Artificial Intelligence","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":" U23CS947 / U23CS903","name":"Professional Elective ","credits":3},{"code":"U23CS505","name":"Computer Networks Laboratory","credits":2},{"code":"U23CS506","name":"Artificial Intelligence and Machine Learning Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude-III","credits":1}],"6":[],"7":[],"8":[]}},
-            "IT":{"name":"Info. Technology","color":"var(--it-color)","icon":"fas fa-network-wired","semesters":{"1":[{"code":"U23IT101","name":"Programming Fundamentals","credits":4},{"code":"U23IT102","name":"Discrete Mathematics","credits":4},{"code":"U23IT103","name":"Digital Systems","credits":3},{"code":"U23IT104","name":"Computer Organization","credits":3},{"code":"U23IT105","name":"Communication Skills","credits":2},{"code":"U23IT106","name":"Programming Lab","credits":1},{"code":"U23IT107","name":"Digital Systems Lab","credits":1}],"2":[{"code":"U23IT201","name":"Data Structures","credits":4},{"code":"U23IT202","name":"Database Systems","credits":4},{"code":"U23IT203","name":"Operating Systems","credits":3},{"code":"U23IT204","name":"Computer Networks","credits":3},{"code":"U23IT205","name":"Web Technologies","credits":3},{"code":"U23IT206","name":"Data Structures Lab","credits":1},{"code":"U23IT207","name":"Web Technologies Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
-            "ECE":{"name":"Electronics & Comm","color":"var(--ece-color)","icon":"fas fa-satellite-dish","semesters":{"1":[{"code":"U23EC101","name":"Basic Electronics","credits":4},{"code":"U23EC102","name":"Circuit Theory","credits":4},{"code":"U23EC103","name":"Engineering Mathematics","credits":4},{"code":"U23EC104","name":"Programming in C","credits":3},{"code":"U23EC105","name":"Communication Skills","credits":2},{"code":"U23EC106","name":"Electronics Lab","credits":1},{"code":"U23EC107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EC201","name":"Analog Electronics","credits":4},{"code":"U23EC202","name":"Digital Electronics","credits":4},{"code":"U23EC203","name":"Signals and Systems","credits":4},{"code":"U23EC204","name":"Electromagnetic Theory","credits":3},{"code":"U23EC205","name":"Data Structures","credits":3},{"code":"U23EC206","name":"Analog Electronics Lab","credits":1},{"code":"U23EC207","name":"Digital Electronics Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
-            "EEE":{"name":"Electrical & Electronics","color":"var(--eee-color)","icon":"fas fa-bolt","semesters":{"1":[{"code":"U23EE101","name":"Basic Electrical Engineering","credits":4},{"code":"U23EE102","name":"Engineering Mathematics","credits":4},{"code":"U23EE103","name":"Electronics Engineering","credits":3},{"code":"U23EE104","name":"Programming in C","credits":3},{"code":"U23EE105","name":"Communication Skills","credits":2},{"code":"U23EE106","name":"Electrical Lab","credits":1},{"code":"U23EE107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EE201","name":"Circuit Theory","credits":4},{"code":"U23EE202","name":"Electromagnetic Theory","credits":4},{"code":"U23EE203","name":"Digital Electronics","credits":4},{"code":"U23EE204","name":"Electrical Machines","credits":3},{"code":"U23EE205","name":"Data Structures","credits":3},{"code":"U23EE206","name":"Circuit Theory Lab","credits":1},{"code":"U23EE207","name":"Digital Electronics Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
-            "MECH":{"name":"Mechanical","color":"var(--mech-color)","icon":"fas fa-cogs","semesters":{"1":[{"code":"U23ME101","name":"Engineering Mechanics","credits":4},{"code":"U23ME102","name":"Engineering Graphics","credits":4},{"code":"U23ME103","name":"Engineering Mathematics","credits":4},{"code":"U23ME104","name":"Basic Electrical Engineering","credits":3},{"code":"U23ME105","name":"Communication Skills","credits":2},{"code":"U23ME106","name":"Workshop Practice","credits":1},{"code":"U23ME107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23ME201","name":"Thermodynamics","credits":4},{"code":"U23ME202","name":"Mechanics of Materials","credits":4},{"code":"U23ME203","name":"Manufacturing Technology","credits":4},{"code":"U23ME204","name":"Fluid Mechanics","credits":3},{"code":"U23ME205","name":"Computer Programming","credits":3},{"code":"U23ME206","name":"Thermodynamics Lab","credits":1},{"code":"U23ME207","name":"Manufacturing Technology Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
-            "AIML":{"name":"AI & Machine Learning","color":"var(--aiml-color)","icon":"fas fa-brain","semesters":{"1":[{"code":"U23EG107","name":"Engineering Graphics","credits":3},{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus with MATLAB","credits":4},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23PHY103E","name":"Engineering Physics","credits":3},{"code":"U23PHL110","name":"Engineering Physics Laboratory","credits":1},{"code":"U23PPL112","name":"Python Programming Laboratory","credits":1},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202D","name":"Discrete Mathematics","credits":4},{"code":"U23BEEE206B","name":"Basics of Electrical and Electronics Engineering","credits":3},{"code":"U23CPR205","name":"Programming in C","credits":3},{"code":"U23CHE204C","name":"Applied Chemistry","credits":2},{"code":"U23EC203","name":"Digital Principles and System Design","credits":3},{"code":"U23CPL212","name":"C Programming Laboratory","credits":1},{"code":"U23CHL211","name":"Chemistry Laboratory","credits":1},{"code":"U23BEEL213B","name":"BEEE Laboratory","credits":1},{"code":"U23TAM201","name":"Tamils and Technology","credits":1}],"3":[{"code":"U23MAT301E","name":"Applied Probability and Statistics-I","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming Using Java","credits":3},{"code":"U23AML301","name":"Data Visualization","credits":3},{"code":"noc25-mg106","name":"NPTEL: Design Thinking - A Primer","credits":1},{"code":"U23CS306","name":"Data Structures Laboratory","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Using Java Laboratory","credits":1},{"code":"U23AML302","name":"Data Visualization Laboratory","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1}],"4":[{"code":"U23MAT401A","name":"Applied Probability and Statistics-II","credits":4},{"code":"U23CS403","name":"Database Management Systems","credits":3},{"code":"U23CS401","name":"Design and Analysis of Algorithms","credits":3},{"code":"U23AML401","name":"Artificial Intelligence","credits":3},{"code":"U23CSD402","name":"Operating Systems","credits":3},{"code":"U23AML402","name":"Artificial Intelligence Lab","credits":1},{"code":"U23CS405","name":"Database Management Systems Lab","credits":1},{"code":"U23GE401","name":"Soft Skills and Aptitude-II","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CSD502","name":"Software Engineering","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":"U19CS903","name":"Professional Elective - Agile Methodologies","credits":3},{"code":"U23AML501","name":"Machine Learning Laboratory","credits":2},{"code":"U23CSD504","name":"Software Development Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude-III","credits":1}],"6":[{"code":"U23CS601","name":"Computer Vision","credits":3},{"code":"U23CS602","name":"Reinforcement Learning","credits":3},{"code":"U23CS603","name":"Robotics","credits":3},{"code":"U23CS604","name":"Cyber Security","credits":3},{"code":"U23CS605","name":"Blockchain Technology","credits":3},{"code":"U23CS606","name":"Elective III","credits":3},{"code":"U23CS607","name":"Project Work II","credits":3}],"7":[{"code":"U23CS701","name":"Advanced Machine Learning","credits":3},{"code":"U23CS702","name":"AI Ethics and Governance","credits":3},{"code":"U23CS703","name":"Elective IV","credits":3},{"code":"U23CS704","name":"Project Work III","credits":3}],"8":[{"code":"U23CS801","name":"Industry Internship","credits":6},{"code":"U23CS802","name":"Project Work IV","credits":6}]}},
-            "CIVIL":{"name":"Civil Engineering","color":"var(--civil-color)","icon":"fas fa-building","semesters":{"1":[{"code":"U23CE101","name":"Engineering Mechanics","credits":4},{"code":"U23CE102","name":"Engineering Graphics","credits":4},{"code":"U23CE103","name":"Engineering Mathematics","credits":4},{"code":"U23CE104","name":"Basic Civil Engineering","credits":3},{"code":"U23CE105","name":"Communication Skills","credits":2},{"code":"U23CE106","name":"Surveying","credits":1},{"code":"U23CE107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23CE201","name":"Building Materials","credits":4},{"code":"U23CE202","name":"Structural Analysis","credits":4},{"code":"U23CE203","name":"Fluid Mechanics","credits":4},{"code":"U23CE204","name":"Surveying","credits":3},{"code":"U23CE205","name":"Computer Programming","credits":3},{"code":"U23CE206","name":"Building Materials Lab","credits":1},{"code":"U23CE207","name":"Surveying Lab","credits":1}]}},
-            "BME":{"name":"Bio Medical","color":"var(--bme-color)","icon":"fas fa-heartbeat","semesters":{"1":[{"code":"U23BM101","name":"Human Anatomy","credits":4},{"code":"U23BM102","name":"Engineering Mathematics","credits":4},{"code":"U23BM103","name":"Basic Electronics","credits":3},{"code":"U23BM104","name":"Programming in C","credits":3},{"code":"U23BM105","name":"Communication Skills","credits":2},{"code":"U23BM106","name":"Human Anatomy Lab","credits":1},{"code":"U23BM107","name":"Programming Lab","credits":1}],"2":[{"code":"U23BM201","name":"Human Physiology","credits":4},{"code":"U23BM202","name":"Biochemistry","credits":4},{"code":"U23BM203","name":"Medical Electronics","credits":4},{"code":"U23BM204","name":"Biomechanics","credits":3},{"code":"U23BM205","name":"Data Structures","credits":3},{"code":"U23BM206","name":"Human Physiology Lab","credits":1},{"code":"U23BM207","name":"Medical Electronics Lab","credits":1}]}},
-            "FT":{"name":"Fashion Technology","color":"var(--ft-color)","icon":"fas fa-tshirt","semesters":{"1":[{"code":"U23FT101","name":"Fiber Science","credits":4},{"code":"U23FT102","name":"Textile Chemistry","credits":4},{"code":"U23FT103","name":"Fashion Illustration","credits":3},{"code":"U23FT104","name":"Pattern Making","credits":3},{"code":"U23FT105","name":"Communication Skills","credits":2},{"code":"U23FT106","name":"Textile Chemistry Lab","credits":1},{"code":"U23FT107","name":"Pattern Making Lab","credits":1}],"2":[{"code":"U23FT201","name":"Textile Processing","credits":4},{"code":"U23FT202","name":"Apparel Manufacturing","credits":4},{"code":"U23FT203","name":"Fashion Design","credits":4},{"code":"U23FT204","name":"Garment Construction","credits":3},{"code":"U23FT205","name":"Computer Applications","credits":3},{"code":"U23FT206","name":"Apparel Manufacturing Lab","credits":1},{"code":"U23FT207","name":"Garment Construction Lab","credits":1}]}},
-            "MCT":{"name":"Mechatronics","color":"var(--mct-color)","icon":"fas fa-robot","semesters":{"1":[{"code":"U23MT101","name":"Engineering Mechanics","credits":4},{"code":"U23MT102","name":"Engineering Graphics","credits":4},{"code":"U23MT103","name":"Engineering Mathematics","credits":4},{"code":"U23MT104","name":"Basic Electronics","credits":3},{"code":"U23MT105","name":"Communication Skills","credits":2},{"code":"U23MT106","name":"Workshop Practice","credits":1},{"code":"U23MT107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23MT201","name":"Thermodynamics","credits":4},{"code":"U23MT202","name":"Mechanics of Materials","credits":4},{"code":"U23MT203","name":"Digital Electronics","credits":4},{"code":"U23MT204","name":"Fluid Mechanics","credits":3},{"code":"U23MT205","name":"Computer Programming","credits":3},{"code":"U23MT206","name":"Thermodynamics Lab","credits":1},{"code":"U23MT207","name":"Digital Electronics Lab","credits":1}]}},
-            "CSD":{"name":"CS & Design","color":"var(--csd-color)","icon":"fas fa-paint-brush","semesters":{"1":[{"code":"U23CD101","name":"Design Fundamentals","credits":4},{"code":"U23CD102","name":"Programming Basics","credits":4},{"code":"U23CD103","name":"Visual Communication","credits":3},{"code":"U23CD104","name":"Mathematics for Design","credits":3},{"code":"U23CD105","name":"Communication Skills","credits":2},{"code":"U23CD106","name":"Design Studio","credits":1},{"code":"U23CD107","name":"Programming Lab","credits":1}],"2":[{"code":"U23CD201","name":"User Interface Design","credits":4},{"code":"U23CD202","name":"Data Structures","credits":4},{"code":"U23CD203","name":"Web Design","credits":4},{"code":"U23CD204","name":"Digital Illustration","credits":3},{"code":"U23CD205","name":"Human-Computer Interaction","credits":3},{"code":"U23CD206","name":"UI Design Lab","credits":1},{"code":"U23CD207","name":"Web Design Lab","credits":1}]}},
-            "ADS":{"name":"AI & Data Science","color":"var(--ads-color)","icon":"fas fa-database","semesters":{"1":[{"code":"U23DS101","name":"Programming Fundamentals","credits":4},{"code":"U23DS102","name":"Linear Algebra","credits":4},{"code":"U23DS103","name":"Statistics Basics","credits":3},{"code":"U23DS104","name":"Computational Thinking","credits":3},{"code":"U23DS105","name":"Communication Skills","credits":2},{"code":"U23DS106","name":"Programming Lab","credits":1},{"code":"U23DS107","name":"Statistics Lab","credits":1}],"2":[{"code":"U23DS201","name":"Data Structures","credits":4},{"code":"U23DS202","name":"Probability and Statistics","credits":4},{"code":"U23DS203","name":"Database Systems","credits":4},{"code":"U23DS204","name":"Data Visualization","credits":3},{"code":"U23DS205","name":"Python Programming","credits":3},{"code":"U23DS206","name":"Data Structures Lab","credits":1},{"code":"U23DS207","name":"Database Lab","credits":1}]}},
-            "EFE":{"name":"Electrical & Computer","color":"var(--efe-color)","icon":"fas fa-microchip","semesters":{"1":[{"code":"U23EF101","name":"Circuit Theory","credits":4},{"code":"U23EF102","name":"Programming Fundamentals","credits":4},{"code":"U23EF103","name":"Digital Electronics","credits":3},{"code":"U23EF104","name":"Engineering Mathematics","credits":3},{"code":"U23EF105","name":"Communication Skills","credits":2},{"code":"U23EF106","name":"Circuit Theory Lab","credits":1},{"code":"U23EF107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EF201","name":"Signals and Systems","credits":4},{"code":"U23EF202","name":"Data Structures","credits":4},{"code":"U23EF203","name":"Analog Electronics","credits":4},{"code":"U23EF204","name":"Electromagnetic Theory","credits":3},{"code":"U23EF205","name":"Computer Organization","credits":3},{"code":"U23EF206","name":"Analog Electronics Lab","credits":1},{"code":"U23EF207","name":"Data Structures Lab","credits":1}]}},
-            "EXE":{"name":"Electronics & Computer","color":"var(--exe-color)","icon":"fas fa-desktop","semesters":{"1":[{"code":"U23EX101","name":"Basic Electronics","credits":4},{"code":"U23EX102","name":"Programming Fundamentals","credits":4},{"code":"U23EX103","name":"Digital Logic Design","credits":3},{"code":"U23EX104","name":"Engineering Mathematics","credits":3},{"code":"U23EX105","name":"Communication Skills","credits":2},{"code":"U23EX106","name":"Electronics Lab","credits":1},{"code":"U23EX107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EX201","name":"Data Structures","credits":4},{"code":"U23EX202","name":"Analog Electronics","credits":4},{"code":"U23EX203","name":"Computer Organization","credits":4},{"code":"U23EX204","name":"Signals and Systems","credits":3},{"code":"U23EX205","name":"Database Systems","credits":3},{"code":"U23EX206","name":"Analog Electronics Lab","credits":1},{"code":"U23EX207","name":"Data Structures Lab","credits":1}]}}}
+            branches: {
+                "CSE": {
+                    "name": "Computer Science",
+                    "color": "var(--cse-color)",
+                    "icon": "fas fa-laptop-code",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23ENG101A", "name": "Communication Skills in English", "credits": 3},
+                            {"code": "U23MAT102A", "name": "Linear Algebra and Calculus With MATLAB", "credits": 4},
+                            {"code": "U23PHY103B", "name": "Engineering Physics", "credits": 3},
+                            {"code": "U23PPR105", "name": "Problem Solving using Python Programming", "credits": 3},
+                            {"code": "U23BEE106A", "name": "Basic Electrical and Electronics Engineering", "credits": 3},
+                            {"code": "U23TAM101", "name": "Heritage of Tamils", "credits": 1},
+                            {"code": "U23PHL110", "name": "Engineering Physics Lab", "credits": 1},
+                            {"code": "U23BEEL113", "name": "Basic Electrical and Electronics Engineering Lab", "credits": 1},
+                            {"code": "U23PPL112", "name": "Python Programming Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23ENG201A", "name": "Technical English", "credits": 2},
+                            {"code": "U23MAT202B", "name": "Discrete Mathematics", "credits": 4},
+                            {"code": "U23CHE204B", "name": "Chemistry For Computer Science", "credits": 3},
+                            {"code": "U23CPR205B", "name": "Programming In C", "credits": 3},
+                            {"code": "U23EGR207", "name": "Engineering Graphics", "credits": 3},
+                            {"code": "U23EC203", "name": "Digital Principles And System Design", "credits": 3},
+                            {"code": "U23CHL211", "name": "Chemistry Lab", "credits": 1},
+                            {"code": "U23CPL212", "name": "C programming Lab", "credits": 1},
+                            {"code": "U23TAM201", "name": "Tamils And Technology", "credits": 1}
+                        ],
+                        "3": [
+                            {"code": "U23MAT301D", "name": "Probability and Statistics", "credits": 4},
+                            {"code": "U23CS301", "name": "Data Structures", "credits": 3},
+                            {"code": "U23CS302", "name": "Computer Architecture", "credits": 3},
+                            {"code": "U23CS303", "name": "Object Oriented Programming", "credits": 3},
+                            {"code": "U23CS304", "name": "Operating Systems", "credits": 3},
+                            {"code": "U23CS305", "name": "Computer Information and Ethics", "credits": 3},
+                            {"code": "U23CS306", "name": "Data Structures Lab", "credits": 1},
+                            {"code": "U23CS307", "name": "Object Oriented Programming Lab", "credits": 1},
+                            {"code": "U23GE301", "name": "Soft Skills and Aptitude-I", "credits": 1},
+                            {"code": "Noc24-mg72", "name": "NPTEL:design Thinking-A Primer", "credits": 1}
+                        ],
+                        "4": [
+                            {"code": "U23MAT401B", "name": "Numerical Methods", "credits": 4},
+                            {"code": "U23CS401", "name": "Design And Analysis of Algorithms", "credits": 3},
+                            {"code": "U23CS402", "name": "Software Engineering", "credits": 3},
+                            {"code": "U23CS403", "name": "DataBase Management Systems", "credits": 3},
+                            {"code": "U23CS404", "name": "Embedded System Design ", "credits": 3},
+                            {"code": "U23CS405", "name": "Software Development Lab", "credits": 1},
+                            {"code": "U23CS403", "name": "Database Management Systems Lab", "credits": 1}
+                        ],
+                        "5": [
+                            {"code": "U23CS504", "name": "Machine Learning", "credits": 3},
+                            {"code": "U23CS501", "name": "Computer Networks", "credits": 3},
+                            {"code": "U23CS502", "name": "Artificial Intelligence", "credits": 3},
+                            {"code": "U23CS503", "name": "Theory of Computation", "credits": 3},
+                            {"code": "noc25-cs135", "name": "Elective NPTEL", "credits": 3},
+                            {"code": " U23CS947 / U23CS903", "name": "Professional Elective ", "credits": 3},
+                            {"code": "U23CS505", "name": "Computer Networks Laboratory", "credits": 2},
+                            {"code": "U23CS506", "name": "Artificial Intelligence and Machine Learning Laboratory", "credits": 1},
+                            {"code": "U23GE501", "name": "Soft Skills and Aptitude-III", "credits": 1}
+                        ],
+                        "6": [], "7": [], "8": []
+                    }
+                },
+                "IT": {
+                    "name": "Info. Technology",
+                    "color": "var(--it-color)",
+                    "icon": "fas fa-network-wired",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23IT101", "name": "Programming Fundamentals", "credits": 4},
+                            {"code": "U23IT102", "name": "Discrete Mathematics", "credits": 4},
+                            {"code": "U23IT103", "name": "Digital Systems", "credits": 3},
+                            {"code": "U23IT104", "name": "Computer Organization", "credits": 3},
+                            {"code": "U23IT105", "name": "Communication Skills", "credits": 2},
+                            {"code": "U23IT106", "name": "Programming Lab", "credits": 1},
+                            {"code": "U23IT107", "name": "Digital Systems Lab", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23IT201", "name": "Data Structures", "credits": 4},
+                            {"code": "U23IT202", "name": "Database Systems", "credits": 4},
+                            {"code": "U23IT203", "name": "Operating Systems", "credits": 3},
+                            {"code": "U23IT204", "name": "Computer Networks", "credits": 3},
+                            {"code": "U23IT205", "name": "Web Technologies", "credits": 3},
+                            {"code": "U23IT206", "name": "Data Structures Lab", "credits": 1},
+                            {"code": "U23IT207", "name": "Web Technologies Lab", "credits": 1}
+                        ],
+                        "3": [], "4": [], "5": [], "6": [], "7": [], "8": []
+                    }
+                },
+                "AIML": {
+                    "name": "AI & Machine Learning",
+                    "color": "var(--aiml-color)",
+                    "icon": "fas fa-brain",
+                    "semesters": {
+                        "1": [
+                            {"code": "U23EG107", "name": "Engineering Graphics", "credits": 3},
+                            {"code": "U23ENG101A", "name": "Communication Skills in English", "credits": 3},
+                            {"code": "U23MAT102A", "name": "Linear Algebra and Calculus with MATLAB", "credits": 4},
+                            {"code": "U23PPR105", "name": "Problem Solving using Python Programming", "credits": 3},
+                            {"code": "U23PHY103E", "name": "Engineering Physics", "credits": 3},
+                            {"code": "U23PHL110", "name": "Engineering Physics Laboratory", "credits": 1},
+                            {"code": "U23PPL112", "name": "Python Programming Laboratory", "credits": 1},
+                            {"code": "U23TAM101", "name": "Heritage of Tamils", "credits": 1}
+                        ],
+                        "2": [
+                            {"code": "U23ENG201A", "name": "Technical English", "credits": 2},
+                            {"code": "U23MAT202D", "name": "Discrete Mathematics", "credits": 4},
+                            {"code": "U23BEEE206B", "name": "Basics of Electrical and Electronics Engineering", "credits": 3},
+                            {"code": "U23CPR205", "name": "Programming in C", "credits": 3},
+                            {"code": "U23CHE204C", "name": "Applied Chemistry", "credits": 2},
+                            {"code": "U23EC203", "name": "Digital Principles and System Design", "credits": 3},
+                            {"code": "U23CPL212", "name": "C Programming Laboratory", "credits": 1},
+                            {"code": "U23CHL211", "name": "Chemistry Laboratory", "credits": 1},
+                            {"code": "U23BEEL213B", "name": "BEEE Laboratory", "credits": 1},
+                            {"code": "U23TAM201", "name": "Tamils and Technology", "credits": 1}
+                        ],
+                        "3": [
+                            {"code": "U23MAT301E", "name": "Applied Probability and Statistics-I", "credits": 4},
+                            {"code": "U23CS301", "name": "Data Structures", "credits": 3},
+                            {"code": "U23CS302", "name": "Computer Architecture", "credits": 3},
+                            {"code": "U23CS303", "name": "Object Oriented Programming Using Java", "credits": 3},
+                            {"code": "U23AML301", "name": "Data Visualization", "credits": 3},
+                            {"code": "noc25-mg106", "name": "NPTEL: Design Thinking - A Primer", "credits": 1},
+                            {"code": "U23CS306", "name": "Data Structures Laboratory", "credits": 1},
+                            {"code": "U23CS307", "name": "Object Oriented Programming Using Java Laboratory", "credits": 1},
+                            {"code": "U23AML302", "name": "Data Visualization Laboratory", "credits": 1},
+                            {"code": "U23GE301", "name": "Soft Skills and Aptitude-I", "credits": 1}
+                        ],
+                        "4": [
+                            {"code": "U23MAT401A", "name": "Applied Probability and Statistics-II", "credits": 4},
+                            {"code": "U23CS403", "name": "Database Management Systems", "credits": 3},
+                            {"code": "U23CS401", "name": "Design and Analysis of Algorithms", "credits": 3},
+                            {"code": "U23AML401", "name": "Artificial Intelligence", "credits": 3},
+                            {"code": "U23CSD402", "name": "Operating Systems", "credits": 3},
+                            {"code": "U23AML402", "name": "Artificial Intelligence Lab", "credits": 1},
+                            {"code": "U23CS405", "name": "Database Management Systems Lab", "credits": 1},
+                            {"code": "U23GE401", "name": "Soft Skills and Aptitude-II", "credits": 1}
+                        ],
+                        "5": [
+                            {"code": "U23CS504", "name": "Machine Learning", "credits": 3},
+                            {"code": "U23CS501", "name": "Computer Networks", "credits": 3},
+                            {"code": "U23CSD502", "name": "Software Engineering", "credits": 3},
+                            {"code": "U23CS503", "name": "Theory of Computation", "credits": 3},
+                            {"code": "noc25-cs135", "name": "Elective NPTEL", "credits": 3},
+                            {"code": "U19CS903", "name": "Professional Elective - Agile Methodologies", "credits": 3},
+                            {"code": "U23AML501", "name": "Machine Learning Laboratory", "credits": 2},
+                            {"code": "U23CSD504", "name": "Software Development Laboratory", "credits": 1},
+                            {"code": "U23GE501", "name": "Soft Skills and Aptitude-III", "credits": 1}
+                        ],
+                        "6": [
+                            {"code": "U23CS601", "name": "Computer Vision", "credits": 3},
+                            {"code": "U23CS602", "name": "Reinforcement Learning", "credits": 3},
+                            {"code": "U23CS603", "name": "Robotics", "credits": 3},
+                            {"code": "U23CS604", "name": "Cyber Security", "credits": 3},
+                            {"code": "U23CS605", "name": "Blockchain Technology", "credits": 3},
+                            {"code": "U23CS606", "name": "Elective III", "credits": 3},
+                            {"code": "U23CS607", "name": "Project Work II", "credits": 3}
+                        ],
+                        "7": [
+                            {"code": "U23CS701", "name": "Advanced Machine Learning", "credits": 3},
+                            {"code": "U23CS702", "name": "AI Ethics and Governance", "credits": 3},
+                            {"code": "U23CS703", "name": "Elective IV", "credits": 3},
+                            {"code": "U23CS704", "name": "Project Work III", "credits": 3}
+                        ],
+                        "8": [
+                            {"code": "U23CS801", "name": "Industry Internship", "credits": 6},
+                            {"code": "U23CS802", "name": "Project Work IV", "credits": 6}
+                        ]
+                    }
+                }
+            }
         };
         
         document.addEventListener('DOMContentLoaded', () => {
@@ -816,23 +1560,32 @@
             firebase.initializeApp(firebaseConfig);
             const auth = firebase.auth();
             const db = firebase.firestore();
+            const storage = firebase.storage();
             
             // DOM Elements
+            const uploadForm = document.getElementById('upload-form');
             const contentTypeSelector = document.getElementById('content-type-selector');
             const selectedContentType = document.getElementById('selected-content-type');
             const openContentTypeModalBtn = document.getElementById('open-content-type-modal-btn');
-            const yearGroup = document.getElementById('year-group');
-            const detailsGroup = document.getElementById('details-group');
-            const detailsLabel = document.getElementById('details-label');
-            const urlLabel = document.getElementById('url-label');
-            const materialsFields = document.getElementById('materials-fields');
-            const thumbnailURL = document.getElementById('thumbnailURL');
-            const thumbnailPreview = document.getElementById('thumbnail-preview');
-            const thumbnailImg = document.getElementById('thumbnail-img');
-            const removeThumbnail = document.getElementById('remove-thumbnail');
-            const formMessage = document.getElementById('form-message');
+            const courseGroup = document.getElementById('course-group');
+            const courseSelector = document.getElementById('course-selector');
+            const selectedCourseDisplay = document.getElementById('selected-course-display');
+            const openFilterBtn = document.getElementById('open-filter-modal-btn');
+            const titleInput = document.getElementById('title');
+            const fileUploadArea = document.getElementById('file-upload-area');
+            const fileInput = document.getElementById('file-input');
+            const filePreview = document.getElementById('file-preview');
+            const fileName = document.getElementById('file-name');
+            const fileSize = document.getElementById('file-size');
+            const removeFileBtn = document.getElementById('remove-file');
+            const uploadProgress = document.getElementById('upload-progress');
+            const progressFill = document.getElementById('progress-fill');
+            const progressText = document.getElementById('progress-text');
+            const progressStatus = document.getElementById('progress-status');
+            const storageOptions = document.querySelectorAll('.storage-option');
+            const additionalFields = document.getElementById('additional-fields');
             const submitBtn = document.getElementById('submit-btn');
-            const uploadForm = document.getElementById('upload-form');
+            const formMessage = document.getElementById('form-message');
             const logoutBtn = document.getElementById('logout-btn');
             const spinnerOverlay = document.getElementById('spinner-overlay');
             const pageTransition = document.getElementById('page-transition');
@@ -844,13 +1597,11 @@
             const examTypeModal = document.getElementById('exam-type-modal');
             const examTypeModalCloseBtn = document.getElementById('exam-type-modal-close-btn');
             const filterModal = document.getElementById('filter-modal');
-            const openFilterBtn = document.getElementById('open-filter-modal-btn');
             const filterModalCloseBtn = document.getElementById('filter-modal-close-btn');
             const filterColumns = document.querySelector('.filter-columns');
             const deptCol = document.getElementById('department-col');
             const semCol = document.getElementById('semester-col');
             const courseCol = document.getElementById('course-col');
-            const selectionDisplay = document.getElementById('selected-course-display');
             
             // Progress steps
             const stepDept = document.getElementById('step-dept');
@@ -863,10 +1614,13 @@
             let selectedDept = { code: null, name: null };
             let selectedSem = { code: null, name: null };
             let selectedCourse = { code: null, name: null };
+            let selectedFile = null;
+            let selectedStorage = 'firebase';
             
             // Initialize the page
             function initializePage() {
                 setupEventListeners();
+                checkAuthentication();
             }
             
             // Setup event listeners
@@ -919,13 +1673,52 @@
                     });
                 });
                 
+                // File upload
+                fileUploadArea.addEventListener('click', () => fileInput.click());
+                fileUploadArea.addEventListener('dragover', handleDragOver);
+                fileUploadArea.addEventListener('dragleave', handleDragLeave);
+                fileUploadArea.addEventListener('drop', handleDrop);
+                fileInput.addEventListener('change', handleFileSelect);
+                removeFileBtn.addEventListener('click', removeFile);
+                
+                // Storage options
+                storageOptions.forEach(option => {
+                    option.addEventListener('click', () => {
+                        storageOptions.forEach(opt => opt.classList.remove('selected'));
+                        option.classList.add('selected');
+                        selectedStorage = option.dataset.storage;
+                    });
+                });
+                
                 // Form submission
                 uploadForm.addEventListener('submit', handleFormSubmit);
                 logoutBtn.addEventListener('click', handleLogout);
-                
-                // Thumbnail preview
-                thumbnailURL.addEventListener('input', handleThumbnailURL);
-                removeThumbnail.addEventListener('click', clearThumbnail);
+            }
+            
+            // Check authentication
+            function checkAuthentication() {
+                auth.onAuthStateChanged(user => {
+                    if (!user) {
+                        pageTransition.classList.add('active');
+                        setTimeout(() => {
+                            window.location.replace('/index.html');
+                        }, 500);
+                        return;
+                    }
+                    
+                    db.collection('users').doc(user.uid).get().then(doc => {
+                        if (!doc.exists || doc.data().role !== 'admin') {
+                            pageTransition.classList.add('active');
+                            setTimeout(() => {
+                                window.location.replace('/studentdashboard.html');
+                            }, 500);
+                        }
+                    }).catch(err => {
+                        console.error('Error checking user role:', err);
+                        showToast('Authentication error. Please try again.', 'error');
+                        auth.signOut();
+                    });
+                });
             }
             
             // Open content type modal
@@ -964,14 +1757,130 @@
                 // Close modal
                 closeContentTypeModal();
                 
-                // Handle form fields based on content type
-                handleContentTypeChange();
+                // Show/hide course selection based on content type
+                if (type === 'materials' || type === 'pyqs') {
+                    courseGroup.style.display = 'block';
+                } else {
+                    courseGroup.style.display = 'none';
+                }
+                
+                // Handle additional fields based on content type
+                updateAdditionalFields();
                 
                 // If PYQs, open exam type modal
                 if (type === 'pyqs') {
                     setTimeout(() => {
                         examTypeModal.classList.add('active');
                     }, 300);
+                }
+            }
+            
+            // Update additional fields based on content type
+            function updateAdditionalFields() {
+                let fieldsHTML = '';
+                
+                switch (selectedContentTypeValue) {
+                    case 'materials':
+                        fieldsHTML = `
+                            <div class="form-group">
+                                <label for="description">
+                                    <i class="fas fa-align-left"></i> Description
+                                </label>
+                                <textarea id="description" name="description" rows="3" placeholder="Enter a brief description of the material"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="thumbnailURL">
+                                    <i class="fas fa-image"></i> Thumbnail URL
+                                </label>
+                                <input type="url" id="thumbnailURL" name="thumbnailURL" placeholder="https://example.com/image.jpg">
+                                <div id="thumbnail-preview" class="thumbnail-preview">
+                                    <img id="thumbnail-img" src="" alt="Thumbnail preview">
+                                    <button type="button" id="remove-thumbnail" class="remove-thumbnail">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="isPaid" name="isPaid">
+                                    <label for="isPaid">Premium Content</label>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    case 'pyqs':
+                        fieldsHTML = `
+                            <div class="form-group">
+                                <label for="year">
+                                    <i class="fas fa-calendar-alt"></i> Year
+                                </label>
+                                <input type="number" id="year" name="year" min="2020" max="2030" placeholder="2024">
+                            </div>
+                        `;
+                        break;
+                    case 'seminars':
+                        fieldsHTML = `
+                            <div class="form-group">
+                                <label for="speaker">
+                                    <i class="fas fa-user-tie"></i> Speaker Name
+                                </label>
+                                <input type="text" id="speaker" name="speaker" placeholder="Enter speaker name">
+                            </div>
+                            <div class="form-group">
+                                <label for="youtubeURL">
+                                    <i class="fab fa-youtube"></i> YouTube URL
+                                </label>
+                                <input type="url" id="youtubeURL" name="youtubeURL" placeholder="https://youtube.com/watch?v=...">
+                            </div>
+                        `;
+                        break;
+                    case 'quizzes':
+                        fieldsHTML = `
+                            <div class="form-group">
+                                <label for="topic">
+                                    <i class="fas fa-tag"></i> Quiz Topic
+                                </label>
+                                <input type="text" id="topic" name="topic" placeholder="Enter quiz topic">
+                            </div>
+                            <div class="form-group">
+                                <label for="googleFormURL">
+                                    <i class="fab fa-google"></i> Google Form URL
+                                </label>
+                                <input type="url" id="googleFormURL" name="googleFormURL" placeholder="https://forms.gle/...">
+                            </div>
+                        `;
+                        break;
+                }
+                
+                additionalFields.innerHTML = fieldsHTML;
+                
+                // Add event listeners for thumbnail preview if materials
+                if (selectedContentTypeValue === 'materials') {
+                    const thumbnailURL = document.getElementById('thumbnailURL');
+                    const thumbnailPreview = document.getElementById('thumbnail-preview');
+                    const thumbnailImg = document.getElementById('thumbnail-img');
+                    const removeThumbnail = document.getElementById('remove-thumbnail');
+                    
+                    thumbnailURL.addEventListener('input', () => {
+                        const url = thumbnailURL.value.trim();
+                        if (url) {
+                            thumbnailImg.src = url;
+                            thumbnailImg.onload = function() {
+                                thumbnailPreview.style.display = 'block';
+                            };
+                            thumbnailImg.onerror = function() {
+                                thumbnailPreview.style.display = 'none';
+                                showToast('Invalid image URL', 'error');
+                            };
+                        } else {
+                            thumbnailPreview.style.display = 'none';
+                        }
+                    });
+                    
+                    removeThumbnail.addEventListener('click', () => {
+                        thumbnailURL.value = '';
+                        thumbnailPreview.style.display = 'none';
+                    });
                 }
             }
             
@@ -1001,56 +1910,6 @@
                 
                 // Close modal
                 closeExamTypeModal();
-                
-                // Update details label for PYQs
-                detailsLabel.innerHTML = `<i class="fas fa-info-circle"></i> Course Code`;
-            }
-            
-            // Handle content type change
-            function handleContentTypeChange() {
-                const type = selectedContentTypeValue;
-                const isMaterials = type === 'materials';
-                const isPYQs = type === 'pyqs';
-                
-                materialsFields.style.display = isMaterials ? 'block' : 'none';
-                detailsGroup.style.display = isMaterials || isPYQs ? 'none' : 'block';
-                yearGroup.style.display = isPYQs ? 'block' : 'none';
-                
-                if (type === 'seminars') {
-                    detailsLabel.innerHTML = '<i class="fas fa-user-tie"></i> Speaker Name';
-                    urlLabel.innerHTML = '<i class="fab fa-youtube"></i> YouTube Embed URL';
-                } else if (type === 'quizzes') {
-                    detailsLabel.innerHTML = '<i class="fas fa-tag"></i> Quiz Topic';
-                    urlLabel.innerHTML = '<i class="fab fa-google-drive"></i> Google Form Embed URL';
-                } else if (type === 'pyqs') {
-                    // Details will be set after exam type selection
-                    urlLabel.innerHTML = '<i class="fas fa-link"></i> Download URL';
-                } else {
-                    urlLabel.innerHTML = '<i class="fas fa-link"></i> Download URL';
-                }
-            }
-            
-            // Handle thumbnail URL input
-            function handleThumbnailURL() {
-                const url = thumbnailURL.value.trim();
-                if (url) {
-                    thumbnailImg.src = url;
-                    thumbnailImg.onload = function() {
-                        thumbnailPreview.style.display = 'block';
-                    };
-                    thumbnailImg.onerror = function() {
-                        thumbnailPreview.style.display = 'none';
-                        showToast('Invalid image URL', 'error');
-                    };
-                } else {
-                    thumbnailPreview.style.display = 'none';
-                }
-            }
-            
-            // Clear thumbnail preview
-            function clearThumbnail() {
-                thumbnailURL.value = '';
-                thumbnailPreview.style.display = 'none';
             }
             
             // Open course selector modal
@@ -1211,9 +2070,9 @@
                 
                 // Update display
                 if (selectedContentTypeValue === 'pyqs' && selectedExamType) {
-                    selectionDisplay.innerHTML = `<strong>${selectedCourse.code}</strong> - ${selectedCourse.name} (${selectedExamType})`;
+                    selectedCourseDisplay.innerHTML = `<strong>${selectedCourse.code}</strong> - ${selectedCourse.name} (${selectedExamType})`;
                 } else {
-                    selectionDisplay.innerHTML = `<strong>${selectedCourse.code}</strong> - ${selectedCourse.name}`;
+                    selectedCourseDisplay.innerHTML = `<strong>${selectedCourse.code}</strong> - ${selectedCourse.name}`;
                 }
             }
             
@@ -1225,8 +2084,68 @@
                 selectedElement.classList.add('selected');
             }
             
+            // Handle file drag over
+            function handleDragOver(e) {
+                e.preventDefault();
+                fileUploadArea.classList.add('dragover');
+            }
+            
+            // Handle file drag leave
+            function handleDragLeave(e) {
+                e.preventDefault();
+                fileUploadArea.classList.remove('dragover');
+            }
+            
+            // Handle file drop
+            function handleDrop(e) {
+                e.preventDefault();
+                fileUploadArea.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFile(files[0]);
+                }
+            }
+            
+            // Handle file select
+            function handleFileSelect(e) {
+                const files = e.target.files;
+                if (files.length > 0) {
+                    handleFile(files[0]);
+                }
+            }
+            
+            // Handle file
+            function handleFile(file) {
+                selectedFile = file;
+                
+                // Update file preview
+                fileName.textContent = file.name;
+                fileSize.textContent = formatFileSize(file.size);
+                filePreview.classList.add('show');
+                
+                // Reset file input
+                fileInput.value = '';
+            }
+            
+            // Format file size
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            // Remove file
+            function removeFile() {
+                selectedFile = null;
+                filePreview.classList.remove('show');
+                fileInput.value = '';
+            }
+            
             // Handle form submission
-            function handleFormSubmit(e) {
+            async function handleFormSubmit(e) {
                 e.preventDefault();
                 
                 // Validate form
@@ -1239,10 +2158,68 @@
                 submitBtn.classList.add('loading');
                 formMessage.classList.remove('show');
                 
+                try {
+                    let downloadURL = '';
+                    
+                    // Handle file upload based on storage option
+                    if (selectedFile) {
+                        if (selectedStorage === 'firebase') {
+                            // Upload to Firebase Storage
+                            const storageRef = storage.ref(`${selectedContentTypeValue}/${selectedFile.name}`);
+                            const uploadTask = storageRef.put(selectedFile);
+                            
+                            // Show progress
+                            uploadProgress.classList.add('show');
+                            
+                            // Monitor upload progress
+                            uploadTask.on('state_changed', 
+                                (snapshot) => {
+                                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                                    progressFill.style.width = `${progress}%`;
+                                    progressText.textContent = `${Math.round(progress)}%`;
+                                    
+                                    if (snapshot.state === 'running') {
+                                        progressStatus.textContent = 'Uploading...';
+                                    }
+                                }, 
+                                (error) => {
+                                    console.error('Upload error:', error);
+                                    showToast('Upload failed. Please try again.', 'error');
+                                    resetFormState();
+                                }, 
+                                async () => {
+                                    // Upload completed successfully
+                                    downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+                                    progressStatus.textContent = 'Upload complete!';
+                                    await saveToDatabase(downloadURL);
+                                }
+                            );
+                        } else if (selectedStorage === 'gdrive') {
+                            // For Google Drive, we'll simulate the upload
+                            // In a real implementation, you would use Google Drive API
+                            showToast('Google Drive integration coming soon!', 'info');
+                            resetFormState();
+                            return;
+                        }
+                    } else {
+                        // No file to upload, just save metadata
+                        await saveToDatabase('');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showToast('An error occurred. Please try again.', 'error');
+                    resetFormState();
+                }
+            }
+            
+            // Save to database
+            async function saveToDatabase(downloadURL) {
                 const collectionName = selectedContentTypeValue;
                 const data = {
-                    title: document.getElementById('title').value.trim(),
-                    uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    title: titleInput.value.trim(),
+                    uploadedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    uploadedBy: auth.currentUser.email,
+                    storageLocation: selectedStorage
                 };
                 
                 // Prepare data based on content type
@@ -1251,43 +2228,40 @@
                         data.department = selectedDept.code;
                         data.semester = selectedSem.code;
                         data.courseCode = selectedCourse.code;
-                        data.downloadURL = document.getElementById('url').value.trim();
-                        data.isPaid = document.getElementById('isPaid').checked;
-                        data.thumbnailURL = document.getElementById('thumbnailURL').value.trim();
-                        data.description = document.getElementById('description').value.trim();
+                        data.downloadURL = downloadURL;
+                        data.isPaid = document.getElementById('isPaid')?.checked || false;
+                        data.thumbnailURL = document.getElementById('thumbnailURL')?.value.trim() || '';
+                        data.description = document.getElementById('description')?.value.trim() || '';
                         break;
                     case 'pyqs':
                         data.department = selectedDept.code;
                         data.semester = selectedSem.code;
                         data.courseCode = selectedCourse.code;
                         data.examType = selectedExamType;
-                        data.downloadURL = document.getElementById('url').value.trim();
-                        data.year = Number(document.getElementById('year').value) || null;
+                        data.downloadURL = downloadURL;
+                        data.year = Number(document.getElementById('year')?.value) || null;
                         break;
                     case 'seminars':
-                        data.speaker = document.getElementById('details').value.trim();
-                        data.youtubeURL = document.getElementById('url').value.trim();
+                        data.speaker = document.getElementById('speaker')?.value.trim() || '';
+                        data.youtubeURL = document.getElementById('youtubeURL')?.value.trim() || '';
                         break;
                     case 'quizzes':
-                        data.topic = document.getElementById('details').value.trim();
-                        data.googleFormURL = document.getElementById('url').value.trim();
+                        data.topic = document.getElementById('topic')?.value.trim() || '';
+                        data.googleFormURL = document.getElementById('googleFormURL')?.value.trim() || '';
                         break;
                 }
                 
                 // Add to Firestore
-                db.collection(collectionName).add(data)
-                    .then(() => {
-                        showToast('Content uploaded successfully!', 'success');
-                        resetForm();
-                    })
-                    .catch(err => {
-                        console.error('Error uploading content:', err);
-                        showToast(`Error: ${err.message}`, 'error');
-                    })
-                    .finally(() => {
-                        submitBtn.disabled = false;
-                        submitBtn.classList.remove('loading');
-                    });
+                await db.collection(collectionName).add(data);
+                
+                // Show success message
+                showToast('Content uploaded successfully!', 'success');
+                formMessage.textContent = 'Content uploaded successfully!';
+                formMessage.className = 'message success show';
+                
+                // Reset form
+                resetForm();
+                resetFormState();
             }
             
             // Validate form
@@ -1297,51 +2271,61 @@
                     return false;
                 }
                 
-                const title = document.getElementById('title').value.trim();
+                const title = titleInput.value.trim();
                 if (!title) {
                     showToast('Please enter a title', 'error');
                     return false;
                 }
                 
-                const url = document.getElementById('url').value.trim();
-                if (!url) {
-                    showToast('Please enter a URL', 'error');
-                    return false;
-                }
-                
-                if (selectedContentTypeValue === 'materials') {
-                    if (!selectedDept.code || !selectedSem.code || !selectedCourse.code) {
-                        showToast('Please select a course for the material', 'error');
-                        return false;
-                    }
-                }
-                
-                if (selectedContentTypeValue === 'pyqs') {
-                    if (!selectedExamType) {
-                        showToast('Please select an exam type', 'error');
-                        return false;
-                    }
+                // Validate based on content type
+                switch (selectedContentTypeValue) {
+                    case 'materials':
+                    case 'pyqs':
+                        if (!selectedDept.code || !selectedSem.code || !selectedCourse.code) {
+                            showToast('Please select a course', 'error');
+                            return false;
+                        }
+                        
+                        if (!selectedFile) {
+                            showToast('Please select a file to upload', 'error');
+                            return false;
+                        }
+                        
+                        if (selectedContentTypeValue === 'pyqs' && !selectedExamType) {
+                            showToast('Please select an exam type', 'error');
+                            return false;
+                        }
+                        break;
                     
-                    if (!selectedDept.code || !selectedSem.code || !selectedCourse.code) {
-                        showToast('Please select a course for the PYQs', 'error');
-                        return false;
-                    }
-                }
-                
-                if (selectedContentTypeValue === 'seminars') {
-                    const details = document.getElementById('details').value.trim();
-                    if (!details) {
-                        showToast('Please enter a speaker name', 'error');
-                        return false;
-                    }
-                }
-                
-                if (selectedContentTypeValue === 'quizzes') {
-                    const details = document.getElementById('details').value.trim();
-                    if (!details) {
-                        showToast('Please enter a quiz topic', 'error');
-                        return false;
-                    }
+                    case 'seminars':
+                        const speaker = document.getElementById('speaker')?.value.trim();
+                        const youtubeURL = document.getElementById('youtubeURL')?.value.trim();
+                        
+                        if (!speaker) {
+                            showToast('Please enter a speaker name', 'error');
+                            return false;
+                        }
+                        
+                        if (!youtubeURL) {
+                            showToast('Please enter a YouTube URL', 'error');
+                            return false;
+                        }
+                        break;
+                    
+                    case 'quizzes':
+                        const topic = document.getElementById('topic')?.value.trim();
+                        const googleFormURL = document.getElementById('googleFormURL')?.value.trim();
+                        
+                        if (!topic) {
+                            showToast('Please enter a quiz topic', 'error');
+                            return false;
+                        }
+                        
+                        if (!googleFormURL) {
+                            showToast('Please enter a Google Form URL', 'error');
+                            return false;
+                        }
+                        break;
                 }
                 
                 return true;
@@ -1350,14 +2334,21 @@
             // Reset form
             function resetForm() {
                 uploadForm.reset();
-                handleContentTypeChange();
-                resetMaterialSelection();
-                clearThumbnail();
-                
-                // Reset content type
                 selectedContentTypeValue = null;
                 selectedExamType = null;
-                selectedContentType.innerHTML = 'No content type selected';
+                selectedDept = { code: null, name: null };
+                selectedSem = { code: null, name: null };
+                selectedCourse = { code: null, name: null };
+                selectedFile = null;
+                selectedStorage = 'firebase';
+                
+                // Reset UI
+                selectedContentType.innerHTML = '<strong>No content type selected</strong>';
+                selectedCourseDisplay.innerHTML = '<strong>No course selected</strong>';
+                courseGroup.style.display = 'none';
+                filePreview.classList.remove('show');
+                uploadProgress.classList.remove('show');
+                additionalFields.innerHTML = '';
                 
                 // Reset content type options
                 document.querySelectorAll('.content-type-option').forEach(opt => {
@@ -1368,19 +2359,20 @@
                 document.querySelectorAll('.exam-type-option').forEach(opt => {
                     opt.classList.remove('selected');
                 });
+                
+                // Reset storage options
+                storageOptions.forEach(opt => opt.classList.remove('selected'));
+                storageOptions[0].classList.add('selected');
             }
             
-            // Reset material selection
-            function resetMaterialSelection() {
-                selectedDept = { code: null, name: null };
-                selectedSem = { code: null, name: null };
-                selectedCourse = { code: null, name: null };
-                selectionDisplay.textContent = 'No course selected';
-                
-                // Reset visual selected state
-                [...document.querySelectorAll('.filter-item.selected')].forEach(item => {
-                    item.classList.remove('selected');
-                });
+            // Reset form state
+            function resetFormState() {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('loading');
+                uploadProgress.classList.remove('show');
+                progressFill.style.width = '0%';
+                progressText.textContent = '0%';
+                progressStatus.textContent = 'Uploading...';
             }
             
             // Handle logout
@@ -1412,10 +2404,10 @@
                 if (type === 'error') icon = 'fa-exclamation-circle';
                 
                 toast.innerHTML = `
-                    <i class="fas ${icon}"></i>
-                    <div class="toast-content">
-                        <div class="toast-title">${type.charAt(0).toUpperCase() + type.slice(1)}</div>
-                        <div class="toast-message">${message}</div>
+                    <i class=\"fas ${icon}\"></i>
+                    <div class=\"toast-content\">
+                        <div class=\"toast-title\">${type.charAt(0).toUpperCase() + type.slice(1)}</div>
+                        <div class=\"toast-message\">${message}</div>
                     </div>
                 `;
                 
@@ -1435,31 +2427,8 @@
                 }, 4000);
             }
             
-            // Admin authentication check
-            auth.onAuthStateChanged(user => {
-                if (!user) {
-                    pageTransition.classList.add('active');
-                    setTimeout(() => {
-                        window.location.replace('/index.html');
-                    }, 500);
-                    return;
-                }
-                
-                db.collection('users').doc(user.uid).get().then(doc => {
-                    if (!doc.exists || doc.data().role !== 'admin') {
-                        pageTransition.classList.add('active');
-                        setTimeout(() => {
-                            window.location.replace('/studentdashboard.html');
-                        }, 500);
-                    } else {
-                        initializePage();
-                    }
-                }).catch(err => {
-                    console.error('Error checking user role:', err);
-                    showToast('Authentication error. Please try again.', 'error');
-                    auth.signOut();
-                });
-            });
+            // Initialize page
+            initializePage();
         });
     </script>
 </body>
