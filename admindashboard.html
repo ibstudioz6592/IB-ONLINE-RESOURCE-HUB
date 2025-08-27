@@ -1261,31 +1261,39 @@
         // Load dashboard overview data in real-time
         function loadDashboardData() {
             try {
-                // Show spinners initially
-                document.getElementById('totalUsersCount').textContent = '...';
-                document.getElementById('activeUsersCount').textContent = '...';
-                document.getElementById('totalContentCount').textContent = '...';
-                document.getElementById('totalPaymentsCount').textContent = '...';
+                // Show initial loading state
+                totalUsersCount.textContent = '...';
+                activeUsersCount.textContent = '...';
+                totalContentCount.textContent = '...';
+                totalPaymentsCount.textContent = '...';
                 
                 // Users and active count
                 db.collection('users').onSnapshot(snapshot => {
-                    document.getElementById('totalUsersCount').textContent = snapshot.size;
+                    const totalUsers = snapshot.size;
+                    totalUsersCount.textContent = totalUsers;
+                    
+                    // Calculate active users (last 7 days)
                     const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-                    const active = snapshot.docs.filter(doc => {
+                    let activeCount = 0;
+                    
+                    snapshot.forEach(doc => {
                         const data = doc.data();
-                        return data.lastLoginAt && data.lastLoginAt.toDate() > weekAgo;
-                    }).length;
-                    document.getElementById('activeUsersCount').textContent = active;
+                        if (data.lastLoginAt && data.lastLoginAt.toDate() > weekAgo) {
+                            activeCount++;
+                        }
+                    });
+                    
+                    activeUsersCount.textContent = activeCount;
                 }, err => {
                     console.error('Failed to load users:', err);
-                    document.getElementById('totalUsersCount').textContent = 'Error';
-                    document.getElementById('activeUsersCount').textContent = 'Error';
+                    totalUsersCount.textContent = 'Error';
+                    activeUsersCount.textContent = 'Error';
                 });
                 
                 // Content count
                 let notesCount = 0, pyqsCount = 0, seminarsCount = 0;
                 const updateTotalContent = () => {
-                    document.getElementById('totalContentCount').textContent = notesCount + pyqsCount + seminarsCount;
+                    totalContentCount.textContent = notesCount + pyqsCount + seminarsCount;
                 };
                 
                 db.collection('notes').onSnapshot(s => { 
@@ -1293,7 +1301,7 @@
                     updateTotalContent(); 
                 }, err => {
                     console.error('Failed to load notes:', err);
-                    document.getElementById('totalContentCount').textContent = 'Error';
+                    totalContentCount.textContent = 'Error';
                 });
                 
                 db.collection('pyqs').onSnapshot(s => { 
@@ -1301,7 +1309,7 @@
                     updateTotalContent(); 
                 }, err => {
                     console.error('Failed to load pyqs:', err);
-                    document.getElementById('totalContentCount').textContent = 'Error';
+                    totalContentCount.textContent = 'Error';
                 });
                 
                 db.collection('seminars').onSnapshot(s => { 
@@ -1309,15 +1317,15 @@
                     updateTotalContent(); 
                 }, err => {
                     console.error('Failed to load seminars:', err);
-                    document.getElementById('totalContentCount').textContent = 'Error';
+                    totalContentCount.textContent = 'Error';
                 });
                 
                 // Payments count
                 db.collection('payments').onSnapshot(s => {
-                    document.getElementById('totalPaymentsCount').textContent = s.size;
+                    totalPaymentsCount.textContent = s.size;
                 }, err => {
                     console.error('Failed to load payments:', err);
-                    document.getElementById('totalPaymentsCount').textContent = 'Error';
+                    totalPaymentsCount.textContent = 'Error';
                 });
             } catch (e) {
                 console.error('Dashboard error:', e);
@@ -1334,7 +1342,7 @@
                 usersData = [];
                 
                 // First load users data
-                db.collection('users').orderBy('createdAt', 'desc').get().then(snapshot => {
+                db.collection('users').get().then(snapshot => {
                     usersData = snapshot.docs.map(doc => {
                         const user = { id: doc.id, ...doc.data() };
                         user.totalPurchases = 0;
@@ -1366,7 +1374,7 @@
                     filterUsers();
                     
                     // Set up real-time listeners
-                    const unsubscribeUsers = db.collection('users').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                    const unsubscribeUsers = db.collection('users').onSnapshot(snapshot => {
                         usersData = snapshot.docs.map(doc => {
                             const user = { id: doc.id, ...doc.data() };
                             user.totalPurchases = 0;
