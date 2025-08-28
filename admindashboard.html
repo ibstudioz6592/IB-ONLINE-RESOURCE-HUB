@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --primary-glow: #FFD700; --secondary-glow: #00A2FF; --accent-glow: #FF6B6B; --dark-bg: #0A0A0A;
@@ -74,38 +75,6 @@
         }
         @keyframes rgb-text-flow { to { background-position: 400% 0; } }
         
-        /* ADMIN Button with RGB Blinking Effect */
-        .btn-admin {
-            background: linear-gradient(135deg, #ff00ff, #00ffea, #ffdd00, #ff6b6b, #ff00ff);
-            background-size: 400% 100%; 
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: rgb-text-flow 2s linear infinite;
-            border: 2px solid;
-            border-image: linear-gradient(135deg, #ff00ff, #00ffea, #ffdd00, #ff6b6b, #ff00ff) 1;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: 800;
-            cursor: not-allowed;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-        }
-        .btn-admin::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-        
         /* Enhanced Buttons */
         .btn-secondary { 
             background: var(--glass-bg); border: 1px solid var(--glass-border); 
@@ -127,122 +96,63 @@
             transform: translateY(-2px);
         }
         
-        /* Modern Dashboard Cards */
-        .dashboard-cards { display: flex; flex-wrap: wrap; gap: 24px; margin-bottom: 32px; }
-        .card {
-            flex: 1; min-width: 220px; background: #fff; border-radius: 12px;
-            box-shadow: 0 2px 8px #0001; padding: 24px; display: flex;
-            flex-direction: column; align-items: center; transition: box-shadow 0.2s;
+        .btn-primary {
+            background: var(--primary-glow); color: var(--dark-bg);
+            border: none; padding: 12px 24px; border-radius: 8px;
+            font-weight: 600; cursor: pointer;
+            transition: all 0.3s ease;
         }
-        .card:hover { box-shadow: 0 4px 16px #007bff22; }
-        .spinner-container { display: flex; justify-content: center; align-items: center; height: 80px; }
-        .spinner {
-            border: 6px solid #f3f3f3;
-            border-top: 6px solid #007bff;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
+        .btn-primary:hover {
+            background: #ffcc00; transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,215,0,0.3);
         }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
         
-        /* Dashboard Overview Cards */
-        .dashboard-overview {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-            gap: 20px; margin: 20px 0 40px 0; padding: 0 20px;
+        .btn-danger {
+            background: var(--danger); color: white;
+            border: none; padding: 8px 16px; border-radius: 6px;
+            font-weight: 600; cursor: pointer;
+            transition: all 0.3s ease;
         }
-        .overview-card {
-            background: var(--glass-bg); backdrop-filter: blur(20px);
-            border-radius: 16px; border: 1px solid var(--glass-border);
-            padding: 20px; text-align: center; position: relative; overflow: hidden;
-            transition: all 0.3s ease; animation: card-fade-in 0.6s ease-out forwards;
-            opacity: 0;
+        .btn-danger:hover {
+            background: #c0392b; transform: translateY(-2px);
         }
-        .overview-card:nth-child(1) { animation-delay: 0.1s; }
-        .overview-card:nth-child(2) { animation-delay: 0.2s; }
-        .overview-card:nth-child(3) { animation-delay: 0.3s; }
-        .overview-card:nth-child(4) { animation-delay: 0.4s; }
-        .overview-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, transparent, rgba(255,215,0,0.05), transparent);
-            opacity: 0; transition: opacity 0.3s ease;
-        }
-        .overview-card:hover::before { opacity: 1; }
-        .overview-card:hover { transform: translateY(-5px) scale(1.02); }
-        .overview-number {
-            font-size: 2.5rem; font-weight: 800; margin-bottom: 5px;
-            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
-            -webkit-background-clip: text; background-clip: text; color: transparent;
-        }
-        .overview-label { font-size: 0.9rem; color: var(--text-secondary); font-weight: 500; }
         
         .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
         .hidden { display: none !important; }
         
-        /* Enhanced Welcome Section */
-        .welcome-header-pro { 
-            padding: 50px 0; margin-bottom: 40px; text-align: left; 
-            border-left: 5px solid; 
-            border-image: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow), var(--accent-glow)) 1; 
-            padding-left: 40px; position: relative;
-        }
-        .welcome-header-pro::after {
-            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px;
-            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow), var(--accent-glow));
-            filter: blur(3px); opacity: 0.7;
-        }
-        .welcome-header-pro h1 { 
-            font-size: clamp(2.5rem, 5vw, 3.8rem); font-weight: 800; 
-            line-height: 1.1; margin-bottom: 15px; 
-            background: linear-gradient(135deg, var(--text-primary), var(--primary-glow));
-            -webkit-background-clip: text; background-clip: text; color: transparent;
-        }
-        #admin-name { 
-            color: var(--primary-glow); text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-            animation: glow-pulse 2s ease-in-out infinite alternate;
-        }
-        @keyframes glow-pulse { 
-            from { text-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
-            to { text-shadow: 0 0 30px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.3); }
-        }
-        .welcome-header-pro p { 
-            font-size: 1.2rem; color: var(--text-secondary); max-width: 700px; 
-            font-weight: 400; letter-spacing: 0.5px;
-        }
-        
-        /* Feature Tabs */
-        .feature-tabs {
-            display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px;
+        /* Admin Navigation */
+        .admin-nav {
+            display: flex; flex-wrap: wrap; gap: 15px; margin: 20px 0;
             background: var(--glass-bg); backdrop-filter: blur(20px);
             border-radius: 16px; border: 1px solid var(--glass-border);
             padding: 15px;
         }
-        .feature-tab {
+        .admin-nav-item {
             background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
             border-radius: 30px; padding: 10px 20px; font-size: 0.9rem;
             font-weight: 600; cursor: pointer; transition: all 0.3s ease;
             color: var(--text-secondary);
         }
-        .feature-tab.active {
+        .admin-nav-item.active {
             background: var(--primary-glow); color: var(--dark-bg);
             border-color: var(--primary-glow);
         }
-        .feature-tab:hover:not(.active) {
+        .admin-nav-item:hover:not(.active) {
             background: rgba(255,255,255,0.1); border-color: var(--primary-glow);
             color: var(--text-primary);
         }
         
-        /* Feature Content */
-        .feature-content {
+        /* Admin Content */
+        .admin-content {
             background: var(--glass-bg); backdrop-filter: blur(25px);
             border-radius: 20px; border: 1px solid var(--glass-border);
             padding: 30px; margin-bottom: 40px;
-            min-height: 400px;
+            min-height: 500px;
         }
-        .feature-panel {
+        .admin-panel {
             display: none;
         }
-        .feature-panel.active {
+        .admin-panel.active {
             display: block;
             animation: fade-in 0.5s ease;
         }
@@ -251,84 +161,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* Enhanced Navigation Cards */
-        .dashboard-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
-            gap: 30px; margin-bottom: 60px; 
-        }
-        .nav-card { 
-            background: var(--glass-bg); backdrop-filter: blur(25px);
-            border-radius: 20px; border: 1px solid var(--glass-border); 
-            padding: 35px 30px; text-decoration: none; 
-            box-shadow: 0 12px 40px rgba(0,0,0,0.3); 
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-            cursor: pointer; opacity: 0; 
-            animation: card-fade-in 0.6s ease-out forwards;
-            position: relative; overflow: hidden;
-        }
-        .nav-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at center, transparent 40%, var(--card-color, var(--primary-glow)) 140%);
-            opacity: 0; transition: opacity 0.3s ease; z-index: -1;
-        }
-        .nav-card:hover::before { opacity: 0.03; }
-        @keyframes card-fade-in { 
-            from { opacity: 0; transform: translateY(30px) scale(0.95); } 
-            to { opacity: 1; transform: translateY(0) scale(1); } 
-        }
-        .nav-card:nth-child(1) { animation-delay: 0.1s; } 
-        .nav-card:nth-child(2) { animation-delay: 0.2s; } 
-        .nav-card:nth-child(3) { animation-delay: 0.3s; }
-        .nav-card:nth-child(4) { animation-delay: 0.4s; } 
-        .nav-card:nth-child(5) { animation-delay: 0.5s; }
-        .nav-card:nth-child(6) { animation-delay: 0.6s; }
-        .nav-card:hover { 
-            transform: translateY(-12px) scale(1.02); 
-            border-color: var(--card-color, var(--primary-glow)); 
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px var(--card-color, var(--primary-glow))20;
-        }
-        .nav-card-header { 
-            display: flex; align-items: center; justify-content: space-between; 
-            margin-bottom: 20px; 
-        }
-        .nav-card-icon { 
-            font-size: 2.8rem; color: var(--card-color, var(--primary-glow)); 
-            transition: all 0.4s ease; filter: drop-shadow(0 0 10px var(--card-color, var(--primary-glow))30);
-        }
-        .nav-card:hover .nav-card-icon { 
-            transform: scale(1.15) rotate(5deg); 
-            filter: drop-shadow(0 0 20px var(--card-color, var(--primary-glow))50);
-        }
-        .nav-card-arrow { 
-            font-size: 1.8rem; color: var(--text-secondary); opacity: 0; 
-            transform: translateX(-15px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-        }
-        .nav-card:hover .nav-card-arrow { 
-            opacity: 1; transform: translateX(5px); 
-            color: var(--card-color, var(--primary-glow));
-        }
-        .nav-card h3 { 
-            font-size: 1.4rem; margin-bottom: 10px; color: var(--text-primary); 
-            text-align: left; font-weight: 700; letter-spacing: 0.5px;
-        }
-        .nav-card p { 
-            color: var(--text-secondary); font-size: 0.95rem; text-align: left; 
-            line-height: 1.5; font-weight: 400;
-        }
-        
-        /* Notices Section */
-        .notices-section {
-            background: var(--glass-bg); backdrop-filter: blur(25px);
-            border-radius: 20px; border: 1px solid var(--glass-border);
-            padding: 30px; margin-bottom: 40px;
-            position: relative; overflow: hidden;
-        }
-        .notices-section::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-            background: linear-gradient(90deg, transparent, var(--primary-glow), transparent);
-            opacity: 0.5;
-        }
+        /* Section Header */
         .section-header {
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--glass-border);
@@ -338,185 +171,54 @@
             background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
             -webkit-background-clip: text; background-clip: text; color: transparent;
         }
-        .notices-list {
-            max-height: 400px; overflow-y: auto;
-        }
-        .notices-list::-webkit-scrollbar { width: 8px; }
-        .notices-list::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); border-radius: 4px; }
-        .notices-list::-webkit-scrollbar-thumb { 
-            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow)); 
-            border-radius: 4px; 
-        }
-        .notice-item {
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 12px; padding: 20px; margin-bottom: 15px;
-            transition: all 0.3s ease; position: relative;
-        }
-        .notice-item:hover {
-            background: rgba(255,255,255,0.06); border-color: rgba(255,215,0,0.3);
-            transform: translateX(5px);
-        }
-        .notice-item.important {
-            border-left: 4px solid var(--danger);
-        }
-        .notice-title {
-            font-size: 1.2rem; font-weight: 600; margin-bottom: 10px;
-            color: var(--text-primary);
-        }
-        .notice-message {
-            color: var(--text-secondary); margin-bottom: 15px;
-            line-height: 1.5;
-        }
-        .notice-meta {
-            display: flex; justify-content: space-between; align-items: center;
-            font-size: 0.85rem; color: var(--text-muted);
-        }
-        .notice-time {
-            display: flex; align-items: center; gap: 5px;
-        }
-        .notice-badge {
-            background: var(--primary-glow); color: var(--dark-bg);
-            padding: 4px 10px; border-radius: 20px; font-size: 0.75rem;
-            font-weight: 600;
-        }
         
-        /* Recent Materials Section */
-        .materials-section {
-            background: var(--glass-bg); backdrop-filter: blur(25px);
-            border-radius: 20px; border: 1px solid var(--glass-border);
-            padding: 30px; margin-bottom: 40px;
-            position: relative; overflow: hidden;
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
         }
-        .materials-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px; margin-top: 20px;
+        .form-label {
+            display: block; margin-bottom: 8px;
+            font-weight: 600; color: var(--text-primary);
         }
-        .material-card {
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 12px; padding: 20px; transition: all 0.3s ease;
-        }
-        .material-card:hover {
-            background: rgba(255,255,255,0.06); border-color: rgba(255,215,0,0.3);
-            transform: translateY(-5px);
-        }
-        .material-icon {
-            font-size: 2.5rem; margin-bottom: 15px;
-            color: var(--primary-glow);
-        }
-        .material-title {
-            font-size: 1.1rem; font-weight: 600; margin-bottom: 10px;
-            color: var(--text-primary);
-        }
-        .material-meta {
-            font-size: 0.85rem; color: var(--text-muted);
-        }
-        
-        /* User Management Section */
-        .users-section {
-            background: var(--glass-bg); backdrop-filter: blur(25px);
-            border-radius: 20px; border: 1px solid var(--glass-border);
-            padding: 30px; margin-bottom: 40px;
-            position: relative; overflow: hidden;
-        }
-        .users-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px; margin-top: 20px;
-        }
-        .user-card {
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 12px; padding: 20px; transition: all 0.3s ease;
-        }
-        .user-card:hover {
-            background: rgba(255,255,255,0.06); border-color: rgba(255,215,0,0.3);
-            transform: translateY(-5px);
-        }
-        .user-header {
-            display: flex; align-items: center; gap: 15px; margin-bottom: 15px;
-        }
-        .user-avatar {
-            width: 50px; height: 50px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; color: var(--dark-bg);
-        }
-        .user-info h3 {
-            font-size: 1.2rem; font-weight: 600; margin-bottom: 5px;
-            color: var(--text-primary);
-        }
-        .user-info p {
-            font-size: 0.9rem; color: var(--text-secondary);
-        }
-        .user-stats {
-            display: flex; justify-content: space-between; margin-top: 15px;
-            padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);
-        }
-        .user-stat {
-            text-align: center;
-        }
-        .user-stat-value {
-            font-size: 1.2rem; font-weight: 700;
-            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
-            -webkit-background-clip: text; background-clip: text; color: transparent;
-        }
-        .user-stat-label {
-            font-size: 0.8rem; color: var(--text-muted);
-        }
-        .user-actions {
-            display: flex; gap: 10px; margin-top: 15px;
-        }
-        .user-actions button {
-            flex: 1; padding: 8px; border-radius: 8px;
-            border: none; background: rgba(255,255,255,0.1);
-            color: var(--text-primary); cursor: pointer;
+        .form-input, .form-textarea, .form-select {
+            width: 100%; padding: 12px 15px;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px; color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
             transition: all 0.3s ease;
         }
-        .user-actions button:hover {
-            background: rgba(255,215,0,0.2);
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none; border-color: var(--primary-glow);
+            background: rgba(255,255,255,0.08);
+        }
+        .form-textarea {
+            min-height: 120px; resize: vertical;
+        }
+        .form-row {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
         }
         
-        /* Analytics Section */
-        .analytics-section {
-            background: var(--glass-bg); backdrop-filter: blur(25px);
-            border-radius: 20px; border: 1px solid var(--glass-border);
-            padding: 30px; margin-bottom: 40px;
-            position: relative; overflow: hidden;
+        /* Tables */
+        .data-table {
+            width: 100%; border-collapse: collapse;
+            margin-top: 20px;
         }
-        .analytics-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px; margin-top: 20px;
+        .data-table th {
+            text-align: left; padding: 15px; font-weight: 600;
+            color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.03);
         }
-        .analytics-card {
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 12px; padding: 20px; transition: all 0.3s ease;
+        .data-table td {
+            padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        .analytics-card:hover {
-            background: rgba(255,255,255,0.06); border-color: rgba(255,215,0,0.3);
-            transform: translateY(-5px);
+        .data-table tr:last-child td {
+            border-bottom: none;
         }
-        .analytics-icon {
-            font-size: 2.5rem; margin-bottom: 15px;
-            color: var(--primary-glow);
-        }
-        .analytics-title {
-            font-size: 1.1rem; font-weight: 600; margin-bottom: 10px;
-            color: var(--text-primary);
-        }
-        .analytics-value {
-            font-size: 2rem; font-weight: 700;
-            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
-            -webkit-background-clip: text; background-clip: text; color: transparent;
-        }
-        .analytics-change {
-            font-size: 0.9rem; margin-top: 5px;
-        }
-        .analytics-change.positive {
-            color: var(--success);
-        }
-        .analytics-change.negative {
-            color: var(--danger);
+        .data-table tr:hover {
+            background: rgba(255,255,255,0.03);
         }
         
-        /* Enhanced Modals */
+        /* Modals */
         .modal-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(10,10,10,0.8); backdrop-filter: blur(15px); 
@@ -533,6 +235,7 @@
             transform: scale(0.9) translateY(20px); 
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative; overflow: hidden;
+            max-height: 90vh; overflow-y: auto;
         }
         .modal::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
@@ -561,90 +264,7 @@
             color: var(--accent-glow);
         }
         
-        /* Enhanced Lists */
-        .list-container { max-height: 65vh; overflow-y: auto; padding-right: 10px; }
-        .list-container::-webkit-scrollbar { width: 8px; }
-        .list-container::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); border-radius: 4px; }
-        .list-container::-webkit-scrollbar-thumb { 
-            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow)); 
-            border-radius: 4px; 
-        }
-        .list-item { 
-            display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; 
-            padding: 20px; margin-bottom: 15px;
-            background: rgba(255,255,255,0.03); border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.3s ease;
-        }
-        .list-item:hover { 
-            background: rgba(255,255,255,0.06); 
-            border-color: rgba(255,215,0,0.3);
-            transform: translateX(5px);
-        }
-        
-        /* Enhanced Buttons */
-        .btn-group { display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-end; }
-        .btn-sm { 
-            padding: 10px 18px; border-radius: 10px; cursor: pointer; border: none; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-            font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.9rem;
-            position: relative; overflow: hidden;
-        }
-        .btn-sm::before {
-            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s ease;
-        }
-        .btn-sm:hover::before { left: 100%; }
-        .btn-sm:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
-        
-        /* Button Colors */
-        .btn-info { background: var(--info); color: white; }
-        .btn-success { background: var(--success); color: white; }
-        .btn-warning { background: var(--warning); color: white; }
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-details { background: var(--details); color: white; }
-        .btn-wide { width: 100%; justify-content: center; display: flex; align-items: center; gap: 8px; }
-        
-        /* Search and Filter */
-        .controls-section {
-            display: flex; gap: 20px; align-items: center; margin-bottom: 25px;
-            flex-wrap: wrap;
-        }
-        .search-box {
-            flex: 1; min-width: 250px; position: relative;
-        }
-        .search-box input {
-            width: 100%; padding: 12px 45px 12px 15px; 
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px; color: var(--text-primary); font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-        .search-box input:focus {
-            outline: none; border-color: var(--primary-glow);
-            box-shadow: 0 0 20px rgba(255,215,0,0.2);
-        }
-        .search-box i {
-            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
-            color: var(--text-muted);
-        }
-        .filter-select {
-            padding: 12px 15px; background: rgba(255,255,255,0.05); 
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
-            color: var(--text-primary); cursor: pointer;
-        }
-        
-        /* Loading States */
-        .spinner-container { display: flex; justify-content: center; align-items: center; height: 120px; }
-        .spinner { 
-            width: 50px; height: 50px; 
-            border: 4px solid rgba(255, 255, 255, 0.1); border-radius: 50%; 
-            border-top-color: var(--primary-glow); 
-            animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite; 
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        
-        /* Enhanced Toast */
+        /* Toast */
         .toast { 
             position: fixed; bottom: 30px; right: 30px; 
             background: var(--glass-bg); backdrop-filter: blur(20px);
@@ -664,129 +284,103 @@
         .toast.error i { color: var(--danger); }
         .toast.info i { color: var(--info); }
         
-        /* Quick Actions Floating Button */
-        .quick-actions {
-            position: fixed; bottom: 30px; left: 30px; z-index: 1000;
+        /* Loading Spinner */
+        .spinner-container { display: flex; justify-content: center; align-items: center; height: 120px; }
+        .spinner { 
+            width: 50px; height: 50px; 
+            border: 4px solid rgba(255, 255, 255, 0.1); border-radius: 50%; 
+            border-top-color: var(--primary-glow); 
+            animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite; 
         }
-        .quick-actions-btn {
-            width: 60px; height: 60px; border-radius: 50%; 
-            background: var(--primary-glow); border: none; color: var(--dark-bg);
-            font-size: 1.5rem; cursor: pointer; box-shadow: 0 8px 25px rgba(255,215,0,0.4);
-            transition: all 0.3s ease; position: relative; overflow: hidden;
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center; padding: 40px 20px;
+            color: var(--text-muted);
         }
-        .quick-actions-btn:hover {
-            transform: scale(1.1); box-shadow: 0 12px 35px rgba(255,215,0,0.6);
-        }
-        .quick-actions-menu {
-            position: absolute; bottom: 70px; left: 0; background: var(--glass-bg);
-            backdrop-filter: blur(20px); border-radius: 12px; border: 1px solid var(--glass-border);
-            padding: 10px; opacity: 0; visibility: hidden; transform: scale(0.8);
-            transition: all 0.3s ease; min-width: 200px;
-        }
-        .quick-actions.active .quick-actions-menu {
-            opacity: 1; visibility: visible; transform: scale(1);
-        }
-        .quick-action-item {
-            display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 8px;
-            cursor: pointer; transition: all 0.2s ease; color: var(--text-primary);
-            text-decoration: none;
-        }
-        .quick-action-item:hover {
-            background: rgba(255,255,255,0.1); color: var(--primary-glow);
+        .empty-icon {
+            font-size: 3rem; margin-bottom: 15px; opacity: 0.5;
         }
         
-        /* Status Indicators */
-        .status-indicator {
-            display: inline-block; width: 8px; height: 8px; border-radius: 50%;
-            margin-right: 8px;
+        /* Dashboard Stats */
+        .dashboard-stats {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 20px; margin: 20px 0 40px 0;
         }
-        .status-online { background: var(--success); box-shadow: 0 0 6px var(--success); }
-        .status-offline { background: var(--text-muted); }
-        .status-pending { background: var(--warning); animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        
-        /* Enhanced Forms */
-        .form-group { margin-bottom: 25px; }
-        .form-group label { 
-            display: block; margin-bottom: 8px; color: var(--text-secondary); 
-            font-weight: 600; font-size: 0.9rem;
-        }
-        .form-group input, .form-group textarea, .form-group select { 
-            width: 100%; padding: 12px 15px; border-radius: 10px; 
-            border: 1px solid rgba(255,255,255,0.1); 
-            background: rgba(255,255,255,0.05); color: var(--text-primary); 
-            font-family: 'Inter', sans-serif; font-size: 1rem;
+        .stat-card {
+            background: var(--glass-bg); backdrop-filter: blur(20px);
+            border-radius: 16px; border: 1px solid var(--glass-border);
+            padding: 20px; text-align: center; position: relative; overflow: hidden;
             transition: all 0.3s ease;
         }
-        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
-            outline: none; border-color: var(--primary-glow);
-            box-shadow: 0 0 20px rgba(255,215,0,0.2);
-            background: rgba(255,255,255,0.08);
+        .stat-card:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+        .stat-number {
+            font-size: 2.5rem; font-weight: 800; margin-bottom: 5px;
+            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .stat-label { font-size: 0.9rem; color: var(--text-secondary); font-weight: 500; }
+        
+        /* Analytics Charts */
+        .chart-container {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px; padding: 20px; margin-bottom: 20px;
+            height: 300px;
         }
         
-        /* Details Grid */
-        .details-grid {
-            display: grid; grid-template-columns: auto 1fr; gap: 15px 25px;
-            align-items: center; color: var(--text-primary);
+        /* Settings */
+        .settings-section {
+            margin-bottom: 30px;
         }
-        .details-grid dt {
-            font-weight: 600; color: var(--text-secondary);
+        .settings-section h3 {
+            margin-bottom: 15px; color: var(--text-primary);
         }
-        .details-grid dd {
-            color: var(--text-primary);
-        }
-        
-        /* Settings Grid */
         .settings-grid {
-            display: grid; gap: 30px; max-width: none;
-        }
-        .setting-category {
-            background: rgba(255,255,255,0.03); border-radius: 12px;
-            padding: 25px; border: 1px solid rgba(255,255,255,0.05);
-        }
-        .setting-category h3 {
-            margin-bottom: 20px; color: var(--primary-glow);
-            display: flex; align-items: center; gap: 10px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
         }
         .setting-item {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px; padding: 20px;
+        }
+        .setting-header {
             display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 15px; padding: 10px 0;
+            margin-bottom: 15px;
         }
-        .setting-item:last-child { margin-bottom: 0; }
-        .setting-item label {
-            font-weight: 500; color: var(--text-secondary); margin: 0;
+        .setting-title {
+            font-weight: 600; color: var(--text-primary);
         }
-        .setting-item input[type="checkbox"] {
-            width: auto; transform: scale(1.2);
+        .toggle-switch {
+            position: relative; width: 50px; height: 26px;
+            background: rgba(255,255,255,0.1); border-radius: 13px;
+            cursor: pointer; transition: background 0.3s ease;
         }
-        .setting-item input[type="number"] {
-            width: 100px; padding: 8px 12px; border-radius: 6px;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.05);
+        .toggle-switch.active {
+            background: var(--primary-glow);
+        }
+        .toggle-slider {
+            position: absolute; top: 3px; left: 3px;
+            width: 20px; height: 20px; background: white;
+            border-radius: 50%; transition: transform 0.3s ease;
+        }
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(24px);
         }
         
         /* Responsive Design */
         @media (max-width: 768px) {
             .page-header { flex-direction: column; gap: 20px; margin: 15px; padding: 25px 20px; }
-            .welcome-header-pro { padding-left: 25px; margin-bottom: 30px; }
-            .dashboard-grid { grid-template-columns: 1fr; gap: 20px; }
-            .dashboard-overview { grid-template-columns: repeat(2, 1fr); }
-            .list-item { grid-template-columns: 1fr; text-align: center; gap: 15px; }
-            .btn-group { justify-content: center; }
-            .controls-section { flex-direction: column; align-items: stretch; }
-            .search-box { min-width: auto; }
-            .toast { left: 20px; right: 20px; min-width: auto; }
-            .quick-actions { left: 20px; }
+            .form-row { grid-template-columns: 1fr; }
             .modal { padding: 30px 20px; }
-            .users-grid, .analytics-grid { grid-template-columns: 1fr; }
+            .dashboard-stats { grid-template-columns: repeat(2, 1fr); }
         }
         
         @media (max-width: 480px) {
-            .dashboard-overview { grid-template-columns: 1fr; }
-            .overview-number { font-size: 2rem; }
-            .welcome-header-pro h1 { font-size: 2rem; }
-            .nav-card { padding: 25px 20px; }
-            .nav-card h3 { font-size: 1.2rem; }
+            .dashboard-stats { grid-template-columns: 1fr; }
+            .stat-number { font-size: 2rem; }
         }
     </style>
 </head>
@@ -809,7 +403,9 @@
                 <h1 class="brand-title">IB STUDIOZ</h1>
             </a>
             <div style="display: flex; gap: 15px; align-items: center;">
-                <button id="admin-btn" class="btn-admin">ADMIN</button>
+                <button id="profile-btn" class="btn-secondary">
+                    <i class="fas fa-user-shield"></i> Admin
+                </button>
                 <button id="logout-btn" class="btn-secondary">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </button>
@@ -817,475 +413,285 @@
         </header>
         
         <div class="container">
-            <!-- Modern Dashboard Cards -->
-            <div class="dashboard-cards" style="display:flex;flex-wrap:wrap;gap:24px;margin-bottom:32px;">
-              <div class="card" style="flex:1;min-width:220px;background:#fff;border-radius:12px;box-shadow:0 2px 8px #0001;padding:24px;display:flex;flex-direction:column;align-items:center;">
-                <span style="font-size:2.2rem;font-weight:700;color:#007bff;" id="totalUsersCount">0</span>
-                <span style="color:#555;font-size:1.1rem;">Total Users</span>
-              </div>
-              <div class="card" style="flex:1;min-width:220px;background:#fff;border-radius:12px;box-shadow:0 2px 8px #0001;padding:24px;display:flex;flex-direction:column;align-items:center;">
-                <span style="font-size:2.2rem;font-weight:700;color:#28a745;" id="activeUsersCount">0</span>
-                <span style="color:#555;font-size:1.1rem;">Active Users (7d)</span>
-              </div>
-              <div class="card" style="flex:1;min-width:220px;background:#fff;border-radius:12px;box-shadow:0 2px 8px #0001;padding:24px;display:flex;flex-direction:column;align-items:center;">
-                <span style="font-size:2.2rem;font-weight:700;color:#17a2b8;" id="totalContentCount">0</span>
-                <span style="color:#555;font-size:1.1rem;">Total Content</span>
-              </div>
-              <div class="card" style="flex:1;min-width:220px;background:#fff;border-radius:12px;box-shadow:0 2px 8px #0001;padding:24px;display:flex;flex-direction:column;align-items:center;">
-                <span style="font-size:2.2rem;font-weight:700;color:#ffc107;" id="totalPaymentsCount">0</span>
-                <span style="color:#555;font-size:1.1rem;">Payments</span>
-              </div>
-            </div>
-            
             <div class="welcome-header-pro">
-                <h1>Admin Control Panel</h1>
-                <p>Welcome back, <span id="admin-name">Admin</span>. Manage your platform with advanced tools and real-time insights.</p>
+                <h1>Admin Dashboard</h1>
+                <p>Manage your platform with powerful administrative tools and analytics.</p>
             </div>
             
-            <!-- Feature Tabs -->
-            <div class="feature-tabs">
-                <div class="feature-tab active" data-tab="dashboard">Dashboard</div>
-                <div class="feature-tab" data-tab="users">User Management</div>
-                <div class="feature-tab" data-tab="content">Content Management</div>
-                <div class="feature-tab" data-tab="analytics">Analytics</div>
-                <div class="feature-tab" data-tab="notices">Notices</div>
-                <div class="feature-tab" data-tab="settings">Settings</div>
+            <!-- Admin Navigation -->
+            <div class="admin-nav">
+                <div class="admin-nav-item active" data-panel="dashboard">Dashboard</div>
+                <div class="admin-nav-item" data-panel="notices">Notices</div>
+                <div class="admin-nav-item" data-panel="users">Users</div>
+                <div class="admin-nav-item" data-panel="payments">Payments</div>
+                <div class="admin-nav-item" data-panel="analytics">Analytics</div>
+                <div class="admin-nav-item" data-panel="settings">Settings</div>
             </div>
             
-            <!-- Feature Content -->
-            <div class="feature-content">
+            <!-- Admin Content -->
+            <div class="admin-content">
                 <!-- Dashboard Panel -->
-                <div class="feature-panel active" id="dashboard-panel">
-                    <!-- Notices Section -->
-                    <div class="notices-section">
-                        <div class="section-header">
-                            <h2 class="section-title"><i class="fas fa-bullhorn"></i> Recent Notices</h2>
-                            <button class="btn-secondary" id="add-notice-btn">
-                                <i class="fas fa-plus"></i> Add Notice
-                            </button>
+                <div class="admin-panel active" id="dashboard-panel">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-tachometer-alt"></i> Dashboard Overview</h2>
+                    </div>
+                    
+                    <div class="dashboard-stats">
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-users">0</div>
+                            <div class="stat-label">Total Users</div>
                         </div>
-                        <div class="notices-list" id="admin-notices-list">
-                            <div class="spinner-container">
-                                <div class="spinner"></div>
-                            </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-materials">0</div>
+                            <div class="stat-label">Materials</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-pyqs">0</div>
+                            <div class="stat-label">PYQs</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-seminars">0</div>
+                            <div class="stat-label">Seminars</div>
                         </div>
                     </div>
                     
-                    <!-- Recent Materials Section -->
-                    <div class="materials-section">
-                        <div class="section-header">
-                            <h2 class="section-title"><i class="fas fa-book"></i> Recent Materials</h2>
-                            <a href="/upload.html" class="btn-secondary">Upload New</a>
+                    <div class="settings-grid">
+                        <div class="chart-container">
+                            <canvas id="user-growth-chart"></canvas>
                         </div>
-                        <div class="materials-grid" id="admin-recent-materials">
-                            <div class="spinner-container">
-                                <div class="spinner"></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Quick Access Section -->
-                    <section class="dashboard-grid">
-                        <a href="/upload.html" class="nav-card" style="--card-color: #2575fc;">
-                            <div class="nav-card-header">
-                                <div class="nav-card-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                                <span class="nav-card-arrow">→</span>
-                            </div>
-                            <h3>Upload Content</h3>
-                            <p>Add new notes, PYQs, and seminar materials with advanced metadata.</p>
-                        </a>
-                        
-                        <div id="manage-users-card" class="nav-card" style="--card-color: #f857a6;">
-                            <div class="nav-card-header">
-                                <div class="nav-card-icon"><i class="fas fa-users-cog"></i></div>
-                                <span class="nav-card-arrow">→</span>
-                            </div>
-                            <h3>Manage Users</h3>
-                            <p>View, modify, or grant access to students with advanced filtering.</p>
-                        </div>
-                        
-                        <div id="manage-payments-card" class="nav-card" style="--card-color: #9b59b6;">
-                            <div class="nav-card-header">
-                                <div class="nav-card-icon"><i class="fas fa-receipt"></i></div>
-                                <span class="nav-card-arrow">→</span>
-                            </div>
-                            <h3>Payment History</h3>
-                            <p>Monitor transactions, refunds, and access management.</p>
-                        </div>
-                        
-                        <div id="view-analytics-card" class="nav-card" style="--card-color: #A18CD1;">
-                            <div class="nav-card-header">
-                                <div class="nav-card-icon"><i class="fas fa-chart-line"></i></div>
-                                <span class="nav-card-arrow">→</span>
-                            </div>
-                            <h3>Analytics Dashboard</h3>
-                            <p>Comprehensive insights, usage patterns, and performance metrics.</p>
-                        </div>
-                        
-                        <div id="system-settings-card" class="nav-card" style="--card-color: #ff6b6b;">
-                            <div class="nav-card-header">
-                                <div class="nav-card-icon"><i class="fas fa-cogs"></i></div>
-                                <span class="nav-card-arrow">→</span>
-                            </div>
-                            <h3>System Settings</h3>
-                            <p>Configure platform settings, notifications, and security options.</p>
-                        </div>
-                    </section>
-                </div>
-                
-                <!-- User Management Panel -->
-                <div class="feature-panel" id="users-panel">
-                    <div class="users-section">
-                        <div class="section-header">
-                            <h2 class="section-title"><i class="fas fa-users"></i> User Management</h2>
-                            <button class="btn-secondary" id="add-user-btn">
-                                <i class="fas fa-user-plus"></i> Add User
-                            </button>
-                        </div>
-                        
-                        <div class="controls-section">
-                            <div class="search-box">
-                                <input type="text" id="users-search" placeholder="Search users by name, email, or admission number...">
-                                <i class="fas fa-search"></i>
-                            </div>
-                            <select class="filter-select" id="users-filter">
-                                <option value="all">All Users</option>
-                                <option value="active">Recently Active</option>
-                                <option value="new">New Registrations</option>
-                                <option value="no-purchases">No Purchases</option>
-                            </select>
-                            <button class="btn-sm btn-info" id="export-users">
-                                <i class="fas fa-download"></i> Export
-                            </button>
-                        </div>
-                        
-                        <div class="users-grid" id="users-grid">
-                            <div class="spinner-container">
-                                <div class="spinner"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Content Management Panel -->
-                <div class="feature-panel" id="content-panel">
-                    <div class="materials-section">
-                        <div class="section-header">
-                            <h2 class="section-title"><i class="fas fa-folder-open"></i> Content Management</h2>
-                            <a href="/upload.html" class="btn-secondary">
-                                <i class="fas fa-plus"></i> Upload New
-                            </a>
-                        </div>
-                        
-                        <div class="controls-section">
-                            <div class="search-box">
-                                <input type="text" id="content-search" placeholder="Search content by title or details...">
-                                <i class="fas fa-search"></i>
-                            </div>
-                            <select class="filter-select" id="content-filter">
-                                <option value="all">All Content</option>
-                                <option value="notes">Notes Only</option>
-                                <option value="pyqs">PYQs Only</option>
-                                <option value="seminars">Seminars Only</option>
-                            </select>
-                            <button class="btn-sm btn-warning" id="bulk-actions-btn">
-                                <i class="fas fa-tasks"></i> Bulk Actions
-                            </button>
-                        </div>
-                        
-                        <div class="materials-grid" id="content-grid">
-                            <div class="spinner-container">
-                                <div class="spinner"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Analytics Panel -->
-                <div class="feature-panel" id="analytics-panel">
-                    <div class="analytics-section">
-                        <div class="section-header">
-                            <h2 class="section-title"><i class="fas fa-chart-bar"></i> Platform Analytics</h2>
-                            <button class="btn-secondary" id="refresh-analytics">
-                                <i class="fas fa-sync-alt"></i> Refresh
-                            </button>
-                        </div>
-                        
-                        <div class="analytics-grid" id="analytics-grid">
-                            <div class="spinner-container">
-                                <div class="spinner"></div>
-                            </div>
+                        <div class="chart-container">
+                            <canvas id="activity-chart"></canvas>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Notices Panel -->
-                <div class="feature-panel" id="notices-panel">
-                    <div class="notices-section">
-                        <div class="section-header">
-                            <h2 class="section-title"><i class="fas fa-bullhorn"></i> Notice Management</h2>
-                            <button class="btn-secondary" id="add-notice-panel-btn">
-                                <i class="fas fa-plus"></i> Add Notice
-                            </button>
-                        </div>
-                        
-                        <div class="controls-section">
-                            <div class="search-box">
-                                <input type="text" id="notices-search" placeholder="Search notices by title or message...">
-                                <i class="fas fa-search"></i>
-                            </div>
-                            <select class="filter-select" id="notices-filter">
-                                <option value="all">All Notices</option>
-                                <option value="important">Important Only</option>
-                                <option value="recent">Recent Only</option>
-                            </select>
-                        </div>
-                        
-                        <div class="notices-list" id="notices-management-list">
-                            <div class="spinner-container">
-                                <div class="spinner"></div>
-                            </div>
+                <div class="admin-panel" id="notices-panel">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-bullhorn"></i> Notices Management</h2>
+                        <button class="btn-primary" id="add-notice-btn">
+                            <i class="fas fa-plus"></i> Add Notice
+                        </button>
+                    </div>
+                    
+                    <div class="notices-list" id="notices-list">
+                        <div class="spinner-container">
+                            <div class="spinner"></div>
                         </div>
                     </div>
                 </div>
                 
+                <!-- Users Panel -->
+                <div class="admin-panel" id="users-panel">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-users"></i> User Management</h2>
+                        <button class="btn-primary" id="add-user-btn">
+                            <i class="fas fa-user-plus"></i> Add User
+                        </button>
+                    </div>
+                    
+                    <div class="users-list" id="users-list">
+                        <div class="spinner-container">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Payments Panel -->
+                <div class="admin-panel" id="payments-panel">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-credit-card"></i> Payment History</h2>
+                        <button class="btn-secondary" id="export-payments-btn">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+                    
+                    <div class="payments-list" id="payments-list">
+                        <div class="spinner-container">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Analytics Panel -->
+                <div class="admin-panel" id="analytics-panel">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-chart-line"></i> Platform Analytics</h2>
+                    </div>
+                    
+                    <div class="settings-grid">
+                        <div class="chart-container">
+                            <canvas id="material-usage-chart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="user-engagement-chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container" style="height: 400px; margin-top: 20px;">
+                        <canvas id="revenue-chart"></canvas>
+                    </div>
+                </div>
+                
                 <!-- Settings Panel -->
-                <div class="feature-panel" id="settings-panel">
+                <div class="admin-panel" id="settings-panel">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-cog"></i> System Settings</h2>
+                    </div>
+                    
                     <div class="settings-section">
-                        <div class="section-header">
-                            <h2 class="section-title"><i class="fas fa-cogs"></i> System Settings</h2>
-                            <button class="btn-secondary" id="save-settings">
-                                <i class="fas fa-save"></i> Save Settings
-                            </button>
-                        </div>
-                        
-                        <div class="settings-grid" id="settings-grid">
-                            <div class="setting-category">
-                                <h3><i class="fas fa-shield-alt"></i> Security Settings</h3>
-                                <div class="setting-item">
-                                    <label>Require 2FA for Admin Accounts</label>
-                                    <input type="checkbox" id="require-2fa">
+                        <h3>General Settings</h3>
+                        <div class="settings-grid">
+                            <div class="setting-item">
+                                <div class="setting-header">
+                                    <div class="setting-title">User Registration</div>
+                                    <div class="toggle-switch active" id="registration-toggle">
+                                        <div class="toggle-slider"></div>
+                                    </div>
                                 </div>
-                                <div class="setting-item">
-                                    <label>Session Timeout (minutes)</label>
-                                    <input type="number" id="session-timeout" value="60" min="15" max="480">
-                                </div>
+                                <p style="color: var(--text-secondary); font-size: 0.9rem;">Allow new users to register on the platform</p>
                             </div>
-                            
-                            <div class="setting-category">
-                                <h3><i class="fas fa-bell"></i> Notification Settings</h3>
-                                <div class="setting-item">
-                                    <label>Email notifications for new users</label>
-                                    <input type="checkbox" id="email-new-users" checked>
+                            <div class="setting-item">
+                                <div class="setting-header">
+                                    <div class="setting-title">Email Notifications</div>
+                                    <div class="toggle-switch active" id="email-toggle">
+                                        <div class="toggle-slider"></div>
+                                    </div>
                                 </div>
-                                <div class="setting-item">
-                                    <label>Email notifications for payments</label>
-                                    <input type="checkbox" id="email-payments" checked>
-                                </div>
+                                <p style="color: var(--text-secondary); font-size: 0.9rem;">Send email notifications to users</p>
                             </div>
-                            
-                            <div class="setting-category">
-                                <h3><i class="fas fa-database"></i> Data Management</h3>
-                                <div class="setting-item">
-                                    <button class="btn-sm btn-info" id="backup-now">
-                                        <i class="fas fa-download"></i> Create Backup Now
-                                    </button>
+                            <div class="setting-item">
+                                <div class="setting-header">
+                                    <div class="setting-title">Maintenance Mode</div>
+                                    <div class="toggle-switch" id="maintenance-toggle">
+                                        <div class="toggle-slider"></div>
+                                    </div>
                                 </div>
-                                <div class="setting-item">
-                                    <button class="btn-sm btn-warning" id="cleanup-data">
-                                        <i class="fas fa-broom"></i> Cleanup Old Data
-                                    </button>
+                                <p style="color: var(--text-secondary); font-size: 0.9rem;">Put the platform in maintenance mode</p>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-header">
+                                    <div class="setting-title">Analytics Tracking</div>
+                                    <div class="toggle-switch active" id="analytics-toggle">
+                                        <div class="toggle-slider"></div>
+                                    </div>
                                 </div>
+                                <p style="color: var(--text-secondary); font-size: 0.9rem;">Track user analytics and platform usage</p>
                             </div>
                         </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>Platform Configuration</h3>
+                        <div class="form-group">
+                            <label class="form-label">Platform Name</label>
+                            <input type="text" class="form-input" id="platform-name" value="IB STUDIOZ">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Admin Email</label>
+                            <input type="email" class="form-input" id="admin-email" value="admin@ibstudioz.com">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Support Contact</label>
+                            <input type="text" class="form-input" id="support-contact" value="+1 (555) 123-4567">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Default Credits</label>
+                            <input type="number" class="form-input" id="default-credits" value="100">
+                        </div>
+                        <button class="btn-primary" id="save-settings-btn">Save Settings</button>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Quick Actions Floating Menu -->
-        <div class="quick-actions" id="quick-actions">
-            <button class="quick-actions-btn" id="quick-actions-btn">
-                <i class="fas fa-plus"></i>
-            </button>
-            <div class="quick-actions-menu" id="quick-actions-menu">
-                <a href="/upload.html" class="quick-action-item">
-                    <i class="fas fa-upload"></i>
-                    <span>Quick Upload</span>
-                </a>
-                <div class="quick-action-item" id="quick-grant-access">
-                    <i class="fas fa-user-plus"></i>
-                    <span>Grant Access</span>
-                </div>
-                <div class="quick-action-item" id="quick-backup">
-                    <i class="fas fa-database"></i>
-                    <span>Backup Data</span>
-                </div>
-                <div class="quick-action-item" id="quick-broadcast">
-                    <i class="fas fa-bullhorn"></i>
-                    <span>Send Notice</span>
-                </div>
-            </div>
-        </div>
-        
-        <!-- User Details Modal -->
-        <div id="user-details-modal" class="modal-overlay">
+        <!-- Notice Modal -->
+        <div id="notice-modal" class="modal-overlay">
             <div class="modal">
                 <div class="modal-header">
-                    <h2 id="user-details-title"><i class="fas fa-user"></i> User Details</h2>
-                    <button id="user-details-modal-close-btn" class="modal-close">&times;</button>
+                    <h2 id="notice-modal-title">Add Notice</h2>
+                    <button class="modal-close">&times;</button>
                 </div>
-                <dl class="details-grid">
-                    <dt>Full Name:</dt> <dd id="detail-user-name"></dd>
-                    <dt>Email:</dt> <dd id="detail-user-email"></dd>
-                    <dt>Admission No:</dt> <dd id="detail-user-admissionNo"></dd>
-                    <hr style="grid-column: 1 / -1; border-color: var(--border-color); margin: 15px 0;">
-                    <dt><i class="fas fa-calendar-plus"></i> Registered:</dt> <dd id="detail-user-createdAt"></dd>
-                    <dt><i class="fas fa-clock"></i> Last Login:</dt> <dd id="detail-user-lastLoginAt"></dd>
-                    <dt><i class="fas fa-sign-in-alt"></i> Login Count:</dt> <dd id="detail-user-loginCount"></dd>
-                    <hr style="grid-column: 1 / -1; border-color: var(--border-color); margin: 15px 0;">
-                    <dt><i class="fas fa-shopping-cart"></i> Total Purchases:</dt> <dd id="detail-user-purchases">0</dd>
-                    <dt><i class="fas fa-dollar-sign"></i> Total Spent:</dt> <dd id="detail-user-spent">₹0</dd>
-                </dl>
-            </div>
-        </div>
-        
-        <!-- Edit User Modal -->
-        <div id="edit-user-modal" class="modal-overlay">
-            <div class="modal" style="max-width: 500px;">
-                <div class="modal-header">
-                    <h2><i class="fas fa-user-edit"></i> Modify User</h2>
-                    <button id="edit-user-modal-close-btn" class="modal-close">&times;</button>
-                </div>
-                <form id="edit-user-form">
-                    <input type="hidden" id="edit-user-uid">
+                <form id="notice-form">
+                    <input type="hidden" id="notice-id">
                     <div class="form-group">
-                        <label for="edit-user-name">Full Name</label>
-                        <input type="text" id="edit-user-name" required>
+                        <label class="form-label">Title</label>
+                        <input type="text" class="form-input" id="notice-title" required>
                     </div>
                     <div class="form-group">
-                        <label for="edit-user-admissionNo">Admission Number</label>
-                        <input type="text" id="edit-user-admissionNo">
+                        <label class="form-label">Message</label>
+                        <textarea class="form-textarea" id="notice-message" required></textarea>
                     </div>
-                    <button type="submit" class="btn-sm btn-success btn-wide">
-                        <i class="fas fa-save"></i> Save Changes
-                    </button>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Important</label>
+                            <select class="form-select" id="notice-important">
+                                <option value="false">No</option>
+                                <option value="true">Yes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Target Audience</label>
+                            <select class="form-select" id="notice-audience">
+                                <option value="all">All Users</option>
+                                <option value="students">Students Only</option>
+                                <option value="faculty">Faculty Only</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary">Save Notice</button>
                 </form>
             </div>
         </div>
         
-        <!-- Add Notice Modal -->
-        <div id="add-notice-modal" class="modal-overlay">
-            <div class="modal" style="max-width: 600px;">
+        <!-- User Modal -->
+        <div id="user-modal" class="modal-overlay">
+            <div class="modal">
                 <div class="modal-header">
-                    <h2><i class="fas fa-bullhorn"></i> Add New Notice</h2>
-                    <button id="add-notice-modal-close-btn" class="modal-close">&times;</button>
+                    <h2 id="user-modal-title">Add User</h2>
+                    <button class="modal-close">&times;</button>
                 </div>
-                <form id="add-notice-form">
-                    <div class="form-group">
-                        <label for="notice-title">Notice Title</label>
-                        <input type="text" id="notice-title" placeholder="Enter notice title" required>
+                <form id="user-form">
+                    <input type="hidden" id="user-id">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-input" id="user-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" id="user-email" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Admission No</label>
+                            <input type="text" class="form-input" id="user-admission">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Branch</label>
+                            <input type="text" class="form-input" id="user-branch">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Semester</label>
+                            <input type="text" class="form-input" id="user-semester">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Role</label>
+                            <select class="form-select" id="user-role">
+                                <option value="student">Student</option>
+                                <option value="faculty">Faculty</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="notice-message">Message</label>
-                        <textarea id="notice-message" rows="4" placeholder="Enter notice message" required></textarea>
+                        <label class="form-label">Credits</label>
+                        <input type="number" class="form-input" id="user-credits" value="100">
                     </div>
-                    <div class="form-group">
-                        <label for="notice-important">
-                            <input type="checkbox" id="notice-important"> Mark as important
-                        </label>
-                    </div>
-                    <button type="submit" class="btn-sm btn-success btn-wide">
-                        <i class="fas fa-paper-plane"></i> Publish Notice
-                    </button>
-                </form>
-            </div>
-        </div>
-        
-        <!-- Grant Access Modal -->
-        <div id="grant-access-modal" class="modal-overlay">
-            <div class="modal" style="max-width: 500px;">
-                <div class="modal-header">
-                    <h2><i class="fas fa-user-plus"></i> Grant Material Access</h2>
-                    <button id="grant-access-modal-close-btn" class="modal-close">&times;</button>
-                </div>
-                <p style="color: var(--text-secondary); margin-bottom: 20px;">
-                    Grant <strong id="grant-user-name"></strong> access to a material for free.
-                </p>
-                <form id="grant-access-form">
-                    <input type="hidden" id="grant-user-email">
-                    <div class="form-group">
-                        <label for="grant-material-id">Material ID</label>
-                        <input type="text" id="grant-material-id" placeholder="Paste the exact Material Document ID" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="grant-material-title">Material Title (for history)</label>
-                        <input type="text" id="grant-material-title" placeholder="e.g., Unit 1 Notes" required>
-                    </div>
-                    <button type="submit" class="btn-sm btn-success btn-wide">
-                        <i class="fas fa-gift"></i> Grant Access
-                    </button>
-                </form>
-            </div>
-        </div>
-        
-        <!-- Edit Content Modal -->
-        <div id="edit-content-modal" class="modal-overlay">
-            <div class="modal" style="max-width: 600px;">
-                <div class="modal-header">
-                    <h2><i class="fas fa-edit"></i> Edit Content</h2>
-                    <button id="edit-content-modal-close-btn" class="modal-close">&times;</button>
-                </div>
-                <form id="edit-content-form">
-                    <input type="hidden" id="edit-content-collection">
-                    <input type="hidden" id="edit-content-docId">
-                    <div class="form-group">
-                        <label for="edit-content-title">Title</label>
-                        <input type="text" id="edit-content-title" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-content-details">Details (Course Code, Speaker, etc.)</label>
-                        <input type="text" id="edit-content-details">
-                    </div>
-                    <div class="form-group" id="edit-thumbnail-group" style="display:none;">
-                        <label for="edit-content-thumbnail">Thumbnail URL</label>
-                        <input type="url" id="edit-content-thumbnail" placeholder="Paste public image URL">
-                    </div>
-                    <button type="submit" class="btn-sm btn-success btn-wide">
-                        <i class="fas fa-save"></i> Save Changes
-                    </button>
-                </form>
-            </div>
-        </div>
-        
-        <!-- Broadcast Modal -->
-        <div id="broadcast-modal" class="modal-overlay">
-            <div class="modal" style="max-width: 600px;">
-                <div class="modal-header">
-                    <h2><i class="fas fa-bullhorn"></i> Send Broadcast Notice</h2>
-                    <button id="broadcast-modal-close-btn" class="modal-close">&times;</button>
-                </div>
-                <form id="broadcast-form">
-                    <div class="form-group">
-                        <label for="broadcast-title">Notice Title</label>
-                        <input type="text" id="broadcast-title" placeholder="e.g., System Maintenance Notice" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="broadcast-message">Message</label>
-                        <textarea id="broadcast-message" rows="4" placeholder="Enter your message here..." required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="broadcast-target">Send To</label>
-                        <select id="broadcast-target" required>
-                            <option value="">Select recipient group</option>
-                            <option value="all">All Users</option>
-                            <option value="students">Students Only</option>
-                            <option value="recent">Recently Active Users</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn-sm btn-warning btn-wide">
-                        <i class="fas fa-paper-plane"></i> Send Notice
-                    </button>
+                    <button type="submit" class="btn-primary">Save User</button>
                 </form>
             </div>
         </div>
@@ -1300,7 +706,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-functions.js"></script>
     <script>
         // Initialize Firebase
         const firebaseConfig = { 
@@ -1314,70 +719,168 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        const functions = firebase.functions();
         
-        // Global variables for data caching
-        let usersData = [];
-        let paymentsData = [];
-        let contentData = [];
-        let noticesData = [];
-        let currentView = '';
+        // Global variables
+        let currentUser = null;
+        let userGrowthChart = null;
+        let activityChart = null;
+        let materialUsageChart = null;
+        let userEngagementChart = null;
+        let revenueChart = null;
         
         // DOM Elements
-        const adminNameEl = document.getElementById('admin-name');
         const logoutBtn = document.getElementById('logout-btn');
-        const adminBtn = document.getElementById('admin-btn');
-        
-        // Overview counters
-        const totalUsersCount = document.getElementById('totalUsersCount');
-        const totalContentCount = document.getElementById('totalContentCount');
-        const totalPaymentsCount = document.getElementById('totalPaymentsCount');
-        const activeUsersCount = document.getElementById('activeUsersCount');
-        
-        // Cards
-        const manageUsersCard = document.getElementById('manage-users-card');
-        const manageContentCard = document.getElementById('manage-content-card');
-        const viewAnalyticsCard = document.getElementById('view-analytics-card');
-        const managePaymentsCard = document.getElementById('manage-payments-card');
-        const systemSettingsCard = document.getElementById('system-settings-card');
-        
-        // Feature tabs
-        const featureTabs = document.querySelectorAll('.feature-tab');
-        const featurePanels = document.querySelectorAll('.feature-panel');
-        
-        // Quick Actions
-        const quickActionsBtn = document.getElementById('quick-actions-btn');
-        const quickActions = document.getElementById('quick-actions');
-        const quickGrantAccess = document.getElementById('quick-grant-access');
-        const quickBackup = document.getElementById('quick-backup');
-        const quickBroadcast = document.getElementById('quick-broadcast');
-        
-        // Modals
-        const userDetailsModal = document.getElementById('user-details-modal');
-        const editUserModal = document.getElementById('edit-user-modal');
-        const addNoticeModal = document.getElementById('add-notice-modal');
-        const grantAccessModal = document.getElementById('grant-access-modal');
-        const editContentModal = document.getElementById('edit-content-modal');
-        const broadcastModal = document.getElementById('broadcast-modal');
-        
-        // Search and Filter inputs
-        const usersSearch = document.getElementById('users-search');
-        const usersFilter = document.getElementById('users-filter');
-        const contentSearch = document.getElementById('content-search');
-        const contentFilter = document.getElementById('content-filter');
-        const noticesSearch = document.getElementById('notices-search');
-        const noticesFilter = document.getElementById('notices-filter');
-        
-        // Forms
-        const editUserForm = document.getElementById('edit-user-form');
-        const addNoticeForm = document.getElementById('add-notice-form');
-        const editContentForm = document.getElementById('edit-content-form');
-        const grantAccessForm = document.getElementById('grant-access-form');
-        const broadcastForm = document.getElementById('broadcast-form');
-        
-        // Toast notification
+        const adminNavItems = document.querySelectorAll('.admin-nav-item');
+        const adminPanels = document.querySelectorAll('.admin-panel');
         const toast = document.getElementById('toast');
         const toastMessage = document.getElementById('toast-message');
+        
+        // Modal elements
+        const noticeModal = document.getElementById('notice-modal');
+        const userModal = document.getElementById('user-modal');
+        const noticeForm = document.getElementById('notice-form');
+        const userForm = document.getElementById('user-form');
+        
+        // Initialize page
+        function initializePage() {
+            // Logout functionality
+            logoutBtn.addEventListener('click', () => {
+                if (confirm('Are you sure you want to logout?')) {
+                    auth.signOut().then(() => {
+                        window.location.replace('/index.html');
+                    }).catch(error => {
+                        showToast("Logout failed. Please try again.", "error");
+                    });
+                }
+            });
+            
+            // Admin navigation
+            adminNavItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const panelId = item.getAttribute('data-panel');
+                    
+                    // Update active nav item
+                    adminNavItems.forEach(navItem => navItem.classList.remove('active'));
+                    item.classList.add('active');
+                    
+                    // Update active panel
+                    adminPanels.forEach(panel => {
+                        panel.classList.remove('active');
+                        if (panel.id === `${panelId}-panel`) {
+                            panel.classList.add('active');
+                        }
+                    });
+                    
+                    // Load panel-specific data
+                    loadPanelData(panelId);
+                });
+            });
+            
+            // Modal close buttons
+            document.querySelectorAll('.modal-close').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.modal-overlay').forEach(modal => {
+                        modal.classList.remove('active');
+                    });
+                });
+            });
+            
+            // Modal overlay clicks
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.classList.remove('active');
+                    }
+                });
+            });
+            
+            // Notice form
+            noticeForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                saveNotice();
+            });
+            
+            // User form
+            userForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                saveUser();
+            });
+            
+            // Add notice button
+            document.getElementById('add-notice-btn').addEventListener('click', () => {
+                document.getElementById('notice-modal-title').textContent = 'Add Notice';
+                document.getElementById('notice-id').value = '';
+                document.getElementById('notice-title').value = '';
+                document.getElementById('notice-message').value = '';
+                document.getElementById('notice-important').value = 'false';
+                document.getElementById('notice-audience').value = 'all';
+                noticeModal.classList.add('active');
+            });
+            
+            // Add user button
+            document.getElementById('add-user-btn').addEventListener('click', () => {
+                document.getElementById('user-modal-title').textContent = 'Add User';
+                document.getElementById('user-id').value = '';
+                document.getElementById('user-name').value = '';
+                document.getElementById('user-email').value = '';
+                document.getElementById('user-admission').value = '';
+                document.getElementById('user-branch').value = '';
+                document.getElementById('user-semester').value = '';
+                document.getElementById('user-role').value = 'student';
+                document.getElementById('user-credits').value = '100';
+                userModal.classList.add('active');
+            });
+            
+            // Export payments button
+            document.getElementById('export-payments-btn').addEventListener('click', exportPayments);
+            
+            // Settings toggles
+            document.getElementById('registration-toggle').addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+            
+            document.getElementById('email-toggle').addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+            
+            document.getElementById('maintenance-toggle').addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+            
+            document.getElementById('analytics-toggle').addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+            
+            // Save settings button
+            document.getElementById('save-settings-btn').addEventListener('click', saveSettings);
+            
+            // Load dashboard data
+            loadDashboardData();
+        }
+        
+        // Load panel-specific data
+        function loadPanelData(panelId) {
+            switch(panelId) {
+                case 'dashboard':
+                    // Already loaded in initializePage
+                    break;
+                case 'notices':
+                    loadNotices();
+                    break;
+                case 'users':
+                    loadUsers();
+                    break;
+                case 'payments':
+                    loadPayments();
+                    break;
+                case 'analytics':
+                    loadAnalytics();
+                    break;
+                case 'settings':
+                    // Settings are static
+                    break;
+            }
+        }
         
         // Enhanced toast function with auto-hide
         function showToast(message, type = 'success') {
@@ -1398,7 +901,7 @@
             }, 4000);
         }
         
-        // Format timestamp with more options
+        // Format timestamp
         function formatTimestamp(timestamp) {
             if (!timestamp || !timestamp.toDate) return 'N/A';
             const date = timestamp.toDate();
@@ -1419,1516 +922,768 @@
             }
         }
         
-        // Initialize page functionality
-        function initializePage() {
-            // Logout functionality
-            logoutBtn.addEventListener('click', () => {
-                if (confirm('Are you sure you want to logout?')) {
-                    auth.signOut().then(() => {
-                        window.location.replace('/index.html');
-                    }).catch(error => {
-                        showToast("Logout failed. Please try again.", "error");
-                    });
-                }
-            });
-            
-            // ADMIN button functionality (non-functional as requested)
-            adminBtn.addEventListener('click', () => {
-                showToast("You're already in admin mode!", "info");
-            });
-            
-            // Feature tabs
-            featureTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const tabId = tab.getAttribute('data-tab');
-                    
-                    // Update active tab
-                    featureTabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    
-                    // Update active panel
-                    featurePanels.forEach(panel => {
-                        panel.classList.remove('active');
-                        if (panel.id === `${tabId}-panel`) {
-                            panel.classList.add('active');
-                        }
-                    });
-                    
-                    // Load panel-specific data
-                    loadPanelData(tabId);
-                });
-            });
-            
-            // Quick Actions Menu
-            quickActionsBtn.addEventListener('click', () => {
-                quickActions.classList.toggle('active');
-            });
-            
-            // Close quick actions when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!quickActions.contains(e.target)) {
-                    quickActions.classList.remove('active');
-                }
-            });
-            
-            // Quick action handlers
-            quickGrantAccess.addEventListener('click', () => {
-                quickActions.classList.remove('active');
-                document.getElementById('grant-user-name').textContent = 'Any User';
-                document.getElementById('grant-user-email').value = '';
-                grantAccessForm.reset();
-                grantAccessModal.classList.add('active');
-            });
-            
-            quickBackup.addEventListener('click', async () => {
-                quickActions.classList.remove('active');
-                if (confirm('Create a backup of all platform data? This may take a few minutes.')) {
-                    showToast('Backup process started...', 'info');
-                    try {
-                        const backupData = {
-                            users: usersData,
-                            payments: paymentsData,
-                            content: contentData,
-                            notices: noticesData,
-                            timestamp: new Date().toISOString()
-                        };
-                        const dataStr = JSON.stringify(backupData, null, 2);
-                        const dataBlob = new Blob([dataStr], {type: 'application/json'});
-                        const url = URL.createObjectURL(dataBlob);
-                        const link = document.createElement('a');
-                        link.href = url;
-                        link.download = `ib-studioz-backup-${new Date().toISOString().split('T')[0]}.json`;
-                        link.click();
-                        showToast('Backup downloaded successfully!', 'success');
-                    } catch (error) {
-                        showToast('Backup failed: ' + error.message, 'error');
-                    }
-                }
-            });
-            
-            quickBroadcast.addEventListener('click', () => {
-                quickActions.classList.remove('active');
-                broadcastModal.classList.add('active');
-            });
-            
-            // Modal openers
-            document.getElementById('add-notice-btn').addEventListener('click', () => {
-                addNoticeModal.classList.add('active');
-            });
-            
-            document.getElementById('add-notice-panel-btn').addEventListener('click', () => {
-                addNoticeModal.classList.add('active');
-            });
-            
-            document.getElementById('add-user-btn').addEventListener('click', () => {
-                showToast('Add user feature coming soon!', 'info');
-            });
-            
-            document.getElementById('export-users').addEventListener('click', exportUsers);
-            
-            document.getElementById('refresh-analytics').addEventListener('click', () => {
-                loadPanelData('analytics');
-                showToast('Analytics refreshed', 'info');
-            });
-            
-            document.getElementById('save-settings').addEventListener('click', saveSettings);
-            
-            document.getElementById('backup-now').addEventListener('click', () => {
-                quickBackup.click();
-            });
-            
-            document.getElementById('cleanup-data').addEventListener('click', async () => {
-                if (confirm('This will remove old temporary data and optimize the database. Continue?')) {
-                    showToast('Cleanup started...', 'info');
-                    // Implement cleanup logic here
-                    setTimeout(() => {
-                        showToast('Database cleanup completed!', 'success');
-                    }, 2000);
-                }
-            });
-            
-            // Modal closers
-            setupModalClosers();
-            
-            // Search and filter handlers
-            setupSearchAndFilter();
-            
-            // Form handlers
-            setupFormHandlers();
-        }
-        
-        // Setup modal close functionality
-        function setupModalClosers() {
-            const modals = [
-                { modal: userDetailsModal, closeBtn: 'user-details-modal-close-btn' },
-                { modal: editUserModal, closeBtn: 'edit-user-modal-close-btn' },
-                { modal: addNoticeModal, closeBtn: 'add-notice-modal-close-btn' },
-                { modal: grantAccessModal, closeBtn: 'grant-access-modal-close-btn' },
-                { modal: editContentModal, closeBtn: 'edit-content-modal-close-btn' },
-                { modal: broadcastModal, closeBtn: 'broadcast-modal-close-btn' }
-            ];
-            
-            modals.forEach(({ modal, closeBtn }) => {
-                document.getElementById(closeBtn).addEventListener('click', () => {
-                    modal.classList.remove('active');
-                });
-                
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) {
-                        modal.classList.remove('active');
-                    }
-                });
-            });
-        }
-        
-        // Setup search and filter functionality
-        function setupSearchAndFilter() {
-            // Users search and filter
-            usersSearch.addEventListener('input', filterUsers);
-            usersFilter.addEventListener('change', filterUsers);
-            
-            // Content search and filter
-            contentSearch.addEventListener('input', filterContent);
-            contentFilter.addEventListener('change', filterContent);
-            
-            // Notices search and filter
-            noticesSearch.addEventListener('input', filterNotices);
-            noticesFilter.addEventListener('change', filterNotices);
-        }
-        
-        // Setup form handlers
-        function setupFormHandlers() {
-            editUserForm.addEventListener('submit', handleEditUser);
-            addNoticeForm.addEventListener('submit', handleAddNotice);
-            editContentForm.addEventListener('submit', handleEditContent);
-            grantAccessForm.addEventListener('submit', handleGrantAccess);
-            broadcastForm.addEventListener('submit', handleBroadcast);
-        }
-        
-        // Load dashboard overview data in real-time
+        // Load dashboard data
         function loadDashboardData() {
-            try {
-                // Show initial loading state
-                totalUsersCount.textContent = '...';
-                activeUsersCount.textContent = '...';
-                totalContentCount.textContent = '...';
-                totalPaymentsCount.textContent = '...';
+            // Load users count
+            db.collection('users').onSnapshot(snapshot => {
+                document.getElementById('total-users').textContent = snapshot.size;
+            }, error => {
+                console.error('Error loading users:', error);
+                document.getElementById('total-users').textContent = 'Error';
+            });
+            
+            // Load materials count
+            db.collection('notes').onSnapshot(snapshot => {
+                document.getElementById('total-materials').textContent = snapshot.size;
+            }, error => {
+                console.error('Error loading materials:', error);
+                document.getElementById('total-materials').textContent = 'Error';
+            });
+            
+            // Load PYQs count
+            db.collection('pyqs').onSnapshot(snapshot => {
+                document.getElementById('total-pyqs').textContent = snapshot.size;
+            }, error => {
+                console.error('Error loading PYQs:', error);
+                document.getElementById('total-pyqs').textContent = 'Error';
+            });
+            
+            // Load seminars count
+            db.collection('seminars').onSnapshot(snapshot => {
+                document.getElementById('total-seminars').textContent = snapshot.size;
+            }, error => {
+                console.error('Error loading seminars:', error);
+                document.getElementById('total-seminars').textContent = 'Error';
+            });
+            
+            // Load user growth chart
+            loadUserGrowthChart();
+            
+            // Load activity chart
+            loadActivityChart();
+        }
+        
+        // Load user growth chart
+        function loadUserGrowthChart() {
+            const ctx = document.getElementById('user-growth-chart').getContext('2d');
+            
+            // Get user data for the last 7 days
+            const labels = [];
+            const data = [];
+            const today = new Date();
+            
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                labels.push(date.toLocaleDateString('en-US', { weekday: 'short' }));
                 
-                // Users and active count
-                db.collection('users').onSnapshot(snapshot => {
-                    const totalUsers = snapshot.size;
-                    totalUsersCount.textContent = totalUsers;
-                    
-                    // Calculate active users (last 7 days)
-                    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-                    let activeCount = 0;
+                // For demo purposes, generate random data
+                data.push(Math.floor(Math.random() * 10) + 5);
+            }
+            
+            if (userGrowthChart) {
+                userGrowthChart.destroy();
+            }
+            
+            userGrowthChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'New Users',
+                        data: data,
+                        backgroundColor: 'rgba(255, 215, 0, 0.2)',
+                        borderColor: 'rgba(255, 215, 0, 1)',
+                        borderWidth: 2,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'User Growth (Last 7 Days)',
+                            color: '#F0F0F0',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            labels: {
+                                color: '#F0F0F0'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#A0A0A0'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#A0A0A0'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Load activity chart
+        function loadActivityChart() {
+            const ctx = document.getElementById('activity-chart').getContext('2d');
+            
+            if (activityChart) {
+                activityChart.destroy();
+            }
+            
+            activityChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Materials', 'PYQs', 'Seminars', 'Quizzes', 'Other'],
+                    datasets: [{
+                        data: [35, 25, 15, 20, 5],
+                        backgroundColor: [
+                            'rgba(255, 215, 0, 0.7)',
+                            'rgba(0, 162, 255, 0.7)',
+                            'rgba(255, 107, 107, 0.7)',
+                            'rgba(155, 89, 182, 0.7)',
+                            'rgba(46, 204, 113, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 215, 0, 1)',
+                            'rgba(0, 162, 255, 1)',
+                            'rgba(255, 107, 107, 1)',
+                            'rgba(155, 89, 182, 1)',
+                            'rgba(46, 204, 113, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Platform Activity Distribution',
+                            color: '#F0F0F0',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                color: '#F0F0F0'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Load notices
+        function loadNotices() {
+            const noticesList = document.getElementById('notices-list');
+            
+            db.collection('notices')
+                .orderBy('createdAt', 'desc')
+                .onSnapshot(snapshot => {
+                    const notices = [];
                     
                     snapshot.forEach(doc => {
-                        const data = doc.data();
-                        // Check if lastLoginAt exists and is a valid timestamp
-                        if (data.lastLoginAt && data.lastLoginAt.toDate && data.lastLoginAt.toDate() > weekAgo) {
-                            activeCount++;
-                        }
+                        const notice = doc.data();
+                        notice.id = doc.id;
+                        notices.push(notice);
                     });
                     
-                    activeUsersCount.textContent = activeCount;
-                }, err => {
-                    console.error('Failed to load users:', err);
-                    totalUsersCount.textContent = 'Error';
-                    activeUsersCount.textContent = 'Error';
-                });
-                
-                // Content count
-                let notesCount = 0, pyqsCount = 0, seminarsCount = 0;
-                const updateTotalContent = () => {
-                    totalContentCount.textContent = notesCount + pyqsCount + seminarsCount;
-                };
-                
-                db.collection('notes').onSnapshot(s => { 
-                    notesCount = s.size; 
-                    updateTotalContent(); 
-                }, err => {
-                    console.error('Failed to load notes:', err);
-                    totalContentCount.textContent = 'Error';
-                });
-                
-                db.collection('pyqs').onSnapshot(s => { 
-                    pyqsCount = s.size; 
-                    updateTotalContent(); 
-                }, err => {
-                    console.error('Failed to load pyqs:', err);
-                    totalContentCount.textContent = 'Error';
-                });
-                
-                db.collection('seminars').onSnapshot(s => { 
-                    seminarsCount = s.size; 
-                    updateTotalContent(); 
-                }, err => {
-                    console.error('Failed to load seminars:', err);
-                    totalContentCount.textContent = 'Error';
-                });
-                
-                // Payments count
-                db.collection('payments').onSnapshot(s => {
-                    totalPaymentsCount.textContent = s.size;
-                }, err => {
-                    console.error('Failed to load payments:', err);
-                    totalPaymentsCount.textContent = 'Error';
-                });
-            } catch (e) {
-                console.error('Dashboard error:', e);
-                showToast('Dashboard loading error', 'error');
-            }
-        }
-        
-        // Load panel-specific data
-        function loadPanelData(panelId) {
-            switch(panelId) {
-                case 'dashboard':
-                    loadAdminNotices();
-                    loadRecentMaterials();
-                    break;
-                case 'users':
-                    loadUsers();
-                    break;
-                case 'content':
-                    loadAllContent();
-                    break;
-                case 'analytics':
-                    loadAnalytics();
-                    break;
-                case 'notices':
-                    loadAllNotices();
-                    break;
-                case 'settings':
-                    // Settings are loaded from HTML
-                    break;
-            }
-        }
-        
-        // Load admin notices (recent notices for dashboard)
-        function loadAdminNotices() {
-            const container = document.getElementById('admin-notices-list');
-            container.innerHTML = '<div class="spinner-container"><div class="spinner"></div></div>';
-            
-            try {
-                db.collection('notices')
-                    .orderBy('createdAt', 'desc')
-                    .limit(5)
-                    .onSnapshot(snapshot => {
-                        const notices = [];
-                        
-                        snapshot.forEach(doc => {
-                            const notice = doc.data();
-                            notice.id = doc.id;
-                            notices.push(notice);
-                        });
-                        
-                        if (notices.length === 0) {
-                            container.innerHTML = `
-                                <div class="empty-state">
-                                    <div class="empty-icon"><i class="fas fa-bullhorn"></i></div>
-                                    <p>No notices at the moment</p>
-                                </div>
-                            `;
-                            return;
-                        }
-                        
-                        const noticesHtml = notices.map(notice => {
-                            const isImportant = notice.important || false;
-                            
-                            return `
-                                <div class="notice-item ${isImportant ? 'important' : ''}">
-                                    <div class="notice-title">${notice.title || 'Untitled Notice'}</div>
-                                    <div class="notice-message">${notice.message || ''}</div>
-                                    <div class="notice-meta">
-                                        <div class="notice-time">
-                                            <i class="fas fa-clock"></i>
-                                            ${formatTimestamp(notice.createdAt)}
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        }).join('');
-                        
-                        container.innerHTML = noticesHtml;
-                    }, error => {
-                        console.error('Error loading notices:', error);
-                        container.innerHTML = `
+                    if (notices.length === 0) {
+                        noticesList.innerHTML = `
                             <div class="empty-state">
-                                <div class="empty-icon"><i class="fas fa-exclamation-circle"></i></div>
-                                <p>Failed to load notices</p>
-                            </div>
-                        `;
-                    });
-            } catch (error) {
-                console.error('Error in loadAdminNotices:', error);
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon"><i class="fas fa-exclamation-circle"></i></div>
-                        <p>Failed to load notices</p>
-                    </div>
-                `;
-            }
-        }
-        
-        // Load recent materials for dashboard
-        function loadRecentMaterials() {
-            const container = document.getElementById('admin-recent-materials');
-            container.innerHTML = '<div class="spinner-container"><div class="spinner"></div></div>';
-            
-            try {
-                // Create a combined query for all materials
-                const materialsPromises = [
-                    db.collection('notes').orderBy('createdAt', 'desc').limit(6).get(),
-                    db.collection('pyqs').orderBy('createdAt', 'desc').limit(6).get(),
-                    db.collection('seminars').orderBy('createdAt', 'desc').limit(6).get()
-                ];
-                
-                Promise.all(materialsPromises).then(snapshots => {
-                    const allMaterials = [];
-                    
-                    // Process notes
-                    snapshots[0].forEach(doc => {
-                        const data = doc.data();
-                        allMaterials.push({
-                            id: doc.id,
-                            type: 'note',
-                            title: data.title || 'Untitled',
-                            details: data.details || data.description || 'No description',
-                            createdAt: data.createdAt,
-                            icon: 'fa-file-alt',
-                            collection: 'notes'
-                        });
-                    });
-                    
-                    // Process PYQs
-                    snapshots[1].forEach(doc => {
-                        const data = doc.data();
-                        allMaterials.push({
-                            id: doc.id,
-                            type: 'pyq',
-                            title: data.title || 'Untitled',
-                            details: data.subject || 'No subject',
-                            createdAt: data.createdAt,
-                            icon: 'fa-file-alt',
-                            collection: 'pyqs'
-                        });
-                    });
-                    
-                    // Process seminars
-                    snapshots[2].forEach(doc => {
-                        const data = doc.data();
-                        allMaterials.push({
-                            id: doc.id,
-                            type: 'seminar',
-                            title: data.title || 'Untitled',
-                            details: data.speaker || 'No speaker',
-                            createdAt: data.createdAt,
-                            icon: 'fa-chalkboard-teacher',
-                            collection: 'seminars'
-                        });
-                    });
-                    
-                    // Sort by creation date
-                    allMaterials.sort((a, b) => {
-                        const aTime = a.createdAt ? a.createdAt.toDate() : new Date(0);
-                        const bTime = b.createdAt ? b.createdAt.toDate() : new Date(0);
-                        return bTime - aTime;
-                    });
-                    
-                    // Take only the latest 6
-                    const latestMaterials = allMaterials.slice(0, 6);
-                    
-                    if (latestMaterials.length === 0) {
-                        container.innerHTML = `
-                            <div class="empty-state">
-                                <div class="empty-icon"><i class="fas fa-book"></i></div>
-                                <p>No materials available</p>
+                                <div class="empty-icon"><i class="fas fa-bullhorn"></i></div>
+                                <p>No notices found</p>
                             </div>
                         `;
                         return;
                     }
                     
-                    const materialsHtml = latestMaterials.map(material => `
-                        <div class="material-card">
-                            <div class="material-icon">
-                                <i class="fas ${material.icon}"></i>
+                    const noticesHtml = notices.map(notice => {
+                        const isImportant = notice.important === 'true' || notice.important === true;
+                        
+                        return `
+                            <div class="notice-item" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 15px; ${isImportant ? 'border-left: 4px solid var(--danger);' : ''}">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                    <div>
+                                        <div style="font-size: 1.2rem; font-weight: 600; margin-bottom: 10px; color: var(--text-primary);">${notice.title || 'Untitled Notice'}</div>
+                                        <div style="color: var(--text-secondary); margin-bottom: 15px;">${notice.message || ''}</div>
+                                        <div style="font-size: 0.85rem; color: var(--text-muted);">
+                                            <i class="fas fa-clock"></i> ${formatTimestamp(notice.createdAt)} • 
+                                            Audience: ${notice.audience || 'all'} • 
+                                            Important: ${isImportant ? 'Yes' : 'No'}
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; gap: 10px;">
+                                        <button class="btn-secondary" style="padding: 8px 12px; font-size: 0.9rem;" onclick="editNotice('${notice.id}')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-danger" style="padding: 8px 12px; font-size: 0.9rem;" onclick="deleteNotice('${notice.id}')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="material-title">${material.title}</div>
-                            <div class="material-meta">
-                                ${material.type.charAt(0).toUpperCase() + material.type.slice(1)} • 
-                                ${formatTimestamp(material.createdAt)}
-                            </div>
-                            <div class="user-actions">
-                                <button onclick="editContent('${material.collection}', '${material.id}')">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button onclick="deleteContent('${material.collection}', '${material.id}')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                    `).join('');
+                        `;
+                    }).join('');
                     
-                    container.innerHTML = materialsHtml;
-                }).catch(error => {
-                    console.error('Error loading recent materials:', error);
-                    container.innerHTML = `
+                    noticesList.innerHTML = noticesHtml;
+                }, error => {
+                    console.error('Error loading notices:', error);
+                    noticesList.innerHTML = `
                         <div class="empty-state">
                             <div class="empty-icon"><i class="fas fa-exclamation-circle"></i></div>
-                            <p>Failed to load materials</p>
+                            <p>Failed to load notices</p>
                         </div>
                     `;
                 });
-            } catch (error) {
-                console.error('Error in loadRecentMaterials:', error);
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon"><i class="fas fa-exclamation-circle"></i></div>
-                        <p>Failed to load materials</p>
-                    </div>
-                `;
-            }
         }
         
-        // Load users with real-time updates
-        function loadUsers() {
-            const container = document.getElementById('users-grid');
-            container.innerHTML = '<div class="spinner-container"><div class="spinner"></div></div>';
-            
-            try {
-                usersData = [];
-                
-                // First load users data
-                db.collection('users').get().then(snapshot => {
-                    usersData = snapshot.docs.map(doc => {
-                        const user = { id: doc.id, ...doc.data() };
-                        // Ensure these properties exist
-                        user.totalPurchases = 0;
-                        user.totalSpent = 0;
-                        user.name = user.name || 'Unknown User';
-                        user.email = user.email || 'No email';
-                        user.admissionNo = user.admissionNo || 'Not provided';
-                        user.createdAt = user.createdAt || null;
-                        user.lastLoginAt = user.lastLoginAt || null;
-                        user.loginCount = user.loginCount || 0;
-                        return user;
-                    });
-                    
-                    // Then load payments data
-                    return db.collection('payments').get();
-                }).then(paymentsSnapshot => {
-                    const paymentsByEmail = {};
-                    paymentsSnapshot.docs.forEach(doc => {
-                        const data = doc.data();
-                        const email = data.userEmail;
-                        if (!paymentsByEmail[email]) paymentsByEmail[email] = { purchases: 0, spent: 0 };
-                        paymentsByEmail[email].purchases += 1;
-                        if (data.status === 'completed') paymentsByEmail[email].spent += parseFloat(data.amount || 0);
-                    });
-                    
-                    // Update user data with payment information
-                    usersData.forEach(user => {
-                        const payInfo = paymentsByEmail[user.email] || { purchases: 0, spent: 0 };
-                        user.totalPurchases = payInfo.purchases;
-                        user.totalSpent = payInfo.spent;
-                    });
-                    
-                    // Display the users
-                    displayUsers(usersData);
-                    filterUsers();
-                    
-                    // Set up real-time listeners
-                    const unsubscribeUsers = db.collection('users').onSnapshot(snapshot => {
-                        usersData = snapshot.docs.map(doc => {
-                            const user = { id: doc.id, ...doc.data() };
-                            user.totalPurchases = 0;
-                            user.totalSpent = 0;
-                            user.name = user.name || 'Unknown User';
-                            user.email = user.email || 'No email';
-                            user.admissionNo = user.admissionNo || 'Not provided';
-                            user.createdAt = user.createdAt || null;
-                            user.lastLoginAt = user.lastLoginAt || null;
-                            user.loginCount = user.loginCount || 0;
-                            return user;
-                        });
-                        
-                        // Re-apply payment information
-                        usersData.forEach(user => {
-                            const payInfo = paymentsByEmail[user.email] || { purchases: 0, spent: 0 };
-                            user.totalPurchases = payInfo.purchases;
-                            user.totalSpent = payInfo.spent;
-                        });
-                        
-                        displayUsers(usersData);
-                        filterUsers();
-                    });
-                    
-                    // Store unsubscribe function for cleanup
-                    if (!usersData.unsubscribeUsers) {
-                        usersData.unsubscribeUsers = unsubscribeUsers;
-                    }
-                }).catch(error => {
-                    console.error('Error loading users:', error);
-                    container.innerHTML = '<p style="text-align: center; color: var(--danger);">Failed to load users: ' + error.message + '</p>';
-                    showToast('Failed to load users', 'error');
-                });
-                
-            } catch (error) {
-                console.error('Error in loadUsers:', error);
-                container.innerHTML = '<p style="text-align: center; color: var(--danger);">Failed to load users</p>';
-                showToast('Failed to load users', 'error');
-            }
-        }
-        
-        // Display users in the grid
-        function displayUsers(users) {
-            const container = document.getElementById('users-grid');
-            
-            if (users.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: var(--text-muted);">No users found</p>';
-                return;
-            }
-            
-            const html = users.map(user => `
-                <div class="user-card">
-                    <div class="user-header">
-                        <div class="user-avatar">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <div class="user-info">
-                            <h3>${user.name || 'N/A'}</h3>
-                            <p>${user.email}</p>
-                        </div>
-                    </div>
-                    <div class="user-stats">
-                        <div class="user-stat">
-                            <div class="user-stat-value">${user.totalPurchases || 0}</div>
-                            <div class="user-stat-label">Purchases</div>
-                        </div>
-                        <div class="user-stat">
-                            <div class="user-stat-value">₹${user.totalSpent || 0}</div>
-                            <div class="user-stat-label">Spent</div>
-                        </div>
-                    </div>
-                    <div class="user-actions">
-                        <button onclick="viewUserDetails('${user.id}')">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <button onclick="editUser('${user.id}')">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button onclick="grantUserAccess('${user.id}', '${user.name}', '${user.email}')">
-                            <i class="fas fa-gift"></i>
-                        </button>
-                        ${user.role !== 'admin' ? `<button onclick="deleteUser('${user.id}')">
-                            <i class="fas fa-trash"></i>
-                        </button>` : ''}
-                    </div>
-                </div>
-            `).join('');
-            
-            container.innerHTML = html;
-        }
-        
-        // Load all content with real-time updates
-        function loadAllContent() {
-            const container = document.getElementById('content-grid');
-            container.innerHTML = '<div class="spinner-container"><div class="spinner"></div></div>';
-            
-            try {
-                contentData = [];
-                const collections = ['notes', 'pyqs', 'seminars'];
-                const unsubscribes = [];
-                
-                // First load all content data
-                const promises = collections.map(collectionName => {
-                    return db.collection(collectionName).get().then(snapshot => {
-                        snapshot.docs.forEach(doc => {
-                            const data = doc.data();
-                            contentData.push({
-                                id: doc.id,
-                                collection: collectionName,
-                                title: data.title || 'Untitled',
-                                details: data.details || data.description || 'No description',
-                                createdAt: data.createdAt || null,
-                                downloadCount: data.downloadCount || 0,
-                                ...data
-                            });
-                        });
-                    });
-                });
-                
-                Promise.all(promises).then(() => {
-                    // Sort all content
-                    contentData.sort((a, b) => {
-                        const aDate = a.createdAt ? a.createdAt.toDate() : new Date(0);
-                        const bDate = b.createdAt ? b.createdAt.toDate() : new Date(0);
-                        return bDate - aDate;
-                    });
-                    
-                    // Display the content
-                    displayContent(contentData);
-                    filterContent();
-                    
-                    // Set up real-time listeners
-                    for (const collectionName of collections) {
-                        const unsubscribe = db.collection(collectionName).onSnapshot(snapshot => {
-                            // Remove old data from this collection
-                            contentData = contentData.filter(item => item.collection !== collectionName);
-                            
-                            // Add new
-                            snapshot.docs.forEach(doc => {
-                                const data = doc.data();
-                                contentData.push({
-                                    id: doc.id,
-                                    collection: collectionName,
-                                    title: data.title || 'Untitled',
-                                    details: data.details || data.description || 'No description',
-                                    createdAt: data.createdAt || null,
-                                    downloadCount: data.downloadCount || 0,
-                                    ...data
-                                });
-                            });
-                            
-                            // Sort all
-                            contentData.sort((a, b) => {
-                                const aDate = a.createdAt ? a.createdAt.toDate() : new Date(0);
-                                const bDate = b.createdAt ? b.createdAt.toDate() : new Date(0);
-                                return bDate - aDate;
-                            });
-                            
-                            displayContent(contentData);
-                            filterContent();
-                        });
-                        unsubscribes.push(unsubscribe);
-                    }
-                    
-                    // Store unsubscribe functions for cleanup
-                    if (!contentData.unsubscribes) {
-                        contentData.unsubscribes = unsubscribes;
-                    }
-                }).catch(error => {
-                    console.error('Error loading content:', error);
-                    container.innerHTML = '<p style="text-align: center; color: var(--danger);">Failed to load content</p>';
-                    showToast('Failed to load content', 'error');
-                });
-            } catch (error) {
-                console.error('Error in loadAllContent:', error);
-                container.innerHTML = '<p style="text-align: center; color: var(--danger);">Failed to load content</p>';
-                showToast('Failed to load content', 'error');
-            }
-        }
-        
-        // Display content in the grid
-        function displayContent(content) {
-            const container = document.getElementById('content-grid');
-            
-            if (content.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: var(--text-muted);">No content found</p>';
-                return;
-            }
-            
-            const html = content.map(item => `
-                <div class="material-card">
-                    <div class="material-icon">
-                        <i class="fas ${getIconForCollection(item.collection)}"></i>
-                    </div>
-                    <div class="material-title">${item.title || 'Untitled'}</div>
-                    <div class="material-meta">
-                        ${item.collection.charAt(0).toUpperCase() + item.collection.slice(1)} • 
-                        ${formatTimestamp(item.createdAt)}
-                    </div>
-                    ${item.downloadCount ? `<div class="material-meta">
-                        <i class="fas fa-download"></i> ${item.downloadCount} downloads
-                    </div>` : ''}
-                    <div class="user-actions">
-                        <button onclick="editContent('${item.collection}', '${item.id}')">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button onclick="deleteContent('${item.collection}', '${item.id}')">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-            
-            container.innerHTML = html;
-        }
-        
-        // Get icon for collection type
-        function getIconForCollection(collection) {
-            switch(collection) {
-                case 'notes': return 'fa-file-alt';
-                case 'pyqs': return 'fa-file-alt';
-                case 'seminars': return 'fa-chalkboard-teacher';
-                default: return 'fa-file';
-            }
-        }
-        
-        // Load analytics data
-        async function loadAnalytics() {
-            const container = document.getElementById('analytics-grid');
-            container.innerHTML = '<div class="spinner-container"><div class="spinner"></div></div>';
-            
-            try {
-                // Get various analytics metrics
-                const usersSnapshot = await db.collection('users').get();
-                const paymentsSnapshot = await db.collection('payments').get();
-                
-                let totalRevenue = 0;
-                let monthlyRevenue = 0;
-                const currentMonth = new Date();
-                currentMonth.setDate(1);
-                
-                paymentsSnapshot.docs.forEach(doc => {
-                    const payment = doc.data();
-                    if (payment.status === 'completed' && payment.amount) {
-                        const amount = parseFloat(payment.amount) || 0;
-                        totalRevenue += amount;
-                        
-                        if (payment.createdAt && payment.createdAt.toDate && payment.createdAt.toDate() >= currentMonth) {
-                            monthlyRevenue += amount;
-                        }
-                    }
-                });
-                
-                // Calculate user growth
-                const lastMonth = new Date();
-                lastMonth.setMonth(lastMonth.getMonth() - 1);
-                const newUsersThisMonth = usersSnapshot.docs.filter(doc => {
-                    const data = doc.data();
-                    return data.createdAt && data.createdAt.toDate && data.createdAt.toDate() >= currentMonth;
-                }).length;
-                
-                // Most popular content
-                let mostPopularContent = 'No data available';
-                try {
-                    const collections = ['notes', 'pyqs', 'seminars'];
-                    let maxDownloads = 0;
-                    let popularItem = null;
-                    
-                    for (const collection of collections) {
-                        try {
-                            const snapshot = await db.collection(collection).get();
-                            snapshot.docs.forEach(doc => {
-                                const data = doc.data();
-                                if (data.downloadCount && data.downloadCount > maxDownloads) {
-                                    maxDownloads = data.downloadCount;
-                                    popularItem = { ...data, collection };
-                                }
-                            });
-                        } catch (collectionError) {
-                            console.error(`Error loading collection ${collection}:`, collectionError);
-                        }
-                    }
-                    
-                    if (popularItem) {
-                        mostPopularContent = `${popularItem.title} (${maxDownloads} downloads)`;
-                    }
-                } catch (error) {
-                    console.error('Error getting popular content:', error);
-                }
-                
-                // Calculate active users in the last 7 days
-                const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-                let activeUsersCount = 0;
-                usersSnapshot.docs.forEach(doc => {
-                    const data = doc.data();
-                    if (data.lastLoginAt && data.lastLoginAt.toDate && data.lastLoginAt.toDate() > weekAgo) {
-                        activeUsersCount++;
-                    }
-                });
-                
-                // Content distribution
-                const contentDistribution = {
-                    notes: 0,
-                    pyqs: 0,
-                    seminars: 0
-                };
-                
-                try {
-                    const notesSnapshot = await db.collection('notes').get();
-                    contentDistribution.notes = notesSnapshot.size;
-                    
-                    const pyqsSnapshot = await db.collection('pyqs').get();
-                    contentDistribution.pyqs = pyqsSnapshot.size;
-                    
-                    const seminarsSnapshot = await db.collection('seminars').get();
-                    contentDistribution.seminars = seminarsSnapshot.size;
-                } catch (error) {
-                    console.error('Error getting content distribution:', error);
-                }
-                
-                const analyticsHtml = `
-                    <div class="analytics-card">
-                        <div class="analytics-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="analytics-title">Total Users</div>
-                        <div class="analytics-value">${usersSnapshot.size}</div>
-                        <div class="analytics-change positive">
-                            <i class="fas fa-arrow-up"></i> ${newUsersThisMonth} this month
-                        </div>
-                    </div>
-                    
-                    <div class="analytics-card">
-                        <div class="analytics-icon">
-                            <i class="fas fa-user-check"></i>
-                        </div>
-                        <div class="analytics-title">Active Users (7d)</div>
-                        <div class="analytics-value">${activeUsersCount}</div>
-                        <div class="analytics-change positive">
-                            <i class="fas fa-arrow-up"></i> ${Math.round((activeUsersCount / usersSnapshot.size) * 100)}% of total
-                        </div>
-                    </div>
-                    
-                    <div class="analytics-card">
-                        <div class="analytics-icon">
-                            <i class="fas fa-money-bill-wave"></i>
-                        </div>
-                        <div class="analytics-title">Total Revenue</div>
-                        <div class="analytics-value">₹${totalRevenue.toFixed(2)}</div>
-                        <div class="analytics-change positive">
-                            <i class="fas fa-arrow-up"></i> ₹${monthlyRevenue.toFixed(2)} this month
-                        </div>
-                    </div>
-                    
-                    <div class="analytics-card">
-                        <div class="analytics-icon">
-                            <i class="fas fa-file-alt"></i>
-                        </div>
-                        <div class="analytics-title">Total Content</div>
-                        <div class="analytics-value">${contentDistribution.notes + contentDistribution.pyqs + contentDistribution.seminars}</div>
-                        <div class="analytics-change">
-                            Notes: ${contentDistribution.notes} | PYQs: ${contentDistribution.pyqs} | Seminars: ${contentDistribution.seminars}
-                        </div>
-                    </div>
-                    
-                    <div class="analytics-card">
-                        <div class="analytics-icon">
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <div class="analytics-title">Most Popular</div>
-                        <div class="analytics-value" style="font-size: 1.2rem;">${mostPopularContent}</div>
-                    </div>
-                    
-                    <div class="analytics-card">
-                        <div class="analytics-icon">
-                            <i class="fas fa-chart-pie"></i>
-                        </div>
-                        <div class="analytics-title">Content Distribution</div>
-                        <div class="analytics-change">
-                            Notes: ${Math.round((contentDistribution.notes / (contentDistribution.notes + contentDistribution.pyqs + contentDistribution.seminars)) * 100)}% | 
-                            PYQs: ${Math.round((contentDistribution.pyqs / (contentDistribution.notes + contentDistribution.pyqs + contentDistribution.seminars)) * 100)}% | 
-                            Seminars: ${Math.round((contentDistribution.seminars / (contentDistribution.notes + contentDistribution.pyqs + contentDistribution.seminars)) * 100)}%
-                        </div>
-                    </div>
-                `;
-                
-                container.innerHTML = analyticsHtml;
-                
-            } catch (error) {
-                console.error('Error loading analytics:', error);
-                container.innerHTML = '<p style="text-align: center; color: var(--danger);">Failed to load analytics: ' + error.message + '</p>';
-                showToast('Failed to load analytics', 'error');
-            }
-        }
-        
-        // Load all notices for management
-        function loadAllNotices() {
-            const container = document.getElementById('notices-management-list');
-            container.innerHTML = '<div class="spinner-container"><div class="spinner"></div></div>';
-            
-            try {
-                noticesData = [];
-                
-                const unsubscribe = db.collection('notices')
-                    .orderBy('createdAt', 'desc')
-                    .onSnapshot(snapshot => {
-                        noticesData = [];
-                        
-                        snapshot.forEach(doc => {
-                            const notice = doc.data();
-                            notice.id = doc.id;
-                            noticesData.push(notice);
-                        });
-                        
-                        if (noticesData.length === 0) {
-                            container.innerHTML = `
-                                <div class="empty-state">
-                                    <div class="empty-icon"><i class="fas fa-bullhorn"></i></div>
-                                    <p>No notices found</p>
-                                </div>
-                            `;
-                            return;
-                        }
-                        
-                        const noticesHtml = noticesData.map(notice => {
-                            const isImportant = notice.important || false;
-                            
-                            return `
-                                <div class="notice-item ${isImportant ? 'important' : ''}">
-                                    <div class="notice-title">${notice.title || 'Untitled Notice'}</div>
-                                    <div class="notice-message">${notice.message || ''}</div>
-                                    <div class="notice-meta">
-                                        <div class="notice-time">
-                                            <i class="fas fa-clock"></i>
-                                            ${formatTimestamp(notice.createdAt)}
-                                        </div>
-                                        <div class="btn-group">
-                                            <button class="btn-sm btn-info" onclick="editNotice('${notice.id}')">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn-sm btn-danger" onclick="deleteNotice('${notice.id}')">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        }).join('');
-                        
-                        container.innerHTML = noticesHtml;
-                    }, error => {
-                        console.error('Error loading notices:', error);
-                        container.innerHTML = `
-                            <div class="empty-state">
-                                <div class="empty-icon"><i class="fas fa-exclamation-circle"></i></div>
-                                <p>Failed to load notices</p>
-                            </div>
-                        `;
-                    });
-                
-                // Store unsubscribe function for cleanup
-                if (!noticesData.unsubscribe) {
-                    noticesData.unsubscribe = unsubscribe;
-                }
-            } catch (error) {
-                console.error('Error in loadAllNotices:', error);
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon"><i class="fas fa-exclamation-circle"></i></div>
-                        <p>Failed to load notices</p>
-                    </div>
-                `;
-            }
-        }
-        
-        // Filter functions
-        function filterUsers() {
-            const searchTerm = usersSearch.value.toLowerCase();
-            const filterValue = usersFilter.value;
-            
-            let filteredUsers = [...usersData];
-            
-            // Apply search filter
-            if (searchTerm) {
-                filteredUsers = filteredUsers.filter(user => 
-                    (user.name && user.name.toLowerCase().includes(searchTerm)) ||
-                    (user.email && user.email.toLowerCase().includes(searchTerm)) ||
-                    (user.admissionNo && user.admissionNo.toLowerCase().includes(searchTerm))
-                );
-            }
-            
-            // Apply category filter
-            if (filterValue !== 'all') {
-                const now = new Date();
-                switch(filterValue) {
-                    case 'active':
-                        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-                        filteredUsers = filteredUsers.filter(user => 
-                            user.lastLoginAt && user.lastLoginAt.toDate && user.lastLoginAt.toDate() > weekAgo
-                        );
-                        break;
-                    case 'new':
-                        const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-                        filteredUsers = filteredUsers.filter(user => 
-                            user.createdAt && user.createdAt.toDate && user.createdAt.toDate() > monthAgo
-                        );
-                        break;
-                    case 'no-purchases':
-                        filteredUsers = filteredUsers.filter(user => 
-                            !user.totalPurchases || user.totalPurchases === 0
-                        );
-                        break;
-                }
-            }
-            
-            displayUsers(filteredUsers);
-        }
-        
-        function filterContent() {
-            const searchTerm = contentSearch.value.toLowerCase();
-            const filterValue = contentFilter.value;
-            
-            let filteredContent = [...contentData];
-            
-            // Apply search filter
-            if (searchTerm) {
-                filteredContent = filteredContent.filter(item => 
-                    (item.title && item.title.toLowerCase().includes(searchTerm)) ||
-                    (item.details && item.details.toLowerCase().includes(searchTerm)) ||
-                    (item.description && item.description.toLowerCase().includes(searchTerm))
-                );
-            }
-            
-            // Apply category filter
-            if (filterValue !== 'all') {
-                filteredContent = filteredContent.filter(item => item.collection === filterValue);
-            }
-            
-            displayContent(filteredContent);
-        }
-        
-        function filterNotices() {
-            const searchTerm = noticesSearch.value.toLowerCase();
-            const filterValue = noticesFilter.value;
-            
-            let filteredNotices = [...noticesData];
-            
-            // Apply search filter
-            if (searchTerm) {
-                filteredNotices = filteredNotices.filter(notice => 
-                    (notice.title && notice.title.toLowerCase().includes(searchTerm)) ||
-                    (notice.message && notice.message.toLowerCase().includes(searchTerm))
-                );
-            }
-            
-            // Apply category filter
-            if (filterValue !== 'all') {
-                switch(filterValue) {
-                    case 'important':
-                        filteredNotices = filteredNotices.filter(notice => notice.important);
-                        break;
-                    case 'recent':
-                        const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-                        filteredNotices = filteredNotices.filter(notice => 
-                            notice.createdAt && notice.createdAt.toDate && notice.createdAt.toDate() > weekAgo
-                        );
-                        break;
-                }
-            }
-            
-            const container = document.getElementById('notices-management-list');
-            
-            if (filteredNotices.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: var(--text-muted);">No notices found</p>';
-                return;
-            }
-            
-            const noticesHtml = filteredNotices.map(notice => {
-                const isImportant = notice.important || false;
-                
-                return `
-                    <div class="notice-item ${isImportant ? 'important' : ''}">
-                        <div class="notice-title">${notice.title || 'Untitled Notice'}</div>
-                        <div class="notice-message">${notice.message || ''}</div>
-                        <div class="notice-meta">
-                            <div class="notice-time">
-                                <i class="fas fa-clock"></i>
-                                ${formatTimestamp(notice.createdAt)}
-                            </div>
-                            <div class="btn-group">
-                                <button class="btn-sm btn-info" onclick="editNotice('${notice.id}')">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn-sm btn-danger" onclick="deleteNotice('${notice.id}')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            
-            container.innerHTML = noticesHtml;
-        }
-        
-        // User action functions
-        function viewUserDetails(userId) {
-            const user = usersData.find(u => u.id === userId);
-            if (!user) return;
-            
-            document.getElementById('detail-user-name').textContent = user.name || 'N/A';
-            document.getElementById('detail-user-email').textContent = user.email || 'N/A';
-            document.getElementById('detail-user-admissionNo').textContent = user.admissionNo || 'Not provided';
-            document.getElementById('detail-user-createdAt').textContent = formatTimestamp(user.createdAt);
-            document.getElementById('detail-user-lastLoginAt').textContent = formatTimestamp(user.lastLoginAt);
-            document.getElementById('detail-user-loginCount').textContent = user.loginCount || 0;
-            document.getElementById('detail-user-purchases').textContent = user.totalPurchases || 0;
-            document.getElementById('detail-user-spent').textContent = `₹${user.totalSpent || 0}`;
-            
-            userDetailsModal.classList.add('active');
-        }
-        
-        function editUser(userId) {
-            const user = usersData.find(u => u.id === userId);
-            if (!user) return;
-            
-            document.getElementById('edit-user-uid').value = userId;
-            document.getElementById('edit-user-name').value = user.name || '';
-            document.getElementById('edit-user-admissionNo').value = user.admissionNo || '';
-            
-            editUserModal.classList.add('active');
-        }
-        
-        function grantUserAccess(userId, userName, userEmail) {
-            document.getElementById('grant-user-name').textContent = userName;
-            document.getElementById('grant-user-email').value = userEmail;
-            grantAccessModal.classList.add('active');
-        }
-        
-        async function deleteUser(userId) {
-            if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
-                return;
-            }
-            
-            try {
-                await db.collection('users').doc(userId).delete();
-                showToast('User deleted successfully', 'success');
-            } catch (error) {
-                console.error('Error deleting user:', error);
-                showToast('Failed to delete user: ' + error.message, 'error');
-            }
-        }
-        
-        // Content action functions
-        function editContent(collection, docId) {
-            const item = contentData.find(c => c.id === docId && c.collection === collection);
-            if (!item) return;
-            
-            document.getElementById('edit-content-collection').value = collection;
-            document.getElementById('edit-content-docId').value = docId;
-            document.getElementById('edit-content-title').value = item.title || '';
-            document.getElementById('edit-content-details').value = item.details || item.description || '';
-            
-            // Show thumbnail field for seminars
-            if (collection === 'seminars') {
-                document.getElementById('edit-thumbnail-group').style.display = 'block';
-                document.getElementById('edit-content-thumbnail').value = item.thumbnail || '';
-            } else {
-                document.getElementById('edit-thumbnail-group').style.display = 'none';
-            }
-            
-            editContentModal.classList.add('active');
-        }
-        
-        async function deleteContent(collection, docId) {
-            if (!confirm('Are you sure you want to delete this content? This action cannot be undone.')) {
-                return;
-            }
-            
-            try {
-                await db.collection(collection).doc(docId).delete();
-                showToast('Content deleted successfully', 'success');
-            } catch (error) {
-                console.error('Error deleting content:', error);
-                showToast('Failed to delete content: ' + error.message, 'error');
-            }
-        }
-        
-        // Notice action functions
-        function editNotice(noticeId) {
-            const notice = noticesData.find(n => n.id === noticeId);
-            if (!notice) return;
-            
-            document.getElementById('notice-title').value = notice.title || '';
-            document.getElementById('notice-message').value = notice.message || '';
-            document.getElementById('notice-important').checked = notice.important || false;
-            
-            // Change the form to update mode
-            const form = document.getElementById('add-notice-form');
-            form.onsubmit = function(e) {
-                e.preventDefault();
-                handleUpdateNotice(noticeId);
+        // Save notice
+        function saveNotice() {
+            const noticeId = document.getElementById('notice-id').value;
+            const noticeData = {
+                title: document.getElementById('notice-title').value,
+                message: document.getElementById('notice-message').value,
+                important: document.getElementById('notice-important').value,
+                audience: document.getElementById('notice-audience').value,
+                createdAt: noticeId ? firebase.firestore.FieldValue.serverTimestamp() : firebase.firestore.FieldValue.serverTimestamp()
             };
             
-            // Update the button text
-            const submitBtn = form.querySelector('button[type="submit"]');
-            submitBtn.innerHTML = '<i class="fas fa-save"></i> Update Notice';
-            
-            addNoticeModal.classList.add('active');
-        }
-        
-        async function deleteNotice(noticeId) {
-            if (!confirm('Are you sure you want to delete this notice? This action cannot be undone.')) {
-                return;
-            }
-            
-            try {
-                await db.collection('notices').doc(noticeId).delete();
-                showToast('Notice deleted successfully', 'success');
-            } catch (error) {
-                console.error('Error deleting notice:', error);
-                showToast('Failed to delete notice: ' + error.message, 'error');
-            }
-        }
-        
-        // Form handlers
-        async function handleEditUser(e) {
-            e.preventDefault();
-            
-            const userId = document.getElementById('edit-user-uid').value;
-            const name = document.getElementById('edit-user-name').value;
-            const admissionNo = document.getElementById('edit-user-admissionNo').value;
-            
-            try {
-                const updateData = { name };
-                if (admissionNo) {
-                    updateData.admissionNo = admissionNo;
-                }
-                
-                await db.collection('users').doc(userId).update(updateData);
-                showToast('User updated successfully', 'success');
-                editUserModal.classList.remove('active');
-            } catch (error) {
-                console.error('Error updating user:', error);
-                showToast('Failed to update user: ' + error.message, 'error');
+            if (noticeId) {
+                // Update existing notice
+                db.collection('notices').doc(noticeId).update(noticeData)
+                    .then(() => {
+                        showToast('Notice updated successfully', 'success');
+                        noticeModal.classList.remove('active');
+                    })
+                    .catch(error => {
+                        console.error('Error updating notice:', error);
+                        showToast('Failed to update notice', 'error');
+                    });
+            } else {
+                // Add new notice
+                db.collection('notices').add(noticeData)
+                    .then(() => {
+                        showToast('Notice added successfully', 'success');
+                        noticeModal.classList.remove('active');
+                    })
+                    .catch(error => {
+                        console.error('Error adding notice:', error);
+                        showToast('Failed to add notice', 'error');
+                    });
             }
         }
         
-        async function handleAddNotice(e) {
-            e.preventDefault();
-            
-            const title = document.getElementById('notice-title').value;
-            const message = document.getElementById('notice-message').value;
-            const important = document.getElementById('notice-important').checked;
-            
-            try {
-                const noticeData = {
-                    title,
-                    message,
-                    important,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
-                
-                await db.collection('notices').add(noticeData);
-                showToast('Notice added successfully', 'success');
-                addNoticeModal.classList.remove('active');
-                addNoticeForm.reset();
-                
-                // Reset form to original state
-                const form = document.getElementById('add-notice-form');
-                form.onsubmit = handleAddNotice;
-                const submitBtn = form.querySelector('button[type="submit"]');
-                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Publish Notice';
-            } catch (error) {
-                console.error('Error adding notice:', error);
-                showToast('Failed to add notice: ' + error.message, 'error');
-            }
-        }
-        
-        async function handleUpdateNotice(noticeId) {
-            const title = document.getElementById('notice-title').value;
-            const message = document.getElementById('notice-message').value;
-            const important = document.getElementById('notice-important').checked;
-            
-            try {
-                await db.collection('notices').doc(noticeId).update({
-                    title,
-                    message,
-                    important
+        // Edit notice
+        function editNotice(noticeId) {
+            db.collection('notices').doc(noticeId).get()
+                .then(doc => {
+                    if (doc.exists) {
+                        const notice = doc.data();
+                        document.getElementById('notice-modal-title').textContent = 'Edit Notice';
+                        document.getElementById('notice-id').value = noticeId;
+                        document.getElementById('notice-title').value = notice.title || '';
+                        document.getElementById('notice-message').value = notice.message || '';
+                        document.getElementById('notice-important').value = notice.important ? 'true' : 'false';
+                        document.getElementById('notice-audience').value = notice.audience || 'all';
+                        noticeModal.classList.add('active');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error getting notice:', error);
+                    showToast('Failed to load notice', 'error');
                 });
-                
-                showToast('Notice updated successfully', 'success');
-                addNoticeModal.classList.remove('active');
-                addNoticeForm.reset();
-                
-                // Reset form to original state
-                const form = document.getElementById('add-notice-form');
-                form.onsubmit = handleAddNotice;
-                const submitBtn = form.querySelector('button[type="submit"]');
-                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Publish Notice';
-            } catch (error) {
-                console.error('Error updating notice:', error);
-                showToast('Failed to update notice: ' + error.message, 'error');
+        }
+        
+        // Delete notice
+        function deleteNotice(noticeId) {
+            if (confirm('Are you sure you want to delete this notice?')) {
+                db.collection('notices').doc(noticeId).delete()
+                    .then(() => {
+                        showToast('Notice deleted successfully', 'success');
+                    })
+                    .catch(error => {
+                        console.error('Error deleting notice:', error);
+                        showToast('Failed to delete notice', 'error');
+                    });
             }
         }
         
-        async function handleEditContent(e) {
-            e.preventDefault();
+        // Load users
+        function loadUsers() {
+            const usersList = document.getElementById('users-list');
             
-            const collection = document.getElementById('edit-content-collection').value;
-            const docId = document.getElementById('edit-content-docId').value;
-            const title = document.getElementById('edit-content-title').value;
-            const details = document.getElementById('edit-content-details').value;
-            const thumbnail = document.getElementById('edit-content-thumbnail').value;
+            db.collection('users')
+                .orderBy('createdAt', 'desc')
+                .onSnapshot(snapshot => {
+                    const users = [];
+                    
+                    snapshot.forEach(doc => {
+                        const user = doc.data();
+                        user.id = doc.id;
+                        users.push(user);
+                    });
+                    
+                    if (users.length === 0) {
+                        usersList.innerHTML = `
+                            <div class="empty-state">
+                                <div class="empty-icon"><i class="fas fa-users"></i></div>
+                                <p>No users found</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    const usersHtml = users.map(user => {
+                        return `
+                            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 15px;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                    <div>
+                                        <div style="font-size: 1.2rem; font-weight: 600; margin-bottom: 10px; color: var(--text-primary);">${user.name || 'Unknown'}</div>
+                                        <div style="color: var(--text-secondary); margin-bottom: 5px;">${user.email || 'No email'}</div>
+                                        <div style="font-size: 0.85rem; color: var(--text-muted);">
+                                            ${user.admissionNo ? `Admission No: ${user.admissionNo} • ` : ''}
+                                            ${user.branch ? `Branch: ${user.branch} • ` : ''}
+                                            ${user.semester ? `Semester: ${user.semester} • ` : ''}
+                                            Role: ${user.role || 'student'} • 
+                                            Credits: ${user.credits || 0} • 
+                                            Joined: ${formatTimestamp(user.createdAt)}
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; gap: 10px;">
+                                        <button class="btn-secondary" style="padding: 8px 12px; font-size: 0.9rem;" onclick="editUser('${user.id}')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-danger" style="padding: 8px 12px; font-size: 0.9rem;" onclick="deleteUser('${user.id}')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    usersList.innerHTML = usersHtml;
+                }, error => {
+                    console.error('Error loading users:', error);
+                    usersList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon"><i class="fas fa-exclamation-circle"></i></div>
+                            <p>Failed to load users</p>
+                        </div>
+                    `;
+                });
+        }
+        
+        // Save user
+        function saveUser() {
+            const userId = document.getElementById('user-id').value;
+            const userData = {
+                name: document.getElementById('user-name').value,
+                email: document.getElementById('user-email').value,
+                admissionNo: document.getElementById('user-admission').value,
+                branch: document.getElementById('user-branch').value,
+                semester: document.getElementById('user-semester').value,
+                role: document.getElementById('user-role').value,
+                credits: parseInt(document.getElementById('user-credits').value) || 0,
+                createdAt: userId ? firebase.firestore.FieldValue.serverTimestamp() : firebase.firestore.FieldValue.serverTimestamp()
+            };
             
-            try {
-                const updateData = { title };
-                if (details) {
-                    updateData.details = details;
-                    updateData.description = details; // For compatibility
-                }
-                if (thumbnail && collection === 'seminars') {
-                    updateData.thumbnail = thumbnail;
-                }
-                
-                await db.collection(collection).doc(docId).update(updateData);
-                showToast('Content updated successfully', 'success');
-                editContentModal.classList.remove('active');
-            } catch (error) {
-                console.error('Error updating content:', error);
-                showToast('Failed to update content: ' + error.message, 'error');
+            if (userId) {
+                // Update existing user
+                db.collection('users').doc(userId).update(userData)
+                    .then(() => {
+                        showToast('User updated successfully', 'success');
+                        userModal.classList.remove('active');
+                    })
+                    .catch(error => {
+                        console.error('Error updating user:', error);
+                        showToast('Failed to update user', 'error');
+                    });
+            } else {
+                // Add new user
+                db.collection('users').add(userData)
+                    .then(() => {
+                        showToast('User added successfully', 'success');
+                        userModal.classList.remove('active');
+                    })
+                    .catch(error => {
+                        console.error('Error adding user:', error);
+                        showToast('Failed to add user', 'error');
+                    });
             }
         }
         
-        async function handleGrantAccess(e) {
-            e.preventDefault();
-            
-            const userEmail = document.getElementById('grant-user-email').value;
-            const materialId = document.getElementById('grant-material-id').value;
-            const materialTitle = document.getElementById('grant-material-title').value;
-            
-            if (!userEmail) {
-                showToast('Please select a user first', 'error');
-                return;
-            }
-            
-            try {
-                // Create a payment record with status 'completed' and amount 0
-                const paymentData = {
-                    userEmail: userEmail,
-                    materialId: materialId,
-                    materialTitle: materialTitle,
-                    amount: 0,
-                    status: 'completed',
-                    type: 'admin_grant',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    grantedBy: auth.currentUser.email,
-                    razorpayPaymentId: 'ADMIN_GRANT_' + Date.now()
-                };
-                
-                await db.collection('payments').add(paymentData);
-                showToast('Access granted successfully', 'success');
-                grantAccessModal.classList.remove('active');
-                grantAccessForm.reset();
-            } catch (error) {
-                console.error('Error granting access:', error);
-                showToast('Failed to grant access: ' + error.message, 'error');
+        // Edit user
+        function editUser(userId) {
+            db.collection('users').doc(userId).get()
+                .then(doc => {
+                    if (doc.exists) {
+                        const user = doc.data();
+                        document.getElementById('user-modal-title').textContent = 'Edit User';
+                        document.getElementById('user-id').value = userId;
+                        document.getElementById('user-name').value = user.name || '';
+                        document.getElementById('user-email').value = user.email || '';
+                        document.getElementById('user-admission').value = user.admissionNo || '';
+                        document.getElementById('user-branch').value = user.branch || '';
+                        document.getElementById('user-semester').value = user.semester || '';
+                        document.getElementById('user-role').value = user.role || 'student';
+                        document.getElementById('user-credits').value = user.credits || 0;
+                        userModal.classList.add('active');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error getting user:', error);
+                    showToast('Failed to load user', 'error');
+                });
+        }
+        
+        // Delete user
+        function deleteUser(userId) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                db.collection('users').doc(userId).delete()
+                    .then(() => {
+                        showToast('User deleted successfully', 'success');
+                    })
+                    .catch(error => {
+                        console.error('Error deleting user:', error);
+                        showToast('Failed to delete user', 'error');
+                    });
             }
         }
         
-        async function handleBroadcast(e) {
-            e.preventDefault();
+        // Load payments
+        function loadPayments() {
+            const paymentsList = document.getElementById('payments-list');
             
-            const title = document.getElementById('broadcast-title').value;
-            const message = document.getElementById('broadcast-message').value;
-            const target = document.getElementById('broadcast-target').value;
+            db.collection('transactions')
+                .orderBy('createdAt', 'desc')
+                .limit(50)
+                .onSnapshot(snapshot => {
+                    const transactions = [];
+                    
+                    snapshot.forEach(doc => {
+                        const transaction = doc.data();
+                        transaction.id = doc.id;
+                        transactions.push(transaction);
+                    });
+                    
+                    if (transactions.length === 0) {
+                        paymentsList.innerHTML = `
+                            <div class="empty-state">
+                                <div class="empty-icon"><i class="fas fa-credit-card"></i></div>
+                                <p>No payment transactions found</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    const transactionsHtml = `
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>User</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                    <th>Description</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${transactions.map(transaction => {
+                                    // Get user name
+                                    let userName = 'Unknown';
+                                    if (transaction.userId) {
+                                        db.collection('users').doc(transaction.userId).get()
+                                            .then(userDoc => {
+                                                if (userDoc.exists) {
+                                                    const userData = userDoc.data();
+                                                    document.getElementById(`user-${transaction.id}`).textContent = userData.name || 'Unknown';
+                                                }
+                                            })
+                                            .catch(error => {
+                                                console.error('Error getting user:', error);
+                                            });
+                                    }
+                                    
+                                    return `
+                                        <tr>
+                                            <td>${transaction.id.substring(0, 8)}...</td>
+                                            <td id="user-${transaction.id}">Loading...</td>
+                                            <td style="color: ${transaction.type === 'earn' ? 'var(--success)' : 'var(--danger)'};">
+                                                ${transaction.type === 'earn' ? 'Earn' : 'Spend'}
+                                            </td>
+                                            <td style="color: ${transaction.type === 'earn' ? 'var(--success)' : 'var(--danger)'};">
+                                                ${transaction.type === 'earn' ? '+' : '-'}${transaction.amount}
+                                            </td>
+                                            <td>${transaction.description || 'No description'}</td>
+                                            <td>${formatTimestamp(transaction.createdAt)}</td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                    
+                    paymentsList.innerHTML = transactionsHtml;
+                }, error => {
+                    console.error('Error loading payments:', error);
+                    paymentsList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon"><i class="fas fa-exclamation-circle"></i></div>
+                            <p>Failed to load payment history</p>
+                        </div>
+                    `;
+                });
+        }
+        
+        // Export payments
+        function exportPayments() {
+            showToast('Export feature coming soon!', 'info');
+        }
+        
+        // Load analytics
+        function loadAnalytics() {
+            // Load material usage chart
+            loadMaterialUsageChart();
             
-            try {
-                // Get target users based on selection
-                let targetUsers = [];
-                const usersSnapshot = await db.collection('users').get();
-                
-                switch(target) {
-                    case 'all':
-                        targetUsers = usersSnapshot.docs.map(doc => doc.data().email);
-                        break;
-                    case 'students':
-                        targetUsers = usersSnapshot.docs
-                            .filter(doc => doc.data().role !== 'admin')
-                            .map(doc => doc.data().email);
-                        break;
-                    case 'recent':
-                        const weekAgo = new Date();
-                        weekAgo.setDate(weekAgo.getDate() - 7);
-                        targetUsers = usersSnapshot.docs
-                            .filter(doc => {
-                                const data = doc.data();
-                                return data.lastLoginAt && data.lastLoginAt.toDate && data.lastLoginAt.toDate() > weekAgo;
-                            })
-                            .map(doc => doc.data().email);
-                        break;
-                }
-                
-                // Create broadcast record
-                const broadcastData = {
-                    title: title,
-                    message: message,
-                    targetGroup: target,
-                    targetEmails: targetUsers,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    sentBy: auth.currentUser.email,
-                    status: 'sent'
-                };
-                
-                await db.collection('broadcasts').add(broadcastData);
-                
-                // In a real implementation, you would also trigger email sending here
-                // For now, we'll just show success
-                showToast(`Broadcast sent to ${targetUsers.length} users`, 'success');
-                broadcastModal.classList.remove('active');
-                broadcastForm.reset();
-                
-            } catch (error) {
-                console.error('Error sending broadcast:', error);
-                showToast('Failed to send broadcast: ' + error.message, 'error');
+            // Load user engagement chart
+            loadUserEngagementChart();
+            
+            // Load revenue chart
+            loadRevenueChart();
+        }
+        
+        // Load material usage chart
+        function loadMaterialUsageChart() {
+            const ctx = document.getElementById('material-usage-chart').getContext('2d');
+            
+            if (materialUsageChart) {
+                materialUsageChart.destroy();
             }
+            
+            materialUsageChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Materials Viewed',
+                        data: [65, 59, 80, 81, 56, 55, 40],
+                        backgroundColor: 'rgba(255, 215, 0, 0.7)',
+                        borderColor: 'rgba(255, 215, 0, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Material Usage (Last 7 Days)',
+                            color: '#F0F0F0',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            labels: {
+                                color: '#F0F0F0'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#A0A0A0'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#A0A0A0'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Load user engagement chart
+        function loadUserEngagementChart() {
+            const ctx = document.getElementById('user-engagement-chart').getContext('2d');
+            
+            if (userEngagementChart) {
+                userEngagementChart.destroy();
+            }
+            
+            userEngagementChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [{
+                        label: 'Active Users',
+                        data: [30, 45, 60, 70, 85, 90, 95],
+                        backgroundColor: 'rgba(0, 162, 255, 0.2)',
+                        borderColor: 'rgba(0, 162, 255, 1)',
+                        borderWidth: 2,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'User Engagement (Last 7 Months)',
+                            color: '#F0F0F0',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            labels: {
+                                color: '#F0F0F0'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#A0A0A0'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#A0A0A0'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Load revenue chart
+        function loadRevenueChart() {
+            const ctx = document.getElementById('revenue-chart').getContext('2d');
+            
+            if (revenueChart) {
+                revenueChart.destroy();
+            }
+            
+            revenueChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Revenue',
+                        data: [12000, 19000, 15000, 25000, 22000, 30000, 28000, 35000, 32000, 40000, 38000, 45000],
+                        backgroundColor: 'rgba(46, 204, 113, 0.7)',
+                        borderColor: 'rgba(46, 204, 113, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Revenue Overview (Current Year)',
+                            color: '#F0F0F0',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            labels: {
+                                color: '#F0F0F0'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#A0A0A0',
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#A0A0A0'
+                            }
+                        }
+                    }
+                }
+            });
         }
         
         // Save settings
-        async function saveSettings() {
-            try {
-                const settings = {
-                    require2FA: document.getElementById('require-2fa').checked,
-                    sessionTimeout: parseInt(document.getElementById('session-timeout').value),
-                    emailNewUsers: document.getElementById('email-new-users').checked,
-                    emailPayments: document.getElementById('email-payments').checked,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedBy: auth.currentUser.email
-                };
-                
-                await db.collection('settings').doc('platform').set(settings);
-                showToast('Settings saved successfully', 'success');
-            } catch (error) {
-                console.error('Error saving settings:', error);
-                showToast('Failed to save settings: ' + error.message, 'error');
-            }
-        }
-        
-        // Export functions
-        function exportUsers() {
-            try {
-                const csvContent = convertToCSV(usersData, [
-                    'name', 'email', 'admissionNo', 'totalPurchases', 'totalSpent'
-                ]);
-                downloadCSV(csvContent, 'users-export.csv');
-                showToast('Users exported successfully', 'success');
-            } catch (error) {
-                showToast('Failed to export users', 'error');
-            }
-        }
-        
-        // Utility functions
-        function convertToCSV(data, fields) {
-            const headers = fields.join(',');
-            const rows = data.map(item => 
-                fields.map(field => {
-                    let value = item[field];
-                    if (value === null || value === undefined) value = '';
-                    if (typeof value === 'string' && value.includes(',')) {
-                        value = `"${value.replace(/"/g, '""')}"`;
-                    }
-                    return value;
-                }).join(',')
-            );
+        function saveSettings() {
+            const settings = {
+                platformName: document.getElementById('platform-name').value,
+                adminEmail: document.getElementById('admin-email').value,
+                supportContact: document.getElementById('support-contact').value,
+                defaultCredits: parseInt(document.getElementById('default-credits').value) || 100,
+                registrationEnabled: document.getElementById('registration-toggle').classList.contains('active'),
+                emailNotificationsEnabled: document.getElementById('email-toggle').classList.contains('active'),
+                maintenanceMode: document.getElementById('maintenance-toggle').classList.contains('active'),
+                analyticsEnabled: document.getElementById('analytics-toggle').classList.contains('active'),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
             
-            return [headers, ...rows].join('\n');
-        }
-        
-        function downloadCSV(csvContent, filename) {
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            link.setAttribute('href', url);
-            link.setAttribute('download', filename);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            db.collection('settings').doc('system').set(settings)
+                .then(() => {
+                    showToast('Settings saved successfully', 'success');
+                })
+                .catch(error => {
+                    console.error('Error saving settings:', error);
+                    showToast('Failed to save settings', 'error');
+                });
         }
         
         // Keyboard shortcuts
@@ -2938,62 +1693,44 @@
                 document.querySelectorAll('.modal-overlay.active').forEach(modal => {
                     modal.classList.remove('active');
                 });
-                quickActions.classList.remove('active');
-            }
-            
-            // Ctrl/Cmd + K for quick actions
-            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                e.preventDefault();
-                quickActions.classList.toggle('active');
             }
         });
         
-        // Auto-refresh data every 5 minutes
-        setInterval(() => {
-            if (document.visibilityState === 'visible') {
-                loadDashboardData();
+        // Authentication check
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                currentUser = user;
+                
+                // Check if user is admin
+                db.collection('users').doc(user.uid).get().then(doc => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        if (userData.role !== 'admin') {
+                            // Redirect to student dashboard if not admin
+                            window.location.replace('/studentdashboard.html');
+                            return;
+                        }
+                        
+                        // Initialize page
+                        initializePage();
+                    } else {
+                        // User data not found, redirect to login
+                        window.location.replace('/index.html');
+                    }
+                }).catch(error => {
+                    console.error('Error getting user data:', error);
+                    window.location.replace('/index.html');
+                });
+            } else {
+                // Redirect to login page
+                window.location.replace('/index.html');
             }
-        }, 5 * 60 * 1000);
+        });
         
         // Console welcome message
         console.log('%cIB STUDIOZ Admin Dashboard', 'color: #FFD700; font-size: 24px; font-weight: bold;');
-        console.log('%cWelcome to the admin control panel', 'color: #00A2FF; font-size: 14px;');
+        console.log('%cWelcome to your powerful admin control panel', 'color: #00A2FF; font-size: 14px;');
         console.log('Real-time Firebase integration active ✓');
-        
-        // Enhanced authentication check
-        auth.onAuthStateChanged(user => {
-            if (window._redirecting) return;
-            if (user) {
-                db.collection('users').doc(user.uid).get()
-                    .then(doc => {
-                        if (doc.exists && doc.data().role === 'admin') {
-                            adminNameEl.textContent = doc.data().name.split(' ')[0];
-                            initializePage();
-                            loadDashboardData();
-                            loadPanelData('dashboard');
-                        } else {
-                            if (!window.location.pathname.endsWith('/studentdashboard.html')) {
-                                window._redirecting = true;
-                                window.location.replace('/studentdashboard.html');
-                            }
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error checking user role:", error);
-                        auth.signOut();
-                        if (!window.location.pathname.endsWith('/index.html')) {
-                            window._redirecting = true;
-                            window.location.replace('/index.html');
-                        }
-                    });
-            } else {
-                if (!window.location.pathname.endsWith('/index.html')) {
-                    window._redirecting = true;
-                    window.location.replace('/index.html');
-                }
-            }
-        });
     </script>
 </body>
 </html>
- 
