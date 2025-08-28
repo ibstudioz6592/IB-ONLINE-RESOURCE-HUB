@@ -267,6 +267,7 @@
             margin-bottom: 20px;
             opacity: 0;
             animation: fadeInUp 0.5s ease forwards;
+            position: relative;
         }
         
         .form-group:nth-child(1) { animation-delay: 0.1s; }
@@ -304,6 +305,28 @@
             box-shadow: 0 0 0 3px rgba(255, 195, 0, 0.3); 
             border-color: var(--primary);
             transform: translateY(-2px);
+        }
+        
+        /* Password field with toggle */
+        .password-container {
+            position: relative;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .password-toggle:hover {
+            color: var(--primary);
         }
         
         .auth-card .btn { width: 100%; margin-top: 10px; }
@@ -522,7 +545,10 @@
         
         /* --- RESPONSIVE DESIGN --- */
         @media (max-width: 480px) {
-            .auth-card { padding: 25px; }
+            .auth-card { 
+                padding: 25px; 
+                margin: 0 15px;
+            }
             .brand-logo img { width: 40px; }
             .brand-title-animated { font-size: 1.5rem; }
             .container { padding: 15px; margin: 15px auto; }
@@ -530,6 +556,9 @@
             .dark-mode-toggle {
                 width: 40px;
                 height: 40px;
+            }
+            .btn {
+                padding: 12px 20px;
             }
         }
         
@@ -601,6 +630,50 @@
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
         }
+        
+        /* Social registration modal */
+        .social-registration-modal .modal {
+            max-width: 500px;
+        }
+        
+        .social-user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .social-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+        }
+        
+        .social-details h3 {
+            margin-bottom: 5px;
+            color: var(--text-primary);
+        }
+        
+        .social-details p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -660,7 +733,12 @@
                 </div>
                 <div class="form-group">
                     <label for="password"><i class="fas fa-lock"></i> Password</label>
-                    <input type="password" id="password" placeholder="Minimum 6 characters" required>
+                    <div class="password-container">
+                        <input type="password" id="password" placeholder="Minimum 6 characters" required>
+                        <button type="button" class="password-toggle" id="password-toggle">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
                     <div class="error-message" id="password-error"></div>
                     <div class="password-strength" id="password-strength">
                         <div class="strength-bar">
@@ -672,41 +750,43 @@
                 
                 <!-- Additional fields for registration -->
                 <div id="registration-fields" style="display: none;">
-                    <div class="form-group">
-                        <label for="branch"><i class="fas fa-graduation-cap"></i> Branch</label>
-                        <select id="branch">
-                            <option value="">Select your branch</option>
-                            <option value="CSE">Computer Science and Engineering</option>
-                            <option value="IT">Information Technology</option>
-                            <option value="ECE">Electronics and Communication Engineering</option>
-                            <option value="EEE">Electrical and Electronics Engineering</option>
-                            <option value="MECH">Mechanical Engineering</option>
-                            <option value="CIVIL">Civil Engineering</option>
-                            <option value="AERO">Aeronautical Engineering</option>
-                            <option value="AUTO">Automobile Engineering</option>
-                            <option value="BME">Biomedical Engineering</option>
-                            <option value="CHEM">Chemical Engineering</option>
-                            <option value="IOT">Internet of Things</option>
-                            <option value="AI">Artificial Intelligence</option>
-                            <option value="DS">Data Science</option>
-                            <option value="CSBS">Computer Science and Business Systems</option>
-                        </select>
-                        <div class="error-message" id="branch-error"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="semester"><i class="fas fa-calendar-alt"></i> Semester</label>
-                        <select id="semester">
-                            <option value="">Select your semester</option>
-                            <option value="1">Semester 1</option>
-                            <option value="2">Semester 2</option>
-                            <option value="3">Semester 3</option>
-                            <option value="4">Semester 4</option>
-                            <option value="5">Semester 5</option>
-                            <option value="6">Semester 6</option>
-                            <option value="7">Semester 7</option>
-                            <option value="8">Semester 8</option>
-                        </select>
-                        <div class="error-message" id="semester-error"></div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="branch"><i class="fas fa-graduation-cap"></i> Branch</label>
+                            <select id="branch">
+                                <option value="">Select branch</option>
+                                <option value="CSE">Computer Science</option>
+                                <option value="IT">Information Technology</option>
+                                <option value="ECE">Electronics</option>
+                                <option value="EEE">Electrical</option>
+                                <option value="MECH">Mechanical</option>
+                                <option value="CIVIL">Civil</option>
+                                <option value="AERO">Aeronautical</option>
+                                <option value="AUTO">Automobile</option>
+                                <option value="BME">Biomedical</option>
+                                <option value="CHEM">Chemical</option>
+                                <option value="IOT">Internet of Things</option>
+                                <option value="AI">Artificial Intelligence</option>
+                                <option value="DS">Data Science</option>
+                                <option value="CSBS">CS and Business Systems</option>
+                            </select>
+                            <div class="error-message" id="branch-error"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="semester"><i class="fas fa-calendar-alt"></i> Semester</label>
+                            <select id="semester">
+                                <option value="">Select semester</option>
+                                <option value="1">Semester 1</option>
+                                <option value="2">Semester 2</option>
+                                <option value="3">Semester 3</option>
+                                <option value="4">Semester 4</option>
+                                <option value="5">Semester 5</option>
+                                <option value="6">Semester 6</option>
+                                <option value="7">Semester 7</option>
+                                <option value="8">Semester 8</option>
+                            </select>
+                            <div class="error-message" id="semester-error"></div>
+                        </div>
                     </div>
                 </div>
                 
@@ -756,6 +836,84 @@
         </div>
     </div>
     
+    <!-- Social Registration Modal -->
+    <div class="modal-overlay social-registration-modal" id="social-registration-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Complete Your Registration</h3>
+                <button class="modal-close" id="social-modal-close">&times;</button>
+            </div>
+            
+            <div class="social-user-info">
+                <img src="" alt="Profile" class="social-avatar" id="social-avatar">
+                <div class="social-details">
+                    <h3 id="social-name"></h3>
+                    <p id="social-email"></p>
+                </div>
+            </div>
+            
+            <form id="social-registration-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="social-admission"><i class="fas fa-id-card"></i> Admission No</label>
+                        <input type="text" id="social-admission" placeholder="e.g., 717821F123" required>
+                        <div class="error-message" id="social-admission-error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="social-branch"><i class="fas fa-graduation-cap"></i> Branch</label>
+                        <select id="social-branch" required>
+                            <option value="">Select branch</option>
+                            <option value="CSE">Computer Science</option>
+                            <option value="IT">Information Technology</option>
+                            <option value="ECE">Electronics</option>
+                            <option value="EEE">Electrical</option>
+                            <option value="MECH">Mechanical</option>
+                            <option value="CIVIL">Civil</option>
+                            <option value="AERO">Aeronautical</option>
+                            <option value="AUTO">Automobile</option>
+                            <option value="BME">Biomedical</option>
+                            <option value="CHEM">Chemical</option>
+                            <option value="IOT">Internet of Things</option>
+                            <option value="AI">Artificial Intelligence</option>
+                            <option value="DS">Data Science</option>
+                            <option value="CSBS">CS and Business Systems</option>
+                        </select>
+                        <div class="error-message" id="social-branch-error"></div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="social-semester"><i class="fas fa-calendar-alt"></i> Semester</label>
+                        <select id="social-semester" required>
+                            <option value="">Select semester</option>
+                            <option value="1">Semester 1</option>
+                            <option value="2">Semester 2</option>
+                            <option value="3">Semester 3</option>
+                            <option value="4">Semester 4</option>
+                            <option value="5">Semester 5</option>
+                            <option value="6">Semester 6</option>
+                            <option value="7">Semester 7</option>
+                            <option value="8">Semester 8</option>
+                        </select>
+                        <div class="error-message" id="social-semester-error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="social-phone"><i class="fas fa-phone"></i> Phone Number</label>
+                        <input type="tel" id="social-phone" placeholder="Enter your phone number">
+                        <div class="error-message" id="social-phone-error"></div>
+                    </div>
+                </div>
+                
+                <div id="social-message" class="message"></div>
+                <button type="submit" class="btn btn-primary" id="social-submit-btn">
+                    <span class="btn-text">Complete Registration</span>
+                    <div class="btn-spinner"></div>
+                </button>
+            </form>
+        </div>
+    </div>
+    
     <div id="spinner" class="spinner-overlay" style="display: none;"><div class="spinner"></div></div>
     
     <!-- Page transition element -->
@@ -767,8 +925,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-google-auth-provider.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-microsoft-auth-provider.js"></script>
     <script>
         // Initialize Firebase
         const firebaseConfig = {
@@ -811,6 +967,22 @@
         const submitBtnSpinner = submitBtn.querySelector('.btn-spinner');
         const sendResetBtnText = sendResetBtn.querySelector('.btn-text');
         const sendResetBtnSpinner = sendResetBtn.querySelector('.btn-spinner');
+        
+        // Password toggle elements
+        const passwordToggle = document.getElementById('password-toggle');
+        const passwordToggleIcon = passwordToggle.querySelector('i');
+        
+        // Social registration modal elements
+        const socialRegistrationModal = document.getElementById('social-registration-modal');
+        const socialModalClose = document.getElementById('social-modal-close');
+        const socialRegistrationForm = document.getElementById('social-registration-form');
+        const socialAvatar = document.getElementById('social-avatar');
+        const socialName = document.getElementById('social-name');
+        const socialEmail = document.getElementById('social-email');
+        const socialSubmitBtn = document.getElementById('social-submit-btn');
+        const socialSubmitBtnText = socialSubmitBtn.querySelector('.btn-text');
+        const socialSubmitBtnSpinner = socialSubmitBtn.querySelector('.btn-spinner');
+        const socialMessage = document.getElementById('social-message');
         
         // State variables
         let isLogin = true;
@@ -868,6 +1040,21 @@
                 }, 300);
             }, 4000);
         }
+        
+        // Password visibility toggle
+        passwordToggle.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Toggle icon
+            if (type === 'password') {
+                passwordToggleIcon.classList.remove('fa-eye-slash');
+                passwordToggleIcon.classList.add('fa-eye');
+            } else {
+                passwordToggleIcon.classList.remove('fa-eye');
+                passwordToggleIcon.classList.add('fa-eye-slash');
+            }
+        });
         
         // Password strength checker
         passwordInput.addEventListener('input', (e) => {
@@ -1014,9 +1201,46 @@
             return isValid;
         }
         
+        // Social registration form validation
+        function validateSocialForm() {
+            clearSocialErrors();
+            let isValid = true;
+            
+            const admission = document.getElementById('social-admission').value.trim();
+            if (!admission) {
+                showSocialError('social-admission', 'Admission number is required');
+                isValid = false;
+            }
+            
+            const branch = document.getElementById('social-branch').value;
+            if (!branch) {
+                showSocialError('social-branch', 'Please select your branch');
+                isValid = false;
+            }
+            
+            const semester = document.getElementById('social-semester').value;
+            if (!semester) {
+                showSocialError('social-semester', 'Please select your semester');
+                isValid = false;
+            }
+            
+            const phone = document.getElementById('social-phone').value.trim();
+            if (phone && !isValidPhone(phone)) {
+                showSocialError('social-phone', 'Please enter a valid phone number');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
         function isValidEmail(email) {
             const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return re.test(email);
+        }
+        
+        function isValidPhone(phone) {
+            const re = /^[\d\s\-\+\(\)]+$/;
+            return re.test(phone) && phone.replace(/\D/g, '').length >= 10;
         }
         
         function showError(field, message) {
@@ -1025,11 +1249,25 @@
             document.getElementById(field === 'admission' ? 'admissionNo' : field).parentElement.classList.add('error');
         }
         
+        function showSocialError(field, message) {
+            const errorElement = document.getElementById(`${field}-error`);
+            errorElement.textContent = message;
+            document.getElementById(field).parentElement.classList.add('error');
+        }
+        
         function clearErrors() {
             const errorElements = document.querySelectorAll('.error-message');
             errorElements.forEach(el => el.textContent = '');
             
             const formGroups = document.querySelectorAll('.form-group');
+            formGroups.forEach(group => group.classList.remove('error'));
+        }
+        
+        function clearSocialErrors() {
+            const errorElements = document.querySelectorAll('#social-registration-form .error-message');
+            errorElements.forEach(el => el.textContent = '');
+            
+            const formGroups = document.querySelectorAll('#social-registration-form .form-group');
             formGroups.forEach(group => group.classList.remove('error'));
         }
         
@@ -1053,7 +1291,6 @@
                 if (isLogin) {
                     // Login with email and password
                     const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                    // The onAuthStateChanged listener above will handle redirection
                     
                     // Update last login
                     await db.collection('users').doc(userCredential.user.uid).update({
@@ -1208,25 +1445,23 @@
                 const userDoc = await db.collection('users').doc(result.user.uid).get();
                 
                 if (!userDoc.exists) {
-                    // New user, show registration form
+                    // New user, show registration modal
                     isSocialSignup = true;
                     socialUserData = {
                         name: result.user.displayName || "Google User",
                         email: result.user.email,
+                        photoURL: result.user.photoURL,
                         provider: "Google"
                     };
                     
-                    // Change form to registration mode if not already
-                    if (isLogin) {
-                        toggleLink.click();
-                    }
+                    // Populate social registration modal
+                    socialAvatar.src = socialUserData.photoURL || 'https://picsum.photos/seed/avatar/60/60.jpg';
+                    socialName.textContent = socialUserData.name;
+                    socialEmail.textContent = socialUserData.email;
                     
-                    // Pre-fill form fields
-                    document.getElementById('name').value = socialUserData.name;
-                    document.getElementById('email').value = socialUserData.email;
-                    document.getElementById('email').disabled = true;
+                    // Show modal
+                    socialRegistrationModal.classList.add('active');
                     
-                    showToast('Please complete your registration with Google', 'info');
                 } else {
                     // Existing user, update login info
                     await db.collection('users').doc(result.user.uid).update({
@@ -1254,25 +1489,23 @@
                 const userDoc = await db.collection('users').doc(result.user.uid).get();
                 
                 if (!userDoc.exists) {
-                    // New user, show registration form
+                    // New user, show registration modal
                     isSocialSignup = true;
                     socialUserData = {
                         name: result.user.displayName || "Microsoft User",
                         email: result.user.email,
+                        photoURL: result.user.photoURL,
                         provider: "Microsoft"
                     };
                     
-                    // Change form to registration mode if not already
-                    if (isLogin) {
-                        toggleLink.click();
-                    }
+                    // Populate social registration modal
+                    socialAvatar.src = socialUserData.photoURL || 'https://picsum.photos/seed/avatar/60/60.jpg';
+                    socialName.textContent = socialUserData.name;
+                    socialEmail.textContent = socialUserData.email;
                     
-                    // Pre-fill form fields
-                    document.getElementById('name').value = socialUserData.name;
-                    document.getElementById('email').value = socialUserData.email;
-                    document.getElementById('email').disabled = true;
+                    // Show modal
+                    socialRegistrationModal.classList.add('active');
                     
-                    showToast('Please complete your registration with Microsoft', 'info');
                 } else {
                     // Existing user, update login info
                     await db.collection('users').doc(result.user.uid).update({
@@ -1288,55 +1521,85 @@
             }
         });
         
-        // Handle social registration completion
-        document.getElementById('submit-btn').addEventListener('click', async function(e) {
+        // Social registration modal close
+        socialModalClose.addEventListener('click', () => {
+            socialRegistrationModal.classList.remove('active');
+            // If user closes the modal, sign them out
             if (isSocialSignup) {
-                e.preventDefault();
-                
-                if (!validateForm()) {
-                    return;
-                }
-                
-                const admissionNo = document.getElementById('admissionNo').value.trim();
-                const name = document.getElementById('name').value.trim();
-                const email = document.getElementById('email').value;
-                const branch = document.getElementById('branch').value;
-                const semester = document.getElementById('semester').value;
-                
-                spinner.style.display = 'flex';
-                
-                try {
-                    // Update user document with additional info
-                    const userData = {
-                        name: name,
-                        admissionNo: admissionNo,
-                        email: email,
-                        role: 'student',
-                        branch: branch,
-                        semester: semester,
-                        provider: socialUserData.provider,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        lastLoginAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        loginCount: 1
-                    };
-                    
-                    await db.collection('users').doc(auth.currentUser.uid).set(userData);
-                    
-                    showToast('Social registration successful!', 'success');
-                    
-                    // Reset form
+                auth.signOut();
+                isSocialSignup = false;
+            }
+        });
+        
+        // Close social modal when clicking outside
+        socialRegistrationModal.addEventListener('click', (e) => {
+            if (e.target === socialRegistrationModal) {
+                socialRegistrationModal.classList.remove('active');
+                // If user closes the modal, sign them out
+                if (isSocialSignup) {
+                    auth.signOut();
                     isSocialSignup = false;
-                    document.getElementById('email').disabled = false;
-                    
-                    // Simulate successful login
-                    setTimeout(() => {
-                        navigateToPage('/studentdashboard.html');
-                    }, 1500);
-                } catch (error) {
-                    console.error("Social registration error:", error);
-                    showToast('Registration failed. Please try again.', 'error');
-                    spinner.style.display = 'none';
                 }
+            }
+        });
+        
+        // Handle social registration form submission
+        socialRegistrationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!validateSocialForm()) {
+                return;
+            }
+            
+            // Show loading state
+            socialSubmitBtn.classList.add('btn-loading');
+            socialSubmitBtnText.style.visibility = 'hidden';
+            socialSubmitBtnSpinner.style.display = 'block';
+            
+            try {
+                const admissionNo = document.getElementById('social-admission').value.trim();
+                const branch = document.getElementById('social-branch').value;
+                const semester = document.getElementById('social-semester').value;
+                const phone = document.getElementById('social-phone').value.trim();
+                
+                // Update user document with additional info
+                const userData = {
+                    name: socialUserData.name,
+                    admissionNo: admissionNo,
+                    email: socialUserData.email,
+                    role: 'student',
+                    branch: branch,
+                    semester: semester,
+                    phone: phone,
+                    provider: socialUserData.provider,
+                    photoURL: socialUserData.photoURL,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    lastLoginAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    loginCount: 1
+                };
+                
+                await db.collection('users').doc(auth.currentUser.uid).set(userData);
+                
+                showToast('Registration successful! Redirecting...', 'success');
+                
+                // Reset form
+                isSocialSignup = false;
+                socialRegistrationModal.classList.remove('active');
+                socialRegistrationForm.reset();
+                clearSocialErrors();
+                
+                // Simulate successful login
+                setTimeout(() => {
+                    navigateToPage('/studentdashboard.html');
+                }, 1500);
+            } catch (error) {
+                console.error("Social registration error:", error);
+                socialMessage.textContent = 'Registration failed. Please try again.';
+                socialMessage.className = 'message error';
+            } finally {
+                socialSubmitBtn.classList.remove('btn-loading');
+                socialSubmitBtnText.style.visibility = 'visible';
+                socialSubmitBtnSpinner.style.display = 'none';
             }
         });
         
