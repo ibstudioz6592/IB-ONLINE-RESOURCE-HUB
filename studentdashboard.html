@@ -81,13 +81,15 @@
             font-size: 0.9rem; font-weight: 600; cursor: pointer; 
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
             backdrop-filter: blur(10px); position: relative; overflow: hidden;
+            z-index: 1;
         }
         .btn-secondary::before {
-            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,215,0,0.1), transparent);
-            transition: left 0.5s ease;
+            content: ''; position: absolute; top: 50%; left: 50%; width: 0; height: 0;
+            border-radius: 50%; background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%); transition: width 0.6s, height 0.6s;
+            z-index: -1;
         }
-        .btn-secondary:hover::before { left: 100%; }
+        .btn-secondary:hover::before { width: 300px; height: 300px; }
         .btn-secondary:hover { 
             background: var(--primary-glow); color: var(--dark-bg); 
             border-color: var(--primary-glow); 
@@ -119,7 +121,13 @@
             opacity: 0; transition: opacity 0.3s ease;
             z-index: -1;
         }
+        .overview-card::after {
+            content: ''; position: absolute; top: -50%; right: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%);
+            opacity: 0; transition: opacity 0.5s ease; z-index: -1;
+        }
         .overview-card:hover::before { opacity: 1; }
+        .overview-card:hover::after { opacity: 1; }
         .overview-card:hover { transform: translateY(-5px) scale(1.02); }
         .overview-number {
             font-size: 2.5rem; font-weight: 800; margin-bottom: 5px;
@@ -181,11 +189,17 @@
             position: relative; overflow: hidden;
         }
         .nav-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at center, transparent 40%, var(--card-color, var(--primary-glow)) 140%);
-            opacity: 0; transition: opacity 0.3s ease; z-index: -1;
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow), var(--accent-glow));
+            transform: translateX(-100%); transition: transform 0.6s ease;
         }
-        .nav-card:hover::before { opacity: 0.03; }
+        .nav-card::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+            opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+        }
+        .nav-card:hover::before { transform: translateX(0); }
+        .nav-card:hover::after { opacity: 1; }
         @keyframes card-fade-in { 
             from { opacity: 0; transform: translateY(30px) scale(0.95); } 
             to { opacity: 1; transform: translateY(0) scale(1); } 
@@ -281,7 +295,14 @@
             background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
             border-radius: 12px; padding: 20px; text-align: center;
             transition: all 0.3s ease;
+            position: relative; overflow: hidden;
         }
+        .badge-item::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+            opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+        }
+        .badge-item:hover::after { opacity: 1; }
         .badge-item:hover {
             background: rgba(255,255,255,0.1); border-color: var(--primary-glow);
             transform: translateY(-5px);
@@ -399,7 +420,14 @@
             border-radius: 8px; padding: 15px; margin-bottom: 10px;
             transition: all 0.3s ease; display: flex; align-items: center;
             justify-content: space-between;
+            position: relative; overflow: hidden;
         }
+        .task-item::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+            opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+        }
+        .task-item:hover::after { opacity: 1; }
         .task-item:hover {
             background: rgba(255,255,255,0.06); border-color: rgba(255,215,0,0.3);
         }
@@ -529,7 +557,14 @@
             background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
             border-radius: 8px; padding: 15px; margin-bottom: 15px;
             transition: all 0.3s ease;
+            position: relative; overflow: hidden;
         }
+        .goal-item::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+            opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+        }
+        .goal-item:hover::after { opacity: 1; }
         .goal-item:hover {
             background: rgba(255,255,255,0.06); border-color: rgba(255,215,0,0.3);
         }
@@ -587,7 +622,7 @@
         .group-subject {
             background: var(--secondary-glow); color: var(--dark-bg);
             padding: 4px 8px; border-radius: 12px; font-size: 0.7rem;
-            font-weight: 600;
+            font-weight: 600; margin-bottom: 10px; display: inline-block;
         }
         
         /* Performance Insights */
@@ -1055,7 +1090,14 @@
             padding: 15px; margin-bottom: 10px;
             background: rgba(255,255,255,0.03); border-radius: 8px;
             transition: all 0.3s ease;
+            position: relative; overflow: hidden;
         }
+        .activity-item::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+            opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+        }
+        .activity-item:hover::after { opacity: 1; }
         .activity-item:hover {
             background: rgba(255,255,255,0.06);
         }
@@ -1139,7 +1181,14 @@
             padding: 15px; margin-bottom: 10px;
             background: rgba(255,255,255,0.03); border-radius: 8px;
             transition: all 0.3s ease;
+            position: relative; overflow: hidden;
         }
+        .transaction-item::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+            opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+        }
+        .transaction-item:hover::after { opacity: 1; }
         .transaction-item:hover {
             background: rgba(255,255,255,0.06);
         }
@@ -1313,7 +1362,14 @@
         .material-card {
             background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
             border-radius: 12px; padding: 20px; transition: all 0.3s ease;
+            position: relative; overflow: hidden;
         }
+        .material-card::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+            opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+        }
+        .material-card:hover::after { opacity: 1; }
         .material-card:hover {
             background: rgba(255,255,255,0.06); border-color: rgba(255,215,0,0.3);
             transform: translateY(-5px);
@@ -1450,23 +1506,51 @@
         .toast.error i { color: var(--danger); }
         .toast.info i { color: var(--info); }
         
-        /* Loading Spinner */
+        /* Enhanced Loading Spinner */
         .spinner-container { display: flex; justify-content: center; align-items: center; height: 120px; }
         .spinner { 
-            width: 50px; height: 50px; 
+            position: relative; width: 50px; height: 50px; 
             border: 4px solid rgba(255, 255, 255, 0.1); border-radius: 50%; 
             border-top-color: var(--primary-glow); 
             animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite; 
         }
+        .spinner::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: var(--secondary-glow);
+            animation: spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite reverse;
+        }
         @keyframes spin { to { transform: rotate(360deg); } }
         
-        /* Empty State */
+        /* Enhanced Empty State */
         .empty-state {
             text-align: center; padding: 40px 20px;
             color: var(--text-muted);
+            position: relative; overflow: hidden;
+        }
+        .empty-state::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary-glow), transparent);
+            opacity: 0.3;
         }
         .empty-icon {
             font-size: 3rem; margin-bottom: 15px; opacity: 0.5;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
         
         /* Progress Circle */
@@ -1488,6 +1572,171 @@
             font-size: 1.5rem; font-weight: 700; color: var(--text-primary);
         }
         
+        /* Floating Chatbot Button */
+        .chatbot-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
+            color: var(--dark-bg);
+            border: none;
+            border-radius: 50px;
+            padding: 15px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 215, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+        }
+
+        .chatbot-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Chatbot Modal */
+        .chatbot-modal {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            height: 500px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slide-up 0.4s ease-out;
+        }
+
+        @keyframes slide-up {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .chatbot-modal.active {
+            display: flex;
+        }
+
+        .chatbot-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
+            color: var(--dark-bg);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chatbot-close-btn {
+            background: none;
+            border: none;
+            color: var(--dark-bg);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .chatbot-close-btn:hover {
+            transform: rotate(90deg);
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chatbot-input-container {
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chatbot-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 12px 20px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            outline: none;
+        }
+
+        .chatbot-input:focus {
+            border-color: var(--primary-glow);
+        }
+
+        .chatbot-send-btn {
+            background: var(--primary-glow);
+            color: var(--dark-bg);
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-send-btn:hover {
+            background: #ffcc00;
+            transform: scale(1.05);
+        }
+        
+        /* Premium Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #ffcc00, var(--secondary-glow));
+        }
+        
         /* Responsive Design */
         @media (max-width: 768px) {
             .page-header { flex-direction: column; gap: 20px; margin: 15px; padding: 25px 20px; }
@@ -1497,6 +1746,11 @@
             .materials-grid { grid-template-columns: 1fr; }
             .section-header { flex-direction: column; align-items: flex-start; gap: 10px; }
             .modal { padding: 30px 20px; }
+            .chatbot-modal {
+                width: 90%;
+                right: 5%;
+                left: 5%;
+            }
             
             /* Feature responsive */
             .ai-assistant-container, .resume-builder, .time-tracker-container,
@@ -1513,6 +1767,10 @@
             .welcome-header-pro h1 { font-size: 2rem; }
             .nav-card { padding: 25px 20px; }
             .nav-card h3 { font-size: 1.2rem; }
+            .chatbot-btn {
+                padding: 12px 16px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -1552,27 +1810,27 @@
             <!-- Dashboard Overview Cards -->
             <div class="dashboard-overview">
                 <div class="overview-card">
-                    <div class="overview-number" id="materials-count">0</div>
+                    <div class="overview-number" id="materials-count">...</div>
                     <div class="overview-label">Materials</div>
                 </div>
                 <div class="overview-card">
-                    <div class="overview-number" id="pyqs-count">0</div>
+                    <div class="overview-number" id="pyqs-count">...</div>
                     <div class="overview-label">PYQs</div>
                 </div>
                 <div class="overview-card">
-                    <div class="overview-number" id="seminars-count">0</div>
+                    <div class="overview-number" id="seminars-count">...</div>
                     <div class="overview-label">Seminars</div>
                 </div>
                 <div class="overview-card">
-                    <div class="overview-number" id="credits-count">0</div>
+                    <div class="overview-number" id="credits-count">...</div>
                     <div class="overview-label">Credits</div>
                 </div>
                 <div class="overview-card">
-                    <div class="overview-number" id="streak-count">0</div>
+                    <div class="overview-number" id="streak-count">...</div>
                     <div class="overview-label">Study Streak</div>
                 </div>
                 <div class="overview-card">
-                    <div class="overview-number" id="hours-count">0</div>
+                    <div class="overview-number" id="hours-count">...</div>
                     <div class="overview-label">Study Hours</div>
                 </div>
             </div>
@@ -1610,7 +1868,7 @@
                     <!-- Study Streak Widget -->
                     <div class="streak-widget" style="margin-bottom: 40px;">
                         <div class="streak-fire">🔥</div>
-                        <div class="streak-number" id="streak-display">0</div>
+                        <div class="streak-number" id="streak-display">...</div>
                         <div class="streak-label">Day Study Streak</div>
                     </div>
                     
@@ -2630,7 +2888,7 @@
                             <div class="currency-icon">
                                 <i class="fas fa-coins"></i>
                             </div>
-                            <div class="currency-amount" id="currency-amount">0</div>
+                            <div class="currency-amount" id="currency-amount">...</div>
                             <div class="currency-label">Credits</div>
                             <div class="currency-actions">
                                 <button class="currency-btn earn" id="earn-credits">
@@ -2694,6 +2952,39 @@
             </div>
         </div>
     </main>
+    
+    <!-- Floating Chatbot Button -->
+    <button id="chatbot-btn" class="chatbot-btn">
+        <i class="fas fa-comments"></i>
+        <span>IB HELP</span>
+    </button>
+
+    <!-- Chatbot Modal -->
+    <div class="chatbot-modal" id="chatbot-modal">
+        <div class="chatbot-container">
+            <div class="chatbot-header">
+                <div class="chatbot-title">
+                    <i class="fas fa-robot"></i> IB HELP
+                </div>
+                <button class="chatbot-close-btn" id="chatbot-close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages">
+                <div class="message ai">
+                    <div class="message-bubble">
+                        Hello! I'm your IB HELP assistant. How can I assist you today?
+                    </div>
+                </div>
+            </div>
+            <div class="chatbot-input-container">
+                <input type="text" class="chatbot-input" placeholder="Type your message..." id="chatbot-input">
+                <button class="chatbot-send-btn" id="chatbot-send-btn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
     
     <!-- Modals -->
     <!-- Profile Modal -->
@@ -2855,6 +3146,14 @@
         // Toast notification
         const toast = document.getElementById('toast');
         const toastMessage = document.getElementById('toast-message');
+        
+        // Chatbot elements
+        const chatbotBtn = document.getElementById('chatbot-btn');
+        const chatbotModal = document.getElementById('chatbot-modal');
+        const chatbotCloseBtn = document.getElementById('chatbot-close-btn');
+        const chatbotMessages = document.getElementById('chatbot-messages');
+        const chatbotInput = document.getElementById('chatbot-input');
+        const chatbotSendBtn = document.getElementById('chatbot-send-btn');
         
         // Enhanced toast function with auto-hide
         function showToast(message, type = 'success') {
@@ -3550,6 +3849,23 @@
             
             // Load dashboard data
             loadDashboardData();
+            
+            // Chatbot functionality
+            chatbotBtn.addEventListener('click', () => {
+                chatbotModal.classList.add('active');
+                chatbotInput.focus();
+            });
+            
+            chatbotCloseBtn.addEventListener('click', () => {
+                chatbotModal.classList.remove('active');
+            });
+            
+            chatbotSendBtn.addEventListener('click', sendChatbotMessage);
+            chatbotInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendChatbotMessage();
+                }
+            });
         }
         
         // Initialize sample data
@@ -3868,6 +4184,53 @@
             aiMessages.scrollTop = aiMessages.scrollHeight;
         }
         
+        // Send chatbot message
+        function sendChatbotMessage() {
+            const message = chatbotInput.value.trim();
+            if (!message) return;
+
+            // Add user message
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message user';
+            userMessage.innerHTML = `<div class="message-bubble">${message}</div>`;
+            chatbotMessages.appendChild(userMessage);
+
+            // Clear input
+            chatbotInput.value = '';
+
+            // Simulate bot response
+            setTimeout(() => {
+                const botMessage = document.createElement('div');
+                botMessage.className = 'message ai';
+                
+                // Enhanced response logic
+                let response = "I'm here to help with your studies. Could you provide more details?";
+                
+                if (message.toLowerCase().includes('help')) {
+                    response = "I can assist you with:\n• Study materials\n• Previous year papers\n• Exam preparation\n• Time management\n• Course concepts\nWhat would you like help with?";
+                } else if (message.toLowerCase().includes('material') || message.toLowerCase().includes('note')) {
+                    response = "You can access all study materials from the 'Study Materials' section on your dashboard. We have notes, e-books, and other resources organized by subject.";
+                } else if (message.toLowerCase().includes('pyq') || message.toLowerCase().includes('previous')) {
+                    response = "Previous year question papers are available in the 'Previous Year Papers' section. They're organized by subject and year to help you prepare effectively.";
+                } else if (message.toLowerCase().includes('seminar')) {
+                    response = "Check out the 'Seminars' section for recorded sessions from industry experts and faculty members. They cover important course concepts and exam tips.";
+                } else if (message.toLowerCase().includes('exam') || message.toLowerCase().includes('test')) {
+                    response = "For exam preparation, I recommend:\n1. Review previous year papers\n2. Take practice quizzes\n3. Use the study planner to organize your time\n4. Join virtual study rooms for group discussions";
+                } else if (message.toLowerCase().includes('contact') || message.toLowerCase().includes('support')) {
+                    response = "For additional support, you can:\n• Email support@ibstudioz.com\n• Call our helpline at +1-234-567-8900\n• Visit the help center on our website";
+                }
+                
+                botMessage.innerHTML = `<div class="message-bubble">${response}</div>`;
+                chatbotMessages.appendChild(botMessage);
+
+                // Scroll to bottom
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }, 1000);
+
+            // Scroll to bottom
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+        
         // Save time session
         function saveTimeSession(seconds, activity) {
             if (!currentUser) return;
@@ -3947,51 +4310,102 @@
             showToast('Edit profile feature coming soon!', 'info');
         }
         
+        // Animate counter when value changes
+        function animateCounter(element) {
+            const target = parseInt(element.textContent);
+            const duration = 1000;
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+            
+            const updateCounter = () => {
+                current += increment;
+                if (current < target) {
+                    element.textContent = Math.floor(current);
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    element.textContent = target;
+                }
+            };
+            
+            updateCounter();
+        }
+        
         // Load dashboard data
         function loadDashboardData() {
             if (!currentUser) return;
             
-            // Load materials count
+            // Show loading indicators
+            document.querySelectorAll('.overview-number').forEach(el => {
+                el.textContent = '...';
+            });
+            
+            // Load materials count with real-time updates
             db.collection('notes').onSnapshot(snapshot => {
                 materialsCount.textContent = snapshot.size;
+                animateCounter(materialsCount);
             }, error => {
                 console.error('Error loading materials:', error);
                 materialsCount.textContent = 'Error';
             });
             
-            // Load PYQs count
+            // Load PYQs count with real-time updates
             db.collection('pyqs').onSnapshot(snapshot => {
                 pyqsCount.textContent = snapshot.size;
+                animateCounter(pyqsCount);
             }, error => {
                 console.error('Error loading PYQs:', error);
                 pyqsCount.textContent = 'Error';
             });
             
-            // Load seminars count
+            // Load seminars count with real-time updates
             db.collection('seminars').onSnapshot(snapshot => {
                 seminarsCount.textContent = snapshot.size;
+                animateCounter(seminarsCount);
             }, error => {
                 console.error('Error loading seminars:', error);
                 seminarsCount.textContent = 'Error';
             });
             
-            // Load user credits
+            // Load user credits with real-time updates
             db.collection('users').doc(currentUser.uid).onSnapshot(doc => {
                 if (doc.exists) {
                     const data = doc.data();
                     creditsCount.textContent = data.credits || 0;
                     userData = data;
                     studentNameEl.textContent = data.name || 'Student';
+                    animateCounter(creditsCount);
                 }
             }, error => {
                 console.error('Error loading user data:', error);
                 creditsCount.textContent = 'Error';
             });
             
-            // Load notices
+            // Load study streak from user data
+            db.collection('users').doc(currentUser.uid).get().then(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    studyStreak = data.studyStreak || 0;
+                    streakCount.textContent = studyStreak;
+                    document.getElementById('streak-display').textContent = studyStreak;
+                    animateCounter(streakCount);
+                }
+            });
+            
+            // Load total study hours from user data
+            db.collection('users').doc(currentUser.uid).get().then(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    totalStudyHours = data.totalStudyHours || 0;
+                    hoursCount.textContent = Math.round(totalStudyHours);
+                    animateCounter(hoursCount);
+                }
+            });
+            
+            // Load notices with real-time updates
             loadNotices();
             
-            // Load recent materials
+            // Load recent materials with real-time updates
             loadRecentMaterials();
         }
         
@@ -4002,6 +4416,13 @@
             
             // Get last notice view time from localStorage
             lastNoticeTime = localStorage.getItem('lastNoticeTime');
+            
+            // Show loading state
+            noticesList.innerHTML = `
+                <div class="spinner-container">
+                    <div class="spinner"></div>
+                </div>
+            `;
             
             db.collection('notices')
                 .orderBy('createdAt', 'desc')
@@ -4090,6 +4511,13 @@
         // Load recent materials with real-time updates
         function loadRecentMaterials() {
             const recentMaterials = document.getElementById('recent-materials');
+            
+            // Show loading state
+            recentMaterials.innerHTML = `
+                <div class="spinner-container">
+                    <div class="spinner"></div>
+                </div>
+            `;
             
             // Create a combined query for all materials
             const materialsPromises = [
@@ -4563,12 +4991,19 @@
                 document.querySelectorAll('.modal-overlay.active').forEach(modal => {
                     modal.classList.remove('active');
                 });
+                chatbotModal.classList.remove('active');
             }
             
             // Ctrl/Cmd + K for quick search
             if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
                 e.preventDefault();
                 showToast('Quick search feature coming soon!', 'info');
+            }
+            
+            // Ctrl/Cmd + H for chatbot
+            if ((e.ctrlKey || e.metaKey) && e.key === 'h') {
+                e.preventDefault();
+                chatbotBtn.click();
             }
             
             // Tab navigation with numbers
@@ -4725,7 +5160,15 @@
                 setupAutoSave();
                 simulateActivity();
             }
+            
+            // Add welcome message for new users
+            if (!localStorage.getItem('welcomeShown')) {
+                setTimeout(() => {
+                    showToast('Welcome to IB STUDIOZ! Press Ctrl+H for help anytime.', 'info');
+                    localStorage.setItem('welcomeShown', 'true');
+                }, 2000);
+            }
         });
     </script>
 </body>
-</html> 
+</html>
