@@ -880,30 +880,118 @@
             box-shadow: 0 5px 15px rgba(255,215,0,0.3);
         }
         
-        /* IB Help Chatbot */
-        .ib-help-container {
+        /* AI Assistant */
+        .ai-assistant-container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
+            height: 500px;
+        }
+        .ai-chat {
             background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
             border-radius: 12px; padding: 20px;
-            height: 500px;
-            display: flex;
-            flex-direction: column;
+            display: flex; flex-direction: column;
         }
-        .ib-help-header {
+        .ai-chat-header {
             display: flex; align-items: center; gap: 15px;
             margin-bottom: 20px; padding-bottom: 15px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-        .ib-help-avatar {
+        .ai-avatar {
             width: 50px; height: 50px; border-radius: 50%;
             background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
             display: flex; align-items: center; justify-content: center;
             font-size: 1.5rem; color: var(--dark-bg);
         }
-        .ib-help-iframe {
-            flex: 1;
-            border: none;
-            border-radius: 12px;
-            background: rgba(255,255,255,0.02);
+        .ai-status {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.9rem; color: var(--text-secondary);
+        }
+        .status-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: var(--success); animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .ai-messages {
+            flex: 1; overflow-y: auto; margin-bottom: 20px;
+            padding-right: 10px;
+        }
+        .ai-messages::-webkit-scrollbar { width: 6px; }
+        .ai-messages::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); border-radius: 3px; }
+        .ai-messages::-webkit-scrollbar-thumb { 
+            background: var(--primary-glow); border-radius: 3px; 
+        }
+        .message {
+            margin-bottom: 15px; display: flex;
+        }
+        .message.user {
+            justify-content: flex-end;
+        }
+        .message-bubble {
+            max-width: 80%; padding: 12px 18px;
+            border-radius: 18px; font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .message.ai .message-bubble {
+            background: rgba(255,255,255,0.1); border-top-left-radius: 4px;
+            color: var(--text-primary);
+        }
+        .message.user .message-bubble {
+            background: var(--primary-glow); color: var(--dark-bg);
+            border-top-right-radius: 4px;
+        }
+        .ai-input-container {
+            display: flex; gap: 10px;
+        }
+        .ai-input {
+            flex: 1; padding: 12px 18px;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 30px; color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+        }
+        .ai-input:focus {
+            outline: none; border-color: var(--primary-glow);
+        }
+        .ai-send {
+            width: 45px; height: 45px; border-radius: 50%;
+            background: var(--primary-glow); color: var(--dark-bg);
+            border: none; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        .ai-send:hover {
+            background: #ffcc00; transform: scale(1.05);
+        }
+        .ai-features {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px; padding: 20px;
+        }
+        .ai-feature-title {
+            font-size: 1.2rem; font-weight: 700; margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+        .ai-feature-list {
+            list-style: none;
+        }
+        .ai-feature-item {
+            display: flex; align-items: center; gap: 15px;
+            padding: 15px; margin-bottom: 10px;
+            background: rgba(255,255,255,0.03); border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .ai-feature-item:hover {
+            background: rgba(255,255,255,0.06); border-left: 3px solid var(--primary-glow);
+        }
+        .ai-feature-icon {
+            width: 40px; height: 40px; border-radius: 8px;
+            background: rgba(255,215,0,0.1); color: var(--primary-glow);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+        }
+        .ai-feature-name {
+            font-weight: 600; color: var(--text-primary);
         }
         
         /* Time Tracker */
@@ -1411,7 +1499,7 @@
             .modal { padding: 30px 20px; }
             
             /* Feature responsive */
-            .ib-help-container, .resume-builder, .time-tracker-container,
+            .ai-assistant-container, .resume-builder, .time-tracker-container,
             .currency-container, .leaderboard-container, .task-manager,
             .analytics-container, .social-container, .goals-container,
             .quiz-creator, .planner-container, .collab-notes-container {
@@ -1509,7 +1597,7 @@
                 <div class="feature-tab" data-tab="insights">Performance</div>
                 <div class="feature-tab" data-tab="badges">Badges</div>
                 <div class="feature-tab" data-tab="resume">Resume Builder</div>
-                <div class="feature-tab" data-tab="ib-help">IB Help</div>
+                <div class="feature-tab" data-tab="ai-assistant">AI Assistant</div>
                 <div class="feature-tab" data-tab="time-tracker">Time Tracker</div>
                 <div class="feature-tab" data-tab="credits">Virtual Currency</div>
                 <div class="feature-tab" data-tab="leaderboard">Leaderboard</div>
@@ -2405,34 +2493,81 @@
                     </div>
                 </div>
                 
-                <!-- IB Help Panel -->
-                <div class="feature-panel" id="ib-help-panel">
+                <!-- AI Assistant Panel -->
+                <div class="feature-panel" id="ai-assistant-panel">
                     <div class="section-header">
-                        <h2 class="section-title"><i class="fas fa-comments"></i> IB Help</h2>
+                        <h2 class="section-title"><i class="fas fa-robot"></i> AI Learning Assistant</h2>
                         <div class="btn-secondary">
-                            <i class="fas fa-sync"></i> Refresh
+                            <i class="fas fa-cog"></i> Settings
                         </div>
                     </div>
                     
-                    <div class="ib-help-container">
-                        <div class="ib-help-header">
-                            <div class="ib-help-avatar">
-                                <i class="fas fa-robot"></i>
-                            </div>
-                            <div>
-                                <div style="font-weight: 600; color: var(--text-primary);">IB Help Assistant</div>
-                                <div class="ai-status">
-                                    <div class="status-dot"></div>
-                                    Online
+                    <div class="ai-assistant-container">
+                        <div class="ai-chat">
+                            <div class="ai-chat-header">
+                                <div class="ai-avatar">
+                                    <i class="fas fa-robot"></i>
                                 </div>
+                                <div>
+                                    <div style="font-weight: 600; color: var(--text-primary);">Study Assistant</div>
+                                    <div class="ai-status">
+                                        <div class="status-dot"></div>
+                                        Online
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="ai-messages" id="ai-messages">
+                                <div class="message ai">
+                                    <div class="message-bubble">
+                                        Hello! I'm your AI learning assistant. How can I help you today?
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="ai-input-container">
+                                <input type="text" class="ai-input" placeholder="Ask me anything..." id="ai-input">
+                                <button class="ai-send" id="ai-send">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
                             </div>
                         </div>
                         
-                        <iframe 
-                            src="https://bot.dialogflow.com/d4202877-f46b-4b1f-9d97-36aa700f482d" 
-                            class="ib-help-iframe"
-                            style="width: 100%; height: 100%; border: none; border-radius: 12px;">
-                        </iframe>
+                        <div class="ai-features">
+                            <div class="ai-feature-title">AI Features</div>
+                            <ul class="ai-feature-list">
+                                <li class="ai-feature-item">
+                                    <div class="ai-feature-icon">
+                                        <i class="fas fa-brain"></i>
+                                    </div>
+                                    <div class="ai-feature-name">Exam Preparation Coach</div>
+                                </li>
+                                <li class="ai-feature-item">
+                                    <div class="ai-feature-icon">
+                                        <i class="fas fa-comments"></i>
+                                    </div>
+                                    <div class="ai-feature-name">Emotion-Aware Chatbot</div>
+                                </li>
+                                <li class="ai-feature-item">
+                                    <div class="ai-feature-icon">
+                                        <i class="fas fa-microphone"></i>
+                                    </div>
+                                    <div class="ai-feature-name">Speech Recognition</div>
+                                </li>
+                                <li class="ai-feature-item">
+                                    <div class="ai-feature-icon">
+                                        <i class="fas fa-video"></i>
+                                    </div>
+                                    <div class="ai-feature-name">YouTube Video Assistant</div>
+                                </li>
+                                <li class="ai-feature-item">
+                                    <div class="ai-feature-icon">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                    <div class="ai-feature-name">Quiz Difficulty Adjuster</div>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 
@@ -2707,6 +2842,11 @@
         const timerStart = document.getElementById('timer-start');
         const timerStop = document.getElementById('timer-stop');
         const timerReset = document.getElementById('timer-reset');
+        
+        // AI Assistant elements
+        const aiMessages = document.getElementById('ai-messages');
+        const aiInput = document.getElementById('ai-input');
+        const aiSend = document.getElementById('ai-send');
         
         // Resume Builder elements
         const resumeSections = document.querySelectorAll('.resume-section');
@@ -3160,3 +3300,1432 @@
                 const title = document.getElementById('quiz-title').value;
                 const subject = document.getElementById('quiz-subject').value;
                 const question = document.getElementById('quiz-question').value;
+                const option1 = document.getElementById('option-1').value;
+                const option2 = document.getElementById('option-2').value;
+                const option3 = document.getElementById('option-3').value;
+                const option4 = document.getElementById('option-4').value;
+                
+                if (question && option1 && option2) {
+                    quizQuestions.push({
+                        question, 
+                        options: [option1, option2, option3, option4].filter(opt => opt),
+                        correct: 0, // First option is correct
+                        id: Date.now()
+                    });
+                    
+                    updateQuizPreview();
+                    showToast('Question added to quiz', 'success');
+                    
+                    // Clear question form
+                    document.getElementById('quiz-question').value = '';
+                    document.getElementById('option-1').value = '';
+                    document.getElementById('option-2').value = '';
+                    document.getElementById('option-3').value = '';
+                    document.getElementById('option-4').value = '';
+                } else {
+                    showToast('Please fill in question and at least 2 options', 'error');
+                }
+            });
+            
+            // Mind map functionality
+            let nodeCounter = 2;
+            document.getElementById('add-node-btn').addEventListener('click', () => {
+                const text = document.getElementById('node-text').value;
+                if (text) {
+                    const canvas = document.getElementById('mindmap-canvas');
+                    const node = document.createElement('div');
+                    node.className = 'mindmap-node';
+                    node.setAttribute('data-id', nodeCounter++);
+                    node.textContent = text;
+                    node.style.top = Math.random() * 400 + 'px';
+                    node.style.left = Math.random() * 600 + 'px';
+                    
+                    // Make draggable
+                    makeDraggable(node);
+                    
+                    canvas.appendChild(node);
+                    document.getElementById('node-text').value = '';
+                    showToast('Node added', 'success');
+                }
+            });
+            
+            document.getElementById('clear-mindmap').addEventListener('click', () => {
+                if (confirm('Clear all nodes?')) {
+                    const canvas = document.getElementById('mindmap-canvas');
+                    const nodes = canvas.querySelectorAll('.mindmap-node');
+                    nodes.forEach(node => {
+                        if (node.getAttribute('data-id') !== '1') {
+                            node.remove();
+                        }
+                    });
+                    showToast('Mind map cleared', 'info');
+                }
+            });
+            
+            // Collaborative notes
+            const notesList = document.getElementById('notes-list');
+            const noteEditor = document.getElementById('note-editor');
+            
+            notesList.addEventListener('click', (e) => {
+                const noteItem = e.target.closest('.note-item');
+                if (noteItem) {
+                    document.querySelectorAll('.note-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    noteItem.classList.add('active');
+                    
+                    // Load note content (placeholder)
+                    const noteTitle = noteItem.querySelector('.note-title').textContent;
+                    showToast(`Loaded: ${noteTitle}`, 'info');
+                }
+            });
+            
+            // Editor toolbar
+            document.querySelectorAll('.toolbar-btn[data-command]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const command = btn.getAttribute('data-command');
+                    document.execCommand(command, false, null);
+                    btn.classList.toggle('active');
+                });
+            });
+            
+            document.getElementById('save-note').addEventListener('click', () => {
+                showToast('Note saved', 'success');
+            });
+            
+            document.getElementById('new-note-btn').addEventListener('click', () => {
+                const title = prompt('Enter note title:');
+                if (title) {
+                    const notesList = document.getElementById('notes-list');
+                    const newNote = document.createElement('div');
+                    newNote.className = 'note-item';
+                    newNote.innerHTML = `
+                        <div class="note-title">${title}</div>
+                        <div class="note-preview">New note...</div>
+                    `;
+                    notesList.appendChild(newNote);
+                    showToast('New note created', 'success');
+                }
+            });
+            
+            // File upload
+            const uploadZone = document.getElementById('upload-zone');
+            const fileInput = document.getElementById('file-input');
+            
+            uploadZone.addEventListener('click', () => fileInput.click());
+            uploadZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadZone.classList.add('dragover');
+            });
+            uploadZone.addEventListener('dragleave', () => {
+                uploadZone.classList.remove('dragover');
+            });
+            uploadZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadZone.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+            
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+            });
+            
+            // Timer functionality
+            timerStart.addEventListener('click', () => {
+                if (!timerRunning) {
+                    timerRunning = true;
+                    timerStart.innerHTML = '<i class="fas fa-pause"></i>';
+                    
+                    timerInterval = setInterval(() => {
+                        timerSeconds++;
+                        timerDisplay.textContent = formatTime(timerSeconds);
+                    }, 1000);
+                    
+                    if (!currentActivity) {
+                        currentActivity = 'General Study';
+                        timerActivity.textContent = currentActivity;
+                    }
+                    
+                    showToast('Timer started', 'info');
+                } else {
+                    timerRunning = false;
+                    timerStart.innerHTML = '<i class="fas fa-play"></i>';
+                    clearInterval(timerInterval);
+                    
+                    showToast('Timer paused', 'info');
+                }
+            });
+            
+            timerStop.addEventListener('click', () => {
+                if (timerRunning) {
+                    timerRunning = false;
+                    timerStart.innerHTML = '<i class="fas fa-play"></i>';
+                    clearInterval(timerInterval);
+                    
+                    // Save the session
+                    saveTimeSession(timerSeconds, currentActivity);
+                    
+                    // Update study hours
+                    totalStudyHours += timerSeconds / 3600;
+                    hoursCount.textContent = Math.round(totalStudyHours);
+                    
+                    // Update study streak
+                    updateStudyStreak();
+                    
+                    // Reset timer
+                    timerSeconds = 0;
+                    timerDisplay.textContent = formatTime(timerSeconds);
+                    timerActivity.textContent = 'No activity selected';
+                    currentActivity = null;
+                    
+                    showToast('Session saved successfully', 'success');
+                }
+            });
+            
+            timerReset.addEventListener('click', () => {
+                if (timerRunning) {
+                    timerRunning = false;
+                    timerStart.innerHTML = '<i class="fas fa-play</i>';
+                    clearInterval(timerInterval);
+                }
+                
+                timerSeconds = 0;
+                timerDisplay.textContent = formatTime(timerSeconds);
+                timerActivity.textContent = 'No activity selected';
+                currentActivity = null;
+                
+                showToast('Timer reset', 'info');
+            });
+            
+            // AI Assistant functionality
+            aiSend.addEventListener('click', sendAiMessage);
+            aiInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendAiMessage();
+                }
+            });
+            
+            // Resume Builder functionality
+            resumeSections.forEach(section => {
+                section.addEventListener('click', () => {
+                    const sectionId = section.getAttribute('data-section');
+                    
+                    // Update active section
+                    resumeSections.forEach(s => s.classList.remove('active'));
+                    section.classList.add('active');
+                    
+                    // Update active form
+                    resumeForms.forEach(form => {
+                        form.classList.remove('active');
+                        if (form.id === `${sectionId}-form`) {
+                            form.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // Resume save buttons
+            document.getElementById('save-personal')?.addEventListener('click', savePersonalInfo);
+            document.getElementById('save-education')?.addEventListener('click', saveEducation);
+            document.getElementById('save-experience')?.addEventListener('click', saveExperience);
+            document.getElementById('save-skills')?.addEventListener('click', saveSkills);
+            document.getElementById('save-project')?.addEventListener('click', saveProject);
+            document.getElementById('save-achievements')?.addEventListener('click', saveAchievements);
+            
+            // Download resume
+            document.getElementById('download-resume')?.addEventListener('click', downloadResume);
+            
+            // Virtual currency
+            document.getElementById('earn-credits')?.addEventListener('click', earnCredits);
+            document.getElementById('spend-credits')?.addEventListener('click', spendCredits);
+            
+            // Add activity
+            document.getElementById('add-activity')?.addEventListener('click', addActivity);
+            
+            // Initialize calendar
+            generateCalendar();
+            
+            // Initialize sample data
+            initializeSampleData();
+            
+            // Load dashboard data
+            loadDashboardData();
+        }
+        
+        // Initialize sample data
+        function initializeSampleData() {
+            // Sample tasks
+            tasks = [
+                {
+                    title: 'Complete Calculus Assignment',
+                    description: 'Solve problems 1-15 from Chapter 5',
+                    dueDate: '2025-09-05',
+                    priority: 'high',
+                    completed: false,
+                    id: 1
+                },
+                {
+                    title: 'Physics Lab Report',
+                    description: 'Write report on pendulum experiment',
+                    dueDate: '2025-09-03',
+                    priority: 'medium',
+                    completed: true,
+                    id: 2
+                }
+            ];
+            
+            // Sample events
+            events = [
+                {
+                    title: 'Math Exam',
+                    subject: 'Mathematics',
+                    date: '2025-09-10',
+                    time: '10:00',
+                    duration: '120',
+                    id: 1
+                },
+                {
+                    title: 'Physics Seminar',
+                    subject: 'Physics',
+                    date: '2025-09-02',
+                    time: '14:00',
+                    duration: '60',
+                    id: 2
+                }
+            ];
+            
+            // Sample goals
+            goals = [
+                {
+                    title: 'Complete Calculus Chapter 5',
+                    description: 'Study and solve all problems',
+                    deadline: '2025-09-15',
+                    target: '15 problems',
+                    progress: 60,
+                    status: 'in-progress',
+                    id: 1
+                },
+                {
+                    title: 'Read 50 pages of Physics textbook',
+                    description: 'Read and summarize key concepts',
+                    deadline: '2025-08-30',
+                    target: '50 pages',
+                    progress: 100,
+                    status: 'completed',
+                    id: 2
+                }
+            ];
+            
+            // Sample study rooms
+            studyRooms = [
+                {
+                    name: 'Calculus Study Session',
+                    subject: 'Mathematics',
+                    description: 'Working through integration problems and discussing techniques',
+                    participants: 5,
+                    status: 'active',
+                    id: 1
+                },
+                {
+                    name: 'Physics Lab Discussion',
+                    subject: 'Physics',
+                    description: 'Discussing quantum mechanics lab results and theory',
+                    participants: 3,
+                    status: 'active',
+                    id: 2
+                },
+                {
+                    name: 'Computer Science Project',
+                    subject: 'CS',
+                    description: 'Planning our final year project on machine learning',
+                    participants: 3,
+                    status: 'inactive',
+                    id: 3
+                }
+            ];
+            
+            // Initialize study streak
+            studyStreak = Math.floor(Math.random() * 15) + 1;
+            streakCount.textContent = studyStreak;
+            document.getElementById('streak-display').textContent = studyStreak;
+            
+            // Initialize study hours
+            totalStudyHours = Math.random() * 15 + 5;
+            hoursCount.textContent = Math.round(totalStudyHours);
+        }
+        
+        // Update study streak
+        function updateStudyStreak() {
+            const lastStudyDate = localStorage.getItem('lastStudyDate');
+            const today = new Date().toDateString();
+            
+            if (lastStudyDate !== today) {
+                studyStreak++;
+                streakCount.textContent = studyStreak;
+                document.getElementById('streak-display').textContent = studyStreak;
+                localStorage.setItem('lastStudyDate', today);
+                showToast(`Study streak: ${studyStreak} days!`, 'success');
+            }
+        }
+        
+        // Update quiz preview
+        function updateQuizPreview() {
+            const previewContent = document.getElementById('quiz-preview-content');
+            const title = document.getElementById('quiz-title').value;
+            const subject = document.getElementById('quiz-subject').value;
+            
+            if (quizQuestions.length === 0) {
+                previewContent.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="fas fa-question-circle"></i></div>
+                        <p>Add questions to see preview</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let previewHTML = '';
+            if (title) {
+                previewHTML += `<h3 style="color: var(--text-primary); margin-bottom: 10px;">${title}</h3>`;
+            }
+            if (subject) {
+                previewHTML += `<div style="color: var(--text-secondary); margin-bottom: 20px;">Subject: ${subject}</div>`;
+            }
+            
+            quizQuestions.forEach((q, index) => {
+                previewHTML += `
+                    <div style="margin-bottom: 20px; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                        <div style="font-weight: 600; margin-bottom: 10px; color: var(--text-primary);">
+                            ${index + 1}. ${q.question}
+                        </div>
+                        <div style="margin-left: 20px;">
+                            ${q.options.map((opt, i) => `
+                                <div style="margin-bottom: 5px; color: ${i === q.correct ? 'var(--success)' : 'var(--text-secondary)'};">
+                                    ${String.fromCharCode(65 + i)}. ${opt} ${i === q.correct ? '✓' : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            previewContent.innerHTML = previewHTML;
+        }
+        
+        // Make element draggable
+        function makeDraggable(element) {
+            let isDragging = false;
+            let currentX, currentY, initialX, initialY;
+            
+            element.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                initialX = e.clientX - element.offsetLeft;
+                initialY = e.clientY - element.offsetTop;
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                
+                currentX = e.clientX - initialX;
+                currentY = e.clientY - initialY;
+                
+                element.style.left = currentX + 'px';
+                element.style.top = currentY + 'px';
+            });
+            
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+        }
+        
+        // Handle file uploads
+        function handleFiles(files) {
+            const uploadProgress = document.getElementById('upload-progress');
+            const uploadProgressBar = document.getElementById('upload-progress-bar');
+            const uploadStatus = document.getElementById('upload-status');
+            
+            if (files.length > 0) {
+                uploadProgress.style.display = 'block';
+                
+                // Simulate upload progress
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.random() * 20;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(interval);
+                        uploadStatus.textContent = 'Upload complete!';
+                        setTimeout(() => {
+                            uploadProgress.style.display = 'none';
+                            document.getElementById('upload-modal').classList.remove('active');
+                            showToast(`${files.length} file(s) uploaded successfully`, 'success');
+                        }, 1000);
+                    }
+                    uploadProgressBar.style.width = progress + '%';
+                    uploadStatus.textContent = `Uploading ${files.length} file(s)... ${Math.round(progress)}%`;
+                }, 200);
+            }
+        }
+        
+        // Load panel-specific data
+        function loadPanelData(panelId) {
+            switch(panelId) {
+                case 'planner':
+                    generateCalendar();
+                    break;
+                case 'tasks':
+                    loadTasks();
+                    break;
+                case 'analytics':
+                    updateAnalytics();
+                    break;
+                case 'badges':
+                    loadBadges();
+                    break;
+                case 'ai-assistant':
+                    // AI assistant is already initialized
+                    break;
+                case 'time-tracker':
+                    loadActivities();
+                    break;
+                case 'credits':
+                    loadTransactions();
+                    break;
+                case 'leaderboard':
+                    loadLeaderboard();
+                    break;
+                case 'quiz-maker':
+                    updateQuizPreview();
+                    break;
+                case 'goals':
+                    loadGoals();
+                    break;
+                case 'study-rooms':
+                    loadStudyRooms();
+                    break;
+            }
+        }
+        
+        // Update analytics
+        function updateAnalytics() {
+            const weeklyProgressCircle = document.getElementById('weekly-progress-circle');
+            const weeklyProgressText = document.getElementById('weekly-progress-text');
+            const weeklyHours = document.getElementById('weekly-hours');
+            
+            const progress = Math.min((totalStudyHours / 20) * 100, 100);
+            const circumference = 2 * Math.PI * 50;
+            const strokeDasharray = (progress / 100) * circumference;
+            
+            weeklyProgressCircle.style.strokeDasharray = `${strokeDasharray} ${circumference}`;
+            weeklyProgressText.textContent = `${Math.round(progress)}%`;
+            weeklyHours.textContent = `${Math.round(totalStudyHours)}/20 hours this week`;
+        }
+        
+        // Send AI message
+        function sendAiMessage() {
+            const message = aiInput.value.trim();
+            if (!message) return;
+            
+            // Add user message
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message user';
+            userMessage.innerHTML = `<div class="message-bubble">${message}</div>`;
+            aiMessages.appendChild(userMessage);
+            
+            // Clear input
+            aiInput.value = '';
+            
+            // Simulate AI response
+            setTimeout(() => {
+                const aiMessage = document.createElement('div');
+                aiMessage.className = 'message ai';
+                
+                // Enhanced response logic
+                let response = "I'm here to help with your studies. Could you provide more details?";
+                
+                if (message.toLowerCase().includes('recursion')) {
+                    response = "Recursion is a programming technique where a function calls itself. Think of it like Russian dolls - each doll contains a smaller version of itself until you reach the smallest one (base case).";
+                } else if (message.toLowerCase().includes('exam') || message.toLowerCase().includes('test')) {
+                    response = "For effective exam prep: 1) Create a study schedule 2) Use active recall techniques 3) Practice with past papers 4) Take regular breaks 5) Get adequate sleep. What subject are you preparing for?";
+                } else if (message.toLowerCase().includes('stress') || message.toLowerCase().includes('anxious')) {
+                    response = "Study stress is normal! Try the 25-5 technique: study for 25 minutes, then take a 5-minute break. Also consider deep breathing exercises and remember that progress matters more than perfection.";
+                } else if (message.toLowerCase().includes('motivation') || message.toLowerCase().includes('motivat')) {
+                    response = "Remember why you started! Set small, achievable goals and celebrate each victory. Your current study streak of " + studyStreak + " days shows you're already making great progress!";
+                } else if (message.toLowerCase().includes('time management')) {
+                    response = "Great question! Try time-blocking: assign specific time slots to different subjects. Use our built-in time tracker to monitor your study sessions and identify your most productive hours.";
+                } else if (message.toLowerCase().includes('note') || message.toLowerCase().includes('notes')) {
+                    response = "Effective note-taking tips: Use the Cornell method, create visual diagrams, summarize in your own words, and review within 24 hours. Try our collaborative notes feature for group study!";
+                }
+                
+                aiMessage.innerHTML = `<div class="message-bubble">${response}</div>`;
+                aiMessages.appendChild(aiMessage);
+                
+                // Scroll to bottom
+                aiMessages.scrollTop = aiMessages.scrollHeight;
+            }, 1000);
+            
+            // Scroll to bottom
+            aiMessages.scrollTop = aiMessages.scrollHeight;
+        }
+        
+        // Save time session
+        function saveTimeSession(seconds, activity) {
+            if (!currentUser) return;
+            
+            const session = {
+                userId: currentUser.uid,
+                activity: activity,
+                duration: seconds,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            
+            db.collection('timeSessions').add(session)
+                .then(() => {
+                    console.log('Time session saved successfully');
+                })
+                .catch(error => {
+                    console.error('Error saving time session:', error);
+                    showToast('Failed to save session', 'error');
+                });
+        }
+        
+        // Load user profile
+        function loadProfile() {
+            if (!currentUser) return;
+            
+            profileContent.innerHTML = '<div class="spinner-container"><div class="spinner"></div></div>';
+            
+            db.collection('users').doc(currentUser.uid).get()
+                .then(doc => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        const profileHtml = `
+                            <div style="display: grid; grid-template-columns: auto 1fr; gap: 15px; margin-bottom: 20px;">
+                                <div style="font-weight: 600; color: var(--text-secondary);">Full Name:</div>
+                                <div>${data.name || 'Not provided'}</div>
+                                
+                                <div style="font-weight: 600; color: var(--text-secondary);">Email:</div>
+                                <div>${currentUser.email}</div>
+                                
+                                <div style="font-weight: 600; color: var(--text-secondary);">Admission No:</div>
+                                <div>${data.admissionNo || 'Not provided'}</div>
+                                
+                                <div style="font-weight: 600; color: var(--text-secondary);">Branch:</div>
+                                <div>${data.branch || 'Not provided'}</div>
+                                
+                                <div style="font-weight: 600; color: var(--text-secondary);">Semester:</div>
+                                <div>${data.semester || 'Not provided'}</div>
+                                
+                                <div style="font-weight: 600; color: var(--text-secondary);">Study Streak:</div>
+                                <div>${studyStreak} days</div>
+                                
+                                <div style="font-weight: 600; color: var(--text-secondary);">Total Study Hours:</div>
+                                <div>${Math.round(totalStudyHours)} hours</div>
+                                
+                                <div style="font-weight: 600; color: var(--text-secondary);">Joined:</div>
+                                <div>${formatTimestamp(data.createdAt)}</div>
+                            </div>
+                            
+                            <div style="text-align: center; margin-top: 30px;">
+                                <button class="btn-secondary" onclick="editProfile()">
+                                    <i class="fas fa-edit"></i> Edit Profile
+                                </button>
+                            </div>
+                        `;
+                        
+                        profileContent.innerHTML = profileHtml;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading profile:', error);
+                    profileContent.innerHTML = '<div class="empty-state"><p>Failed to load profile</p></div>';
+                });
+        }
+        
+        // Edit profile (placeholder function)
+        function editProfile() {
+            showToast('Edit profile feature coming soon!', 'info');
+        }
+        
+        // Load dashboard data
+        function loadDashboardData() {
+            if (!currentUser) return;
+            
+            // Load materials count
+            db.collection('notes').onSnapshot(snapshot => {
+                materialsCount.textContent = snapshot.size;
+            }, error => {
+                console.error('Error loading materials:', error);
+                materialsCount.textContent = 'Error';
+            });
+            
+            // Load PYQs count
+            db.collection('pyqs').onSnapshot(snapshot => {
+                pyqsCount.textContent = snapshot.size;
+            }, error => {
+                console.error('Error loading PYQs:', error);
+                pyqsCount.textContent = 'Error';
+            });
+            
+            // Load seminars count
+            db.collection('seminars').onSnapshot(snapshot => {
+                seminarsCount.textContent = snapshot.size;
+            }, error => {
+                console.error('Error loading seminars:', error);
+                seminarsCount.textContent = 'Error';
+            });
+            
+            // Load user credits
+            db.collection('users').doc(currentUser.uid).onSnapshot(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    creditsCount.textContent = data.credits || 0;
+                    userData = data;
+                    studentNameEl.textContent = data.name || 'Student';
+                }
+            }, error => {
+                console.error('Error loading user data:', error);
+                creditsCount.textContent = 'Error';
+            });
+            
+            // Load notices
+            loadNotices();
+            
+            // Load recent materials
+            loadRecentMaterials();
+        }
+        
+        // Load notices with real-time updates
+        function loadNotices() {
+            const noticesList = document.getElementById('notices-list');
+            const newNoticesBadge = document.getElementById('new-notices-badge');
+            
+            // Get last notice view time from localStorage
+            lastNoticeTime = localStorage.getItem('lastNoticeTime');
+            
+            db.collection('notices')
+                .orderBy('createdAt', 'desc')
+                .limit(10)
+                .onSnapshot(snapshot => {
+                    const notices = [];
+                    let hasNewNotices = false;
+                    
+                    snapshot.forEach(doc => {
+                        const notice = doc.data();
+                        notice.id = doc.id;
+                        notices.push(notice);
+                        
+                        // Check if this is a new notice
+                        if (lastNoticeTime && notice.createdAt && notice.createdAt.toDate()) {
+                            const noticeTime = notice.createdAt.toDate().getTime();
+                            const lastViewTime = parseInt(lastNoticeTime);
+                            if (noticeTime > lastViewTime) {
+                                hasNewNotices = true;
+                            }
+                        }
+                    });
+                    
+                    // Show new notices badge if there are new notices
+                    if (hasNewNotices) {
+                        newNoticesBadge.style.display = 'block';
+                    } else {
+                        newNoticesBadge.style.display = 'none';
+                    }
+                    
+                    if (notices.length === 0) {
+                        noticesList.innerHTML = `
+                            <div class="empty-state">
+                                <div class="empty-icon"><i class="fas fa-bullhorn"></i></div>
+                                <p>No notices at the moment</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    const noticesHtml = notices.map(notice => {
+                        const isImportant = notice.important || false;
+                        const isNew = lastNoticeTime && notice.createdAt && notice.createdAt.toDate() && 
+                                      notice.createdAt.toDate().getTime() > parseInt(lastNoticeTime);
+                        
+                        return `
+                            <div class="notice-item ${isImportant ? 'important' : ''}">
+                                <div class="notice-title">${notice.title || 'Untitled Notice'}</div>
+                                <div class="notice-message">${notice.message || ''}</div>
+                                <div class="notice-meta">
+                                    <div class="notice-time">
+                                        <i class="fas fa-clock"></i>
+                                        ${formatTimestamp(notice.createdAt)}
+                                    </div>
+                                    ${isNew ? '<span class="notice-badge">NEW</span>' : ''}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    noticesList.innerHTML = noticesHtml;
+                    
+                    // Mark notices as viewed when user scrolls to bottom
+                    noticesList.addEventListener('scroll', () => {
+                        if (noticesList.scrollTop + noticesList.clientHeight >= noticesList.scrollHeight - 50) {
+                            localStorage.setItem('lastNoticeTime', Date.now().toString());
+                            newNoticesBadge.style.display = 'none';
+                            
+                            // Remove NEW badges
+                            document.querySelectorAll('.notice-badge').forEach(badge => {
+                                badge.style.display = 'none';
+                            });
+                        }
+                    });
+                }, error => {
+                    console.error('Error loading notices:', error);
+                    noticesList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon"><i class="fas fa-exclamation-circle"></i></div>
+                            <p>Failed to load notices</p>
+                        </div>
+                    `;
+                });
+        }
+        
+        // Load recent materials with real-time updates
+        function loadRecentMaterials() {
+            const recentMaterials = document.getElementById('recent-materials');
+            
+            // Create a combined query for all materials
+            const materialsPromises = [
+                db.collection('notes').orderBy('createdAt', 'desc').limit(6).get(),
+                db.collection('pyqs').orderBy('createdAt', 'desc').limit(6).get(),
+                db.collection('seminars').orderBy('createdAt', 'desc').limit(6).get()
+            ];
+            
+            Promise.all(materialsPromises).then(snapshots => {
+                const allMaterials = [];
+                
+                // Process notes
+                snapshots[0].forEach(doc => {
+                    const data = doc.data();
+                    allMaterials.push({
+                        id: doc.id,
+                        type: 'note',
+                        title: data.title || 'Untitled',
+                        details: data.details || data.description || 'No description',
+                        createdAt: data.createdAt,
+                        icon: 'fa-file-alt'
+                    });
+                });
+                
+                // Process PYQs
+                snapshots[1].forEach(doc => {
+                    const data = doc.data();
+                    allMaterials.push({
+                        id: doc.id,
+                        type: 'pyq',
+                        title: data.title || 'Untitled',
+                        details: data.subject || 'No subject',
+                        createdAt: data.createdAt,
+                        icon: 'fa-file-alt'
+                    });
+                });
+                
+                // Process seminars
+                snapshots[2].forEach(doc => {
+                    const data = doc.data();
+                    allMaterials.push({
+                        id: doc.id,
+                        type: 'seminar',
+                        title: data.title || 'Untitled',
+                        details: data.speaker || 'No speaker',
+                        createdAt: data.createdAt,
+                        icon: 'fa-chalkboard-teacher'
+                    });
+                });
+                
+                // Sort by creation date
+                allMaterials.sort((a, b) => {
+                    const aTime = a.createdAt ? a.createdAt.toDate() : new Date(0);
+                    const bTime = b.createdAt ? b.createdAt.toDate() : new Date(0);
+                    return bTime - aTime;
+                });
+                
+                // Take only the latest 6
+                const latestMaterials = allMaterials.slice(0, 6);
+                
+                if (latestMaterials.length === 0) {
+                    recentMaterials.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon"><i class="fas fa-book"></i></div>
+                            <p>No materials available</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const materialsHtml = latestMaterials.map(material => `
+                    <div class="material-card">
+                        <div class="material-icon">
+                            <i class="fas ${material.icon}"></i>
+                        </div>
+                        <div class="material-title">${material.title}</div>
+                        <div class="material-meta">
+                            ${material.type.charAt(0).toUpperCase() + material.type.slice(1)} • 
+                            ${formatTimestamp(material.createdAt)}
+                        </div>
+                    </div>
+                `).join('');
+                
+                recentMaterials.innerHTML = materialsHtml;
+            }).catch(error => {
+                console.error('Error loading recent materials:', error);
+                recentMaterials.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="fas fa-exclamation-circle"></i></div>
+                        <p>Failed to load materials</p>
+                    </div>
+                `;
+            });
+        }
+        
+        // Load badges
+        function loadBadges() {
+            const badgesContainer = document.getElementById('badges-container');
+            
+            // Sample badges data
+            const sampleBadges = [
+                { name: 'First Steps', description: 'Complete your first study session', icon: 'fa-star', earned: true },
+                { name: 'Week Warrior', description: 'Study for 7 consecutive days', icon: 'fa-fire', earned: true },
+                { name: 'Quiz Master', description: 'Score 90% or higher on 5 quizzes', icon: 'fa-trophy', earned: false },
+                { name: 'Time Manager', description: 'Use time tracker for 30 sessions', icon: 'fa-clock', earned: false },
+                { name: 'Social Learner', description: 'Join 3 study groups', icon: 'fa-users', earned: false },
+                { name: 'Note Taker', description: 'Create 50 collaborative notes', icon: 'fa-edit', earned: false }
+            ];
+            
+            const badgesHtml = sampleBadges.map(badge => `
+                <div class="badge-item ${badge.earned ? 'badge-earned' : ''}">
+                    <div class="badge-icon">
+                        <i class="fas ${badge.icon}"></i>
+                    </div>
+                    <div class="badge-name">${badge.name}</div>
+                    <div class="badge-desc">${badge.description}</div>
+                </div>
+            `).join('');
+            
+            badgesContainer.innerHTML = badgesHtml;
+        }
+        
+        // Load activities
+        function loadActivities() {
+            const activityList = document.getElementById('activity-list');
+            
+            // Sample activities
+            const sampleActivities = [
+                { name: 'Mathematics', totalTime: 7200, weeklyTime: 3600 },
+                { name: 'Physics', totalTime: 5400, weeklyTime: 2700 },
+                { name: 'Chemistry', totalTime: 4800, weeklyTime: 2400 },
+                { name: 'Computer Science', totalTime: 6000, weeklyTime: 3000 }
+            ];
+            
+            const activitiesHtml = sampleActivities.map(activity => {
+                const hours = Math.floor(activity.weeklyTime / 3600);
+                const minutes = Math.floor((activity.weeklyTime % 3600) / 60);
+                const progress = Math.min((activity.weeklyTime / (20 * 3600)) * 100, 100);
+                
+                return `
+                    <div class="activity-item">
+                        <div>
+                            <div class="activity-name">${activity.name}</div>
+                            <div class="activity-time">${hours}h ${minutes}m this week</div>
+                            <div class="activity-progress">
+                                <div class="activity-progress-bar" style="width: ${progress}%;"></div>
+                            </div>
+                        </div>
+                        <button class="btn-secondary" style="padding: 8px 12px; font-size: 0.9rem;" onclick="selectActivity('${activity.name}')">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+            
+            activityList.innerHTML = activitiesHtml;
+        }
+        
+        // Select activity for timer
+        function selectActivity(name) {
+            currentActivity = name;
+            timerActivity.textContent = name;
+            showToast(`Selected: ${name}`, 'info');
+        }
+        
+        // Add new activity
+        function addActivity() {
+            const name = prompt('Enter activity name:');
+            if (name && name.trim()) {
+                showToast('Activity added successfully', 'success');
+            }
+        }
+        
+        // Load transactions
+        function loadTransactions() {
+            const transactionList = document.getElementById('transaction-list');
+            const currencyAmount = document.getElementById('currency-amount');
+            
+            // Sample transactions
+            const sampleTransactions = [
+                { type: 'earn', amount: 50, description: 'Completed quiz', icon: 'fa-trophy', date: new Date() },
+                { type: 'spend', amount: 20, description: 'Unlocked premium content', icon: 'fa-unlock', date: new Date(Date.now() - 86400000) },
+                { type: 'earn', amount: 30, description: 'Study streak bonus', icon: 'fa-fire', date: new Date(Date.now() - 172800000) }
+            ];
+            
+            currencyAmount.textContent = '150';
+            
+            const transactionsHtml = sampleTransactions.map(transaction => `
+                <div class="transaction-item">
+                    <div class="transaction-details">
+                        <div class="transaction-icon ${transaction.type}">
+                            <i class="fas ${transaction.icon}"></i>
+                        </div>
+                        <div class="transaction-info">
+                            <div class="transaction-desc">${transaction.description}</div>
+                            <div class="transaction-date">${transaction.date.toLocaleDateString()}</div>
+                        </div>
+                    </div>
+                    <div class="transaction-amount ${transaction.type}">
+                        ${transaction.type === 'earn' ? '+' : '-'}${transaction.amount}
+                    </div>
+                </div>
+            `).join('');
+            
+            transactionList.innerHTML = transactionsHtml;
+        }
+        
+        // Earn credits
+        function earnCredits() {
+            const amount = parseInt(prompt('Enter amount to earn:'));
+            if (amount && amount > 0) {
+                showToast(`Earned ${amount} credits successfully`, 'success');
+                
+                // Update display
+                const currentCredits = parseInt(document.getElementById('currency-amount').textContent);
+                document.getElementById('currency-amount').textContent = currentCredits + amount;
+                creditsCount.textContent = currentCredits + amount;
+            }
+        }
+        
+        // Spend credits
+        function spendCredits() {
+            const amount = parseInt(prompt('Enter amount to spend:'));
+            if (amount && amount > 0) {
+                const currentCredits = parseInt(document.getElementById('currency-amount').textContent);
+                if (currentCredits >= amount) {
+                    showToast(`Spent ${amount} credits successfully`, 'success');
+                    
+                    // Update display
+                    document.getElementById('currency-amount').textContent = currentCredits - amount;
+                    creditsCount.textContent = currentCredits - amount;
+                } else {
+                    showToast('Insufficient credits', 'error');
+                }
+            }
+        }
+        
+        // Load leaderboard
+        function loadLeaderboard() {
+            const leaderboardTbody = document.getElementById('leaderboard-tbody');
+            const userRank = document.getElementById('rank-position');
+            const userPoints = document.getElementById('rank-points');
+            const userPercentile = document.getElementById('rank-percentile');
+            const userMedal = document.getElementById('rank-medal');
+            
+            // Sample leaderboard data
+            const sampleUsers = [
+                { name: 'Alice Johnson', points: 2450 },
+                { name: 'Bob Smith', points: 2380 },
+                { name: 'Charlie Brown', points: 2290 },
+                { name: 'Diana Prince', points: 2150 },
+                { name: 'You', points: 2100 },
+                { name: 'Frank Miller', points: 2050 },
+                { name: 'Grace Lee', points: 1980 },
+                { name: 'Henry Ford', points: 1920 }
+            ];
+            
+            // Update user rank display
+            const currentUserRank = 5;
+            userRank.textContent = `#${currentUserRank}`;
+            userPoints.textContent = `2100 Points`;
+            userPercentile.textContent = `Top 63%`;
+            
+            // Update medal
+            userMedal.className = 'rank-medal';
+            userMedal.innerHTML = '<i class="fas fa-award"></i>';
+            
+            // Generate leaderboard table
+            const leaderboardHtml = sampleUsers.map((user, index) => `
+                <tr class="${user.name === 'You' ? 'current-user' : ''}">
+                    <td class="leaderboard-rank-col">#${index + 1}</td>
+                    <td class="leaderboard-name-col">${user.name}</td>
+                    <td class="leaderboard-score-col">${user.points}</td>
+                </tr>
+            `).join('');
+            
+            leaderboardTbody.innerHTML = leaderboardHtml;
+        }
+        
+        // Load goals
+        function loadGoals() {
+            const goalsList = document.getElementById('goals-list');
+            
+            if (goals.length === 0) {
+                goalsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="fas fa-bullseye"></i></div>
+                        <p>No goals yet</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const goalsHtml = goals.map(goal => `
+                <div class="goal-item">
+                    <div class="goal-header">
+                        <div class="goal-title">${goal.title}</div>
+                        <div class="goal-status ${goal.status}">${goal.status.replace('-', ' ')}</div>
+                    </div>
+                    <div style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 10px;">
+                        Due: ${goal.deadline}
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${goal.progress}%;"></div>
+                    </div>
+                    <div style="text-align: center; margin-top: 5px; font-size: 0.8rem; color: var(--text-muted);">
+                        ${goal.progress}% Complete
+                    </div>
+                </div>
+            `).join('');
+            
+            goalsList.innerHTML = goalsHtml;
+        }
+        
+        // Load study rooms
+        function loadStudyRooms() {
+            const studyRoomsContainer = document.getElementById('study-rooms-container');
+            
+            if (studyRooms.length === 0) {
+                studyRoomsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="fas fa-door-open"></i></div>
+                        <p>No study rooms available</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const roomsHtml = studyRooms.map(room => `
+                <div class="study-room">
+                    <div class="room-header">
+                        <div class="room-name">${room.name}</div>
+                        <div class="room-status ${room.status}">${room.status}</div>
+                    </div>
+                    <div class="room-subject">${room.subject}</div>
+                    <div class="room-description">
+                        ${room.description}
+                    </div>
+                    <div class="room-participants">
+                        ${Array.from({ length: Math.min(room.participants, 3) }, (_, i) => 
+                            `<div class="participant-avatar">${String.fromCharCode(65 + i)}</div>`
+                        ).join('')}
+                        ${room.participants > 3 ? `<span style="color: var(--text-muted); font-size: 0.8rem;">+${room.participants - 3} more</span>` : ''}
+                    </div>
+                    <button class="join-room-btn">
+                        <i class="fas fa-sign-in-alt"></i> Join Room
+                    </button>
+                </div>
+            `).join('');
+            
+            studyRoomsContainer.innerHTML = roomsHtml;
+        }
+        
+        // Resume Builder Functions
+        function savePersonalInfo() {
+            showToast('Personal information saved', 'success');
+        }
+        
+        function saveEducation() {
+            showToast('Education saved', 'success');
+        }
+        
+        function saveExperience() {
+            showToast('Experience saved', 'success');
+        }
+        
+        function saveSkills() {
+            showToast('Skills saved', 'success');
+        }
+        
+        function saveProject() {
+            showToast('Project saved', 'success');
+        }
+        
+        function saveAchievements() {
+            showToast('Achievements saved', 'success');
+        }
+        
+        function downloadResume() {
+            // Create a temporary iframe to trigger download
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+            
+            // Generate resume content
+            const resumeContent = generateResumeContent();
+            
+            // Create a blob with the resume content
+            const blob = new Blob([resumeContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            
+            // Set iframe source to the blob URL
+            iframe.src = url;
+            
+            // Trigger download
+            iframe.onload = function() {
+                iframe.contentWindow.print();
+                setTimeout(() => {
+                    document.body.removeChild(iframe);
+                    URL.revokeObjectURL(url);
+                }, 100);
+            };
+            
+            showToast('Resume downloaded successfully', 'success');
+        }
+        
+        function generateResumeContent() {
+            // Generate HTML content for the resume based on form data
+            // This is a simplified version
+            return `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Resume</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; }
+                        h1 { color: #333; }
+                        .section { margin-bottom: 30px; }
+                        .section-title { font-size: 18px; font-weight: bold; color: #444; margin-bottom: 10px; }
+                        .item { margin-bottom: 15px; }
+                        .item-title { font-weight: bold; }
+                        .item-date { color: #666; font-style: italic; }
+                    </style>
+                </head>
+                <body>
+                    <h1>${document.getElementById('resume-name').value || 'Your Name'}</h1>
+                    
+                    <div class="section">
+                        <div class="section-title">Contact Information</div>
+                        <div class="item">
+                            <div class="item-title">Email: ${document.getElementById('resume-email').value || 'your.email@example.com'}</div>
+                            <div class="item-title">Phone: ${document.getElementById('resume-phone').value || 'Your Phone Number'}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">Professional Summary</div>
+                        <div class="item">
+                            ${document.getElementById('resume-summary').value || 'Your professional summary goes here.'}
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">Education</div>
+                        <div class="item">
+                            <div class="item-title">${document.getElementById('resume-degree').value || 'Your Degree'}</div>
+                            <div class="item-date">${document.getElementById('resume-institution').value || 'Your Institution'}</div>
+                            <div class="item-date">Graduated: ${document.getElementById('resume-graduation').value || 'Year'}</div>
+                            <div class="item-date">GPA: ${document.getElementById('resume-gpa').value || 'Your GPA'}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">Skills</div>
+                        <div class="item">
+                            <div class="item-title">Programming Languages: ${document.getElementById('resume-languages').value || 'List your programming languages'}</div>
+                            <div class="item-title">Web Technologies: ${document.getElementById('resume-web-tech').value || 'List your web technologies'}</div>
+                            <div class="item-title">Database: ${document.getElementById('resume-database').value || 'List your database skills'}</div>
+                            <div class="item-title">Tools & Software: ${document.getElementById('resume-tools').value || 'List your tools and software'}</div>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `;
+        }
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Escape key closes modals
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            }
+            
+            // Ctrl/Cmd + K for quick search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                showToast('Quick search feature coming soon!', 'info');
+            }
+            
+            // Tab navigation with numbers
+            if (e.ctrlKey && e.key >= '1' && e.key <= '9') {
+                e.preventDefault();
+                const tabIndex = parseInt(e.key) - 1;
+                const tabs = document.querySelectorAll('.feature-tab');
+                if (tabs[tabIndex]) {
+                    tabs[tabIndex].click();
+                }
+            }
+        });
+        
+        // Initialize draggable functionality for mind map
+        function initializeMindMap() {
+            const centerNode = document.querySelector('.mindmap-node[data-id="1"]');
+            if (centerNode) {
+                makeDraggable(centerNode);
+            }
+        }
+        
+        // Notification system
+        function checkNotifications() {
+            // Check for overdue tasks
+            const overdueTasks = tasks.filter(task => {
+                if (task.completed) return false;
+                const dueDate = new Date(task.dueDate);
+                return dueDate < new Date();
+            });
+            
+            if (overdueTasks.length > 0) {
+                setTimeout(() => {
+                    showToast(`You have ${overdueTasks.length} overdue task(s)`, 'error');
+                }, 2000);
+            }
+            
+            // Check study streak
+            const lastStudyDate = localStorage.getItem('lastStudyDate');
+            const today = new Date().toDateString();
+            
+            if (lastStudyDate && lastStudyDate !== today) {
+                const daysSinceStudy = Math.floor((new Date() - new Date(lastStudyDate)) / (1000 * 60 * 60 * 24));
+                if (daysSinceStudy > 1) {
+                    setTimeout(() => {
+                        showToast('Your study streak is at risk! Start a session to maintain it.', 'warning');
+                    }, 5000);
+                }
+            }
+        }
+        
+        // Auto-save functionality
+        function setupAutoSave() {
+            // Auto-save notes
+            const noteEditor = document.getElementById('note-editor');
+            if (noteEditor) {
+                let autoSaveTimeout;
+                noteEditor.addEventListener('input', () => {
+                    clearTimeout(autoSaveTimeout);
+                    autoSaveTimeout = setTimeout(() => {
+                        console.log('Auto-saving note...');
+                        // In real implementation, save to Firebase
+                    }, 2000);
+                });
+            }
+            
+            // Auto-save resume forms
+            document.querySelectorAll('.form-input, .form-textarea').forEach(input => {
+                let autoSaveTimeout;
+                input.addEventListener('input', () => {
+                    clearTimeout(autoSaveTimeout);
+                    autoSaveTimeout = setTimeout(() => {
+                        console.log('Auto-saving form data...');
+                        // In real implementation, save to Firebase
+                    }, 3000);
+                });
+            });
+        }
+        
+        // Simulate user activity for demo
+        function simulateActivity() {
+            // Simulate some study hours
+            totalStudyHours = Math.random() * 15 + 5;
+            hoursCount.textContent = Math.round(totalStudyHours);
+            
+            // Update analytics
+            setTimeout(() => {
+                updateAnalytics();
+            }, 1000);
+        }
+        
+        // Authentication check
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                currentUser = user;
+                
+                // Get user data
+                db.collection('users').doc(user.uid).get().then(doc => {
+                    if (doc.exists) {
+                        userData = doc.data();
+                        studentNameEl.textContent = userData.name || 'Student';
+                    } else {
+                        studentNameEl.textContent = 'Student';
+                    }
+                    
+                    // Initialize page
+                    initializePage();
+                    initializeMindMap();
+                    setupAutoSave();
+                    simulateActivity();
+                    
+                    // Check notifications after a delay
+                    setTimeout(() => {
+                        checkNotifications();
+                    }, 3000);
+                    
+                }).catch(error => {
+                    console.error('Error getting user data:', error);
+                    studentNameEl.textContent = 'Student';
+                    initializePage();
+                    initializeMindMap();
+                    setupAutoSave();
+                    simulateActivity();
+                });
+            } else {
+                // For demo purposes, initialize anyway
+                currentUser = { uid: 'demo-user' };
+                studentNameEl.textContent = 'Demo Student';
+                initializePage();
+                initializeMindMap();
+                setupAutoSave();
+                simulateActivity();
+            }
+        });
+        
+        // Console welcome message
+        console.log('%cIB STUDIOZ Enhanced Student Dashboard', 'color: #FFD700; font-size: 24px; font-weight: bold;');
+        console.log('%cNew Features: Study Planner, Task Manager, Analytics, Social Learning, Study Goals, Quiz Maker, Mind Maps, Collaborative Notes, Study Rooms, Performance Insights', 'color: #00A2FF; font-size: 14px;');
+        console.log('Enhanced functionality with real-time updates ✓');
+        
+        // Initialize everything on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set default date for date inputs
+            const today = new Date().toISOString().split('T')[0];
+            document.querySelectorAll('input[type="date"]').forEach(input => {
+                if (!input.value) {
+                    input.min = today;
+                }
+            });
+            
+            // Initialize sample data if not authenticated
+            if (!currentUser) {
+                initializePage();
+                initializeMindMap();
+                setupAutoSave();
+                simulateActivity();
+            }
+        });
+    </script>
+</body>
+</html> 
