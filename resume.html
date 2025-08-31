@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Build a professional resume with our AI-powered builder. Get instant suggestions, smart proofreading, and a design that gets you noticed. IB RESUME BUILDER, Investment Banking Resume.">
+  <title>IB RESUME BUILDER</title>
+  <!-- Google Fonts for professional and modern templates -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;600;700&family=Montserrat:wght@300;400;500;700&family=Lato:wght@300;400;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- External Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://unpkg.com/cropperjs/dist/cropper.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/cropperjs/dist/cropper.css">
+  <style>
+    /* General Styles & Variables */
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; transition: all 0.4s ease-in-out; }
+    :root {
+      --primary: #007bff; /* Professional Blue */
+      --secondary: #6c757d; 
+      --success: #28a745;
+      --error: #dc3545;
+      --highlight: #ffc107; /* Gold for highlight */
+      --dark-bg: #1a1a2e; 
+      --darker-bg: #16213e; 
+      --dark-accent: #0f3460;
+      --light-text: #f8f9fa; 
+      --card-bg: rgba(255,255,255,0.1); 
+      --card-border: rgba(255,255,255,0.15);
+      --gradient-bg: linear-gradient(135deg, #0c152a, #16213e, #0f3460);
+      --shadow: 0 8px 30px rgba(0,0,0,0.4); 
+      --animation-ease: cubic-bezier(0.4, 0, 0.2, 1);
+      --resume-font: 'Poppins', sans-serif;
+      --resume-accent-color: var(--primary);
+      --input-bg: rgba(0,0,0,0.2);
+    }
+    body { background: var(--gradient-bg); color: var(--light-text); padding: 20px; display: flex; justify-content: center; min-height: 100vh; font-size: 16px; }
+    body.light-mode {
+      --dark-bg: #f8f9fa; 
+      --darker-bg: #e9ecef; 
+      --dark-accent: #dee2e6; 
+      --light-text: #212529;
+      --card-bg: rgba(0,0,0,0.05); 
+      --card-border: rgba(0,0,0,0.1);
+      --gradient-bg: linear-gradient(135deg, #ffffff, #f8f9fa, #e9ecef);
+      --input-bg: rgba(0,0,0,0.05);
+    }
+    /* Landing Page Section */
+    .landing-section { text-align: center; padding: 50px 20px; background: rgba(0,0,0,0.2); border-radius: 20px; margin-bottom: 30px; box-shadow: var(--shadow); }
+    .landing-section h1 { font-size: 3em; margin-bottom: 10px; color: var(--primary); animation: none; text-shadow: 0 0 10px rgba(0, 123, 255, 0.5); }
+    .landing-section p { font-size: 1.2em; max-width: 800px; margin: 0 auto 20px; }
+    .start-btn { background: linear-gradient(45deg, var(--primary), #0056b3); color: white; padding: 15px 30px; border-radius: 50px; font-weight: 700; text-decoration: none; display: inline-block; animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7); } 70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(0, 123, 255, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); } }
+    /* Layout */
+    .container { display: none; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 1400px; width: 100%; }
+    .form-card, .preview-card {
+      background: var(--card-bg); backdrop-filter: blur(15px); border: 1px solid var(--card-border);
+      border-radius: 20px; padding: 25px; box-shadow: var(--shadow); height: fit-content;
+      max-height: 90vh; overflow-y: auto; animation: fadeIn 0.5s var(--animation-ease);
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    /* Tabs & Sections */
+    .tabs { display: flex; border-bottom: 1px solid var(--card-border); margin-bottom: 20px; }
+    .tab-link { padding: 10px 20px; cursor: pointer; background: transparent; border: none; color: var(--light-text); opacity: 0.7; position: relative; font-size: 1em; }
+    .tab-link.active { opacity: 1; font-weight: 600; }
+    .tab-link.active::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 2px; background: var(--primary); transform: scaleX(1); animation: tabHighlight 0.4s ease; }
+    .tab-link::after { transform: scaleX(0); }
+    @keyframes tabHighlight { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.4s; }
+    
+    .form-section { margin-bottom: 25px; padding: 15px; border-radius: 10px; background: rgba(255,255,255,0.05); box-shadow: inset 0 0 10px rgba(0,0,0,0.1); }
+    .form-section h2 { cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-bottom: none; }
+    .form-section h2 i { transition: transform 0.3s; }
+    .form-section.collapsed .section-content { display: none; }
+    .form-section.collapsed h2 i { transform: rotate(-90deg); }
+    /* Typography & Headings */
+    h1 { text-align: center; font-size: 26px; margin-bottom: 20px; color: var(--primary); display: flex; align-items: center; justify-content: center; gap: 10px; animation: glow 2s infinite alternate; }
+    @keyframes glow { from { text-shadow: 0 0 5px var(--primary); } to { text-shadow: 0 0 15px var(--primary); } }
+    h2 { font-size: 22px; margin: 25px 0 15px; padding-bottom: 8px; border-bottom: 2px solid rgba(255,255,255,0.2); }
+    
+    /* Form Elements */
+    label { display: block; margin-top: 15px; font-weight: 500; font-size: 14px; position: relative; }
+    .required-field::after { content: "*"; color: var(--error); position: absolute; top: 15px; right: 0; }
+    label i.fas, .label-icon { margin-right: 8px; }
+    
+    input, textarea, select {
+      width: 100%; margin-top: 6px; padding: 12px 15px; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.2); outline: none; background: var(--input-bg);
+      color: var(--light-text); font-size: 14px;
+    }
+    input:focus, textarea:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3); }
+    textarea { min-height: 80px; resize: vertical; }
+    /* Photo Upload */
+    .photo-upload-container { text-align: center; margin-bottom: 15px; }
+    #photoPreview, .cert-preview-img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--card-border); margin-bottom: 10px; background-color: rgba(0,0,0,0.2); cursor: pointer; }
+    .cert-preview-img { border-radius: 8px; width: 100px; height: 100px; }
+    #photoUpload, .certificate-upload-input { display: none; }
+    #photoUploadLabel, .certificate-upload-label { cursor: pointer; background: var(--secondary); padding: 8px 15px; border-radius: 8px; font-size: 14px; }
+    .cropper-modal-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; display: none; justify-content: center; align-items: center; }
+    .cropper-modal { background: var(--darker-bg); padding: 20px; border-radius: 10px; max-width: 600px; }
+    #cropperImage { max-width: 100%; }
+    /* Buttons */
+    button {
+      margin-top: 10px; padding: 12px 20px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;
+      color: #111; display: inline-flex; align-items: center; justify-content: center; gap: 8px; position: relative;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    button:hover { transform: scale(1.02); box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
+    button.primary { background: var(--primary); color: white; }
+    button.secondary { background: rgba(255,255,255,0.15); color: var(--light-text); }
+    button.ai-suggest, button.ai-proofread, button.ai-expand, button.star-guide, button.ai-extract { background: linear-gradient(135deg, #6c5ce7, #a481e3); color: white; padding: 8px 12px; font-size: 12px; }
+    .delete-item-btn { background: var(--error); color: white; padding: 8px 12px; font-size: 12px; }
+    .textarea-toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+    .ai-score-container { text-align: center; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 20px; }
+    .cert-preview-container { display: flex; align-items: center; gap: 15px; margin-top: 10px; }
+    
+    /* Enhanced Certificate Upload Styles */
+    .certificate-upload-wrapper {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 15px;
+    }
+    .certificate-upload-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(45deg, var(--primary), #0056b3);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+      width: 100%;
+    }
+    .certificate-upload-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
+    }
+    .certificate-upload-btn i {
+      font-size: 16px;
+    }
+    .certificate-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .cert-preview-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .cert-preview-img {
+      border-radius: 8px;
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border: 2px solid var(--card-border);
+    }
+    .cert-info {
+      flex: 1;
+    }
+    .cert-info h4 {
+      margin: 0 0 5px;
+      font-size: 16px;
+      color: var(--primary);
+    }
+    .cert-info p {
+      margin: 0;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+    
+    /* --- New Styles for visibility --- */
+    .add-item-btn {
+        background: linear-gradient(45deg, var(--primary), #0056b3);
+        color: white;
+        font-weight: 600;
+        animation: pulse-add 2s infinite;
+        width: 100%; /* Make button full width */
+        margin-top: 20px;
+    }
+    .add-item-btn:hover {
+      animation: none;
+    }
+    @keyframes pulse-add {
+        0% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(0, 123, 255, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
+    }
+    button.ai-extract {
+        background: linear-gradient(45deg, #11cdef, #1178a9); /* A bright, contrasting color */
+        color: white;
+        padding: 8px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        animation: pulse-ai 2s infinite;
+    }
+    button.ai-extract:hover {
+      animation: none;
+    }
+    @keyframes pulse-ai {
+        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(17, 205, 239, 0.7); }
+        70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(17, 205, 239, 0); }
+        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(17, 205, 239, 0); }
+    }
+    /* --- End of New Styles --- */
+    /* Sections & Items */
+    .drag-handle { cursor: move; padding: 8px; background: rgba(255,255,255,0.1); border-radius: 8px; margin-top: 10px; display: inline-flex; align-items: center; }
+    .section-item, .dynamic-section-item { animation: slideDown 0.4s var(--animation-ease); }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    /* Templates & Appearance */
+    .template-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 15px; margin-top: 15px; }
+    .template-option { border: 2px solid transparent; border-radius: 12px; padding: 10px; text-align: center; cursor: pointer; }
+    .template-option.selected { border-color: var(--primary); background: rgba(0, 123, 255, 0.1); }
+    .template-thumbnail { height: 80px; border-radius: 8px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); overflow: hidden; }
+    .appearance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center; }
+    input[type="color"] { padding: 0; height: 40px; border-radius: 8px; cursor: pointer; background: none; }
+    
+    /* Progress Bar */
+    .progress-container { margin: 10px 0 20px; }
+    .progress-bar { width: 100%; background: rgba(0,0,0,0.2); border-radius: 10px; height: 15px; overflow: hidden; }
+    #completeness-bar { width: 0%; height: 100%; background: linear-gradient(135deg, var(--success), var(--primary)); border-radius: 10px; transition: width 0.5s; }
+    #completeness-text { text-align: center; font-size: 12px; margin-top: 5px; }
+    /* Resume Preview Output */
+    #resumeOutput { padding: 30px; border-radius: 12px; min-height: 500px; font-family: var(--resume-font); background: white; color: #333; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+    .template-classic { background: linear-gradient(135deg, #ffffff, #f0f4f8); color: #2d3748; }
+    .template-dark { background: linear-gradient(135deg, #1a202c, #2d3748); color: #e2e8f0; }
+    .template-creative { background: linear-gradient(135deg, #ff9a9e, #fad0c4); color: #2d3748; }
+    .template-professional { background: linear-gradient(135deg, #f8f9fa, #e2e8f0); color: #495057; }
+    .template-modern { background: #fff; color: #333; display: grid; grid-template-columns: 1fr 2.5fr; gap: 20px; }
+    
+    .resume-photo { position: absolute; top: 30px; right: 30px; width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid var(--resume-accent-color); }
+    .resume-header { text-align: center; margin-bottom: 25px; padding-right: 120px; }
+    .resume-header h2 { font-size: 28px; margin: 0; border: none; color: var(--resume-accent-color); }
+    .resume-contact { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin: 10px 0 20px; }
+    .resume-section h3 { font-size: 1.2em; border-bottom: 2px solid var(--resume-accent-color); padding-bottom: 5px; margin-bottom: 15px; color: var(--resume-accent-color);}
+    .resume-item { margin-bottom: 15px; }
+    .item-header, .item-subheader { display: flex; justify-content: space-between; }
+    .item-header { font-weight: 600; }
+    .item-subheader { font-size: 0.9em; margin-bottom: 5px; font-style: italic; }
+    .skills-list, .interests-list { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0;}
+    .skill-tag, .interest-tag { background: rgba(0, 123, 255, 0.15); padding: 4px 12px; border-radius: 20px; font-size: 0.9em; }
+    /* Modern Template Specifics */
+    .template-modern .resume-sidebar { background-color: #f3f4f6; padding: 20px; }
+    .template-modern .resume-main { padding: 20px; }
+    .template-modern .resume-photo { position: static; width: 120px; height: 120px; margin: 0 auto 15px; display: block; }
+    .template-modern .resume-header { padding: 0; text-align: center; }
+    .template-modern .resume-contact { flex-direction: column; gap: 8px; align-items: flex-start; }
+    .template-modern .resume-contact span { display: flex; align-items: center; gap: 8px; }
+    .template-modern h3 { font-size: 1.1em; }
+    /* Floating Action Button */
+    #downloadBtn {
+      position: fixed; bottom: 25px; right: 25px; padding: 15px 20px; border-radius: 50px;
+      background: linear-gradient(135deg, var(--success), #218838); cursor: pointer; color: white;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4); z-index: 100; animation: bounce 2s infinite;
+    }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    /* Modal */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+    .modal-overlay.show { opacity: 1; visibility: visible; }
+    .modal-content { background: var(--darker-bg); padding: 30px; border-radius: 15px; box-shadow: var(--shadow); width: 90%; max-width: 500px; text-align: center; transform: scale(0.9); transition: transform 0.3s; }
+    .modal-overlay.show .modal-content { transform: scale(1); }
+    .modal-content h3 { margin-top: 0; color: var(--highlight); }
+    .modal-buttons { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
+    .modal-image-full-preview { max-width: 90vw; max-height: 90vh; object-fit: contain; }
+    
+    /* Loading Spinner */
+    .loading .fas { opacity: 0; }
+    .loading::after {
+      content: ''; position: absolute; width: 16px; height: 16px; top: 0; left: 0; right: 0; bottom: 0;
+      margin: auto; border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    /* Responsive Design */
+    @media (max-width: 992px) { .container { grid-template-columns: 1fr; } }
+    @media (max-width: 576px) { button { width: 100%; } .resume-header { padding-right: 0;} .resume-photo { position: static; margin: 0 auto 15px; } .template-modern { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="landing-section">
+    <h1><i class="fas fa-chart-line"></i> IB RESUME BUILDER</h1>
+    <p>Build a professional, ATS-friendly resume tailored for investment banking and finance. Get AI-powered suggestions and industry-specific guidance to land your dream job.</p>
+    <a href="#" class="start-btn" id="startBuildingBtn"><i class="fas fa-arrow-right"></i> Start Building</a>
+  </div>
+  <div class="container" id="mainApp">
+    <!-- Left: Form -->
+    <div class="form-card" role="form" aria-labelledby="form-title">
+      <h1 id="form-title"><i class="fas fa-crown"></i> IB RESUME BUILDER</h1>
+      
+      <div class="tabs">
+        <button class="tab-link active" data-tab="resume-builder"><i class="fas fa-file-alt"></i> Resume</button>
+        <button class="tab-link" data-tab="cover-letter"><i class="fas fa-envelope-open-text"></i> Cover Letter</button>
+        <button class="tab-link" data-tab="ai-tools"><i class="fas fa-cogs"></i> AI Tools</button>
+      </div>
+      
+      <!-- Resume Builder Panel -->
+      <div id="resume-builder-panel" class="tab-content active">
+        <div class="progress-container">
+          <div id="completeness-text">Resume Completeness: 0%</div>
+          <div class="progress-bar"><div id="completeness-bar"></div></div>
+        </div>
+          
+        <div class="form-section">
+          <h2><i class="fas fa-rocket"></i> Quick Start <i class="fas fa-chevron-down"></i></h2>
+          <div class="section-content">
+            <label for="linkedinImport"><span class="label-icon"><i class="fab fa-linkedin"></i></span> Paste LinkedIn Profile Text to Autofill:</label>
+            <textarea id="linkedinImport" rows="3" placeholder="Copy the text content from a public LinkedIn profile and paste it here..."></textarea>
+            <button type="button" id="linkedinImportBtn" class="primary"><i class="fab fa-linkedin"></i> Import from Text</button>
+          </div>
+        </div>
+        <!-- Personal Info -->
+        <div class="form-section">
+          <h2>Personal Information <i class="fas fa-chevron-down"></i></h2>
+          <div class="section-content">
+            <div class="photo-upload-container">
+              <label for="photoUpload"><img id="photoPreview" src="https://placehold.co/120x120/16213e/f8f9fa?text=Photo" alt="Profile Photo Preview"></label>
+              <input type="file" id="photoUpload" accept="image/*">
+              <label for="photoUpload" id="photoUploadLabel"><i class="fas fa-camera"></i> Upload Photo</label>
+            </div>
+            <label for="name" class="required-field"><i class="fas fa-user"></i> Full Name:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="jobTitle"><i class="fas fa-briefcase"></i> Job Title:</label>
+            <input type="text" id="jobTitle" name="jobTitle" placeholder="e.g. Financial Analyst">
+            <label for="email" class="required-field"><i class="fas fa-envelope"></i> Email:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="phone"><i class="fas fa-phone"></i> Phone:</label>
+            <input type="text" id="phone" name="phone">
+            <label for="location"><i class="fas fa-map-marker-alt"></i> Location:</label>
+            <input type="text" id="location" name="location">
+            <label for="website"><i class="fas fa-link"></i> Website/Portfolio:</label>
+            <input type="url" id="website" name="website">
+            <label for="summary"><i class="fas fa-quote-left"></i> Summary:</label>
+            <textarea id="summary" name="summary" rows="4" placeholder="A concise, 3-4 sentence summary of your professional experience, skills, and career goals."></textarea>
+            <div class="textarea-toolbar">
+              <button type="button" class="ai-suggest" data-target="summary"><i class="fas fa-lightbulb"></i> AI Suggest</button>
+              <button type="button" class="ai-proofread" data-target="summary"><i class="fas fa-spell-check"></i> Proofread</button>
+            </div>
+          </div>
+        </div>
+        <div id="dynamic-sections"></div>
+        <button type="button" id="addCustomSection" class="secondary"><i class="fas fa-plus-circle"></i> Add Custom Section</button>
+        <div class="form-section">
+          <h2>Appearance <i class="fas fa-chevron-down"></i></h2>
+          <div class="section-content">
+            <div class="template-options" role="radiogroup">
+              <div class="template-option selected" data-template="template-professional" tabindex="0" role="radio" aria-checked="true"><div class="template-thumbnail" style="background-color: #e2e8f0;"><i class="fas fa-briefcase"></i></div><span>Professional</span></div>
+              <div class="template-option" data-template="template-modern" tabindex="0" role="radio" aria-checked="false"><div class="template-thumbnail" style="background-color: #f3f4f6;"><i class="fas fa-columns"></i></div><span>Modern</span></div>
+              <div class="template-option" data-template="template-dark" tabindex="0" role="radio" aria-checked="false"><div class="template-thumbnail" style="background-color: #2d3748;"><i class="fas fa-moon"></i></div><span>Dark</span></div>
+              <div class="template-option" data-template="template-creative" tabindex="0" role="radio" aria-checked="false"><div class="template-thumbnail" style="background-color: #fad0c4;"><i class="fas fa-paint-brush"></i></div><span>Creative</span></div>
+            </div>
+            <div class="appearance-grid">
+              <div>
+                <label for="fontSelect"><i class="fas fa-font"></i> Resume Font:</label>
+                <select id="fontSelect">
+                  <option>Poppins</option><option>Roboto</option><option>Open Sans</option><option>Montserrat</option><option>Lato</option><option>Merriweather</option>
+                </select>
+              </div>
+              <div><label for="accentColor"><i class="fas fa-palette"></i> Accent Color:</label><input type="color" id="accentColor" value="#007bff"></div>
+            </div>
+          </div>
+        </div>
+        <div class="action-buttons">
+          <button type="button" id="saveBtn" class="primary"><i class="fas fa-save"></i> Save</button>
+          <button type="button" id="loadBtn" class="primary"><i class="fas fa-cloud-download-alt"></i> Load</button>
+          <button type="button" id="resetBtn" class="secondary"><i class="fas fa-redo"></i> Reset</button>
+          <button type="button" id="themeToggle" class="secondary"><i class="fas fa-sun"></i> Theme</button>
+        </div>
+      </div>
+      <!-- Cover Letter Panel -->
+      <div id="cover-letter-panel" class="tab-content">
+        <h2><i class="fas fa-envelope"></i> Cover Letter Generator</h2>
+        <div class="form-section">
+          <label for="jobDescription"><i class="fas fa-file-alt"></i> Paste Job Description Here:</label>
+          <textarea id="jobDescription" rows="8" placeholder="e.g., We are looking for a proactive project manager..."></textarea>
+          <button type="button" id="generateCoverLetterBtn" class="primary"><i class="fas fa-cogs"></i> Generate Cover Letter</button>
+        </div>
+        <div class="form-section">
+          <label for="coverLetterOutput"><i class="fas fa-file-invoice"></i> Generated Cover Letter:</label>
+          <textarea id="coverLetterOutput" rows="15" readonly placeholder="Your AI-generated cover letter will appear here..."></textarea>
+        </div>
+      </div>
+      <!-- AI Tools Panel -->
+      <div id="ai-tools-panel" class="tab-content">
+        <h2><i class="fas fa-cogs"></i> AI Resume Tools</h2>
+        <div class="form-section">
+          <h3><i class="fas fa-bullseye"></i> Resume Optimization</h3>
+          <p>Get a compatibility score and keywords for a specific job.</p>
+          <label for="jobDescriptionKeywords"><i class="fas fa-clipboard-list"></i> Paste Job Description:</label>
+          <textarea id="jobDescriptionKeywords" rows="5" placeholder="Paste the full job description here..."></textarea>
+          <button type="button" id="analyzeResumeBtn" class="primary"><i class="fas fa-search"></i> Analyze Resume</button>
+          <div id="analysisOutput" class="ai-score-container" style="display: none;">
+            <h3>Compatibility Score: <span id="compatibilityScore">0%</span></h3>
+            <p><strong>Missing Keywords:</strong> <span id="missingKeywords">None</span></p>
+          </div>
+        </div>
+        <div class="form-section">
+          <h3><i class="fas fa-feather-alt"></i> Bullet Point Expander</h3>
+          <p>Transform a simple bullet point into a detailed, impactful statement using the **STAR** method.</p>
+          <label for="bulletPointInput"><i class="fas fa-list-ul"></i> Enter a simple bullet point:</label>
+          <textarea id="bulletPointInput" rows="2" placeholder="e.g., Managed a team of 5 engineers."></textarea>
+          <button type="button" id="expandBulletBtn" class="primary"><i class="fas fa-magic"></i> Expand</button>
+          <label for="expandedBulletOutput"><i class="fas fa-scroll"></i> Expanded Bullet Point:</label>
+          <textarea id="expandedBulletOutput" rows="3" readonly></textarea>
+        </div>
+      </div>
+    </div>
+    <!-- Right: Preview -->
+    <div class="preview-card" role="document" aria-label="Resume Preview">
+      <div id="resumeOutput" class="template-professional"></div>
+    </div>
+  </div>
+  <button id="downloadBtn" aria-label="Download resume as PDF"><i class="fas fa-download"></i> Download PDF</button>
+  <div id="modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 id="modalTitle">Suggestion</h3>
+      <p id="modalText">Replace current text?</p>
+      <div class="modal-buttons">
+        <button id="modalConfirm" class="primary">Confirm</button>
+        <button id="modalCancel" class="secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+  
+  <div id="imagePreviewModal" class="modal-overlay">
+    <div class="modal-content">
+      <img id="modalImageFull" src="#" alt="Certificate Full Preview" class="modal-image-full-preview">
+      <div class="modal-buttons">
+        <button id="modalCloseBtn" class="secondary">Close</button>
+      </div>
+    </div>
+  </div>
+  <div id="cropperModal" class="cropper-modal-container">
+    <div class="cropper-modal">
+      <img id="cropperImage" src="#" alt="Image to crop">
+      <div class="modal-buttons">
+        <button id="cropBtn" class="primary"><i class="fas fa-crop-alt"></i> Crop & Save</button>
+        <button id="cancelCropBtn" class="secondary"><i class="fas fa-times"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+  <script type="module">
+    // Firebase Imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    // --- Firebase Setup ---
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-resume-builder';
+    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+    
+    let app, auth, db, userId;
+    let photoDataUrl = null;
+    let cropper;
+    
+    // Store certificate data URLs in a map
+    const certificateFiles = new Map();
+    async function initializeFirebase() {
+      if (Object.keys(firebaseConfig).length === 0) {
+        console.warn("Firebase config not provided. Cloud features (save/load) will be disabled.");
+        return;
+      }
+      app = initializeApp(firebaseConfig);
+      auth = getAuth(app);
+      db = getFirestore(app);
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          userId = user.uid;
+          console.log("Authenticated as:", userId);
+        }
+      });
+      try {
+        await signInAnonymously(auth);
+      } catch (e) {
+        console.error("Firebase Auth Error:", e);
+      }
+    }
+    // --- Global State & DOM Elements ---
+    const startBuildingBtn = document.getElementById('startBuildingBtn');
+    const landingPage = document.querySelector('.landing-section');
+    const mainApp = document.getElementById('mainApp');
+    const form = document.querySelector('.form-card');
+    const output = document.getElementById('resumeOutput');
+    const dynamicSectionsContainer = document.getElementById('dynamic-sections');
+    const cropperModal = document.getElementById('cropperModal');
+    const cropperImage = document.getElementById('cropperImage');
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalText = document.getElementById('modalText');
+    const modalConfirm = document.getElementById('modalConfirm');
+    const modalCancel = document.getElementById('modalCancel');
+    const imagePreviewModal = document.getElementById('imagePreviewModal');
+    const modalImageFull = document.getElementById('modalImageFull');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    
+    const basicSections = ['Education', 'Experience', 'Skills', 'Certifications'];
+    const aiTools = {
+      'summary': {
+        prompt: (data) => `Generate a concise and professional resume summary for a ${data.jobTitle || 'candidate'}. The summary should be a single paragraph, less than 50 words, and highlight key skills and achievements.`,
+        system: "You are an expert resume writer. Write a clear and impactful summary."
+      },
+      'bullet-point-expander': {
+        prompt: (bullet) => `Expand the following simple resume bullet point into a detailed, quantifiable, and achievement-oriented statement using the STAR method (Situation, Task, Action, Result). Input: "${bullet}"`,
+        system: "You are an expert resume bullet point writer for finance and investment banking. Focus on results and use the STAR method (Situation, Task, Action, Result) implicitly. Use strong action verbs common in finance."
+      },
+      'proofread': {
+        prompt: (text) => `Proofread and correct grammar and spelling in the following text. Do not rewrite, only fix errors. Preserve the original meaning. Text: "${text}"`,
+        system: "You are a professional proofreader. Your only job is to fix grammatical and spelling errors in the provided text."
+      },
+      'linkedin-import': {
+        prompt: (text) => `Parse the following raw text from a LinkedIn profile and extract key information in a JSON format. The JSON should have the following keys: "name", "jobTitle", "email", "phone", "location", "website", "summary", "sections". The "sections" array should contain objects with "title" (e.g., "Experience", "Education", "Skills") and an "items" array. Each item should have "title", "subtitle", "date", "location", and "description". For skills, the "items" array should just contain the skills. Output only the JSON. Text: "${text}"`,
+        system: "You are a data extraction bot. Your output must be a valid JSON object and nothing else."
+      },
+      'cover-letter': {
+        prompt: (resume, jobDesc) => `Write a professional cover letter based on the following resume data and job description. The letter should be in a formal tone, highlight relevant experience, and be concise. Do not include a date or address block, just the body of the letter.
+Resume data (for context): ${JSON.stringify(resume)}
+Job Description: ${jobDesc}`,
+        system: "You are an AI assistant specialized in writing professional and effective cover letters. Your output should be a well-structured and persuasive letter body."
+      },
+      'resume-analyzer': {
+        prompt: (resume, jobDesc) => `Analyze the following resume text and job description.
+        
+Resume Text: ${resume}
+Job Description: ${jobDesc}
+        
+Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating how well the resume matches the job description based on keywords, skills, and experience) and "missingKeywords" (an array of important keywords from the job description that are not present in the resume).`,
+        system: "You are a resume analysis expert. Your output must be a valid JSON object and nothing else."
+      },
+      'skills-list': {
+        // Updated prompt to be more specific and "in the now" as requested
+        prompt: (jobTitle, isStudent) => {
+          let basePrompt = `Generate a list of 10-15 highly relevant technical and soft skills for a ${jobTitle}. The skills should be current and in high demand. Focus on what is most relevant for the job market in the current year. The output should be a single string with skills separated by commas, like "Skill 1, Skill 2, Skill 3".`;
+          if (isStudent) {
+            basePrompt += ` Also, include skills that are suitable for students or entry-level candidates, such as academic skills, project-based skills, or foundational knowledge.`;
+          }
+          return basePrompt;
+        },
+        system: "You are an AI assistant specialized in listing professional skills for various job titles. You have access to up-to-date information on market trends. Provide only a comma-separated list of skills.",
+        // We will use Google Search grounding for this
+        tools: [{ "google_search": {} }]
+      },
+      'extract-certificate': {
+        prompt: (base64Image) => `Extract the following information from the base64 encoded certificate image: "title" (the name of the certification), "subtitle" (the name of the issuing body), and "date" (the date it was issued). Provide the output as a JSON object with these keys. If a value is not found, use an empty string. Output only the JSON object. Image: ${base64Image}`,
+        system: "You are an AI assistant that extracts text from images, specifically for professional certificates. Your output must be a valid JSON object with the specified keys."
+      }
+    };
+    
+    // --- Core Functions ---
+    function collectFormData() { 
+      const data = {
+        name: document.getElementById('name').value,
+        jobTitle: document.getElementById('jobTitle').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        location: document.getElementById('location').value,
+        website: document.getElementById('website').value,
+        summary: document.getElementById('summary').value,
+        photo: photoDataUrl,
+        template: document.querySelector('.template-option.selected')?.dataset.template,
+        font: document.getElementById('fontSelect').value,
+        accentColor: document.getElementById('accentColor').value,
+        sections: []
+      };
+      document.querySelectorAll('#dynamic-sections .form-section').forEach(sectionEl => {
+        const title = sectionEl.querySelector('h2').textContent.trim().replace(/\s*<i class="fas fa-chevron-down"><\/i>\s*/, '');
+        const items = [];
+        const isInterests = title.toLowerCase() === 'interests';
+        const isSkills = title.toLowerCase() === 'skills';
+        const isCertifications = title.toLowerCase() === 'certifications';
+        sectionEl.querySelectorAll('.section-item').forEach(itemEl => {
+          const item = {};
+          if (isInterests || isSkills) {
+            item.description = itemEl.querySelector('textarea')?.value;
+          } else if (isCertifications) {
+            item.title = itemEl.querySelector('input[data-key="title"]')?.value;
+            item.subtitle = itemEl.querySelector('input[data-key="subtitle"]')?.value;
+            item.date = itemEl.querySelector('input[data-key="date"]')?.value;
+            item.certificateFile = itemEl.querySelector('input[type="file"]')?.dataset.base64 || '';
+          } else {
+            item.title = itemEl.querySelector('input[data-key="title"]')?.value;
+            item.subtitle = itemEl.querySelector('input[data-key="subtitle"]')?.value;
+            item.date = itemEl.querySelector('input[data-key="date"]')?.value;
+            item.location = itemEl.querySelector('input[data-key="location"]')?.value;
+            item.description = itemEl.querySelector('textarea')?.value;
+          }
+          items.push(item);
+        });
+        data.sections.push({ title, items });
+      });
+      return data;
+    }
+    
+    function populateForm(data) {
+      document.getElementById('name').value = data.name || '';
+      document.getElementById('jobTitle').value = data.jobTitle || '';
+      document.getElementById('email').value = data.email || '';
+      document.getElementById('phone').value = data.phone || '';
+      document.getElementById('location').value = data.location || '';
+      document.getElementById('website').value = data.website || '';
+      document.getElementById('summary').value = data.summary || '';
+      
+      photoDataUrl = data.photo || null;
+      if (photoDataUrl) {
+        document.getElementById('photoPreview').src = photoDataUrl;
+      }
+      document.getElementById('dynamic-sections').innerHTML = '';
+      data.sections?.forEach(section => {
+        const sectionEl = addSection(section.title, null, false);
+        const isCertifications = section.title.toLowerCase() === 'certifications';
+        section.items?.forEach(item => {
+          addItemToSection(sectionEl, section.title.toLowerCase() === 'skills' || section.title.toLowerCase() === 'interests', isCertifications, false);
+          const itemEl = sectionEl.querySelector('.section-item:last-of-type');
+          if (itemEl) {
+            if (isCertifications) {
+              itemEl.querySelector('input[data-key="title"]').value = item.title || '';
+              itemEl.querySelector('input[data-key="subtitle"]').value = item.subtitle || '';
+              itemEl.querySelector('input[data-key="date"]').value = item.date || '';
+              if (item.certificateFile) {
+                const img = itemEl.querySelector('.cert-preview-img');
+                img.src = item.certificateFile;
+                img.style.display = 'block';
+                itemEl.querySelector('input[type="file"]').dataset.base64 = item.certificateFile;
+              }
+            } else if (section.title.toLowerCase() === 'skills' || section.title.toLowerCase() === 'interests') {
+              itemEl.querySelector('textarea').value = item.description || '';
+            } else {
+              itemEl.querySelector('input[data-key="title"]').value = item.title || '';
+              itemEl.querySelector('input[data-key="subtitle"]').value = item.subtitle || '';
+              itemEl.querySelector('input[data-key="date"]').value = item.date || '';
+              itemEl.querySelector('input[data-key="location"]').value = item.location || '';
+              itemEl.querySelector('textarea').value = item.description || '';
+            }
+          }
+        });
+      });
+      updateResume();
+    }
+    function updateResume() {
+      const data = collectFormData();
+      document.documentElement.style.setProperty('--resume-accent-color', data.accentColor);
+      output.className = data.template;
+      document.documentElement.style.setProperty('--resume-font', data.font);
+      
+      let html;
+      if(data.template === 'template-modern') {
+        html = generateModernLayout(data);
+      } else {
+        html = generateStandardLayout(data);
+      }
+      
+      output.innerHTML = html;
+      updateCompletenessScore();
+    }
+    
+    function generateStandardLayout(data) {
+      let html = `${data.photo ? `<img src="${data.photo}" alt="Profile Photo" class="resume-photo">` : ''}
+        <div class="resume-header">
+          <h2>${data.name || 'Your Name'}</h2>
+          <p>${data.jobTitle || 'Job Title'}</p>
+          <div class="resume-contact">
+            ${data.email ? `<span><i class="fas fa-envelope"></i> ${data.email}</span>` : ''}
+            ${data.phone ? `<span><i class="fas fa-phone"></i> ${data.phone}</span>` : ''}
+            ${data.location ? `<span><i class="fas fa-map-marker-alt"></i> ${data.location}</span>` : ''}
+            ${data.website ? `<span><i class="fas fa-link"></i> <a href="${data.website}" target="_blank">${data.website}</a></span>` : ''}
+          </div>
+        </div>`;
+        if (data.summary) { html += `<div class="resume-section"><h3>Summary</h3><p>${data.summary.replace(/\n/g, '<br>')}</p></div>`; }
+      
+      data.sections?.forEach(section => {
+        if (!section.title || section.items.length === 0) return;
+        html += `<div class="resume-section"><h3>${section.title}</h3>`;
+        section.items.forEach(item => {
+          if (section.title.toLowerCase() === 'skills') {
+            const skills = item.description?.split(',').map(s => `<span class="skill-tag">${s.trim()}</span>`).join('');
+            html += `<ul class="skills-list">${skills}</ul>`;
+          } else if (section.title.toLowerCase() === 'interests') {
+            const interests = item.description?.split(',').map(s => `<span class="interest-tag">${s.trim()}</span>`).join('');
+            html += `<ul class="interests-list">${interests}</ul>`;
+          } else if (section.title.toLowerCase() === 'certifications') {
+            html += `<div class="resume-item">
+              <div class="item-header">
+                <span>${item.title}</span><span>${item.date}</span>
+              </div>
+              <p>${item.subtitle}</p>
+            </div>`;
+          } else {
+            html += `<div class="resume-item">
+              <div class="item-header">
+                <span>${item.title}</span><span>${item.date}</span>
+              </div>
+              <div class="item-subheader">
+                <span>${item.subtitle}</span><span>${item.location}</span>
+              </div>
+              <p>${item.description?.replace(/\n/g, '<br>')}</p>
+            </div>`;
+          }
+        });
+        html += `</div>`;
+      });
+      return html;
+    }
+    
+    function generateModernLayout(data) {
+      const sidebarSections = ['skills', 'interests', 'certifications'];
+      let sidebarHTML = `
+        ${data.photo ? `<img src="${data.photo}" alt="Profile Photo" class="resume-photo">` : ''}
+        <div class="resume-header">
+          <h2>${data.name || 'Your Name'}</h2>
+          <p>${data.jobTitle || 'Job Title'}</p>
+        </div>
+        <div class="resume-section">
+          <h3>Contact</h3>
+          <div class="resume-contact">
+            ${data.email ? `<span><i class="fas fa-envelope"></i> ${data.email}</span>` : ''}
+            ${data.phone ? `<span><i class="fas fa-phone"></i> ${data.phone}</span>` : ''}
+            ${data.location ? `<span><i class="fas fa-map-marker-alt"></i> ${data.location}</span>` : ''}
+            ${data.website ? `<span><i class="fas fa-link"></i> <a href="${data.website}" target="_blank">${data.website.replace(/https?:\/\//, '')}</a></span>` : ''}
+          </div>
+        </div>`;
+      let mainContentHTML = '';
+      if (data.summary) { mainContentHTML += `<div class="resume-section"><h3>Summary</h3><p>${data.summary.replace(/\n/g, '<br>')}</p></div>`; }
+      data.sections?.forEach(section => {
+        if (!section.title || section.items.length === 0) return;
+        let sectionItemsHTML = '';
+        section.items.forEach(item => {
+          if (section.title.toLowerCase() === 'skills') {
+            const skills = item.description?.split(',').map(s => `<span class="skill-tag">${s.trim()}</span>`).join('');
+            sectionItemsHTML += `<ul class="skills-list">${skills}</ul>`;
+          } else if (section.title.toLowerCase() === 'interests') {
+            const interests = item.description?.split(',').map(s => `<span class="interest-tag">${s.trim()}</span>`).join('');
+            sectionItemsHTML += `<ul class="interests-list">${interests}</ul>`;
+          } else if (section.title.toLowerCase() === 'certifications') {
+            sectionItemsHTML += `<div class="resume-item">
+              <div class="item-header">
+                <span>${item.title}</span><span>${item.date}</span>
+              </div>
+              <p>${item.subtitle}</p>
+            </div>`;
+          } else {
+            sectionItemsHTML += `<div class="resume-item">
+              <div class="item-header">
+                <span>${item.title}</span><span>${item.date}</span>
+              </div>
+              <div class="item-subheader">
+                <span>${item.subtitle}</span><span>${item.location}</span>
+              </div>
+              <p>${item.description?.replace(/\n/g, '<br>')}</p>
+            </div>`;
+          }
+        });
+        const sectionHTML = `<div class="resume-section"><h3>${section.title}</h3>${sectionItemsHTML}</div>`;
+        
+        if (sidebarSections.includes(section.title.toLowerCase())) {
+          sidebarHTML += sectionHTML;
+        } else {
+          mainContentHTML += sectionHTML;
+        }
+      });
+      return `<div class="resume-sidebar">${sidebarHTML}</div><div class="resume-main">${mainContentHTML}</div>`;
+    }
+    // --- Section & Item Management ---
+    function addSection(title = 'New Section', id = `section-${Date.now()}`, shouldUpdate = true) {
+      const sectionId = id || `section-${title.toLowerCase().replace(/\s/g, '-')}`;
+      const isInterests = title.toLowerCase() === 'interests';
+      const isSkills = title.toLowerCase() === 'skills';
+      const isCertifications = title.toLowerCase() === 'certifications';
+      const sectionHTML = `
+        <div class="form-section dynamic-section-item collapsed" data-section-id="${sectionId}">
+          <h2><i class="fas fa-list"></i> ${title} <i class="fas fa-chevron-down"></i></h2>
+          <div class="section-content section-items-container">
+            <button type="button" class="add-item-btn secondary"><i class="fas fa-plus-circle"></i> Add ${isCertifications ? 'Certificate' : 'Item'}</button>
+          </div>
+        </div>`;
+      dynamicSectionsContainer.insertAdjacentHTML('beforeend', sectionHTML);
+      const sectionEl = document.getElementById(sectionId) || dynamicSectionsContainer.querySelector(`[data-section-id="${sectionId}"]`);
+      addItemToSection(sectionEl, isSkills || isInterests, isCertifications, false);
+      
+      if (shouldUpdate) updateResume();
+      return sectionEl;
+    }
+    function addItemToSection(sectionEl, isSpecial = false, isCertifications = false, shouldUpdate = true) {
+      const itemsContainer = sectionEl.querySelector('.section-items-container');
+      if (!itemsContainer) return;
+      let itemHTML;
+      if(isCertifications) {
+        itemHTML = `
+          <div class="section-item">
+            <div class="drag-handle"><i class="fas fa-grip-vertical"></i></div>
+            <div class="certificate-upload-wrapper">
+              <label class="certificate-upload-btn">
+                <i class="fas fa-cloud-upload-alt"></i> Upload Certificate
+                <input type="file" class="certificate-upload-input" data-key="certificateFile" accept="image/png, image/jpeg, .pdf">
+              </label>
+            </div>
+            <div class="cert-preview-container" style="display: none;">
+              <img class="cert-preview-img" alt="Certificate Preview">
+              <div class="cert-info">
+                <h4 class="cert-title">Certificate Title</h4>
+                <p class="cert-subtitle">Issuing Organization</p>
+              </div>
+            </div>
+            <div class="certificate-actions">
+              <button type="button" class="open-cert-preview-btn secondary" style="display: none;"><i class="fas fa-expand"></i> Preview</button>
+              <button type="button" class="ai-extract" style="display: none;"><i class="fas fa-magic"></i> AI Extract</button>
+              <button type="button" class="download-cert-pdf-btn secondary" style="display: none;"><i class="fas fa-download"></i> Download</button>
+              <button type="button" class="remove-cert-btn secondary" style="display: none;"><i class="fas fa-trash"></i> Remove</button>
+            </div>
+            <label><i class="fas fa-certificate"></i> Name:</label>
+            <input type="text" data-key="title" placeholder="Certificate Name">
+            <label><i class="fas fa-award"></i> Issued By:</label>
+            <input type="text" data-key="subtitle" placeholder="Issuing Body">
+            <label><i class="fas fa-calendar-alt"></i> Issue Date:</label>
+            <input type="text" data-key="date" placeholder="Date Issued">
+            <button type="button" class="delete-item-btn"><i class="fas fa-trash"></i> Remove Item</button>
+          </div>
+        `;
+      } else if(isSpecial){
+        itemHTML = `<div class="section-item">
+          <textarea data-key="description" placeholder="Enter skills/interests separated by commas..."></textarea>
+          <div class="textarea-toolbar">
+            <button type="button" class="ai-suggest-skills" data-target="description"><i class="fas fa-lightbulb"></i> AI Suggest</button>
+            <button type="button" class="delete-item-btn"><i class="fas fa-trash"></i> Remove Item</button>
+          </div>
+        </div>`;
+      } else {
+        itemHTML = `
+          <div class="section-item">
+            <div class="drag-handle"><i class="fas fa-grip-vertical"></i></div>
+            <label><i class="fas fa-briefcase"></i> Title:</label>
+            <input type="text" data-key="title" placeholder="Job Title / Degree Name">
+            <label><i class="fas fa-building"></i> Company / Institution:</label>
+            <input type="text" data-key="subtitle" placeholder="Company / Institution">
+            <div class="textarea-toolbar">
+              <button type="button" class="ai-suggest" data-target="subtitle"><i class="fas fa-lightbulb"></i> AI Suggest</button>
+            </div>
+            <label><i class="fas fa-calendar-alt"></i> Date:</label>
+            <input type="text" data-key="date" placeholder="Date (e.g., 2020 - Present)">
+            <label><i class="fas fa-map-marker-alt"></i> Location:</label>
+            <input type="text" data-key="location" placeholder="Location (e.g., Remote)">
+            <div class="textarea-toolbar">
+              <button type="button" class="ai-suggest" data-target="location"><i class="fas fa-lightbulb"></i> AI Suggest</button>
+            </div>
+            <label><i class="fas fa-pen-nib"></i> Description:</label>
+            <textarea data-key="description" placeholder="Description..."></textarea>
+            <div class="textarea-toolbar">
+              <button type="button" class="ai-suggest" data-target="description"><i class="fas fa-lightbulb"></i> AI Suggest</button>
+              <button type="button" class="ai-proofread" data-target="description"><i class="fas fa-spell-check"></i> Proofread</button>
+              <button type="button" class="ai-expand"><i class="fas fa-expand-alt"></i> Expand</button>
+            </div>
+            <button type="button" class="delete-item-btn"><i class="fas fa-trash"></i> Remove Item</button>
+          </div>`;
+      }
+      // The `add-item-btn` is now a pulsing button with full width
+      itemsContainer.insertAdjacentHTML('beforeend', itemHTML);
+      if (shouldUpdate) updateResume();
+    }
+    
+    // --- Gemini API Functions (wrapped in a secure function) ---
+    async function callGemini(prompt, systemPrompt, button, tools) {
+      if (button) toggleButtonLoading(button, true);
+      try {
+        const payload = {
+            contents: [{ parts: [{ text: prompt }] }],
+            systemInstruction: { parts: [{ text: systemPrompt }] }
+        };
+        if (tools) {
+            payload.tools = tools;
+        }
+        const apiKey = ""
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'API Error');
+        }
+        const result = await response.json();
+        return result.candidates?.[0]?.content?.parts?.[0]?.text;
+      } catch (e) {
+        console.error("AI API call failed:", e);
+        showModal('API Error', `Failed to get AI response: ${e.message}`, null);
+      } finally {
+        if (button) toggleButtonLoading(button, false);
+      }
+      return null;
+    }
+    
+    // Function to call the AI for skills suggestions, now using Google Search grounding
+    async function getAISkills(targetElement, button) {
+      const jobTitle = document.getElementById('jobTitle').value || "professional";
+      const isStudent = jobTitle.toLowerCase().includes('student') || jobTitle.toLowerCase().includes('undergraduate');
+      
+      const prompt = aiTools['skills-list'].prompt(jobTitle, isStudent);
+      const system = aiTools['skills-list'].system;
+      const tools = aiTools['skills-list'].tools;
+      
+      const result = await callGemini(prompt, system, button, tools);
+      if (result) {
+        const currentSkills = targetElement.value ? targetElement.value.split(',').map(s => s.trim()) : [];
+        const newSkills = result.split(',').map(s => s.trim());
+        const combinedSkills = [...new Set([...currentSkills, ...newSkills])].join(', ');
+        showModal('AI Suggested Skills', `Add these skills?<br><br><i>"${combinedSkills}"</i>`, () => {
+          targetElement.value = combinedSkills;
+          hideModal();
+          updateResume();
+        });
+      }
+    }
+    async function getAISuggestion(targetElement, button) {
+      const field = targetElement.dataset.key;
+      const data = collectFormData();
+      let prompt, system;
+      if (field === 'summary') {
+        prompt = aiTools.summary.prompt(data);
+        system = aiTools.summary.system;
+      } else {
+        prompt = `Generate a concise and professional suggestion for a resume field. Field: ${field}. Context: ${JSON.stringify(data)}`;
+        system = "You are an expert resume writer. Provide a short, professional suggestion."
+      }
+      
+      const result = await callGemini(prompt, system, button);
+      if (result) {
+        showModal('AI Suggestion', `Replace with this text?<br><br><i>"${result}"</i>`, () => {
+          targetElement.value = result;
+          hideModal();
+          updateResume();
+        });
+      }
+    }
+    async function proofreadText(targetElement, button) {
+      const prompt = aiTools.proofread.prompt(targetElement.value);
+      const system = aiTools.proofread.system;
+      const result = await callGemini(prompt, system, button);
+      if (result) {
+        showModal('Proofread & Correct', `Replace with this corrected text?<br><br><i>"${result}"</i>`, () => {
+          targetElement.value = result;
+          hideModal();
+          updateResume();
+        });
+      }
+    }
+    async function expandBulletPoint(targetElement, button) {
+      const prompt = aiTools['bullet-point-expander'].prompt(targetElement.value);
+      const system = aiTools['bullet-point-expander'].system;
+      const result = await callGemini(prompt, system, button);
+      if (result) {
+        document.getElementById('expandedBulletOutput').value = result;
+      }
+    }
+    async function handleLinkedInImport(button) {
+      const rawText = document.getElementById('linkedinImport').value;
+      if (!rawText.trim()) return;
+      const prompt = aiTools['linkedin-import'].prompt(rawText);
+      const system = aiTools['linkedin-import'].system;
+      const result = await callGemini(prompt, system, button);
+      if (result) {
+        try {
+          const data = JSON.parse(result);
+          populateForm(data);
+          showModal('Import Successful', 'Your profile has been imported!', null);
+        } catch (e) {
+          console.error("Failed to parse JSON:", e);
+          showModal('Import Failed', 'Failed to parse the LinkedIn data. Please try again.', null);
+        }
+      }
+    }
+    
+    async function generateCoverLetter(button) {
+      const jobDesc = document.getElementById('jobDescription').value;
+      const resumeData = collectFormData();
+      if (!jobDesc.trim() || !resumeData.name) {
+        showModal('Incomplete Data', 'Please fill out your resume and paste a job description first.', null);
+        return;
+      }
+      const prompt = aiTools['cover-letter'].prompt(resumeData, jobDesc);
+      const system = aiTools['cover-letter'].system;
+      const result = await callGemini(prompt, system, button);
+      if (result) {
+        document.getElementById('coverLetterOutput').value = result;
+      }
+    }
+    async function analyzeResume(button) {
+      const jobDesc = document.getElementById('jobDescriptionKeywords').value;
+      const resumeText = document.getElementById('resumeOutput').textContent;
+      if (!jobDesc.trim()) {
+        showModal('Missing Job Description', 'Please paste a job description to analyze.', null);
+        return;
+      }
+      
+      const prompt = aiTools['resume-analyzer'].prompt(resumeText, jobDesc);
+      const system = aiTools['resume-analyzer'].system;
+      const result = await callGemini(prompt, system, button);
+      if (result) {
+        try {
+          const analysis = JSON.parse(result);
+          const score = analysis.score;
+          const missing = analysis.missingKeywords.join(', ') || 'None';
+          document.getElementById('compatibilityScore').textContent = `${score}%`;
+          document.getElementById('missingKeywords').textContent = missing;
+          document.getElementById('analysisOutput').style.display = 'block';
+        } catch (e) {
+          console.error("Failed to parse analysis JSON:", e);
+          showModal('Analysis Failed', 'Could not process the analysis. Please try again.', null);
+        }
+      }
+    }
+    
+    async function extractCertificateData(fileInput, button) {
+      const file = fileInput.files[0];
+      if (!file) return;
+      if (file.type !== 'image/png' && file.type !== 'image/jpeg' && file.type !== 'application/pdf') {
+          showModal('Invalid File Type', 'Please upload a PNG, JPG, or PDF file.', null);
+          return;
+      }
+      // Convert to Base64 for API call
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const base64Image = e.target.result;
+        const prompt = aiTools['extract-certificate'].prompt(base64Image);
+        const system = aiTools['extract-certificate'].system;
+        const result = await callGemini(prompt, system, button);
+        if (result) {
+          try {
+            const data = JSON.parse(result);
+            const parent = fileInput.closest('.section-item');
+            parent.querySelector('input[data-key="title"]').value = data.title || '';
+            parent.querySelector('input[data-key="subtitle"]').value = data.subtitle || '';
+            parent.querySelector('input[data-key="date"]').value = data.date || '';
+            updateResume();
+          } catch (e) {
+            console.error("Failed to parse certificate JSON:", e);
+            showModal('Extraction Failed', 'Could not extract data from the certificate. Please fill in the details manually.', null);
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+    
+    // --- Firebase & PDF ---
+    async function saveData() {
+      if (!userId) {
+        showModal('Login Required', 'Please sign in to save your data.', null);
+        return;
+      }
+      toggleButtonLoading(document.getElementById('saveBtn'), true);
+      const data = collectFormData();
+      try {
+        await setDoc(doc(db, "resumes", userId), data);
+        showModal('Success', 'Resume saved to cloud!', null);
+      } catch (e) {
+        console.error("Error saving document: ", e);
+        showModal('Error', 'Failed to save resume.', null);
+      } finally {
+        toggleButtonLoading(document.getElementById('saveBtn'), false);
+      }
+    }
+    async function loadData() {
+      if (!userId) {
+        showModal('Login Required', 'Please sign in to load your data.', null);
+        return;
+      }
+      toggleButtonLoading(document.getElementById('loadBtn'), true);
+      try {
+        const docRef = doc(db, "resumes", userId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          populateForm(docSnap.data());
+          showModal('Success', 'Resume loaded from cloud!', null);
+        } else {
+          showModal('No Data', 'No saved resume found.', null);
+        }
+      } catch (e) {
+        console.error("Error loading document: ", e);
+        showModal('Error', 'Failed to load resume.', null);
+      } finally {
+        toggleButtonLoading(document.getElementById('loadBtn'), false);
+      }
+    }
+    function resetForm() {
+      if (confirm("Are you sure you want to reset the form? All data will be lost.")) {
+        document.getElementById('name').value = '';
+        document.getElementById('jobTitle').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('phone').value = '';
+        document.getElementById('location').value = '';
+        document.getElementById('website').value = '';
+        document.getElementById('summary').value = '';
+        photoDataUrl = null;
+        document.getElementById('photoPreview').src = 'https://placehold.co/120x120/16213e/f8f9fa?text=Photo';
+        document.getElementById('dynamic-sections').innerHTML = '';
+        basicSections.forEach(title => addSection(title, null, false));
+        updateResume();
+      }
+    }
+    
+    async function downloadPDF() {
+      toggleButtonLoading(document.getElementById('downloadBtn'), true);
+      const element = document.getElementById('resumeOutput');
+      const filename = `${document.getElementById('name').value || 'Resume'}_${document.getElementById('jobTitle').value || 'Untitled'}.pdf`;
+      // Get dimensions of the element
+      const rect = element.getBoundingClientRect();
+      const width = rect.width;
+      const height = rect.height;
+      const scale = 2; // Increased scale for better resolution
+      try {
+        const canvas = await html2canvas(element, {
+          scale: scale,
+          allowTaint: true,
+          useCORS: true,
+          windowWidth: width,
+          windowHeight: height
+        });
+        const imgData = canvas.toDataURL('image/jpeg', 1.0);
+        const pdf = new jspdf.jsPDF({
+          orientation: 'portrait',
+          unit: 'px',
+          format: [width, height]
+        });
+        pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+        pdf.save(filename);
+      } catch (e) {
+        console.error("PDF generation failed:", e);
+        showModal('PDF Error', `Failed to generate PDF: ${e.message}`, null);
+      } finally {
+        toggleButtonLoading(document.getElementById('downloadBtn'), false);
+      }
+    }
+    // --- UI Helpers ---
+    function showModal(title, text, onConfirm) {
+      modalTitle.textContent = title;
+      modalText.innerHTML = text;
+      modal.classList.add('show');
+      
+      modalConfirm.style.display = onConfirm ? 'inline-block' : 'none';
+      modalConfirm.onclick = onConfirm;
+      modalCancel.onclick = () => hideModal();
+    }
+    function hideModal() { modal.classList.remove('show'); }
+    function showImagePreviewModal(src) {
+      modalImageFull.src = src;
+      imagePreviewModal.classList.add('show');
+    }
+    function hideImagePreviewModal() {
+      imagePreviewModal.classList.remove('show');
+      modalImageFull.src = '#';
+    }
+    function toggleButtonLoading(button, isLoading) {
+      button.classList.toggle('loading', isLoading);
+      button.disabled = isLoading;
+    }
+    function updateCompletenessScore() {
+      const formElements = form.querySelectorAll('input:not([type="file"]), textarea:not(#linkedinImport)');
+      let filledCount = 0;
+      let totalCount = 0;
+      formElements.forEach(el => {
+        if (el.type !== 'hidden') {
+          totalCount++;
+          if (el.value.trim() !== '') {
+            filledCount++;
+          }
+        }
+      });
+      const completeness = Math.floor((filledCount / totalCount) * 100) || 0;
+      document.getElementById('completeness-bar').style.width = `${completeness}%`;
+      document.getElementById('completeness-text').textContent = `Resume Completeness: ${completeness}%`;
+    }
+    // --- Event Listeners ---
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeFirebase();
+      // Initial setup
+      basicSections.forEach(title => { addSection(title, null, false); });
+      Sortable.create(dynamicSectionsContainer, { handle: '.drag-handle', animation: 150 });
+      updateResume();
+      startBuildingBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        landingPage.style.display = 'none';
+        mainApp.style.display = 'grid';
+      });
+      // Tab switching
+      document.querySelector('.tabs').addEventListener('click', e => {
+        if(e.target.classList.contains('tab-link')) {
+          const tabId = e.target.dataset.tab;
+          document.querySelectorAll('.tab-link, .tab-content').forEach(el => el.classList.remove('active'));
+          e.target.classList.add('active');
+          document.getElementById(`${tabId}-panel`).classList.add('active');
+        }
+      });
+      // Accordion for sections
+      form.querySelectorAll('.form-section h2').forEach(header => {
+        header.addEventListener('click', () => {
+          header.parentElement.classList.toggle('collapsed');
+        });
+      });
+      // General form updates and AI button clicks
+      form.addEventListener('input', e => { 
+        if (e.target.id !== 'photoUpload') updateResume(); 
+      });
+      form.addEventListener('click', e => {
+        const button = e.target.closest('button');
+        if (!button) return;
+        if (button.classList.contains('ai-suggest')) {
+          const targetEl = button.closest('.textarea-toolbar').previousElementSibling;
+          getAISuggestion(targetEl, button);
+        } else if (button.classList.contains('ai-suggest-skills')) {
+          const targetEl = button.closest('.textarea-toolbar').previousElementSibling;
+          getAISkills(targetEl, button);
+        } else if (button.classList.contains('ai-proofread')) {
+          const targetEl = button.closest('.textarea-toolbar').previousElementSibling;
+          proofreadText(targetEl, button);
+        } else if (button.classList.contains('ai-expand')) {
+          const targetEl = button.closest('.textarea-toolbar').previousElementSibling;
+          expandBulletPoint(targetEl, button);
+        } else if (button.classList.contains('ai-extract')) {
+          const fileInput = button.closest('.section-item').querySelector('.certificate-upload-input');
+          extractCertificateData(fileInput, button);
+        } else if (button.classList.contains('open-cert-preview-btn')) {
+          const imgSrc = button.closest('.section-item').querySelector('.cert-preview-img').src;
+          if (imgSrc) showImagePreviewModal(imgSrc);
+        } else if (button.classList.contains('download-cert-pdf-btn')) {
+          const imgUrl = button.closest('.section-item').querySelector('.cert-preview-img').src;
+          const certTitle = button.closest('.section-item').querySelector('input[data-key="title"]').value || 'Certificate';
+          if (imgUrl) {
+            const pdf = new jspdf.jsPDF();
+            const img = new Image();
+            img.src = imgUrl;
+            img.onload = function() {
+              const imgWidth = pdf.internal.pageSize.getWidth();
+              const imgHeight = (this.height * imgWidth) / this.width;
+              pdf.addImage(img, 'JPEG', 0, 0, imgWidth, imgHeight);
+              pdf.save(`${certTitle.replace(/ /g, '_')}_Certificate.pdf`);
+            };
+          }
+        } else if (button.classList.contains('remove-cert-btn')) {
+          const certContainer = button.closest('.section-item');
+          certContainer.querySelector('.cert-preview-img').src = '';
+          certContainer.querySelector('.cert-preview-container').style.display = 'none';
+          certContainer.querySelector('.certificate-upload-input').value = '';
+          certContainer.querySelector('.certificate-upload-input').dataset.base64 = '';
+          certContainer.querySelector('.open-cert-preview-btn').style.display = 'none';
+          certContainer.querySelector('.ai-extract').style.display = 'none';
+          certContainer.querySelector('.download-cert-pdf-btn').style.display = 'none';
+          certContainer.querySelector('.remove-cert-btn').style.display = 'none';
+          updateResume();
+        } else if (button.classList.contains('delete-item-btn')) {
+          button.closest('.section-item').remove();
+          updateResume();
+        } else if (button.classList.contains('add-item-btn')) {
+          const sectionEl = button.closest('.form-section');
+          const isSkills = sectionEl.dataset.sectionId.includes('skills');
+          const isCertifications = sectionEl.dataset.sectionId.includes('certifications');
+          addItemToSection(sectionEl, isSkills, isCertifications);
+        }
+      });
+      // Other buttons
+      document.getElementById('linkedinImportBtn').addEventListener('click', e => handleLinkedInImport(e.currentTarget));
+      document.getElementById('generateCoverLetterBtn').addEventListener('click', e => generateCoverLetter(e.currentTarget));
+      document.getElementById('analyzeResumeBtn').addEventListener('click', e => analyzeResume(e.currentTarget));
+      document.getElementById('expandBulletBtn').addEventListener('click', e => expandBulletPoint(document.getElementById('bulletPointInput'), e.currentTarget));
+      document.getElementById('addCustomSection').addEventListener('click', () => addSection());
+      document.getElementById('downloadBtn').addEventListener('click', downloadPDF);
+      document.getElementById('saveBtn').addEventListener('click', saveData);
+      document.getElementById('loadBtn').addEventListener('click', loadData);
+      document.getElementById('resetBtn').addEventListener('click', resetForm);
+      document.getElementById('themeToggle').addEventListener('click', () => document.body.classList.toggle('light-mode'));
+      document.querySelectorAll('.template-option').forEach(option => {
+        option.addEventListener('click', () => {
+          document.querySelector('.template-option.selected').classList.remove('selected');
+          option.classList.add('selected');
+          updateResume();
+        });
+      });
+      document.getElementById('fontSelect').addEventListener('change', updateResume);
+      document.getElementById('accentColor').addEventListener('input', updateResume);
+      modalCloseBtn.addEventListener('click', hideImagePreviewModal);
+      // Photo Upload & Cropper
+      document.getElementById('photoUpload').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            cropperModal.style.display = 'flex';
+            cropperImage.src = event.target.result;
+            if (cropper) cropper.destroy();
+            cropper = new Cropper(cropperImage, {
+              aspectRatio: 1,
+              viewMode: 1,
+              autoCropArea: 0.8,
+            });
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+      document.addEventListener('change', e => {
+          if (e.target.classList.contains('certificate-upload-input')) {
+              const file = e.target.files[0];
+              const parentItem = e.target.closest('.section-item');
+              const previewContainer = parentItem.querySelector('.cert-preview-container');
+              const previewImg = parentItem.querySelector('.cert-preview-img');
+              const aiBtn = parentItem.querySelector('.ai-extract');
+              const previewBtn = parentItem.querySelector('.open-cert-preview-btn');
+              const downloadBtn = parentItem.querySelector('.download-cert-pdf-btn');
+              const removeBtn = parentItem.querySelector('.remove-cert-btn');
+              
+              if (file) {
+                  const reader = new FileReader();
+                  reader.onload = (event) => {
+                      const base64Url = event.target.result;
+                      previewImg.src = base64Url;
+                      previewContainer.style.display = 'flex';
+                      e.target.dataset.base64 = base64Url;
+                      aiBtn.style.display = 'inline-flex';
+                      previewBtn.style.display = 'inline-flex';
+                      downloadBtn.style.display = 'inline-flex';
+                      removeBtn.style.display = 'inline-flex';
+                  };
+                  reader.readAsDataURL(file);
+              } else {
+                  previewImg.src = '';
+                  previewContainer.style.display = 'none';
+                  delete e.target.dataset.base64;
+                  aiBtn.style.display = 'none';
+                  previewBtn.style.display = 'none';
+                  downloadBtn.style.display = 'none';
+                  removeBtn.style.display = 'none';
+              }
+              updateResume();
+          }
+      });
+      document.getElementById('cropBtn').addEventListener('click', () => {
+        if (cropper) {
+          const croppedCanvas = cropper.getCroppedCanvas({
+            width: 300,
+            height: 300,
+          });
+          photoDataUrl = croppedCanvas.toDataURL();
+          document.getElementById('photoPreview').src = photoDataUrl;
+          cropperModal.style.display = 'none';
+          cropper.destroy();
+          cropper = null;
+          updateResume();
+        }
+      });
+      document.getElementById('cancelCropBtn').addEventListener('click', () => {
+        cropperModal.style.display = 'none';
+        if (cropper) {
+          cropper.destroy();
+          cropper = null;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
