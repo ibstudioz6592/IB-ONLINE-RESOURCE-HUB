@@ -274,9 +274,9 @@
             padding: 30px; margin-bottom: 40px;
             min-height: 400px;
         }
-        .feature-panel {
-            display: none;
-        }
+            .feature-panel {
+                display: block;
+            }
         .feature-panel.active {
             display: block;
             animation: fade-in 0.5s ease;
@@ -917,7 +917,7 @@
         
         /* AI Assistant */
         .ai-assistant-container {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
+                display: flex; flex-direction: column; gap: 20px;
             height: 500px;
         }
         .ai-chat {
@@ -2954,6 +2954,19 @@
     </main>
     
     <!-- Floating Chatbot Button -->
+    <button id="resume-float-btn" class="chatbot-btn" style="bottom: 80px;">
+        <i class="fas fa-file-alt"></i>
+        <span>BUILD YOUR RESUME</span>
+    </button>
+    <style>
+        #resume-float-btn { bottom: 110px !important; }
+        #chatbot-btn { bottom: 30px !important; }
+    </style>
+    <script>
+        document.getElementById('resume-float-btn').onclick = function() {
+            window.location.href = '/resume.html';
+        };
+    </script>
     <button id="chatbot-btn" class="chatbot-btn">
         <i class="fas fa-comments"></i>
         <span>IB HELP</span>
