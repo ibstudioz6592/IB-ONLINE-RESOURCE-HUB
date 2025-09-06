@@ -406,29 +406,23 @@
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
-
     .notification.success {
       border-left: 4px solid var(--success);
     }
-
     .notification.warning {
       border-left: 4px solid var(--highlight);
     }
-
     .notification-content {
       display: flex;
       align-items: center;
       gap: 12px;
     }
-
     .notification i {
       font-size: 1.2rem;
     }
-
     .notification.success i {
       color: var(--success);
     }
-
     .notification.warning i {
       color: var(--highlight);
     }
@@ -497,7 +491,7 @@
               <label for="photoUpload"><img id="photoPreview" src="https://placehold.co/120x120/16213e/f8f9fa?text=Photo" alt="Profile Photo Preview"></label>
               <input type="file" id="photoUpload" accept="image/*">
               <label for="photoUpload" id="photoUploadLabel"><i class="fas fa-camera"></i> Upload Photo</label>
-              <div class="upload-hint">Your photo will be automatically cropped to a professional square format</div>
+              <div class="upload-hint">Your photo will be automatically enhanced for a professional look</div>
             </div>
             <label for="name" class="required-field"><i class="fas fa-user"></i> Full Name:</label>
             <input type="text" id="name" name="name" required>
@@ -511,6 +505,14 @@
             <input type="text" id="location" name="location">
             <label for="website"><i class="fas fa-link"></i> Website/Portfolio:</label>
             <input type="url" id="website" name="website">
+            <label for="linkedin"><i class="fab fa-linkedin"></i> LinkedIn:</label>
+            <input type="url" id="linkedin" name="linkedin" placeholder="https://linkedin.com/in/username">
+            <label for="github"><i class="fab fa-github"></i> GitHub:</label>
+            <input type="url" id="github" name="github" placeholder="https://github.com/username">
+            <label for="facebook"><i class="fab fa-facebook"></i> Facebook:</label>
+            <input type="url" id="facebook" name="facebook" placeholder="https://facebook.com/username">
+            <label for="twitter"><i class="fab fa-twitter"></i> Twitter:</label>
+            <input type="url" id="twitter" name="twitter" placeholder="https://twitter.com/username">
             <label for="summary"><i class="fas fa-quote-left"></i> Summary:</label>
             <textarea id="summary" name="summary" rows="4" placeholder="A concise, 3-4 sentence summary of your professional experience, skills, and career goals."></textarea>
             <div class="textarea-toolbar">
@@ -694,7 +696,7 @@
     const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
     const apiKeyStatus = document.getElementById('apiKeyStatus');
     
-    const basicSections = ['Education', 'Experience', 'Skills', 'Certifications'];
+    const basicSections = ['Education', 'Experience', 'Skills', 'Certifications', 'Languages'];
     const aiTools = {
       'summary': {
         prompt: (data) => `Generate a concise and professional resume summary for a ${data.jobTitle || 'candidate'}. The summary should be a single paragraph, less than 50 words, and highlight key skills and achievements.`,
@@ -709,7 +711,7 @@
         system: "You are a professional proofreader. Your only job is to fix grammatical and spelling errors in the provided text."
       },
       'linkedin-import': {
-        prompt: (text) => `Parse the following raw text from a LinkedIn profile and extract key information in a JSON format. The JSON should have the following keys: "name", "jobTitle", "email", "phone", "location", "website", "summary", "sections". The "sections" array should contain objects with "title" (e.g., "Experience", "Education", "Skills") and an "items" array. Each item should have "title", "subtitle", "date", "location", and "description". For skills, the "items" array should just contain the skills. Output only the JSON. Text: "${text}"`,
+        prompt: (text) => `Parse the following raw text from a LinkedIn profile and extract key information in a JSON format. The JSON should have the following keys: "name", "jobTitle", "email", "phone", "location", "website", "linkedin", "github", "facebook", "twitter", "summary", "sections". The "sections" array should contain objects with "title" (e.g., "Experience", "Education", "Skills") and an "items" array. Each item should have "title", "subtitle", "date", "location", and "description". For skills, the "items" array should just contain the skills. Output only the JSON. Text: "${text}"`,
         system: "You are a data extraction bot. Your output must be a valid JSON object and nothing else."
       },
       'cover-letter': {
@@ -755,6 +757,10 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
         phone: document.getElementById('phone').value,
         location: document.getElementById('location').value,
         website: document.getElementById('website').value,
+        linkedin: document.getElementById('linkedin').value,
+        github: document.getElementById('github').value,
+        facebook: document.getElementById('facebook').value,
+        twitter: document.getElementById('twitter').value,
         summary: document.getElementById('summary').value,
         photo: photoDataUrl,
         template: document.querySelector('.template-option.selected')?.dataset.template,
@@ -767,10 +773,11 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
         const items = [];
         const isInterests = title.toLowerCase() === 'interests';
         const isSkills = title.toLowerCase() === 'skills';
+        const isLanguages = title.toLowerCase() === 'languages';
         const isCertifications = title.toLowerCase() === 'certifications';
         sectionEl.querySelectorAll('.section-item').forEach(itemEl => {
           const item = {};
-          if (isInterests || isSkills) {
+          if (isInterests || isSkills || isLanguages) {
             item.description = itemEl.querySelector('textarea')?.value;
           } else if (isCertifications) {
             item.title = itemEl.querySelector('input[data-key="title"]')?.value;
@@ -798,6 +805,10 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
       document.getElementById('phone').value = data.phone || '';
       document.getElementById('location').value = data.location || '';
       document.getElementById('website').value = data.website || '';
+      document.getElementById('linkedin').value = data.linkedin || '';
+      document.getElementById('github').value = data.github || '';
+      document.getElementById('facebook').value = data.facebook || '';
+      document.getElementById('twitter').value = data.twitter || '';
       document.getElementById('summary').value = data.summary || '';
       
       photoDataUrl = data.photo || null;
@@ -809,7 +820,7 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
         const sectionEl = addSection(section.title, null, false);
         const isCertifications = section.title.toLowerCase() === 'certifications';
         section.items?.forEach(item => {
-          addItemToSection(sectionEl, section.title.toLowerCase() === 'skills' || section.title.toLowerCase() === 'interests', isCertifications, false);
+          addItemToSection(sectionEl, section.title.toLowerCase() === 'skills' || section.title.toLowerCase() === 'interests' || section.title.toLowerCase() === 'languages', isCertifications, false);
           const itemEl = sectionEl.querySelector('.section-item:last-of-type');
           if (itemEl) {
             if (isCertifications) {
@@ -822,7 +833,7 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
                 img.style.display = 'block';
                 itemEl.querySelector('input[type="file"]').dataset.base64 = item.certificateFile;
               }
-            } else if (section.title.toLowerCase() === 'skills' || section.title.toLowerCase() === 'interests') {
+            } else if (section.title.toLowerCase() === 'skills' || section.title.toLowerCase() === 'interests' || section.title.toLowerCase() === 'languages') {
               itemEl.querySelector('textarea').value = item.description || '';
             } else {
               itemEl.querySelector('input[data-key="title"]').value = item.title || '';
@@ -863,6 +874,10 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
             ${data.phone ? `<span><i class="fas fa-phone"></i> ${data.phone}</span>` : ''}
             ${data.location ? `<span><i class="fas fa-map-marker-alt"></i> ${data.location}</span>` : ''}
             ${data.website ? `<span><i class="fas fa-link"></i> <a href="${data.website}" target="_blank">${data.website}</a></span>` : ''}
+            ${data.linkedin ? `<span><i class="fab fa-linkedin"></i> <a href="${data.linkedin}" target="_blank">${data.linkedin.replace(/https?:\/\//, '')}</a></span>` : ''}
+            ${data.github ? `<span><i class="fab fa-github"></i> <a href="${data.github}" target="_blank">${data.github.replace(/https?:\/\//, '')}</a></span>` : ''}
+            ${data.facebook ? `<span><i class="fab fa-facebook"></i> <a href="${data.facebook}" target="_blank">${data.facebook.replace(/https?:\/\//, '')}</a></span>` : ''}
+            ${data.twitter ? `<span><i class="fab fa-twitter"></i> <a href="${data.twitter}" target="_blank">${data.twitter.replace(/https?:\/\//, '')}</a></span>` : ''}
           </div>
         </div>`;
         if (data.summary) { html += `<div class="resume-section"><h3>Summary</h3><p>${data.summary.replace(/\n/g, '<br>')}</p></div>`; }
@@ -877,6 +892,9 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
           } else if (section.title.toLowerCase() === 'interests') {
             const interests = item.description?.split(',').map(s => `<span class="interest-tag">${s.trim()}</span>`).join('');
             html += `<ul class="interests-list">${interests}</ul>`;
+          } else if (section.title.toLowerCase() === 'languages') {
+            const languages = item.description?.split(',').map(s => `<span class="skill-tag">${s.trim()}</span>`).join('');
+            html += `<ul class="skills-list">${languages}</ul>`;
           } else if (section.title.toLowerCase() === 'certifications') {
             html += `<div class="resume-item">
               <div class="item-header">
@@ -902,7 +920,7 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
     }
     
     function generateModernLayout(data) {
-      const sidebarSections = ['skills', 'interests', 'certifications'];
+      const sidebarSections = ['skills', 'interests', 'certifications', 'languages'];
       let sidebarHTML = `
         ${data.photo ? `<img src="${data.photo}" alt="Profile Photo" class="resume-photo">` : ''}
         <div class="resume-header">
@@ -916,6 +934,10 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
             ${data.phone ? `<span><i class="fas fa-phone"></i> ${data.phone}</span>` : ''}
             ${data.location ? `<span><i class="fas fa-map-marker-alt"></i> ${data.location}</span>` : ''}
             ${data.website ? `<span><i class="fas fa-link"></i> <a href="${data.website}" target="_blank">${data.website.replace(/https?:\/\//, '')}</a></span>` : ''}
+            ${data.linkedin ? `<span><i class="fab fa-linkedin"></i> <a href="${data.linkedin}" target="_blank">${data.linkedin.replace(/https?:\/\//, '')}</a></span>` : ''}
+            ${data.github ? `<span><i class="fab fa-github"></i> <a href="${data.github}" target="_blank">${data.github.replace(/https?:\/\//, '')}</a></span>` : ''}
+            ${data.facebook ? `<span><i class="fab fa-facebook"></i> <a href="${data.facebook}" target="_blank">${data.facebook.replace(/https?:\/\//, '')}</a></span>` : ''}
+            ${data.twitter ? `<span><i class="fab fa-twitter"></i> <a href="${data.twitter}" target="_blank">${data.twitter.replace(/https?:\/\//, '')}</a></span>` : ''}
           </div>
         </div>`;
       let mainContentHTML = '';
@@ -930,6 +952,9 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
           } else if (section.title.toLowerCase() === 'interests') {
             const interests = item.description?.split(',').map(s => `<span class="interest-tag">${s.trim()}</span>`).join('');
             sectionItemsHTML += `<ul class="interests-list">${interests}</ul>`;
+          } else if (section.title.toLowerCase() === 'languages') {
+            const languages = item.description?.split(',').map(s => `<span class="skill-tag">${s.trim()}</span>`).join('');
+            sectionItemsHTML += `<ul class="skills-list">${languages}</ul>`;
           } else if (section.title.toLowerCase() === 'certifications') {
             sectionItemsHTML += `<div class="resume-item">
               <div class="item-header">
@@ -964,6 +989,7 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
       const sectionId = id || `section-${title.toLowerCase().replace(/\s/g, '-')}`;
       const isInterests = title.toLowerCase() === 'interests';
       const isSkills = title.toLowerCase() === 'skills';
+      const isLanguages = title.toLowerCase() === 'languages';
       const isCertifications = title.toLowerCase() === 'certifications';
       const sectionHTML = `
         <div class="form-section dynamic-section-item collapsed" data-section-id="${sectionId}">
@@ -974,7 +1000,7 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
         </div>`;
       dynamicSectionsContainer.insertAdjacentHTML('beforeend', sectionHTML);
       const sectionEl = document.getElementById(sectionId) || dynamicSectionsContainer.querySelector(`[data-section-id="${sectionId}"]`);
-      addItemToSection(sectionEl, isSkills || isInterests, isCertifications, false);
+      addItemToSection(sectionEl, isSkills || isInterests || isLanguages, isCertifications, false);
       
       if (shouldUpdate) updateResume();
       return sectionEl;
@@ -1017,7 +1043,7 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
         `;
       } else if(isSpecial){
         itemHTML = `<div class="section-item">
-          <textarea data-key="description" placeholder="Enter skills/interests separated by commas..."></textarea>
+          <textarea data-key="description" placeholder="Enter skills/interests/languages separated by commas..."></textarea>
           <div class="textarea-toolbar">
             <button type="button" class="ai-suggest-skills" data-target="description"><i class="fas fa-lightbulb"></i> AI Suggest</button>
             <button type="button" class="delete-item-btn"><i class="fas fa-trash"></i> Remove Item</button>
@@ -1294,6 +1320,10 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
         document.getElementById('phone').value = '';
         document.getElementById('location').value = '';
         document.getElementById('website').value = '';
+        document.getElementById('linkedin').value = '';
+        document.getElementById('github').value = '';
+        document.getElementById('facebook').value = '';
+        document.getElementById('twitter').value = '';
         document.getElementById('summary').value = '';
         photoDataUrl = null;
         document.getElementById('photoPreview').src = 'https://placehold.co/120x120/16213e/f8f9fa?text=Photo';
@@ -1439,8 +1469,8 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
         // Draw the cropped image on the canvas
         ctx.drawImage(this, sx, sy, sWidth, sHeight, 0, 0, 300, 300);
         
-        // Apply subtle sharpening filter for better quality
-        applySharpening(ctx, canvas.width, canvas.height);
+        // Apply professional enhancement (brightness and warmth)
+        applyProfessionalEnhancement(ctx, canvas.width, canvas.height);
         
         // Convert canvas to data URL and pass to callback
         callback(canvas.toDataURL('image/jpeg', 0.95));
@@ -1448,45 +1478,44 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
       img.src = imageSrc;
     }
     
-    // Sharpening filter to enhance photo quality
-    function applySharpening(ctx, width, height) {
+    // Professional enhancement function for face brightening
+    function applyProfessionalEnhancement(ctx, width, height) {
+      // Get image data
       const imageData = ctx.getImageData(0, 0, width, height);
       const data = imageData.data;
-      const weights = [0, -1, 0, -1, 5, -1, 0, -1, 0];
-      const side = Math.round(Math.sqrt(weights.length));
-      const halfSide = Math.floor(side / 2);
       
-      const output = ctx.createImageData(width, height);
-      const outputData = output.data;
+      // Apply brightness and warmth adjustments
+      const brightness = 15; // Increase brightness
+      const warmth = 10;     // Add warmth (red/yellow tones)
       
-      for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-          const dstOff = (y * width + x) * 4;
-          let r = 0, g = 0, b = 0;
-          
-          for (let cy = 0; cy < side; cy++) {
-            for (let cx = 0; cx < side; cx++) {
-              const scy = y + cy - halfSide;
-              const scx = x + cx - halfSide;
-              
-              if (scy >= 0 && scy < height && scx >= 0 && scx < width) {
-                const srcOff = (scy * width + scx) * 4;
-                const wt = weights[cy * side + cx];
-                r += data[srcOff] * wt;
-                g += data[srcOff + 1] * wt;
-                b += data[srcOff + 2] * wt;
-              }
-            }
-          }
-          
-          outputData[dstOff] = Math.min(255, Math.max(0, r));
-          outputData[dstOff + 1] = Math.min(255, Math.max(0, g));
-          outputData[dstOff + 2] = Math.min(255, Math.max(0, b));
-          outputData[dstOff + 3] = 255;
-        }
+      for (let i = 0; i < data.length; i += 4) {
+        // Apply brightness
+        data[i] += brightness;     // Red
+        data[i + 1] += brightness; // Green
+        data[i + 2] += brightness; // Blue
+        
+        // Apply warmth (increase red and yellow tones)
+        data[i] += warmth;         // Increase red
+        data[i + 1] += warmth * 0.5; // Slightly increase green (for yellow tone)
+        
+        // Clamp values to 0-255
+        data[i] = Math.min(255, Math.max(0, data[i]));
+        data[i + 1] = Math.min(255, Math.max(0, data[i + 1]));
+        data[i + 2] = Math.min(255, Math.max(0, data[i + 2]));
       }
       
-      ctx.putImageData(output, 0, 0);
+      // Put the modified data back
+      ctx.putImageData(imageData, 0, 0);
+      
+      // Add subtle vignette for professional look
+      const centerX = width / 2;
+      const centerY = height / 2;
+      const radius = Math.min(width, height) / 2;
+      const gradient = ctx.createRadialGradient(centerX, centerY, radius * 0.7, centerX, centerY, radius);
+      gradient.addColorStop(0, 'rgba(0,0,0,0)');
+      gradient.addColorStop(1, 'rgba(0,0,0,0.3)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, width, height);
     }
     
     // Photo quality assessment
@@ -1624,8 +1653,9 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
         } else if (button.classList.contains('add-item-btn')) {
           const sectionEl = button.closest('.form-section');
           const isSkills = sectionEl.dataset.sectionId.includes('skills');
+          const isLanguages = sectionEl.dataset.sectionId.includes('languages');
           const isCertifications = sectionEl.dataset.sectionId.includes('certifications');
-          addItemToSection(sectionEl, isSkills, isCertifications);
+          addItemToSection(sectionEl, isSkills || isLanguages, isCertifications);
         }
       });
       // Other buttons
@@ -1664,7 +1694,7 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
       document.getElementById('accentColor').addEventListener('input', updateResume);
       modalCloseBtn.addEventListener('click', hideImagePreviewModal);
       
-      // Enhanced Photo Upload with Auto Crop and Quality Assessment
+      // Enhanced Photo Upload with Auto Crop and Professional Enhancement
       document.getElementById('photoUpload').addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -1679,7 +1709,7 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
             // Assess photo quality
             const quality = await assessPhotoQuality(event.target.result);
             
-            // Auto crop the image with enhanced algorithm
+            // Auto crop the image with professional enhancement
             autoCropImage(event.target.result, (croppedImageDataUrl) => {
               // Set the cropped image as the photo preview
               photoDataUrl = croppedImageDataUrl;
@@ -1697,7 +1727,7 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
                     'warning'
                   );
                 } else {
-                  showNotification('Photo quality looks great!', 'success');
+                  showNotification('Photo looks great with professional enhancement!', 'success');
                 }
               };
               preview.src = photoDataUrl;
