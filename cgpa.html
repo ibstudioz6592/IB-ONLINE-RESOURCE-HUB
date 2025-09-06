@@ -150,7 +150,7 @@
             padding: 20px; 
         }
         
-        /* Dark mode toggle */
+        /* Dark mode toggle - Top Right */
         .dark-mode-toggle {
             position: fixed;
             top: 20px;
@@ -182,7 +182,7 @@
             transition: all 0.3s ease;
         }
         
-        /* Floating action button */
+        /* Floating action button - Bottom Right */
         .fab {
             position: fixed;
             bottom: 30px;
@@ -843,6 +843,104 @@
             color: var(--text-secondary);
         }
         
+        /* Semester Selection Modal */
+        .semester-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .semester-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .semester-modal {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 8px 32px 0 var(--shadow-color);
+            transform: translateY(-50px);
+            transition: transform 0.3s ease;
+        }
+        
+        .semester-modal-overlay.active .semester-modal {
+            transform: translateY(0);
+        }
+        
+        .semester-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .semester-modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .semester-modal-close {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .semester-modal-close:hover {
+            transform: rotate(90deg);
+        }
+        
+        .semester-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .semester-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .semester-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+            border-color: var(--secondary-glow);
+        }
+        
+        .semester-card i {
+            font-size: 1.5rem;
+            color: var(--secondary-glow);
+            margin-bottom: 8px;
+        }
+        
+        .semester-card .semester-name {
+            font-weight: 500;
+        }
+        
         /* Responsive Design */
         @media (max-width: 1024px) { 
             .dashboard-layout { 
@@ -878,6 +976,10 @@
                 height: 50px;
                 font-size: 1.2rem;
             }
+            
+            .branch-selection {
+                grid-template-columns: 1fr 1fr;
+            }
         }
         
         @media (max-width: 480px) { 
@@ -892,6 +994,10 @@
             .export-container {
                 justify-content: center;
             }
+            
+            .semester-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
@@ -901,12 +1007,12 @@
         <div class="noise-layer"></div>
     </div>
     
-    <!-- Dark mode toggle -->
+    <!-- Dark mode toggle - Top Right -->
     <button class="dark-mode-toggle tooltip" id="dark-mode-toggle" title="Toggle dark mode">
         <i class="fas fa-moon"></i>
     </button>
     
-    <!-- Floating action button -->
+    <!-- Floating action button - Bottom Right -->
     <div class="fab tooltip" id="help-btn" title="Help">
         <i class="fas fa-question"></i>
     </div>
@@ -974,10 +1080,6 @@
                     <label for="branchSelection"><i class="fas fa-university"></i> Select Branch</label>
                     <div class="branch-selection" id="branchSelection"></div>
                 </div>
-                <div class="form-group" id="semesterGroup" style="display: none;">
-                    <label for="semester"><i class="fas fa-graduation-cap"></i> Select Semester</label>
-                    <select id="semester"></select>
-                </div>
                 <div id="arrearsSection" class="arrears-section" style="display: none;">
                     <h3><i class="fas fa-flag"></i> Arrear Subjects</h3>
                     <ul id="arrearsList" class="arrears-list"></ul>
@@ -1040,6 +1142,19 @@
         </div>
     </div>
     
+    <!-- Semester Selection Modal -->
+    <div class="semester-modal-overlay" id="semester-modal">
+        <div class="semester-modal">
+            <div class="semester-modal-header">
+                <h3 class="semester-modal-title">Select Semester</h3>
+                <button class="semester-modal-close" id="semester-modal-close">&times;</button>
+            </div>
+            <div class="semester-grid" id="semester-grid">
+                <!-- Semester cards will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+    
     <!-- Toast container -->
     <div id="toast-container"></div>
     
@@ -1089,7 +1204,6 @@
     const debouncedFullUpdate = debounce(() => updateAllDisplays(), 400);
     
     document.addEventListener('DOMContentLoaded', () => {
-        const semesterSelect = document.getElementById('semester');
         const subjectForm = document.getElementById('subjectForm');
         
         // Load saved state
@@ -1118,24 +1232,31 @@
             helpModal.classList.remove('active');
         });
         
+        // Set up semester modal
+        const semesterModal = document.getElementById('semester-modal');
+        const semesterModalClose = document.getElementById('semester-modal-close');
+        
+        semesterModalClose.addEventListener('click', () => {
+            semesterModal.classList.remove('active');
+        });
+        
         // Set up export button
         const exportBtn = document.getElementById('export-btn');
         exportBtn.addEventListener('click', exportResults);
         
-        // Restore last selected branch and semester
+        // Restore last selected branch
         if (currentBranch && academicData.branches[currentBranch]) {
             selectBranch(currentBranch, true);
-            const lastSem = localStorage.getItem("lastSemester");
-            if (lastSem) { 
-                semesterSelect.value = lastSem; 
-                loadSubjects(); 
-            }
         } else {
             subjectForm.innerHTML = `<div class="empty-state"><i class="fas fa-hand-pointer"></i><p>Please select your branch to get started.</p></div>`;
         }
         
-        semesterSelect.addEventListener('change', loadSubjects);
-        subjectForm.addEventListener('change', handleGradeChange);
+        // Use event delegation for grade changes
+        subjectForm.addEventListener('change', (e) => {
+            if (e.target.tagName === 'SELECT') {
+                handleGradeChange(e);
+            }
+        });
     });
     
     function toggleDarkMode() {
@@ -1196,16 +1317,46 @@
         localStorage.setItem("lastBranch", branchCode);
         document.querySelectorAll(".branch-card").forEach(c => c.classList.remove("selected"));
         document.querySelector(`.branch-card[data-branch-code="${branchCode}"]`).classList.add("selected");
-        const semSelect = document.getElementById("semester");
-        const availableSems = Object.keys(academicData.branches[branchCode].semesters).filter(sem => academicData.branches[branchCode].semesters[sem]?.length > 0);
-        semSelect.innerHTML = '<option value="">-- Select Semester --</option>' + availableSems.map(sem => `<option value="${sem}">Semester ${sem}</option>`).join('');
         
-        document.getElementById("semesterGroup").style.display = "block";
-        if (!isRestoring) {
-            semSelect.value = "";
-            loadSubjects();
-        }
+        // Show semester selection modal
+        showSemesterModal();
         updateAllDisplays();
+    }
+    
+    function showSemesterModal() {
+        const semesterModal = document.getElementById('semester-modal');
+        const semesterGrid = document.getElementById('semester-grid');
+        
+        // Clear previous semesters
+        semesterGrid.innerHTML = '';
+        
+        // Get available semesters
+        const availableSems = Object.keys(academicData.branches[currentBranch].semesters)
+            .filter(sem => academicData.branches[currentBranch].semesters[sem]?.length > 0);
+        
+        // Create semester cards
+        availableSems.forEach(sem => {
+            const card = document.createElement('div');
+            card.className = 'semester-card';
+            card.dataset.semester = sem;
+            card.innerHTML = `
+                <i class="fas fa-book"></i>
+                <div class="semester-name">Semester ${sem}</div>
+            `;
+            card.addEventListener('click', () => selectSemester(sem));
+            semesterGrid.appendChild(card);
+        });
+        
+        // Show modal
+        semesterModal.classList.add('active');
+    }
+    
+    function selectSemester(sem) {
+        const semesterModal = document.getElementById('semester-modal');
+        semesterModal.classList.remove('active');
+        
+        localStorage.setItem("lastSemester", sem);
+        loadSubjects(sem);
     }
     
     function styleGradeSelect(selectElement) {
@@ -1228,8 +1379,7 @@
         }
     }
     
-    function loadSubjects() {
-        const sem = document.getElementById("semester").value;
+    function loadSubjects(sem) {
         const form = document.getElementById("subjectForm");
         const gpaResultEl = document.getElementById("gpaResult");
         form.innerHTML = ''; 
@@ -1241,7 +1391,6 @@
             return;
         }
         
-        localStorage.setItem("lastSemester", sem);
         const subjects = academicData.branches[currentBranch].semesters[sem];
         
         if (!subjects || subjects.length === 0) {
@@ -1264,7 +1413,7 @@
                                 <span style="font-weight: 500; padding-right: 15px;">${sub.name} (${sub.code})</span>
                                 <span style="font-weight: 600;">Credits: ${sub.credits}</span>
                               </div>
-                              <select data-index="${i}"></select>`;
+                              <select data-index="${i}" data-semester="${sem}"></select>`;
             
             const select = card.querySelector('select');
             select.innerHTML = '<option value="">Grade</option>' + Object.keys(gradePoints).map(g => `<option value="${g}">${g}</option>`).join('');
@@ -1279,10 +1428,10 @@
     }
     
     function handleGradeChange(e) {
-        if (e.target.tagName !== 'SELECT') return;
-        const sem = document.getElementById("semester").value;
-        const index = parseInt(e.target.dataset.index, 10);
-        const grade = e.target.value;
+        const select = e.target;
+        const sem = select.dataset.semester;
+        const index = parseInt(select.dataset.index, 10);
+        const grade = select.value;
         const semesterKey = `${currentBranch}_${sem}`;
         
         if (!currentGrades[semesterKey]) {
@@ -1291,7 +1440,7 @@
         }
         
         currentGrades[semesterKey][index] = grade;
-        styleGradeSelect(e.target);
+        styleGradeSelect(select);
         localStorage.setItem("currentGrades", JSON.stringify(currentGrades));
         
         calculateGPA(sem);
