@@ -2433,6 +2433,37 @@
             }
         };
         
+        // Function to validate Google Drive link
+        function isValidGoogleDriveLink(link) {
+            if (!link) return false;
+            
+            // Convert to lowercase for case-insensitive matching
+            const lowerLink = link.toLowerCase();
+            
+            // Check for various valid Google Drive link patterns
+            const patterns = [
+                'drive.google.com',
+                'docs.google.com',
+                'sheets.google.com',
+                'slides.google.com',
+                'forms.google.com',
+                'sites.google.com',
+                'google.com/drive',
+                'google.com/file/d/',
+                'google.com/open?id=',
+                'google.com/uc?id='
+            ];
+            
+            // Check if the link contains any of the valid patterns
+            for (const pattern of patterns) {
+                if (lowerLink.includes(pattern)) {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+        
         // Function to create custom dropdown
         function createCustomDropdown(selectElement) {
             if (!selectElement) return;
@@ -3868,7 +3899,7 @@
             }
             
             // Validate Google Drive link
-            if (!materialData.link.includes('drive.google.com')) {
+            if (!isValidGoogleDriveLink(materialData.link)) {
                 showToast('Please enter a valid Google Drive link', 'error');
                 return;
             }
@@ -4100,7 +4131,7 @@
             }
             
             // Validate Google Drive link
-            if (!pyqData.link.includes('drive.google.com')) {
+            if (!isValidGoogleDriveLink(pyqData.link)) {
                 showToast('Please enter a valid Google Drive link', 'error');
                 return;
             }
