@@ -48,10 +48,10 @@
       --input-bg: rgba(0,0,0,0.05);
     }
     /* Landing Page Section */
-    .landing-section { text-align: center; padding: 50px 20px; background: rgba(0,0,0,0.2); border-radius: 20px; margin-bottom: 30px; box-shadow: var(--shadow); }
+    .landing-section { text-align: center; padding: 50px 20px; background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(15, 52, 96, 0.4)); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; margin-bottom: 30px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); }
     .landing-section h1 { font-size: 3em; margin-bottom: 10px; color: var(--primary); animation: none; text-shadow: 0 0 10px rgba(0, 123, 255, 0.5); }
     .landing-section p { font-size: 1.2em; max-width: 800px; margin: 0 auto 20px; }
-    .start-btn { background: linear-gradient(45deg, var(--primary), #0056b3); color: white; padding: 15px 30px; border-radius: 50px; font-weight: 700; text-decoration: none; display: inline-block; animation: pulse 2s infinite; }
+    .start-btn { background: linear-gradient(135deg, var(--primary), #0056b3); color: white; padding: 18px 35px; border-radius: 50px; font-weight: 700; text-decoration: none; display: inline-block; animation: pulse 2s infinite; box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4); letter-spacing: 1px; }
     @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7); } 70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(0, 123, 255, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); } }
     /* Layout */
     .container { display: none; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 1400px; width: 100%; }
@@ -71,7 +71,8 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; animation: fadeIn 0.4s; }
     
-    .form-section { margin-bottom: 25px; padding: 15px; border-radius: 10px; background: rgba(255,255,255,0.05); box-shadow: inset 0 0 10px rgba(0,0,0,0.1); }
+    .form-section { margin-bottom: 25px; padding: 15px; border-radius: 12px; background: rgba(255,255,255,0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 8px 20px rgba(0,0,0,0.15); transition: all 0.4s ease; }
+    .form-section:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(0,0,0,0.2); }
     .form-section h2 { cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-bottom: none; }
     .form-section h2 i { transition: transform 0.3s; }
     .form-section.collapsed .section-content { display: none; }
@@ -87,11 +88,17 @@
     label i.fas, .label-icon { margin-right: 8px; }
     
     input, textarea, select {
-      width: 100%; margin-top: 6px; padding: 12px 15px; border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.2); outline: none; background: var(--input-bg);
-      color: var(--light-text); font-size: 14px;
+      width: 100%; margin-top: 6px; padding: 12px 15px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.15); outline: none; background: rgba(255, 255, 255, 0.08);
+      color: var(--light-text); font-size: 14px; backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
     }
-    input:focus, textarea:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3); }
+    input:focus, textarea:focus, select:focus { 
+      background: rgba(255, 255, 255, 0.12); 
+      border-color: var(--primary); 
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2); 
+      transform: translateY(-2px);
+    }
     textarea { min-height: 80px; resize: vertical; }
     /* Photo Upload */
     .photo-upload-container { text-align: center; margin-bottom: 15px; }
@@ -100,13 +107,17 @@
       height: 120px; 
       border-radius: 50%; 
       object-fit: cover; 
-      border: 3px solid var(--card-border); 
+      border: 4px solid var(--primary); 
       margin-bottom: 10px; 
       background-color: rgba(0,0,0,0.2); 
       cursor: pointer;
-      transition: transform 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
     }
-    #photoPreview:hover, .cert-preview-img:hover { transform: scale(1.05); }
+    #photoPreview:hover, .cert-preview-img:hover { 
+      transform: scale(1.05) rotate(2deg); 
+      box-shadow: 0 12px 28px rgba(0, 123, 255, 0.4);
+    }
     .cert-preview-img { border-radius: 8px; width: 100px; height: 100px; }
     #photoUpload, .certificate-upload-input { display: none; }
     #photoUploadLabel, .certificate-upload-label { 
@@ -130,9 +141,22 @@
       margin-top: 10px; padding: 12px 20px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;
       color: #111; display: inline-flex; align-items: center; justify-content: center; gap: 8px; position: relative;
       transition: transform 0.2s, box-shadow 0.2s;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     button:hover { transform: scale(1.02); box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
-    button.primary { background: var(--primary); color: white; }
+    button.primary { 
+      background: linear-gradient(135deg, var(--primary), #0056b3); 
+      color: white; 
+      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    }
+    button.primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 123, 255, 0.4);
+    }
     button.secondary { background: rgba(255,255,255,0.15); color: var(--light-text); }
     button.ai-suggest, button.ai-proofread, button.ai-expand, button.star-guide, button.ai-extract { 
       background: linear-gradient(135deg, #6c5ce7, #a481e3); 
@@ -251,7 +275,11 @@
     .template-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 15px; margin-top: 15px; }
     .template-option { border: 2px solid transparent; border-radius: 12px; padding: 10px; text-align: center; cursor: pointer; }
     .template-option.selected { border-color: var(--primary); background: rgba(0, 123, 255, 0.1); }
-    .template-thumbnail { height: 80px; border-radius: 8px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); overflow: hidden; }
+    .template-thumbnail { height: 80px; border-radius: 8px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); overflow: hidden; transition: all 0.3s ease; }
+    .template-option:hover .template-thumbnail {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
+    }
     .appearance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center; }
     input[type="color"] { padding: 0; height: 40px; border-radius: 8px; cursor: pointer; background: none; }
     
@@ -261,7 +289,22 @@
     #completeness-bar { width: 0%; height: 100%; background: linear-gradient(135deg, var(--success), var(--primary)); border-radius: 10px; transition: width 0.5s; }
     #completeness-text { text-align: center; font-size: 12px; margin-top: 5px; }
     /* Resume Preview Output */
-    #resumeOutput { padding: 30px; border-radius: 12px; min-height: 500px; font-family: var(--resume-font); background: white; color: #333; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+    #resumeOutput { 
+      padding: 30px; 
+      border-radius: 12px; 
+      min-height: 500px; 
+      font-family: var(--resume-font); 
+      background: white; 
+      color: #333; 
+      position: relative; 
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.5s ease;
+    }
+    #resumeOutput:hover {
+      box-shadow: 0 20px 40px rgba(0, 123, 255, 0.2);
+      transform: translateY(-5px);
+    }
     .template-classic { background: linear-gradient(135deg, #ffffff, #f0f4f8); color: #2d3748; }
     .template-dark { background: linear-gradient(135deg, #1a202c, #2d3748); color: #e2e8f0; }
     .template-creative { background: linear-gradient(135deg, #ff9a9e, #fad0c4); color: #2d3748; }
@@ -289,15 +332,32 @@
     .template-modern h3 { font-size: 1.1em; }
     /* Floating Action Button */
     #downloadBtn {
-      position: fixed; bottom: 25px; right: 25px; padding: 15px 20px; border-radius: 50px;
-      background: linear-gradient(135deg, var(--success), #218838); cursor: pointer; color: white;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.4); z-index: 100; animation: bounce 2s infinite;
+      position: fixed; bottom: 25px; right: 25px; padding: 18px 25px; border-radius: 50px;
+      background: linear-gradient(135deg, var(--success), #1e7e34); cursor: pointer; color: white;
+      box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4); z-index: 100; animation: bounce 2s infinite;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    #downloadBtn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(40, 167, 69, 0.5);
     }
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
     /* Modal */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
     .modal-overlay.show { opacity: 1; visibility: visible; }
-    .modal-content { background: var(--darker-bg); padding: 30px; border-radius: 15px; box-shadow: var(--shadow); width: 90%; max-width: 500px; text-align: center; transform: scale(0.9); transition: transform 0.3s; }
+    .modal-content { 
+      background: linear-gradient(135deg, var(--darker-bg), var(--dark-accent)); 
+      padding: 35px; 
+      border-radius: 16px; 
+      box-shadow: var(--shadow); 
+      width: 90%; 
+      max-width: 500px; 
+      text-align: center; 
+      transform: scale(0.9); 
+      transition: transform 0.3s;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
     .modal-overlay.show .modal-content { transform: scale(1); }
     .modal-content h3 { margin-top: 0; color: var(--highlight); }
     .modal-buttons { display: flex; justify-content: center; gap: 15px; margin-top: 20px; flex-wrap: wrap; }
@@ -326,6 +386,51 @@
     }
     .api-key-input input {
       flex: 1;
+    }
+    
+    /* Notification System */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      border-radius: 8px;
+      background: var(--darker-bg);
+      color: var(--light-text);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      transform: translateY(-20px);
+      opacity: 0;
+      transition: all 0.4s ease;
+      max-width: 350px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .notification.success {
+      border-left: 4px solid var(--success);
+    }
+
+    .notification.warning {
+      border-left: 4px solid var(--highlight);
+    }
+
+    .notification-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .notification i {
+      font-size: 1.2rem;
+    }
+
+    .notification.success i {
+      color: var(--success);
+    }
+
+    .notification.warning i {
+      color: var(--highlight);
     }
     
     /* Responsive Design */
@@ -1302,7 +1407,7 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
       }
     }
     
-    // --- Auto Crop Function ---
+    // --- Enhanced Auto Crop Function ---
     function autoCropImage(imageSrc, callback) {
       const img = new Image();
       img.onload = function() {
@@ -1313,18 +1418,120 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
         canvas.width = 300;
         canvas.height = 300;
         
-        // Calculate crop dimensions to maintain aspect ratio
-        const size = Math.min(this.naturalWidth, this.naturalHeight);
-        const sx = (this.naturalWidth - size) / 2;
-        const sy = (this.naturalHeight - size) / 2;
+        // Calculate dimensions for proper face framing
+        const aspectRatio = this.naturalWidth / this.naturalHeight;
+        let sx, sy, sWidth, sHeight;
+        
+        if (aspectRatio > 1) {
+          // Landscape image - focus on top portion
+          sHeight = this.naturalHeight;
+          sWidth = sHeight;
+          sx = (this.naturalWidth - sWidth) / 2;
+          sy = 0; // Start from top to include head
+        } else {
+          // Portrait image - focus on upper portion
+          sWidth = this.naturalWidth;
+          sHeight = sWidth;
+          sx = 0;
+          sy = this.naturalHeight * 0.1; // Shift up to include more head
+        }
         
         // Draw the cropped image on the canvas
-        ctx.drawImage(this, sx, sy, size, size, 0, 0, 300, 300);
+        ctx.drawImage(this, sx, sy, sWidth, sHeight, 0, 0, 300, 300);
+        
+        // Apply subtle sharpening filter for better quality
+        applySharpening(ctx, canvas.width, canvas.height);
         
         // Convert canvas to data URL and pass to callback
-        callback(canvas.toDataURL('image/jpeg', 0.9));
+        callback(canvas.toDataURL('image/jpeg', 0.95));
       };
       img.src = imageSrc;
+    }
+    
+    // Sharpening filter to enhance photo quality
+    function applySharpening(ctx, width, height) {
+      const imageData = ctx.getImageData(0, 0, width, height);
+      const data = imageData.data;
+      const weights = [0, -1, 0, -1, 5, -1, 0, -1, 0];
+      const side = Math.round(Math.sqrt(weights.length));
+      const halfSide = Math.floor(side / 2);
+      
+      const output = ctx.createImageData(width, height);
+      const outputData = output.data;
+      
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const dstOff = (y * width + x) * 4;
+          let r = 0, g = 0, b = 0;
+          
+          for (let cy = 0; cy < side; cy++) {
+            for (let cx = 0; cx < side; cx++) {
+              const scy = y + cy - halfSide;
+              const scx = x + cx - halfSide;
+              
+              if (scy >= 0 && scy < height && scx >= 0 && scx < width) {
+                const srcOff = (scy * width + scx) * 4;
+                const wt = weights[cy * side + cx];
+                r += data[srcOff] * wt;
+                g += data[srcOff + 1] * wt;
+                b += data[srcOff + 2] * wt;
+              }
+            }
+          }
+          
+          outputData[dstOff] = Math.min(255, Math.max(0, r));
+          outputData[dstOff + 1] = Math.min(255, Math.max(0, g));
+          outputData[dstOff + 2] = Math.min(255, Math.max(0, b));
+          outputData[dstOff + 3] = 255;
+        }
+      }
+      
+      ctx.putImageData(output, 0, 0);
+    }
+    
+    // Photo quality assessment
+    function assessPhotoQuality(imageSrc) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = function() {
+          // Simple quality assessment based on dimensions and clarity
+          const quality = {
+            resolution: this.naturalWidth >= 600 && this.naturalHeight >= 600 ? 'high' : 'low',
+            aspectRatio: Math.abs((this.naturalWidth / this.naturalHeight) - 1) < 0.2 ? 'good' : 'poor',
+            size: this.naturalWidth * this.naturalHeight > 500000 ? 'large' : 'small'
+          };
+          
+          resolve(quality);
+        };
+        img.src = imageSrc;
+      });
+    }
+    
+    // Notification system
+    function showNotification(message, type = 'info') {
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.innerHTML = `
+        <div class="notification-content">
+          <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+          <span>${message}</span>
+        </div>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Animate in
+      setTimeout(() => {
+        notification.style.transform = 'translateY(0)';
+        notification.style.opacity = '1';
+      }, 10);
+      
+      // Auto remove after 5 seconds
+      setTimeout(() => {
+        notification.style.transform = 'translateY(-20px)';
+        notification.style.opacity = '0';
+        setTimeout(() => notification.remove(), 500);
+      }, 5000);
     }
     
     // --- Event Listeners ---
@@ -1457,17 +1664,44 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
       document.getElementById('accentColor').addEventListener('input', updateResume);
       modalCloseBtn.addEventListener('click', hideImagePreviewModal);
       
-      // Photo Upload with Auto Crop
-      document.getElementById('photoUpload').addEventListener('change', (e) => {
+      // Enhanced Photo Upload with Auto Crop and Quality Assessment
+      document.getElementById('photoUpload').addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (file) {
           const reader = new FileReader();
-          reader.onload = (event) => {
-            // Auto crop the image
+          const preview = document.getElementById('photoPreview');
+          
+          // Show loading state
+          preview.style.opacity = '0.5';
+          preview.style.transform = 'scale(0.95)';
+          
+          reader.onload = async (event) => {
+            // Assess photo quality
+            const quality = await assessPhotoQuality(event.target.result);
+            
+            // Auto crop the image with enhanced algorithm
             autoCropImage(event.target.result, (croppedImageDataUrl) => {
               // Set the cropped image as the photo preview
               photoDataUrl = croppedImageDataUrl;
-              document.getElementById('photoPreview').src = photoDataUrl;
+              
+              // Smooth transition for the new image
+              preview.style.transition = 'all 0.5s ease';
+              preview.onload = () => {
+                preview.style.opacity = '1';
+                preview.style.transform = 'scale(1)';
+                
+                // Show quality feedback
+                if (quality.resolution === 'low' || quality.aspectRatio === 'poor') {
+                  showNotification(
+                    'For best results, use a high-resolution photo with your face clearly visible and centered', 
+                    'warning'
+                  );
+                } else {
+                  showNotification('Photo quality looks great!', 'success');
+                }
+              };
+              preview.src = photoDataUrl;
+              
               updateResume();
             });
           };
