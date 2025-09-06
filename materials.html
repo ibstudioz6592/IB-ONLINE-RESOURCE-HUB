@@ -1529,7 +1529,7 @@
                             <div class="account-section">
                                 <div class="account-section-title">Account Settings</div>
                                 <div class="account-list">
-                                    <div class="account-item">
+                                    <div class="account-item" id="preferencesBtn">
                                         <div class="account-item-icon">
                                             <i class="fas fa-cog"></i>
                                         </div>
@@ -1537,7 +1537,7 @@
                                             <div class="account-item-title">Preferences</div>
                                         </div>
                                     </div>
-                                    <div class="account-item">
+                                    <div class="account-item" id="privacyBtn">
                                         <div class="account-item-icon">
                                             <i class="fas fa-shield-alt"></i>
                                         </div>
@@ -1545,7 +1545,7 @@
                                             <div class="account-item-title">Privacy</div>
                                         </div>
                                     </div>
-                                    <div class="account-item">
+                                    <div class="account-item" id="helpBtn">
                                         <div class="account-item-icon">
                                             <i class="fas fa-question-circle"></i>
                                         </div>
@@ -1857,6 +1857,11 @@
         const saveProfileBtn = document.getElementById('saveProfileBtn');
         const cancelEditBtn = document.getElementById('cancelEditBtn');
         
+        // Account Settings Elements
+        const preferencesBtn = document.getElementById('preferencesBtn');
+        const privacyBtn = document.getElementById('privacyBtn');
+        const helpBtn = document.getElementById('helpBtn');
+        
         // Branch-Semester-Course Selection Modal Elements
         const branchSemesterCourseModal = document.getElementById('branch-semester-course-modal');
         const selectionModalClose = document.getElementById('selection-modal-close');
@@ -1881,6 +1886,9 @@
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
             updateThemeIcon(savedTheme);
+            
+            // Add event listener for theme toggle
+            themeToggle.addEventListener('click', toggleTheme);
         }
         
         function toggleTheme() {
@@ -2465,6 +2473,14 @@
             const API_KEY = "AIzaSyCaSF0AT441mIB7OM7kk2yoUjeEHqgp_KI";
             const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
             
+            // Add event listener for chatbot toggle
+            chatbotToggle.addEventListener('click', () => {
+                chatbotContainer.classList.toggle('active');
+                if (chatbotContainer.classList.contains('active')) {
+                    chatbotInput.focus();
+                }
+            });
+            
             // Add close button functionality
             chatbotClose.addEventListener('click', () => {
                 chatbotContainer.classList.remove('active');
@@ -2669,6 +2685,22 @@
             
             cancelEditBtn.addEventListener('click', () => {
                 profileEditForm.classList.remove('active');
+            });
+            
+            // Account settings functionality
+            preferencesBtn.addEventListener('click', () => {
+                showToast('Preferences settings would open here', 'info');
+                accountMenu.classList.remove('active');
+            });
+            
+            privacyBtn.addEventListener('click', () => {
+                showToast('Privacy settings would open here', 'info');
+                accountMenu.classList.remove('active');
+            });
+            
+            helpBtn.addEventListener('click', () => {
+                showToast('Help & Support would open here', 'info');
+                accountMenu.classList.remove('active');
             });
         }
         
