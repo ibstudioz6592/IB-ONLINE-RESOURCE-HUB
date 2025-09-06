@@ -2274,23 +2274,28 @@
                 
                 if (userDoc.exists) {
                     const userData = userDoc.data();
-                    const userRole = userData.role || 'student'; // Default to student if role is not set
+                    const userRole = userData.role;
                     
-                    // Redirect based on role
-                    switch (userRole) {
-                        case 'admin':
-                            navigateToPage('admindashboard.html');
-                            break;
-                        case 'faculty':
-                            navigateToPage('facultydashboard.html');
-                            break;
-                        case 'student':
-                        default:
-                            navigateToPage('studentdashboard.html');
-                            break;
+                    if (userRole) {
+                        // User has a role, redirect directly
+                        switch (userRole) {
+                            case 'admin':
+                                navigateToPage('admindashboard.html');
+                                break;
+                            case 'faculty':
+                                navigateToPage('facultydashboard.html');
+                                break;
+                            case 'student':
+                            default:
+                                navigateToPage('studentdashboard.html');
+                                break;
+                        }
+                    } else {
+                        // User doesn't have a role, show role selection modal
+                        roleSelectionModal.classList.add('active');
                     }
                 } else {
-                    // User document doesn't exist, redirect to role selection
+                    // User document doesn't exist, show role selection modal
                     roleSelectionModal.classList.add('active');
                 }
             } catch (error) {
@@ -2764,8 +2769,23 @@
                             updateLanguageDisplay();
                         }
                         
-                        // If user doesn't have a role, show role selection modal
-                        if (!userData.role) {
+                        // Check if user has a role
+                        if (userData.role) {
+                            // User has a role, redirect directly
+                            switch (userData.role) {
+                                case 'admin':
+                                    navigateToPage('admindashboard.html');
+                                    break;
+                                case 'faculty':
+                                    navigateToPage('facultydashboard.html');
+                                    break;
+                                case 'student':
+                                default:
+                                    navigateToPage('studentdashboard.html');
+                                    break;
+                            }
+                        } else {
+                            // User doesn't have a role, show role selection modal
                             roleSelectionModal.classList.add('active');
                         }
                     } else {
