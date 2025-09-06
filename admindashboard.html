@@ -3618,9 +3618,6 @@
             }
             
             const usersHtml = users.map(user => {
-                // Determine user status (active/inactive)
-                const isActive = user.lastActive && 
-                    (new Date().getTime() - user.lastActive.toDate().getTime()) < 7 * 24 * 60 * 60 * 1000;
                 return `
                     <div class="content-card">
                         <div class="content-header">
@@ -3629,27 +3626,11 @@
                                 <div>
                                     <div class="content-title">${user.name || 'Unknown'}</div>
                                     <div style="color: var(--text-secondary); margin-bottom: 5px;">${user.email || 'No email'}</div>
-                                    <div class="content-meta" style="display:flex;flex-wrap:wrap;gap:10px;">
-                                        ${user.phone ? `<span><i class='fas fa-phone'></i> ${user.phone}</span>` : ''}
-                                        ${user.dob ? `<span><i class='fas fa-birthday-cake'></i> ${user.dob}</span>` : ''}
-                                        ${user.gender ? `<span><i class='fas fa-venus-mars'></i> ${user.gender}</span>` : ''}
-                                        ${user.admissionNo ? `<span><i class="fas fa-id-card"></i> ${user.admissionNo}</span>` : ''}
-                                        ${user.branch ? `<span><i class="fas fa-graduation-cap"></i> ${user.branch}</span>` : ''}
-                                        ${user.semester ? `<span><i class="fas fa-calendar-alt"></i> Sem ${user.semester}</span>` : ''}
-                                        ${user.college ? `<span><i class='fas fa-university'></i> ${user.college}</span>` : ''}
-                                        <span><i class="fas fa-user-tag"></i> ${user.role || 'student'}</span>
-                                        <span><i class="fas fa-coins"></i> ${user.credits || 0} credits</span>
-                                        <span class="status-badge ${isActive ? 'status-active' : 'status-inactive'}">
-                                            ${isActive ? 'Active' : 'Inactive'}
-                                        </span>
-                                        <span><i class="fas fa-clock"></i> ${formatTimestamp(user.createdAt)}</span>
-                                    </div>
-                                    ${user.bio ? `<div style='margin-top:8px;color:var(--text-muted);font-size:0.95em;'><i class='fas fa-info-circle'></i> ${user.bio}</div>` : ''}
                                 </div>
                             </div>
                             <div class="content-actions">
-                                <button class="btn-info" style="padding: 8px 12px; font-size: 0.9rem;" onclick="resetUserPassword('${user.id}', '${user.email}')">
-                                    <i class="fas fa-key"></i>
+                                <button class="btn-info" style="padding: 8px 12px; font-size: 0.9rem;" onclick="viewUserDetails('${user.id}')">
+                                    <i class="fas fa-eye"></i>
                                 </button>
                                 <button class="btn-secondary" style="padding: 8px 12px; font-size: 0.9rem;" onclick="editUser('${user.id}')">
                                     <i class="fas fa-edit"></i>
@@ -3663,6 +3644,46 @@
                 `;
             }).join('');
             usersList.innerHTML = usersHtml;
+// View user details in modal (view-only mode)
+function viewUserDetails(userId) {
+    db.collection('users').doc(userId).get()
+        .then(doc => {
+            if (doc.exists) {
+                const user = doc.data();
+                document.getElementById('user-modal-title').textContent = 'User Details';
+                document.getElementById('user-id').value = userId;
+                document.getElementById('user-name').value = user.name || '';
+                document.getElementById('user-email').value = user.email || '';
+                document.getElementById('user-phone').value = user.phone || '';
+                document.getElementById('user-dob').value = user.dob || '';
+                document.getElementById('user-gender').value = user.gender || '';
+                document.getElementById('user-admission').value = user.admissionNo || '';
+                document.getElementById('user-branch').value = user.branch || '';
+                document.getElementById('user-semester').value = user.semester || '';
+                document.getElementById('user-college').value = user.college || '';
+                document.getElementById('user-role').value = user.role || 'student';
+                document.getElementById('user-bio').value = user.bio || '';
+                document.getElementById('user-photoURL').value = user.photoURL || '';
+                document.getElementById('user-credits').value = user.credits || 0;
+                // Disable all fields for view-only
+                const form = document.getElementById('user-form');
+                Array.from(form.elements).forEach(el => el.disabled = true);
+                userModal.classList.add('active');
+            }
+        })
+        .catch(error => {
+            console.error('Error getting user:', error);
+            showToast('Failed to load user', 'error');
+        });
+}
+
+// When closing modal, re-enable fields for edit mode
+userModal.addEventListener('transitionend', function() {
+    if (!userModal.classList.contains('active')) {
+        const form = document.getElementById('user-form');
+        Array.from(form.elements).forEach(el => el.disabled = false);
+    }
+});
         }
         
         // Filter users based on search and filters
