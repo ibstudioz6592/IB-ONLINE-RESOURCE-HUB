@@ -711,10 +711,6 @@
             background: var(--faculty-color);
         }
         
-        .role-icon.admin {
-            background: var(--admin-color);
-        }
-        
         .role-details h3 {
             margin: 0 0 5px;
             font-size: 1.2rem;
@@ -1616,16 +1612,6 @@
                         <p>Manage courses, materials, and student progress</p>
                     </div>
                 </div>
-                
-                <div class="role-option" data-role="admin">
-                    <div class="role-icon admin">
-                        <i class="fas fa-user-shield"></i>
-                    </div>
-                    <div class="role-details">
-                        <h3>Administrator</h3>
-                        <p>Full platform access and system management</p>
-                    </div>
-                </div>
             </div>
             
             <div class="role-modal-actions">
@@ -2293,14 +2279,14 @@
                     // Redirect based on role
                     switch (userRole) {
                         case 'admin':
-                            navigateToPage('/admindashboard.html');
+                            navigateToPage('admindashboard.html');
                             break;
                         case 'faculty':
-                            navigateToPage('/facultydashboard.html');
+                            navigateToPage('facultydashboard.html');
                             break;
                         case 'student':
                         default:
-                            navigateToPage('/studentdashboard.html');
+                            navigateToPage('studentdashboard.html');
                             break;
                     }
                 } else {
@@ -2310,7 +2296,7 @@
             } catch (error) {
                 console.error('Error checking user role:', error);
                 // Default to student dashboard
-                navigateToPage('/studentdashboard.html');
+                navigateToPage('studentdashboard.html');
             }
         }
         
@@ -2597,14 +2583,14 @@
                 // Redirect based on selected role
                 switch (selectedRole) {
                     case 'admin':
-                        navigateToPage('/admindashboard.html');
+                        navigateToPage('admindashboard.html');
                         break;
                     case 'faculty':
-                        navigateToPage('/facultydashboard.html');
+                        navigateToPage('facultydashboard.html');
                         break;
                     case 'student':
                     default:
-                        navigateToPage('/studentdashboard.html');
+                        navigateToPage('studentdashboard.html');
                         break;
                 }
             } catch (error) {
@@ -2789,7 +2775,7 @@
                 }).catch((error) => {
                     console.error('Error getting user data:', error);
                     // Default to student dashboard
-                    navigateToPage('/studentdashboard.html');
+                    navigateToPage('studentdashboard.html');
                 });
             }
         });
