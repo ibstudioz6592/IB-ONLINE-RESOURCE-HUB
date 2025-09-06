@@ -64,7 +64,7 @@
     }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     /* Tabs & Sections */
-    .tabs { display: flex; border-bottom: 1px solid var(--card-border); margin-bottom: 20px; }
+    .tabs { display: flex; border-bottom: 1px solid var(--card-border); margin-bottom: 20px; flex-wrap: wrap; }
     .tab-link { padding: 10px 20px; cursor: pointer; background: transparent; border: none; color: var(--light-text); opacity: 0.7; position: relative; font-size: 1em; }
     .tab-link.active { opacity: 1; font-weight: 600; }
     .tab-link.active::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 2px; background: var(--primary); transform: scaleX(1); animation: tabHighlight 0.4s ease; }
@@ -97,13 +97,64 @@
     textarea { min-height: 80px; resize: vertical; }
     /* Photo Upload */
     .photo-upload-container { text-align: center; margin-bottom: 15px; }
-    #photoPreview, .cert-preview-img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--card-border); margin-bottom: 10px; background-color: rgba(0,0,0,0.2); cursor: pointer; }
+    #photoPreview, .cert-preview-img { 
+      width: 120px; 
+      height: 120px; 
+      border-radius: 50%; 
+      object-fit: cover; 
+      border: 3px solid var(--card-border); 
+      margin-bottom: 10px; 
+      background-color: rgba(0,0,0,0.2); 
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    #photoPreview:hover, .cert-preview-img:hover { transform: scale(1.05); }
     .cert-preview-img { border-radius: 8px; width: 100px; height: 100px; }
     #photoUpload, .certificate-upload-input { display: none; }
-    #photoUploadLabel, .certificate-upload-label { cursor: pointer; background: var(--secondary); padding: 8px 15px; border-radius: 8px; font-size: 14px; }
-    .cropper-modal-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; display: none; justify-content: center; align-items: center; }
-    .cropper-modal { background: var(--darker-bg); padding: 20px; border-radius: 10px; max-width: 600px; }
-    #cropperImage { max-width: 100%; }
+    #photoUploadLabel, .certificate-upload-label { 
+      cursor: pointer; 
+      background: var(--secondary); 
+      padding: 8px 15px; 
+      border-radius: 8px; 
+      font-size: 14px;
+      display: inline-block;
+      transition: background 0.3s ease;
+    }
+    #photoUploadLabel:hover, .certificate-upload-label:hover { background: var(--primary); }
+    .cropper-modal-container { 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      background: rgba(0,0,0,0.9); 
+      z-index: 2000; 
+      display: none; 
+      justify-content: center; 
+      align-items: center;
+      padding: 20px;
+    }
+    .cropper-modal { 
+      background: var(--darker-bg); 
+      padding: 20px; 
+      border-radius: 10px; 
+      max-width: 90vw;
+      max-height: 90vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    #cropperImage { 
+      max-width: 100%; 
+      max-height: 70vh;
+      object-fit: contain;
+    }
+    .cropper-actions {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
     /* Buttons */
     button {
       margin-top: 10px; padding: 12px 20px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;
@@ -113,7 +164,12 @@
     button:hover { transform: scale(1.02); box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
     button.primary { background: var(--primary); color: white; }
     button.secondary { background: rgba(255,255,255,0.15); color: var(--light-text); }
-    button.ai-suggest, button.ai-proofread, button.ai-expand, button.star-guide, button.ai-extract { background: linear-gradient(135deg, #6c5ce7, #a481e3); color: white; padding: 8px 12px; font-size: 12px; }
+    button.ai-suggest, button.ai-proofread, button.ai-expand, button.star-guide, button.ai-extract { 
+      background: linear-gradient(135deg, #6c5ce7, #a481e3); 
+      color: white; 
+      padding: 8px 12px; 
+      font-size: 12px; 
+    }
     .delete-item-btn { background: var(--error); color: white; padding: 8px 12px; font-size: 12px; }
     .textarea-toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
     .ai-score-container { text-align: center; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 20px; }
@@ -274,7 +330,7 @@
     .modal-content { background: var(--darker-bg); padding: 30px; border-radius: 15px; box-shadow: var(--shadow); width: 90%; max-width: 500px; text-align: center; transform: scale(0.9); transition: transform 0.3s; }
     .modal-overlay.show .modal-content { transform: scale(1); }
     .modal-content h3 { margin-top: 0; color: var(--highlight); }
-    .modal-buttons { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
+    .modal-buttons { display: flex; justify-content: center; gap: 15px; margin-top: 20px; flex-wrap: wrap; }
     .modal-image-full-preview { max-width: 90vw; max-height: 90vh; object-fit: contain; }
     
     /* Loading Spinner */
@@ -285,9 +341,46 @@
       animation: spin 1s linear infinite;
     }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    
+    /* API Key Settings */
+    .api-key-container {
+      margin: 20px 0;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+    .api-key-input {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .api-key-input input {
+      flex: 1;
+    }
+    
     /* Responsive Design */
-    @media (max-width: 992px) { .container { grid-template-columns: 1fr; } }
-    @media (max-width: 576px) { button { width: 100%; } .resume-header { padding-right: 0;} .resume-photo { position: static; margin: 0 auto 15px; } .template-modern { grid-template-columns: 1fr; } }
+    @media (max-width: 992px) { 
+      .container { grid-template-columns: 1fr; } 
+      .template-options { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .landing-section h1 { font-size: 2.2em; }
+      .landing-section p { font-size: 1em; }
+      .tabs { justify-content: center; }
+      .tab-link { padding: 8px 12px; font-size: 0.9em; }
+      .appearance-grid { grid-template-columns: 1fr; }
+      .resume-header { padding-right: 0; }
+      .resume-photo { position: static; margin: 0 auto 15px; display: block; }
+      .template-modern { grid-template-columns: 1fr; }
+      .modal-content { width: 95%; padding: 20px; }
+    }
+    @media (max-width: 576px) { 
+      button { width: 100%; } 
+      .modal-buttons { flex-direction: column; }
+      .modal-buttons button { width: 100%; }
+      .cropper-actions { flex-direction: column; }
+      .cropper-actions button { width: 100%; }
+    }
   </style>
 </head>
 <body>
@@ -305,6 +398,7 @@
         <button class="tab-link active" data-tab="resume-builder"><i class="fas fa-file-alt"></i> Resume</button>
         <button class="tab-link" data-tab="cover-letter"><i class="fas fa-envelope-open-text"></i> Cover Letter</button>
         <button class="tab-link" data-tab="ai-tools"><i class="fas fa-cogs"></i> AI Tools</button>
+        <button class="tab-link" data-tab="settings"><i class="fas fa-cog"></i> Settings</button>
       </div>
       
       <!-- Resume Builder Panel -->
@@ -417,13 +511,42 @@
           <textarea id="expandedBulletOutput" rows="3" readonly></textarea>
         </div>
       </div>
+      <!-- Settings Panel -->
+      <div id="settings-panel" class="tab-content">
+        <h2><i class="fas fa-cog"></i> Application Settings</h2>
+        <div class="api-key-container">
+          <h3><i class="fas fa-key"></i> Gemini API Key</h3>
+          <p>Enter your Gemini API key to enable AI features. Your key is stored locally and never sent to our servers.</p>
+          <div class="api-key-input">
+            <input type="password" id="apiKeyInput" placeholder="Enter your API key">
+            <button id="saveApiKeyBtn" class="primary"><i class="fas fa-save"></i> Save</button>
+          </div>
+          <p id="apiKeyStatus" style="margin-top: 10px; font-size: 14px;"></p>
+        </div>
+        <div class="form-section">
+          <h3><i class="fas fa-download"></i> Export Options</h3>
+          <p>Choose your preferred export format:</p>
+          <div class="appearance-grid">
+            <div>
+              <label>
+                <input type="radio" name="exportFormat" value="pdf" checked> PDF
+              </label>
+            </div>
+            <div>
+              <label>
+                <input type="radio" name="exportFormat" value="png"> PNG Image
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <!-- Right: Preview -->
     <div class="preview-card" role="document" aria-label="Resume Preview">
       <div id="resumeOutput" class="template-professional"></div>
     </div>
   </div>
-  <button id="downloadBtn" aria-label="Download resume as PDF"><i class="fas fa-download"></i> Download PDF</button>
+  <button id="downloadBtn" aria-label="Download resume"><i class="fas fa-download"></i> Download</button>
   <div id="modal" class="modal-overlay">
     <div class="modal-content">
       <h3 id="modalTitle">Suggestion</h3>
@@ -446,7 +569,7 @@
   <div id="cropperModal" class="cropper-modal-container">
     <div class="cropper-modal">
       <img id="cropperImage" src="#" alt="Image to crop">
-      <div class="modal-buttons">
+      <div class="cropper-actions">
         <button id="cropBtn" class="primary"><i class="fas fa-crop-alt"></i> Crop & Save</button>
         <button id="cancelCropBtn" class="secondary"><i class="fas fa-times"></i> Cancel</button>
       </div>
@@ -464,6 +587,7 @@
     let app, auth, db, userId;
     let photoDataUrl = null;
     let cropper;
+    let geminiApiKey = localStorage.getItem('geminiApiKey') || '';
     
     // Store certificate data URLs in a map
     const certificateFiles = new Map();
@@ -504,6 +628,9 @@
     const imagePreviewModal = document.getElementById('imagePreviewModal');
     const modalImageFull = document.getElementById('modalImageFull');
     const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const apiKeyInput = document.getElementById('apiKeyInput');
+    const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
+    const apiKeyStatus = document.getElementById('apiKeyStatus');
     
     const basicSections = ['Education', 'Experience', 'Skills', 'Certifications'];
     const aiTools = {
@@ -869,6 +996,11 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
     
     // --- Gemini API Functions (wrapped in a secure function) ---
     async function callGemini(prompt, systemPrompt, button, tools) {
+      if (!geminiApiKey) {
+        showModal('API Key Required', 'Please add your Gemini API key in the Settings tab to use AI features.', null);
+        return null;
+      }
+      
       if (button) toggleButtonLoading(button, true);
       try {
         const payload = {
@@ -878,9 +1010,8 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
         if (tools) {
             payload.tools = tools;
         }
-        // Use your provided API key here
-        const apiKey = "AIzaSyCaSF0AT441mIB7OM7kk2yoUjeEHqgp_KI";
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+        // Use the API key from localStorage
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${geminiApiKey}`;
         const response = await fetch(apiUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -1110,34 +1241,57 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
       }
     }
     
-    async function downloadPDF() {
+    async function downloadResume() {
       toggleButtonLoading(document.getElementById('downloadBtn'), true);
       const element = document.getElementById('resumeOutput');
-      const filename = `${document.getElementById('name').value || 'Resume'}_${document.getElementById('jobTitle').value || 'Untitled'}.pdf`;
-      // Get dimensions of the element
-      const rect = element.getBoundingClientRect();
-      const width = rect.width;
-      const height = rect.height;
-      const scale = 2; // Increased scale for better resolution
+      const filename = `${document.getElementById('name').value || 'Resume'}_${document.getElementById('jobTitle').value || 'Untitled'}`;
+      const exportFormat = document.querySelector('input[name="exportFormat"]:checked').value;
+      
       try {
-        const canvas = await html2canvas(element, {
-          scale: scale,
-          allowTaint: true,
-          useCORS: true,
-          windowWidth: width,
-          windowHeight: height
-        });
-        const imgData = canvas.toDataURL('image/jpeg', 1.0);
-        const pdf = new jspdf.jsPDF({
-          orientation: 'portrait',
-          unit: 'px',
-          format: [width, height]
-        });
-        pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-        pdf.save(filename);
+        if (exportFormat === 'pdf') {
+          // Get dimensions of the element
+          const rect = element.getBoundingClientRect();
+          const width = rect.width;
+          const height = rect.height;
+          const scale = 2; // Increased scale for better resolution
+          
+          const canvas = await html2canvas(element, {
+            scale: scale,
+            allowTaint: true,
+            useCORS: true,
+            windowWidth: width,
+            windowHeight: height
+          });
+          const imgData = canvas.toDataURL('image/jpeg', 1.0);
+          const pdf = new jspdf.jsPDF({
+            orientation: 'portrait',
+            unit: 'px',
+            format: [width, height]
+          });
+          pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+          pdf.save(`${filename}.pdf`);
+        } else if (exportFormat === 'png') {
+          const canvas = await html2canvas(element, {
+            scale: 2,
+            allowTaint: true,
+            useCORS: true
+          });
+          
+          // Convert canvas to blob and download
+          canvas.toBlob(function(blob) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${filename}.png`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          }, 'image/png');
+        }
       } catch (e) {
-        console.error("PDF generation failed:", e);
-        showModal('PDF Error', `Failed to generate PDF: ${e.message}`, null);
+        console.error("Export generation failed:", e);
+        showModal('Export Error', `Failed to generate export: ${e.message}`, null);
       } finally {
         toggleButtonLoading(document.getElementById('downloadBtn'), false);
       }
@@ -1181,6 +1335,15 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
       document.getElementById('completeness-bar').style.width = `${completeness}%`;
       document.getElementById('completeness-text').textContent = `Resume Completeness: ${completeness}%`;
     }
+    function updateApiKeyStatus() {
+      if (geminiApiKey) {
+        apiKeyStatus.textContent = 'API key is saved and ready to use.';
+        apiKeyStatus.style.color = 'var(--success)';
+      } else {
+        apiKeyStatus.textContent = 'No API key set. AI features will not work.';
+        apiKeyStatus.style.color = 'var(--error)';
+      }
+    }
     // --- Event Listeners ---
     document.addEventListener('DOMContentLoaded', () => {
       initializeFirebase();
@@ -1188,6 +1351,13 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
       basicSections.forEach(title => { addSection(title, null, false); });
       Sortable.create(dynamicSectionsContainer, { handle: '.drag-handle', animation: 150 });
       updateResume();
+      
+      // Set initial API key status
+      updateApiKeyStatus();
+      if (geminiApiKey) {
+        apiKeyInput.value = geminiApiKey;
+      }
+      
       startBuildingBtn.addEventListener('click', (e) => {
         e.preventDefault();
         landingPage.style.display = 'none';
@@ -1274,11 +1444,25 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
       document.getElementById('analyzeResumeBtn').addEventListener('click', e => analyzeResume(e.currentTarget));
       document.getElementById('expandBulletBtn').addEventListener('click', e => expandBulletPoint(document.getElementById('bulletPointInput'), e.currentTarget));
       document.getElementById('addCustomSection').addEventListener('click', () => addSection());
-      document.getElementById('downloadBtn').addEventListener('click', downloadPDF);
+      document.getElementById('downloadBtn').addEventListener('click', downloadResume);
       document.getElementById('saveBtn').addEventListener('click', saveData);
       document.getElementById('loadBtn').addEventListener('click', loadData);
       document.getElementById('resetBtn').addEventListener('click', resetForm);
       document.getElementById('themeToggle').addEventListener('click', () => document.body.classList.toggle('light-mode'));
+      
+      // Settings tab buttons
+      saveApiKeyBtn.addEventListener('click', () => {
+        const apiKey = apiKeyInput.value.trim();
+        if (apiKey) {
+          localStorage.setItem('geminiApiKey', apiKey);
+          geminiApiKey = apiKey;
+          updateApiKeyStatus();
+          showModal('Success', 'API key saved successfully!', null);
+        } else {
+          showModal('Error', 'Please enter a valid API key.', null);
+        }
+      });
+      
       document.querySelectorAll('.template-option').forEach(option => {
         option.addEventListener('click', () => {
           document.querySelector('.template-option.selected').classList.remove('selected');
@@ -1289,6 +1473,7 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
       document.getElementById('fontSelect').addEventListener('change', updateResume);
       document.getElementById('accentColor').addEventListener('input', updateResume);
       modalCloseBtn.addEventListener('click', hideImagePreviewModal);
+      
       // Photo Upload & Cropper
       document.getElementById('photoUpload').addEventListener('change', (e) => {
         const file = e.target.files[0];
@@ -1302,6 +1487,10 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
               aspectRatio: 1,
               viewMode: 1,
               autoCropArea: 0.8,
+              responsive: true,
+              checkCrossOrigin: false,
+              modal: false,
+              background: false
             });
           };
           reader.readAsDataURL(file);
@@ -1362,6 +1551,13 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
         if (cropper) {
           cropper.destroy();
           cropper = null;
+        }
+      });
+      
+      // Handle window resize for cropper
+      window.addEventListener('resize', () => {
+        if (cropper) {
+          cropper.resize();
         }
       });
     });
