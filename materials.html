@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -549,7 +550,8 @@
             padding: 1rem;
             background: var(--surface-hover);
             border-radius: var(--radius);
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
         }
         
         .selection-item {
@@ -558,13 +560,13 @@
             padding: 0.75rem;
             background: var(--background);
             border-radius: calc(var(--radius) / 2);
-            border: 1px solid var(--border);
         }
         
         .selection-label {
             font-size: 0.75rem;
             color: var(--text-muted);
             margin-bottom: 0.25rem;
+            text-transform: uppercase;
         }
         
         .selection-value {
@@ -577,7 +579,7 @@
             color: white;
             border: none;
             border-radius: var(--radius);
-            padding: 0.5rem 1rem;
+            padding: 0.75rem 1.25rem;
             font-size: 0.875rem;
             font-weight: 500;
             cursor: pointer;
@@ -589,101 +591,6 @@
         
         .change-selection-btn:hover {
             background: var(--primary-dark);
-        }
-        
-        /* Custom Dropdown Styles */
-        .custom-select {
-            position: relative;
-            width: 100%;
-        }
-        
-        .custom-select-trigger {
-            position: relative;
-            display: block;
-            width: 100%;
-            padding: 0.75rem;
-            background: var(--background);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            color: var(--text-primary);
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .custom-select-trigger:hover {
-            border-color: var(--primary);
-        }
-        
-        .custom-select-trigger i {
-            margin-right: 10px;
-            color: var(--primary);
-        }
-        
-        .custom-select-trigger .arrow {
-            transition: transform 0.3s ease;
-            color: var(--text-secondary);
-        }
-        
-        .custom-select.open .custom-select-trigger .arrow {
-            transform: rotate(180deg);
-        }
-        
-        .custom-select-dropdown {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            margin-top: 5px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-lg);
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: var(--transition);
-            max-height: 250px;
-            overflow-y: auto;
-        }
-        
-        .custom-select.open .custom-select-dropdown {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        
-        .custom-select-option {
-            padding: 0.75rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            transition: var(--transition);
-        }
-        
-        .custom-select-option:hover {
-            background: var(--surface-hover);
-        }
-        
-        .custom-select-option i {
-            margin-right: 12px;
-            width: 20px;
-            text-align: center;
-            color: var(--primary);
-        }
-        
-        .custom-select-option.selected {
-            background: var(--surface-hover);
-            color: var(--primary);
-            font-weight: 600;
-        }
-        
-        /* Hide original select */
-        .custom-select-original {
-            display: none;
         }
         
         /* Materials Grid */
@@ -879,123 +786,6 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: var(--transition);
-        }
-        
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .modal {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            width: 90%;
-            max-width: 800px;
-            max-height: 90vh;
-            overflow: hidden;
-            box-shadow: var(--shadow-xl);
-            transform: translateY(20px);
-            transition: var(--transition);
-        }
-        
-        .modal-overlay.active .modal {
-            transform: translateY(0);
-        }
-        
-        .modal-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-        
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: var(--transition);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal-close:hover {
-            background: var(--surface-hover);
-            color: var(--text-primary);
-        }
-        
-        .modal-content {
-            padding: 1.5rem;
-            max-height: 60vh;
-            overflow-y: auto;
-        }
-        
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-        }
-        
-        .form-input, .form-select, .form-textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            background: var(--background);
-            color: var(--text-primary);
-            font-size: 0.875rem;
-            transition: var(--transition);
-        }
-        
-        .form-textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-        
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-        
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-        }
-        
         /* Branch-Semester-Course Selection Modal */
         .branch-semester-course-modal {
             position: fixed;
@@ -1004,6 +794,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -1030,6 +821,8 @@
             transition: var(--transition);
             max-height: 90vh;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
         
         .branch-semester-course-modal.active .modal {
@@ -1050,6 +843,26 @@
             color: var(--text-primary);
         }
         
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-close:hover {
+            background: var(--surface-hover);
+            color: var(--text-primary);
+        }
+
         .selection-steps {
             display: flex;
             padding: 1.5rem;
@@ -1066,10 +879,11 @@
             content: '';
             position: absolute;
             top: 15px;
-            right: 0;
+            left: 50%;
             width: 100%;
             height: 2px;
             background: var(--border);
+            z-index: -1;
         }
         
         .step.active:not(:last-child):after {
@@ -1087,11 +901,14 @@
             justify-content: center;
             margin: 0 auto 0.5rem;
             font-weight: 600;
+            border: 2px solid var(--border);
+            position: relative;
         }
         
         .step.active .step-number {
             background: var(--primary);
             color: white;
+            border-color: var(--primary);
         }
         
         .step-title {
@@ -1101,12 +918,13 @@
         
         .step.active .step-title {
             color: var(--text-primary);
+            font-weight: 600;
         }
         
         .selection-content {
             padding: 1.5rem;
-            max-height: 50vh;
             overflow-y: auto;
+            flex-grow: 1;
         }
         
         .selection-step {
@@ -1130,7 +948,7 @@
         }
         
         .selection-card {
-            background: var(--surface-hover);
+            background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 1.5rem;
@@ -1140,21 +958,26 @@
         }
         
         .selection-card:hover {
-            background: var(--primary);
             border-color: var(--primary);
-            color: white;
             transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
         }
         
         .selection-card.selected {
             background: var(--primary);
             border-color: var(--primary);
             color: white;
+            box-shadow: var(--shadow-lg);
         }
         
         .selection-icon {
             font-size: 2rem;
             margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .selection-card.selected .selection-icon {
+            color: white;
         }
         
         .selection-name {
@@ -1166,12 +989,17 @@
             font-size: 0.875rem;
             opacity: 0.8;
         }
+
+        .selection-card.selected .selection-code {
+            opacity: 0.9;
+        }
         
         .selection-actions {
             padding: 1.5rem;
             border-top: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
+            background: var(--surface);
         }
         
         .btn-step {
@@ -1182,13 +1010,18 @@
             transition: var(--transition);
             border: none;
         }
+
+        .btn-step:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
         
         .btn-prev {
             background: var(--surface-hover);
             color: var(--text-primary);
         }
         
-        .btn-prev:hover {
+        .btn-prev:hover:not(:disabled) {
             background: var(--border);
         }
         
@@ -1197,7 +1030,7 @@
             color: white;
         }
         
-        .btn-next:hover, .btn-finish:hover {
+        .btn-next:hover:not(:disabled), .btn-finish:hover:not(:disabled) {
             background: var(--primary-dark);
         }
         
@@ -1205,321 +1038,33 @@
             display: none;
         }
         
-        .selection-step.active:last-child .btn-next {
-            display: none;
-        }
-        
-        .selection-step.active:last-child .btn-finish {
-            display: block;
-        }
-        
-        /* Filter Modal */
-        .filter-modal .modal-content {
-            padding: 0;
-        }
-        
-        .filter-modal-body {
-            padding: 1.5rem;
-        }
-        
-        .filter-modal-footer {
-            padding: 1rem 1.5rem;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-        }
-        
-        /* Chatbot */
-        .chatbot-toggle {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            border: none;
-            border-radius: 50px;
-            padding: 0.75rem 1.5rem;
-            cursor: pointer;
-            z-index: 99;
-            box-shadow: var(--shadow-xl);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            color: white;
-            font-size: 0.875rem;
-            font-weight: 600;
-            transition: var(--transition);
-        }
-        
-        .chatbot-toggle:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
-        }
-        
-        .chatbot-container {
-            position: fixed;
-            bottom: 6rem;
-            right: 2rem;
-            width: 90%;
-            max-width: 400px;
-            height: 500px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-xl);
-            z-index: 98;
-            display: flex;
-            flex-direction: column;
-            transform: translateY(20px) scale(0.95);
-            opacity: 0;
-            visibility: hidden;
-            transition: var(--transition);
-        }
-        
-        .chatbot-container.active {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .chatbot-header {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border);
-            font-weight: 600;
-            text-align: center;
-            background: var(--surface);
-            color: var(--primary);
-        }
-        
-        .chatbot-messages {
-            flex: 1;
-            padding: 1rem;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        
-        .message {
-            max-width: 80%;
-            padding: 0.75rem 1rem;
-            border-radius: 1rem;
-            animation: messageSlide 0.3s ease;
-        }
-        
-        @keyframes messageSlide {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .message.user {
-            background: var(--primary);
-            color: white;
-            margin-left: auto;
-            border-bottom-right-radius: 0.25rem;
-        }
-        
-        .message.bot {
-            background: var(--surface-hover);
-            color: var(--text-primary);
-            margin-right: auto;
-            border-bottom-left-radius: 0.25rem;
-        }
-        
-        .chatbot-input {
-            padding: 1rem;
-            border-top: 1px solid var(--border);
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        .chatbot-input input {
-            flex: 1;
-            padding: 0.75rem;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            background: var(--background);
-            color: var(--text-primary);
-            font-size: 0.875rem;
-        }
-        
-        .chatbot-input input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        
-        .chatbot-send {
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: var(--radius);
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .chatbot-send:hover {
-            background: var(--primary-dark);
-        }
-        
-        /* Toast Notifications */
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 1rem 1.5rem;
-            box-shadow: var(--shadow-lg);
-            z-index: 1001;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            min-width: 300px;
-            opacity: 0;
-            transform: translateX(-50%) translateY(20px);
-            transition: var(--transition);
-        }
-        
-        .toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-        
-        .toast.success {
-            border-left: 4px solid var(--success);
-        }
-        
-        .toast.error {
-            border-left: 4px solid var(--danger);
-        }
-        
-        .toast.info {
-            border-left: 4px solid var(--info);
-        }
-        
-        .toast-icon {
-            font-size: 1.25rem;
-        }
-        
-        .toast.success .toast-icon {
-            color: var(--success);
-        }
-        
-        .toast.error .toast-icon {
-            color: var(--danger);
-        }
-        
-        .toast.info .toast-icon {
-            color: var(--info);
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .header-content {
-                padding: 1rem;
-            }
-            
-            .container {
-                padding: 1rem;
-            }
-            
-            .nav-links {
-                display: none;
-            }
-            
-            .welcome-title {
-                font-size: 1.5rem;
-            }
-            
-            .filter-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .materials-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .chatbot-container {
-                right: 1rem;
-                left: 1rem;
-                max-width: none;
-            }
-            
-            .modal {
-                width: 95%;
-                max-height: 95vh;
-            }
-            
-            .account-menu {
-                width: 280px;
-            }
-            
-            .materials-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .chatbot-toggle {
-                padding: 0.5rem 1rem;
-                font-size: 0.75rem;
-            }
-            
-            .selection-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            }
-            
-            .selection-card {
-                padding: 1rem;
-            }
-            
-            .selection-icon {
-                font-size: 1.5rem;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .filter-section {
-                padding: 1rem;
-            }
-            
-            .filter-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
-            }
-            
-            .filter-actions {
-                width: 100%;
-                justify-content: space-between;
-            }
-            
-            .btn {
-                padding: 0.5rem 0.75rem;
-                font-size: 0.8rem;
-            }
-            
-            .material-actions {
-                flex-wrap: wrap;
-            }
-            
-            .material-action {
-                width: 32px;
-                height: 32px;
-            }
-        }
+        /* Chatbot, Toast, Responsive... */
+        .chatbot-toggle { position: fixed; bottom: 2rem; right: 2rem; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border: none; border-radius: 50px; padding: 0.75rem 1.5rem; cursor: pointer; z-index: 99; box-shadow: var(--shadow-xl); display: flex; align-items: center; gap: 0.75rem; color: white; font-size: 0.875rem; font-weight: 600; transition: var(--transition); }
+        .chatbot-toggle:hover { transform: translateY(-3px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2); }
+        .chatbot-container { position: fixed; bottom: 6rem; right: 2rem; width: 90%; max-width: 400px; height: 500px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-xl); z-index: 98; display: flex; flex-direction: column; transform: translateY(20px) scale(0.95); opacity: 0; visibility: hidden; transition: var(--transition); }
+        .chatbot-container.active { transform: translateY(0) scale(1); opacity: 1; visibility: visible; }
+        .chatbot-header { padding: 1rem; border-bottom: 1px solid var(--border); font-weight: 600; text-align: center; background: var(--surface); color: var(--primary); }
+        .chatbot-messages { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; }
+        .message { max-width: 80%; padding: 0.75rem 1rem; border-radius: 1rem; animation: messageSlide 0.3s ease; }
+        @keyframes messageSlide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .message.user { background: var(--primary); color: white; margin-left: auto; border-bottom-right-radius: 0.25rem; }
+        .message.bot { background: var(--surface-hover); color: var(--text-primary); margin-right: auto; border-bottom-left-radius: 0.25rem; }
+        .chatbot-input { padding: 1rem; border-top: 1px solid var(--border); display: flex; gap: 0.5rem; }
+        .chatbot-input input { flex: 1; padding: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--background); color: var(--text-primary); font-size: 0.875rem; }
+        .chatbot-input input:focus { outline: none; border-color: var(--primary); }
+        .chatbot-send { background: var(--primary); color: white; border: none; border-radius: var(--radius); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); }
+        .chatbot-send:hover { background: var(--primary-dark); }
+        .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.5rem; box-shadow: var(--shadow-lg); z-index: 1001; display: flex; align-items: center; gap: 0.75rem; min-width: 300px; opacity: 0; transform: translateX(-50%) translateY(20px); transition: var(--transition); }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
+        .toast.info { border-left: 4px solid var(--info); }
+        .toast-icon { font-size: 1.25rem; }
+        .toast.success .toast-icon { color: var(--success); }
+        .toast.error .toast-icon { color: var(--danger); }
+        .toast.info .toast-icon { color: var(--info); }
+        @media (max-width: 768px) { .header-content { padding: 1rem; } .container { padding: 1rem; } .nav-links { display: none; } .welcome-title { font-size: 1.5rem; } .filter-grid { grid-template-columns: 1fr; } .materials-grid { grid-template-columns: 1fr; } .chatbot-container { right: 1rem; left: 1rem; max-width: none; } .modal { width: 95%; max-height: 95vh; } .account-menu { width: 280px; } .materials-header { flex-direction: column; align-items: flex-start; } .chatbot-toggle { padding: 0.5rem 1rem; font-size: 0.75rem; } .selection-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); } .selection-card { padding: 1rem; } .selection-icon { font-size: 1.5rem; } }
+        @media (max-width: 480px) { .filter-section { padding: 1rem; } .filter-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; } .filter-actions { width: 100%; justify-content: space-between; } .btn { padding: 0.5rem 0.75rem; font-size: 0.8rem; } .material-actions { flex-wrap: wrap; } .material-action { width: 32px; height: 32px; } }
     </style>
 </head>
 <body>
@@ -1637,17 +1182,17 @@
             <div class="filter-header">
                 <h2 class="filter-title">Filter Materials</h2>
                 <div class="filter-actions">
-                    <button class="btn btn-outline" id="openFilterModal">
+                    <button class="btn btn-outline" id="advancedFilterBtn">
                         <i class="fas fa-filter"></i>
-                        Advanced Filters
+                        <span>Advanced Filters</span>
                     </button>
                     <button class="btn btn-outline" id="resetFilters">
                         <i class="fas fa-redo"></i>
-                        Reset
+                        <span>Reset</span>
                     </button>
                 </div>
             </div>
-            
+
             <!-- Branch-Semester-Course Selection Display -->
             <div class="selection-display" id="selection-display" style="display: none;">
                 <div class="selection-item">
@@ -1671,7 +1216,7 @@
             <div class="filter-grid">
                 <div class="filter-group">
                     <label class="filter-label">Search</label>
-                    <input type="text" class="filter-input" id="searchFilter" placeholder="Search materials...">
+                    <input type="text" class="filter-input" id="searchFilter" placeholder="Search by title or description...">
                 </div>
                 <div class="filter-group">
                     <label class="filter-label">Material Type</label>
@@ -1684,6 +1229,19 @@
                         <option value="lab">Lab Manuals</option>
                         <option value="project">Projects</option>
                     </select>
+                </div>
+                <!-- Hidden select elements for filtering logic -->
+                <div class="filter-group" style="display:none;">
+                    <label class="filter-label">Branch</label>
+                    <select class="filter-select" id="branchFilter"></select>
+                </div>
+                <div class="filter-group" style="display:none;">
+                    <label class="filter-label">Semester</label>
+                    <select class="filter-select" id="semesterFilter"></select>
+                </div>
+                <div class="filter-group" style="display:none;">
+                    <label class="filter-label">Course</label>
+                    <select class="filter-select" id="courseFilter"></select>
                 </div>
             </div>
         </div>
@@ -1703,71 +1261,11 @@
         </div>
     </main>
     
-    <!-- Filter Modal -->
-    <div class="modal-overlay filter-modal" id="filterModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 class="modal-title">Advanced Filters</h2>
-                <button class="modal-close" id="filterModalClose">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-content">
-                <div class="filter-modal-body">
-                    <div class="filter-grid">
-                        <div class="filter-group">
-                            <label class="filter-label">Branch</label>
-                            <select class="filter-select" id="branchFilter">
-                                <option value="">All Branches</option>
-                            </select>
-                        </div>
-                        
-                        <div class="filter-group">
-                            <label class="filter-label">Semester</label>
-                            <select class="filter-select" id="semesterFilter">
-                                <option value="">All Semesters</option>
-                            </select>
-                        </div>
-                        
-                        <div class="filter-group">
-                            <label class="filter-label">Course</label>
-                            <select class="filter-select" id="courseFilter">
-                                <option value="">All Courses</option>
-                            </select>
-                        </div>
-                        
-                        <div class="filter-group">
-                            <label class="filter-label">Material Type</label>
-                            <select class="filter-select" id="modalTypeFilter">
-                                <option value="">All Types</option>
-                                <option value="notes">Notes</option>
-                                <option value="ebook">E-Books</option>
-                                <option value="slides">Slides</option>
-                                <option value="video">Videos</option>
-                                <option value="lab">Lab Manuals</option>
-                                <option value="project">Projects</option>
-                            </select>
-                        </div>
-                        
-                        <div class="filter-group">
-                            <label class="filter-label">Search</label>
-                            <input type="text" class="filter-input" id="modalSearchFilter" placeholder="Search materials...">
-                        </div>
-                    </div>
-                </div>
-                <div class="filter-modal-footer">
-                    <button type="button" class="btn btn-outline" id="cancelFilter">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="applyFilter">Apply Filters</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
     <!-- Branch-Semester-Course Selection Modal -->
     <div class="branch-semester-course-modal" id="branch-semester-course-modal">
         <div class="modal">
             <div class="selection-header">
-                <h2>Select Branch, Semester, and Course</h2>
+                <h2>Select Your Course</h2>
                 <button class="modal-close" id="selection-modal-close">
                     <i class="fas fa-times"></i>
                 </button>
@@ -1791,7 +1289,7 @@
             <div class="selection-content">
                 <!-- Branch Selection Step -->
                 <div class="selection-step active" id="branch-step">
-                    <h3 style="margin-bottom: 1rem;">Select Branch</h3>
+                    <h3 style="margin-bottom: 1rem; text-align: center;">Select Your Branch</h3>
                     <div class="selection-grid" id="branch-options">
                         <!-- Branch options will be populated here -->
                     </div>
@@ -1799,7 +1297,7 @@
                 
                 <!-- Semester Selection Step -->
                 <div class="selection-step" id="semester-step">
-                    <h3 style="margin-bottom: 1rem;">Select Semester</h3>
+                    <h3 style="margin-bottom: 1rem; text-align: center;">Select Your Semester</h3>
                     <div class="selection-grid" id="semester-options">
                         <!-- Semester options will be populated here -->
                     </div>
@@ -1807,7 +1305,7 @@
                 
                 <!-- Course Selection Step -->
                 <div class="selection-step" id="course-step">
-                    <h3 style="margin-bottom: 1rem;">Select Course</h3>
+                    <h3 style="margin-bottom: 1rem; text-align: center;">Select Your Course</h3>
                     <div class="selection-grid" id="course-options">
                         <!-- Course options will be populated here -->
                     </div>
@@ -1816,8 +1314,8 @@
             
             <div class="selection-actions">
                 <button class="btn-step btn-prev" id="prev-step-btn" style="display: none;">Previous</button>
-                <button class="btn-step btn-next" id="next-step-btn">Next</button>
-                <button class="btn-step btn-finish" id="finish-selection-btn">Finish</button>
+                <button class="btn-step btn-next" id="next-step-btn" disabled>Next</button>
+                <button class="btn-step btn-finish" id="finish-selection-btn" disabled>Finish</button>
             </div>
         </div>
     </div>
@@ -1892,9 +1390,11 @@
         let materials = [];
         let filteredMaterials = [];
         let downloadedMaterials = [];
-        let selectedBranch = null;
-        let selectedSemester = null;
-        let selectedCourse = null;
+        
+        // These track the state of the selection modal
+        let tempSelectedBranch = null;
+        let tempSelectedSemester = null;
+        let tempSelectedCourse = null;
         
         // DOM Elements
         const themeToggle = document.getElementById('themeToggle');
@@ -1911,15 +1411,9 @@
         const semesterFilter = document.getElementById('semesterFilter');
         const courseFilter = document.getElementById('courseFilter');
         const typeFilter = document.getElementById('typeFilter');
-        const modalTypeFilter = document.getElementById('modalTypeFilter');
         const searchFilter = document.getElementById('searchFilter');
-        const modalSearchFilter = document.getElementById('modalSearchFilter');
         const resetFilters = document.getElementById('resetFilters');
-        const openFilterModal = document.getElementById('openFilterModal');
-        const filterModal = document.getElementById('filterModal');
-        const filterModalClose = document.getElementById('filterModalClose');
-        const cancelFilter = document.getElementById('cancelFilter');
-        const applyFilter = document.getElementById('applyFilter');
+        const advancedFilterBtn = document.getElementById('advancedFilterBtn');
         const downloadedMaterialsList = document.getElementById('downloadedMaterials');
         const chatbotToggle = document.getElementById('chatbotToggle');
         const chatbotContainer = document.getElementById('chatbotContainer');
@@ -1984,219 +1478,36 @@
             }, 3000);
         }
         
-        // Initialize Custom Dropdowns
-        function initCustomDropdowns() {
-            // Function to create custom dropdown
-            function createCustomDropdown(selectElement) {
-                if (!selectElement) return;
-                
-                const wrapper = document.createElement('div');
-                wrapper.className = 'custom-select';
-                
-                const trigger = document.createElement('div');
-                trigger.className = 'custom-select-trigger';
-                
-                const dropdown = document.createElement('div');
-                dropdown.className = 'custom-select-dropdown';
-                
-                // Hide original select
-                selectElement.classList.add('custom-select-original');
-                selectElement.parentNode.insertBefore(wrapper, selectElement);
-                wrapper.appendChild(selectElement);
-                
-                // Create trigger content
-                const triggerContent = document.createElement('div');
-                triggerContent.style.display = 'flex';
-                triggerContent.style.alignItems = 'center';
-                
-                const arrow = document.createElement('i');
-                arrow.className = 'fas fa-chevron-down arrow';
-                
-                trigger.appendChild(triggerContent);
-                trigger.appendChild(arrow);
-                wrapper.appendChild(trigger);
-                wrapper.appendChild(dropdown);
-                
-                // Populate dropdown options
-                for (let i = 0; i < selectElement.options.length; i++) {
-                    const option = selectElement.options[i];
-                    const optionElement = document.createElement('div');
-                    optionElement.className = 'custom-select-option';
-                    optionElement.dataset.value = option.value;
-                    
-                    if (option.value && academicData.branches[option.value]) {
-                        const icon = document.createElement('i');
-                        icon.className = academicData.branches[option.value].icon;
-                        optionElement.appendChild(icon);
-                        optionElement.appendChild(document.createTextNode(option.textContent));
-                    } else {
-                        optionElement.textContent = option.textContent;
-                    }
-                    
-                    if (option.selected) {
-                        optionElement.classList.add('selected');
-                        triggerContent.innerHTML = optionElement.innerHTML;
-                    }
-                    
-                    optionElement.addEventListener('click', function() {
-                        // Update selected option
-                        document.querySelectorAll('.custom-select-option').forEach(opt => {
-                            opt.classList.remove('selected');
-                        });
-                        this.classList.add('selected');
-                        
-                        // Update trigger content
-                        triggerContent.innerHTML = this.innerHTML;
-                        
-                        // Update original select
-                        selectElement.value = this.dataset.value;
-                        selectElement.dispatchEvent(new Event('change'));
-                        
-                        // Close dropdown
-                        wrapper.classList.remove('open');
-                    });
-                    
-                    dropdown.appendChild(optionElement);
-                }
-                
-                // Toggle dropdown on trigger click
-                trigger.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    wrapper.classList.toggle('open');
-                    
-                    // Close other dropdowns
-                    document.querySelectorAll('.custom-select.open').forEach(dropdown => {
-                        if (dropdown !== wrapper) {
-                            dropdown.classList.remove('open');
-                        }
-                    });
-                });
-                
-                // Close dropdown when clicking outside
-                document.addEventListener('click', function() {
-                    wrapper.classList.remove('open');
-                });
-                
-                // Prevent dropdown from closing when clicking inside
-                dropdown.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                });
-            }
-            
-            // Initialize branch filter as custom dropdown
-            createCustomDropdown(branchFilter);
-        }
-        
         // Initialize Filters
         function initFilters() {
-            // Initialize custom dropdowns
-            initCustomDropdowns();
-            
-            // Add event listeners
-            branchFilter.addEventListener('change', updateSemesterFilter);
-            semesterFilter.addEventListener('change', updateCourseFilter);
             typeFilter.addEventListener('change', applyFilters);
-            modalTypeFilter.addEventListener('change', applyFilters);
             searchFilter.addEventListener('input', applyFilters);
-            modalSearchFilter.addEventListener('input', applyFilters);
             resetFilters.addEventListener('click', resetAllFilters);
             
-            // Filter modal event listeners
-            openFilterModal.addEventListener('click', () => {
-                filterModal.classList.add('active');
-                // Sync filter values
-                branchFilter.value = document.getElementById('branchFilter').value;
-                semesterFilter.value = document.getElementById('semesterFilter').value;
-                courseFilter.value = document.getElementById('courseFilter').value;
-                modalTypeFilter.value = typeFilter.value;
-                modalSearchFilter.value = searchFilter.value;
+            // Advanced Filter button now opens the selection modal
+            advancedFilterBtn.addEventListener('click', () => {
+                resetSelectionModal();
+                branchSemesterCourseModal.classList.add('active');
             });
-            
-            filterModalClose.addEventListener('click', () => {
-                filterModal.classList.remove('active');
-            });
-            
-            cancelFilter.addEventListener('click', () => {
-                filterModal.classList.remove('active');
-            });
-            
-            applyFilter.addEventListener('click', () => {
-                // Apply filter values from modal
-                typeFilter.value = modalTypeFilter.value;
-                searchFilter.value = modalSearchFilter.value;
-                applyFilters();
-                filterModal.classList.remove('active');
-            });
-            
-            filterModal.addEventListener('click', (e) => {
-                if (e.target === filterModal) {
-                    filterModal.classList.remove('active');
-                }
-            });
-        }
-        
-        function updateSemesterFilter() {
-            const branch = branchFilter.value;
-            semesterFilter.innerHTML = '<option value="">All Semesters</option>';
-            courseFilter.innerHTML = '<option value="">All Courses</option>';
-            
-            if (branch && academicData.branches[branch]) {
-                Object.keys(academicData.branches[branch].semesters).forEach(sem => {
-                    const option = document.createElement('option');
-                    option.value = sem;
-                    option.textContent = `Semester ${sem}`;
-                    semesterFilter.appendChild(option);
-                });
-            }
-            
-            applyFilters();
-        }
-        
-        function updateCourseFilter() {
-            const branch = branchFilter.value;
-            const semester = semesterFilter.value;
-            courseFilter.innerHTML = '<option value="">All Courses</option>';
-            
-            if (branch && semester && academicData.branches[branch]) {
-                const courses = academicData.branches[branch].semesters[semester] || [];
-                courses.forEach(course => {
-                    const option = document.createElement('option');
-                    option.value = course.code;
-                    option.textContent = `${course.code} - ${course.name}`;
-                    courseFilter.appendChild(option);
-                });
-            }
-            
-            applyFilters();
         }
         
         function applyFilters() {
             const branch = branchFilter.value;
             const semester = semesterFilter.value;
             const course = courseFilter.value;
-            const type = typeFilter.value || modalTypeFilter.value;
-            const search = (searchFilter.value || modalSearchFilter.value).toLowerCase();
+            const type = typeFilter.value;
+            const search = searchFilter.value.toLowerCase();
             
             filteredMaterials = materials.filter(material => {
-                // Branch filter
-                if (branch && material.branch !== branch) return false;
+                const matchesBranch = !branch || material.branch === branch;
+                const matchesSemester = !semester || material.semester === semester;
+                const matchesCourse = !course || (material.courseCode && material.courseCode === course);
+                const matchesType = !type || material.type === type;
+                const matchesSearch = !search || 
+                                      (material.title && material.title.toLowerCase().includes(search)) || 
+                                      (material.description && material.description.toLowerCase().includes(search));
                 
-                // Semester filter
-                if (semester && material.semester !== semester) return false;
-                
-                // Course filter
-                if (course && material.course !== course) return false;
-                
-                // Type filter
-                if (type && material.type !== type) return false;
-                
-                // Search filter
-                if (search && !material.title.toLowerCase().includes(search) && 
-                    !material.description.toLowerCase().includes(search)) {
-                    return false;
-                }
-                
-                return true;
+                return matchesBranch && matchesSemester && matchesCourse && matchesType && matchesSearch;
             });
             
             renderMaterials();
@@ -2207,26 +1518,20 @@
             semesterFilter.value = '';
             courseFilter.value = '';
             typeFilter.value = '';
-            modalTypeFilter.value = '';
             searchFilter.value = '';
-            modalSearchFilter.value = '';
             
-            // Reset selection display
-            selectedBranch = null;
-            selectedSemester = null;
-            selectedCourse = null;
+            // Hide selection display
             selectionDisplay.style.display = 'none';
             
-            updateSemesterFilter();
-            updateCourseFilter();
             applyFilters();
+            showToast('Filters have been reset', 'info');
         }
         
         // Load Materials
         function loadMaterials() {
             materialsGrid.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
             
-            db.collection('materials').get().then(snapshot => {
+            db.collection('notes').orderBy('createdAt', 'desc').get().then(snapshot => {
                 materials = [];
                 snapshot.forEach(doc => {
                     const material = doc.data();
@@ -2237,7 +1542,6 @@
                 filteredMaterials = [...materials];
                 renderMaterials();
                 
-                // Load user's downloaded materials
                 if (currentUser) {
                     loadDownloadedMaterials();
                 }
@@ -2300,9 +1604,8 @@
                 return;
             }
             
-            // Get material details for each downloaded material
             const materialPromises = downloadedMaterials.map(materialId => {
-                return db.collection('materials').doc(materialId).get();
+                return db.collection('notes').doc(materialId).get();
             });
             
             Promise.all(materialPromises)
@@ -2334,7 +1637,6 @@
                         `;
                     }).join('');
                     
-                    // Add click event listeners to downloaded materials
                     document.querySelectorAll('#downloadedMaterials .account-item').forEach(item => {
                         item.addEventListener('click', () => {
                             const materialId = item.dataset.id;
@@ -2379,11 +1681,11 @@
                 return `
                     <div class="material-card" data-id="${material.id}">
                         <div class="material-thumbnail">
-                            ${material.thumbnailUrl ? 
-                                `<img src="${material.thumbnailUrl}" alt="${material.title}">` : 
-                                `<i class="fas ${getMaterialIcon(material.type)}"></i>`
+                            ${material.thumbnail ? 
+                                `<img src="${material.thumbnail}" alt="${material.title}">` : 
+                                `<i class="fas ${getMaterialIcon(material.type || 'notes')}"></i>`
                             }
-                            <div class="material-type-badge">${material.type}</div>
+                            <div class="material-type-badge">${material.type || 'Notes'}</div>
                         </div>
                         <div class="material-content">
                             <h3 class="material-title">${material.title}</h3>
@@ -2417,7 +1719,6 @@
                 `;
             }).join('');
             
-            // Add event listeners to material actions
             document.querySelectorAll('.material-action').forEach(btn => {
                 btn.addEventListener('click', handleMaterialAction);
             });
@@ -2465,8 +1766,8 @@
         }
         
         function viewMaterial(material) {
-            if (material.fileUrl) {
-                window.open(material.fileUrl, '_blank');
+            if (material.link) {
+                window.open(material.link, '_blank');
                 showToast('Opening material...', 'info');
             } else {
                 showToast('Material file not available', 'error');
@@ -2474,29 +1775,23 @@
         }
         
         function downloadMaterial(material) {
-            if (material.fileUrl) {
+            if (material.link) {
                 const link = document.createElement('a');
-                link.href = material.fileUrl;
-                link.download = material.title;
+                link.href = material.link;
+                link.target = "_blank"; // Open in new tab for viewing/downloading from Drive
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
                 
-                showToast('Download started', 'success');
+                showToast('Opening download link...', 'success');
                 
-                // Track download
                 if (currentUser) {
                     db.collection('userActivities').add({
                         userId: currentUser.uid,
                         action: 'download',
                         materialId: material.id,
-                        materialData: {
-                            title: material.title,
-                            type: material.type
-                        },
                         timestamp: firebase.firestore.FieldValue.serverTimestamp()
                     }).then(() => {
-                        // Refresh downloaded materials list if account menu is open
                         if (accountMenu.classList.contains('active')) {
                             loadDownloadedMaterials();
                         }
@@ -2516,27 +1811,19 @@
             const isFavorite = btn.classList.contains('active');
             
             if (isFavorite) {
-                // Remove from favorites
                 db.collection('users').doc(currentUser.uid).update({
                     favoriteMaterials: firebase.firestore.FieldValue.arrayRemove(material.id)
                 }).then(() => {
                     btn.classList.remove('active');
                     showToast('Removed from favorites', 'info');
-                }).catch(error => {
-                    console.error('Error removing favorite:', error);
-                    showToast('Error updating favorites', 'error');
-                });
+                }).catch(error => console.error('Error removing favorite:', error));
             } else {
-                // Add to favorites
                 db.collection('users').doc(currentUser.uid).update({
                     favoriteMaterials: firebase.firestore.FieldValue.arrayUnion(material.id)
                 }).then(() => {
                     btn.classList.add('active');
                     showToast('Added to favorites', 'success');
-                }).catch(error => {
-                    console.error('Error adding favorite:', error);
-                    showToast('Error updating favorites', 'error');
-                });
+                }).catch(error => console.error('Error adding favorite:', error));
             }
         }
         
@@ -2546,19 +1833,13 @@
                     title: material.title,
                     text: material.description,
                     url: window.location.href
-                }).then(() => {
-                    showToast('Shared successfully', 'success');
-                }).catch(error => {
-                    console.error('Error sharing:', error);
-                });
+                }).then(() => showToast('Shared successfully', 'success'))
+                  .catch(error => console.error('Error sharing:', error));
             } else {
-                // Fallback - copy to clipboard
                 const url = `${window.location.origin}/materials.html?id=${material.id}`;
-                navigator.clipboard.writeText(url).then(() => {
-                    showToast('Link copied to clipboard', 'success');
-                }).catch(error => {
-                    showToast('Error copying link', 'error');
-                });
+                navigator.clipboard.writeText(url)
+                    .then(() => showToast('Link copied to clipboard', 'success'))
+                    .catch(() => showToast('Error copying link', 'error'));
             }
         }
         
@@ -2570,21 +1851,15 @@
                     userId: currentUser ? currentUser.uid : null,
                     reason: reason,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                }).then(() => {
-                    showToast('Report submitted successfully', 'success');
-                }).catch(error => {
-                    console.error('Error submitting report:', error);
-                    showToast('Error submitting report', 'error');
-                });
+                }).then(() => showToast('Report submitted successfully', 'success'))
+                  .catch(error => console.error('Error submitting report:', error));
             }
         }
         
         // Branch-Semester-Course Selection Modal Functions
         function initBranchSemesterCourseModal() {
-            // Initialize branch options
             initializeBranchOptions();
             
-            // Modal event listeners
             selectionModalClose.addEventListener('click', () => {
                 branchSemesterCourseModal.classList.remove('active');
             });
@@ -2593,229 +1868,163 @@
             nextStepBtn.addEventListener('click', goToNextStep);
             finishSelectionBtn.addEventListener('click', finishSelection);
             
-            // Change selection button
             changeSelectionBtn.addEventListener('click', () => {
+                resetSelectionModal();
                 branchSemesterCourseModal.classList.add('active');
             });
             
-            // Modal overlay click
             branchSemesterCourseModal.addEventListener('click', (e) => {
                 if (e.target === branchSemesterCourseModal) {
                     branchSemesterCourseModal.classList.remove('active');
                 }
             });
         }
-        
+
+        function resetSelectionModal() {
+            tempSelectedBranch = null;
+            tempSelectedSemester = null;
+            tempSelectedCourse = null;
+
+            [semesterStep, courseStep].forEach(step => step.classList.remove('active'));
+            branchStep.classList.add('active');
+            
+            [stepIndicators[1], stepIndicators[2]].forEach(ind => ind.classList.remove('active'));
+            stepIndicators[0].classList.add('active');
+
+            prevStepBtn.style.display = 'none';
+            finishSelectionBtn.style.display = 'none';
+            nextStepBtn.style.display = 'block';
+            nextStepBtn.disabled = true;
+
+            document.querySelectorAll('.selection-card.selected').forEach(card => card.classList.remove('selected'));
+        }
+
         function initializeBranchOptions() {
             branchOptions.innerHTML = '';
-            
             for (const code in academicData.branches) {
                 const branch = academicData.branches[code];
-                const branchCard = document.createElement('div');
-                branchCard.className = 'selection-card';
-                branchCard.dataset.branch = code;
-                
-                branchCard.innerHTML = `
-                    <div class="selection-icon">
-                        <i class="${branch.icon}"></i>
-                    </div>
-                    <div class="selection-name">${branch.name}</div>
-                    <div class="selection-code">${code}</div>
-                `;
-                
-                branchCard.addEventListener('click', () => selectBranch(code));
-                branchOptions.appendChild(branchCard);
+                const card = document.createElement('div');
+                card.className = 'selection-card';
+                card.dataset.branch = code;
+                card.innerHTML = `<div class="selection-icon"><i class="${branch.icon}"></i></div><div class="selection-name">${branch.name}</div><div class="selection-code">${code}</div>`;
+                card.addEventListener('click', () => selectBranch(code));
+                branchOptions.appendChild(card);
             }
         }
         
         function selectBranch(code) {
-            selectedBranch = code;
-            
-            // Update UI
+            tempSelectedBranch = code;
             document.querySelectorAll('#branch-options .selection-card').forEach(card => {
-                card.classList.remove('selected');
+                card.classList.toggle('selected', card.dataset.branch === code);
             });
-            document.querySelector(`#branch-options .selection-card[data-branch="${code}"]`).classList.add('selected');
-            
-            // Enable next button
             nextStepBtn.disabled = false;
         }
         
         function initializeSemesterOptions() {
             semesterOptions.innerHTML = '';
-            
-            if (!selectedBranch || !academicData.branches[selectedBranch]) return;
-            
-            const semesters = academicData.branches[selectedBranch].semesters;
-            
+            const semesters = academicData.branches[tempSelectedBranch]?.semesters;
+            if (!semesters) return;
             for (const semNum in semesters) {
-                const semesterCard = document.createElement('div');
-                semesterCard.className = 'selection-card';
-                semesterCard.dataset.semester = semNum;
-                
-                semesterCard.innerHTML = `
-                    <div class="selection-icon">
-                        <i class="fas fa-calendar-alt"></i>
-                    </div>
-                    <div class="selection-name">Semester ${semNum}</div>
-                `;
-                
-                semesterCard.addEventListener('click', () => selectSemester(semNum));
-                semesterOptions.appendChild(semesterCard);
+                if (semesters[semNum].length > 0) { // Only show semesters that have courses
+                    const card = document.createElement('div');
+                    card.className = 'selection-card';
+                    card.dataset.semester = semNum;
+                    card.innerHTML = `<div class="selection-icon"><i class="fas fa-calendar-alt"></i></div><div class="selection-name">Semester ${semNum}</div>`;
+                    card.addEventListener('click', () => selectSemester(semNum));
+                    semesterOptions.appendChild(card);
+                }
             }
         }
         
         function selectSemester(semNum) {
-            selectedSemester = semNum;
-            
-            // Update UI
+            tempSelectedSemester = semNum;
             document.querySelectorAll('#semester-options .selection-card').forEach(card => {
-                card.classList.remove('selected');
+                card.classList.toggle('selected', card.dataset.semester === semNum);
             });
-            document.querySelector(`#semester-options .selection-card[data-semester="${semNum}"]`).classList.add('selected');
-            
-            // Enable next button
             nextStepBtn.disabled = false;
         }
         
         function initializeCourseOptions() {
             courseOptions.innerHTML = '';
-            
-            if (!selectedBranch || !selectedSemester || !academicData.branches[selectedBranch]) return;
-            
-            const courses = academicData.branches[selectedBranch].semesters[selectedSemester] || [];
-            
+            const courses = academicData.branches[tempSelectedBranch]?.semesters[tempSelectedSemester] || [];
             if (courses.length === 0) {
-                courseOptions.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">No courses available for this semester</p>';
+                courseOptions.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">No courses available for this semester.</p>';
+                finishSelectionBtn.disabled = true;
                 return;
             }
-            
             courses.forEach(course => {
-                const courseCard = document.createElement('div');
-                courseCard.className = 'selection-card';
-                courseCard.dataset.course = course.code;
-                
-                courseCard.innerHTML = `
-                    <div class="selection-name">${course.name}</div>
-                    <div class="selection-code">${course.code}</div>
-                    <div class="selection-code">${course.credits} Credits</div>
-                `;
-                
-                courseCard.addEventListener('click', () => selectCourse(course));
-                courseOptions.appendChild(courseCard);
+                const card = document.createElement('div');
+                card.className = 'selection-card';
+                card.dataset.course = course.code;
+                card.innerHTML = `<div class="selection-name">${course.name}</div><div class="selection-code">${course.code}</div><div class="selection-code">${course.credits} Credits</div>`;
+                card.addEventListener('click', () => selectCourse(course));
+                courseOptions.appendChild(card);
             });
         }
         
         function selectCourse(course) {
-            selectedCourse = course;
-            
-            // Update UI
+            tempSelectedCourse = course;
             document.querySelectorAll('#course-options .selection-card').forEach(card => {
-                card.classList.remove('selected');
+                card.classList.toggle('selected', card.dataset.course === course.code);
             });
-            document.querySelector(`#course-options .selection-card[data-course="${course.code}"]`).classList.add('selected');
-            
-            // Enable finish button
             finishSelectionBtn.disabled = false;
         }
         
         function goToNextStep() {
-            if (branchStep.classList.contains('active')) {
-                if (!selectedBranch) {
-                    showToast('Please select a branch', 'error');
-                    return;
-                }
-                
-                // Move to semester step
-                branchStep.classList.remove('active');
+            const currentStep = document.querySelector('.selection-step.active');
+            if (currentStep.id === 'branch-step') {
+                if (!tempSelectedBranch) { showToast('Please select a branch', 'error'); return; }
+                currentStep.classList.remove('active');
                 semesterStep.classList.add('active');
-                
-                // Update step indicators
-                stepIndicators[0].classList.remove('active');
                 stepIndicators[1].classList.add('active');
-                
-                // Initialize semester options
                 initializeSemesterOptions();
-                
-                // Show previous button
                 prevStepBtn.style.display = 'block';
-                
-                // Disable next button until semester is selected
                 nextStepBtn.disabled = true;
-            } else if (semesterStep.classList.contains('active')) {
-                if (!selectedSemester) {
-                    showToast('Please select a semester', 'error');
-                    return;
-                }
-                
-                // Move to course step
-                semesterStep.classList.remove('active');
+            } else if (currentStep.id === 'semester-step') {
+                if (!tempSelectedSemester) { showToast('Please select a semester', 'error'); return; }
+                currentStep.classList.remove('active');
                 courseStep.classList.add('active');
-                
-                // Update step indicators
-                stepIndicators[1].classList.remove('active');
                 stepIndicators[2].classList.add('active');
-                
-                // Initialize course options
                 initializeCourseOptions();
-                
-                // Hide next button, show finish button
                 nextStepBtn.style.display = 'none';
                 finishSelectionBtn.style.display = 'block';
-                
-                // Disable finish button until course is selected
                 finishSelectionBtn.disabled = true;
             }
         }
         
         function goToPrevStep() {
-            if (semesterStep.classList.contains('active')) {
-                // Move to branch step
-                semesterStep.classList.remove('active');
+            const currentStep = document.querySelector('.selection-step.active');
+            if (currentStep.id === 'semester-step') {
+                currentStep.classList.remove('active');
                 branchStep.classList.add('active');
-                
-                // Update step indicators
                 stepIndicators[1].classList.remove('active');
-                stepIndicators[0].classList.add('active');
-                
-                // Hide previous button
                 prevStepBtn.style.display = 'none';
-            } else if (courseStep.classList.contains('active')) {
-                // Move to semester step
-                courseStep.classList.remove('active');
+                nextStepBtn.disabled = false;
+            } else if (currentStep.id === 'course-step') {
+                currentStep.classList.remove('active');
                 semesterStep.classList.add('active');
-                
-                // Update step indicators
                 stepIndicators[2].classList.remove('active');
-                stepIndicators[1].classList.add('active');
-                
-                // Show next button, hide finish button
-                nextStepBtn.style.display = 'block';
                 finishSelectionBtn.style.display = 'none';
+                nextStepBtn.style.display = 'block';
+                nextStepBtn.disabled = false;
             }
         }
         
         function finishSelection() {
-            if (!selectedCourse) {
-                showToast('Please select a course', 'error');
-                return;
-            }
+            if (!tempSelectedCourse) { showToast('Please select a course', 'error'); return; }
             
             // Update display
-            selectedBranchDisplay.textContent = academicData.branches[selectedBranch].name;
-            selectedSemesterDisplay.textContent = `Semester ${selectedSemester}`;
-            selectedCourseDisplay.textContent = selectedCourse.name;
+            selectedBranchDisplay.textContent = academicData.branches[tempSelectedBranch].name;
+            selectedSemesterDisplay.textContent = `Semester ${tempSelectedSemester}`;
+            selectedCourseDisplay.textContent = tempSelectedCourse.name;
             selectionDisplay.style.display = 'flex';
             
-            // Update filters
-            branchFilter.value = selectedBranch;
-            semesterFilter.value = selectedSemester;
-            courseFilter.value = selectedCourse.code;
+            // Update hidden filters
+            branchFilter.value = tempSelectedBranch;
+            semesterFilter.value = tempSelectedSemester;
+            courseFilter.innerHTML = `<option value="${tempSelectedCourse.code}" selected>${tempSelectedCourse.name}</option>`;
             
-            // Apply filters
             applyFilters();
-            
-            // Close modal
             branchSemesterCourseModal.classList.remove('active');
         }
         
@@ -2823,15 +2032,6 @@
         function initChatbot() {
             const botResponses = {
                 'material': 'You can find various study materials here including notes, e-books, slides, videos, lab manuals, and projects. Use the filters to narrow down your search.',
-                'notes': 'Notes are concise summaries of course content. You can filter by branch, semester, and course to find relevant notes.',
-                'ebook': 'E-books are digital versions of textbooks. They provide in-depth coverage of subjects.',
-                'slides': 'Slides are presentation materials used in lectures. They are great for quick revision.',
-                'video': 'Video materials include recorded lectures, tutorials, and demonstrations.',
-                'lab': 'Lab manuals contain instructions and procedures for laboratory experiments.',
-                'project': 'Project materials include documentation, source code, and reports for academic projects.',
-                'filter': 'Use the filter options to narrow down materials by branch, semester, course, type, or search keywords.',
-                'download': 'Click the download button on any material to save it to your device.',
-                'favorite': 'Click the star button to add materials to your favorites for quick access.',
                 'default': 'I can help you with information about materials, filtering, downloading, and more. What would you like to know?'
             };
             
@@ -2845,17 +2045,9 @@
             
             function getBotResponse(userInput) {
                 const input = userInput.toLowerCase();
-                
-                if (input.includes('material') || input.includes('note') || input.includes('book') || input.includes('slide') || input.includes('video') || input.includes('lab') || input.includes('project')) {
+                if (input.includes('material') || input.includes('note') || input.includes('book')) {
                     return botResponses.material;
-                } else if (input.includes('filter')) {
-                    return botResponses.filter;
-                } else if (input.includes('download')) {
-                    return botResponses.download;
-                } else if (input.includes('favorite')) {
-                    return botResponses.favorite;
                 }
-                
                 return botResponses.default;
             }
             
@@ -2867,8 +2059,7 @@
                 chatbotInput.value = '';
                 
                 setTimeout(() => {
-                    const response = getBotResponse(message);
-                    addMessage(response, 'bot');
+                    addMessage(getBotResponse(message), 'bot');
                 }, 500);
             }
             
@@ -2896,7 +2087,6 @@
                 }
             });
             
-            // Close account menu when clicking outside
             document.addEventListener('click', (e) => {
                 if (!accountBtn.contains(e.target) && !accountMenu.contains(e.target)) {
                     accountMenu.classList.remove('active');
@@ -2910,11 +2100,9 @@
                 if (user) {
                     currentUser = user;
                     
-                    // Update account info with Gmail account details
                     accountName.textContent = user.displayName || user.email.split('@')[0];
                     accountEmail.textContent = user.email;
                     
-                    // Set avatar with user initial
                     if (user.displayName) {
                         accountAvatar.textContent = user.displayName.charAt(0).toUpperCase();
                     } else {
@@ -2923,21 +2111,10 @@
                     
                     loadMaterials();
                 } else {
-                    // Redirect to login page
                     window.location.href = '/index.html';
                 }
             });
         }
-        
-        // Event Listeners
-        themeToggle.addEventListener('click', toggleTheme);
-        
-        chatbotToggle.addEventListener('click', () => {
-            chatbotContainer.classList.toggle('active');
-            if (chatbotContainer.classList.contains('active')) {
-                chatbotInput.focus();
-            }
-        });
         
         // Initialize Application
         document.addEventListener('DOMContentLoaded', () => {
