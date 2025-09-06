@@ -2009,6 +2009,28 @@
         </div>
     </main>
     
+    <!-- User View Modal (view-only, not a form) -->
+    <style>
+    #user-view-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1002; }
+    #user-view-modal.active { display: flex; }
+    #user-view-modal .modal { background: #fff; border-radius: 10px; max-width: 400px; width: 95vw; box-shadow: 0 8px 32px rgba(0,0,0,0.2); padding: 24px; }
+    #user-view-modal .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+    #user-view-modal .modal-close { background: none; border: none; font-size: 2rem; cursor: pointer; color: #888; }
+    #user-view-modal .modal-body div { margin-bottom: 8px; }
+    </style>
+    
+    <div id="user-view-modal" class="modal-overlay">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 id="user-view-modal-title">User Details</h2>
+          <button class="modal-close" onclick="closeUserViewModal()">&times;</button>
+        </div>
+        <div class="modal-body" id="user-view-modal-body">
+          <!-- User details will be injected here -->
+        </div>
+      </div>
+    </div>
+        
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -3662,26 +3684,32 @@ function viewUserDetails(userId) {
         .then(doc => {
             if (doc.exists) {
                 const user = doc.data();
-                document.getElementById('user-modal-title').textContent = 'User Details';
-                document.getElementById('user-id').value = userId;
-                document.getElementById('user-name').value = user.name || '';
-                document.getElementById('user-email').value = user.email || '';
-                document.getElementById('user-phone').value = user.phone || '';
-                document.getElementById('user-dob').value = user.dob || '';
-                document.getElementById('user-gender').value = user.gender || '';
-                document.getElementById('user-admission').value = user.admissionNo || '';
-                document.getElementById('user-branch').value = user.branch || '';
-                document.getElementById('user-semester').value = user.semester || '';
-                document.getElementById('user-college').value = user.college || '';
-                document.getElementById('user-role').value = user.role || 'student';
-                document.getElementById('user-bio').value = user.bio || '';
-                document.getElementById('user-photoURL').value = user.photoURL || '';
-                document.getElementById('user-credits').value = user.credits || 0;
-                // Disable all fields for view-only
-                const form = document.getElementById('user-form');
-                Array.from(form.elements).forEach(el => el.disabled = true);
-                // Show the modal
-                userModal.classList.add('active');
+                let photo = user.photoURL;
+                if (!photo) {
+                    photo = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name || 'User');
+                }
+                const html = `
+                  <div style="display:flex;align-items:center;gap:18px;margin-bottom:18px;">
+                    <img src="${photo}" alt="User Photo" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid var(--primary-glow);">
+                    <div>
+                      <div class="content-title" style="font-size:1.3em;">${user.name || 'Unknown'}</div>
+                      <div style="color: var(--text-secondary);">${user.email || 'No email'}</div>
+                    </div>
+                  </div>
+                  <div><b>Phone:</b> ${user.phone || '-'}</div>
+                  <div><b>Date of Birth:</b> ${user.dob || '-'}</div>
+                  <div><b>Gender:</b> ${user.gender || '-'}</div>
+                  <div><b>Admission No:</b> ${user.admissionNo || '-'}</div>
+                  <div><b>Branch:</b> ${user.branch || '-'}</div>
+                  <div><b>Semester:</b> ${user.semester || '-'}</div>
+                  <div><b>College:</b> ${user.college || '-'}</div>
+                  <div><b>Role:</b> ${user.role || 'student'}</div>
+                  <div><b>Bio:</b> ${user.bio || '-'}</div>
+                  <div><b>Credits:</b> ${user.credits || 0}</div>
+                `;
+                document.getElementById('user-view-modal-body').innerHTML = html;
+                const modal = document.getElementById('user-view-modal');
+                modal.classList.add('active');
             }
         })
         .catch(error => {
@@ -3689,15 +3717,9 @@ function viewUserDetails(userId) {
             showToast('Failed to load user', 'error');
         });
 }
-
-// When closing modal, re-enable fields for edit mode
-if (typeof userModal !== 'undefined' && userModal) {
-    userModal.addEventListener('transitionend', function() {
-        if (!userModal.classList.contains('active')) {
-            const form = document.getElementById('user-form');
-            Array.from(form.elements).forEach(el => el.disabled = false);
-        }
-    });
+function closeUserViewModal() {
+    const modal = document.getElementById('user-view-modal');
+    modal.classList.remove('active');
 }
         }
         
