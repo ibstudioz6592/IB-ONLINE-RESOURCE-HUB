@@ -4108,10 +4108,9 @@
                 .then(() => {
                     showToast('Thank you for using IB STUDIOZ! You have been logged out successfully.', 'success');
                     logoutConfirmModal.classList.remove('active');
-                    
-                    // Redirect to login page after a short delay
+                    // Redirect to index.html after a short delay
                     setTimeout(() => {
-                        window.location.href = '/login.html';
+                        window.location.href = 'index.html';
                     }, 2000);
                 })
                 .catch(error => {
