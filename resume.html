@@ -156,6 +156,13 @@
       margin-top: 20px;
       flex-wrap: wrap;
     }
+    .image-info {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+      color: var(--light-text);
+      opacity: 0.8;
+    }
     /* Buttons */
     button {
       margin-top: 10px; padding: 12px 20px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;
@@ -570,8 +577,8 @@
   <div id="cropperModal" class="cropper-modal-container">
     <div class="cropper-modal">
       <img id="cropperImage" src="#" alt="Image to crop">
+      <div class="image-info" id="imageInfo"></div>
       <div class="cropper-actions">
-        <button id="applyCropBtn" class="primary"><i class="fas fa-crop-alt"></i> Apply Crop</button>
         <button id="saveCroppedBtn" class="primary"><i class="fas fa-save"></i> Save</button>
         <button id="cancelCropBtn" class="secondary"><i class="fas fa-times"></i> Cancel</button>
       </div>
@@ -622,6 +629,7 @@
     const dynamicSectionsContainer = document.getElementById('dynamic-sections');
     const cropperModal = document.getElementById('cropperModal');
     const cropperImage = document.getElementById('cropperImage');
+    const imageInfo = document.getElementById('imageInfo');
     const modal = document.getElementById('modal');
     const modalTitle = document.getElementById('modalTitle');
     const modalText = document.getElementById('modalText');
@@ -1476,7 +1484,7 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
       document.getElementById('accentColor').addEventListener('input', updateResume);
       modalCloseBtn.addEventListener('click', hideImagePreviewModal);
       
-      // Photo Upload & Cropper - FIXED VERSION
+      // Photo Upload & Cropper - SIMPLIFIED VERSION
       document.getElementById('photoUpload').addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -1485,8 +1493,15 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
             cropperModal.style.display = 'flex';
             cropperImage.src = event.target.result;
             
+            // Show image dimensions
+            const img = new Image();
+            img.onload = function() {
+              imageInfo.textContent = `Original dimensions: ${this.naturalWidth} × ${this.naturalHeight} pixels`;
+            };
+            img.src = event.target.result;
+            
             // Initialize cropper after image is loaded
-            cropperImage.onload = () => {
+            setTimeout(() => {
               if (cropper) {
                 cropper.destroy();
               }
@@ -1499,68 +1514,24 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
                 modal: false,
                 background: false
               });
-            };
+            }, 300);
           };
           reader.readAsDataURL(file);
         }
       });
       
-      // Apply Crop button - applies the crop but keeps the modal open
-      document.getElementById('applyCropBtn').addEventListener('click', () => {
+      // Save Cropped button - handles both cropping and saving
+      document.getElementById('saveCroppedBtn').addEventListener('click', () => {
         if (cropper) {
           try {
+            // Get the cropped canvas
             const croppedCanvas = cropper.getCroppedCanvas({
               width: 300,
               height: 300,
             });
             
             if (croppedCanvas) {
-              const croppedImageDataURL = croppedCanvas.toDataURL();
-              
-              // Destroy the current cropper
-              cropper.destroy();
-              
-              // Update the image source to the cropped data URL
-              cropperImage.src = croppedImageDataURL;
-              
-              // Reinitialize the cropper with the new image
-              cropperImage.onload = () => {
-                cropper = new Cropper(cropperImage, {
-                  aspectRatio: 1,
-                  viewMode: 1,
-                  autoCropArea: 0.8,
-                  responsive: true,
-                  checkCrossOrigin: false,
-                  modal: false,
-                  background: false
-                });
-              };
-            }
-          } catch (error) {
-            console.error('Error applying crop:', error);
-            alert('Error applying crop. Please try again.');
-          }
-        }
-      });
-      
-      // Save Cropped button - saves the cropped image and closes the modal
-      document.getElementById('saveCroppedBtn').addEventListener('click', () => {
-        if (cropper) {
-          try {
-            // Get the cropped canvas without specifying dimensions to avoid issues
-            const croppedCanvas = cropper.getCroppedCanvas();
-            
-            if (croppedCanvas) {
-              // Resize the canvas to 300x300
-              const resizedCanvas = document.createElement('canvas');
-              const ctx = resizedCanvas.getContext('2d');
-              resizedCanvas.width = 300;
-              resizedCanvas.height = 300;
-              
-              // Draw the cropped image on the resized canvas
-              ctx.drawImage(croppedCanvas, 0, 0, 300, 300);
-              
-              photoDataUrl = resizedCanvas.toDataURL();
+              photoDataUrl = croppedCanvas.toDataURL();
               document.getElementById('photoPreview').src = photoDataUrl;
               cropperModal.style.display = 'none';
               cropper.destroy();
