@@ -3,375 +3,287 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CGPA Calculator | IB STUDIOZ</title>
-    
-    <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23FFD700' d='M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z' /%3E%3Cg fill='%230A0A0A'%3E%3Cpath d='M28,25 h10 v50 h-10 Z' /%3E%3Cpath d='M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z' /%3E%3C/g%E3C/svg%3E">
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Icons -->
+    <title>Engineering GPA & CGPA Calculator | IB studioz</title>
+    <!-- Custom Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧮</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
     <style>
         :root {
-            --primary-glow: #FFD700; 
-            --secondary-glow: #00A2FF; 
-            --dark-bg: #0A0A0A;
-            --text-primary: #F0F0F0; 
-            --text-secondary: #A0A0A0; 
-            --card-bg: rgba(22, 22, 22, 0.8);
-            --border-color: rgba(255, 215, 0, 0.2); 
-            --shadow-color: rgba(0, 0, 0, 0.5);
-            --success: #10B981; 
-            --danger: #EF4444; 
-            --warning: #ffb347; 
-            --info: #3498db;
-            
-            /* Branch Colors */
-            --cse-color: #00A2FF; --it-color: #56D1A8; --ece-color: #A18CD1; --eee-color: #FFC371;
-            --mech-color: #9CA3AF; --aiml-color: #F782C2; --civil-color: #A56A55; --bme-color: #FF6B6B;
-            --ft-color: #D881B2; --mct-color: #48C9B0; --csd-color: #AF7AC5; --ads-color: #5DADE2;
-            --efe-color: #F4D03F; --exe-color: #48C9B0;
-            
-            /* Light mode colors */
-            --light-bg: #f8f9fa;
-            --light-text: #212529;
-            --light-card: #ffffff;
-            --light-border: #dee2e6;
+            --primary: #6a11cb; --secondary: #2575fc; --success: #00b09b; --danger: #ff416c;
+            --warning: #ffb347; --info: #3498db; --light: #f8f9fa; --dark: #100721;
+            --text-primary: #ffffff; --text-secondary: rgba(255, 255, 255, 0.8);
+            --card-bg: rgba(255, 255, 255, 0.08); --border-color: rgba(255, 255, 255, 0.15);
+            --shadow-color: rgba(0, 0, 0, 0.2);
+            --cse-color: #4ECDC4; --it-color: #45B7D1; --ece-color: #A18CD1; --eee-color: #FFA07A; --mech-color: #FF6B6B;
+            --civil-color: #A1D1A1; --bme-color: #FFB347; --ft-color: #FF85A2; --mct-color: #8A2BE2; --aiml-color: #00CED1;
+            --csd-color: #9370DB; --ads-color: #20B2AA; --efe-color: #6495ED; --exe-color: #4682B4;
         }
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        @keyframes background-pan { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes stagger-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
+
         body {
-            font-family: 'Inter', sans-serif; 
-            background-color: var(--dark-bg);
-            color: var(--text-primary); 
-            line-height: 1.6;
-            opacity: 0; 
-            animation: page-fade-in 0.4s ease-out forwards;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            font-family: "Poppins", sans-serif; background: linear-gradient(135deg, var(--dark), #1a1a2e);
+            color: var(--text-primary); min-height: 100vh; line-height: 1.6; background-attachment: fixed;
+        }
+        .aurora-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(ellipse at 10% 10%, var(--primary) 0%, rgba(106, 17, 203, 0) 40%), radial-gradient(ellipse at 90% 85%, var(--secondary) 0%, rgba(37, 117, 252, 0) 35%); animation: background-pan 30s linear infinite; opacity: 0.3; }
+        .container { max-width: 1400px; margin: 30px auto; background: rgba(16, 7, 33, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 30px; border-radius: 20px; box-shadow: 0 15px 35px var(--shadow-color); border: 1px solid var(--border-color); }
+        .header { text-align: center; margin-bottom: 20px; }
+        .logo { width: 60px; height: 60px; background: linear-gradient(45deg, var(--primary), var(--secondary)); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px var(--shadow-color); margin-bottom: 10px; }
+        .logo i { font-size: 1.8rem; color: white; }
+        
+        .animated-brand {
+            font-size: 1.5rem; font-weight: 600; letter-spacing: 2px; margin-bottom: 10px;
+            background: linear-gradient(120deg, var(--primary) 20%, var(--secondary) 40%, var(--light) 50%, var(--secondary) 60%, var(--primary) 80%);
+            background-size: 200% auto; color: transparent; -webkit-background-clip: text; background-clip: text;
+            animation: shimmer 4s linear infinite;
         }
         
-        body.light-mode {
-            background-color: var(--light-bg);
-            color: var(--light-text);
-        }
-        
-        body.light-mode .card-bg,
-        body.light-mode .modal,
-        body.light-mode .semester-modal,
-        body.light-mode .toast {
-            background-color: var(--light-card);
-            border-color: var(--light-border);
-            color: var(--light-text);
-        }
-        body.light-mode .modal-title,
-        body.light-mode .modal-content h4,
-        body.light-mode .semester-modal-title {
-            color: var(--light-text);
-        }
-        body.light-mode .modal-close,
-        body.light-mode .semester-modal-close {
-            color: var(--light-text);
-        }
-
-        body.light-mode select, body.light-mode input {
-            background-color: #f1f3f5;
-            color: var(--light-text);
-            border-color: var(--light-border);
-        }
-
-        body.light-mode .text-secondary { color: #6c757d; }
-        body.light-mode .aurora-layer { opacity: 0.05; }
-        @keyframes page-fade-in { to { opacity: 1; } }
-        
-        .background-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
-        .aurora-layer { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            background: radial-gradient(circle at 10% 20%, var(--primary-glow) 0%, transparent 25%), 
-                        radial-gradient(circle at 80% 30%, var(--secondary-glow) 0%, transparent 30%), 
-                        radial-gradient(circle at 50% 80%, var(--primary-glow) 0%, transparent 25%); 
-            animation: aurora-morph 40s linear infinite alternate; 
-            filter: blur(120px); opacity: 0.2; 
-        }
-        @keyframes aurora-morph { 0% { transform: rotate(0deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1.8); } }
-        .noise-layer { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; 
-            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>'); 
-            opacity: 0.015; 
-        }
-        
-        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-        
-        /* Dark mode toggle - Always at the Top Right */
-        .dark-mode-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            background: var(--card-bg);
-            border: 2px solid var(--border-color);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-        .dark-mode-toggle:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-            border-color: var(--primary-glow);
-        }
-        .dark-mode-toggle i { font-size: 1.2rem; color: var(--primary-glow); transition: all 0.3s ease; }
-        
-        /* Floating action button - Always at the Bottom Right */
-        .fab {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
-            color: var(--dark-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 999;
-            animation: float 3s ease-in-out infinite;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); }
-            50% { transform: translateY(-10px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 215, 0, 0.3); }
-        }
-        .fab:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 215, 0, 0.5); }
-        .fab:active { transform: translateY(-2px) scale(1.02); }
-        
-        .page-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; margin: 20px; background: rgba(16,16,16,0.6); backdrop-filter: blur(20px); border-radius: 15px; border: 1px solid var(--border-color); }
-        .brand-logo { display: flex; align-items: center; gap: 15px; text-decoration: none; }
-        .header-logo-svg { width: 45px; height: auto; }
-        .brand-title { position: relative; font-size: 1.5rem; font-weight: 700; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: rgb-text-flow 6s linear infinite; }
-        .brand-title::before { content: 'IB STUDIOZ'; position: absolute; top: 0; left: 0; z-index: -1; background: linear-gradient(90deg, #ff00ff, #00ffea, #ffdd00, #ff00ff); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; filter: blur(20px) opacity(0.9); transform: scale(1.1); animation: rgb-text-flow 6s linear infinite; }
-        @keyframes rgb-text-flow { to { background-position: 400% 0; } }
-        
-        .page-title-header { padding: 40px 0; margin-bottom: 40px; border-left: 4px solid; border-image: linear-gradient(to bottom, var(--primary-glow), var(--secondary-glow)) 1; padding-left: 30px; }
-        .page-title-header h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.2; margin-bottom: 10px; }
-        .page-title-header p { font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; }
+        h1 { font-size: 2.2rem; background: linear-gradient(90deg, #fff, #c9d6ff); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 3px 6px var(--shadow-color); }
         
         .summary-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .summary-card { background: var(--card-bg); border-radius: 15px; padding: 20px; text-align: center; border-left: 5px solid var(--info); transition: transform 0.3s ease, box-shadow 0.3s ease; position: relative; overflow: hidden; }
-        .summary-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(255,255,255,0.05), transparent); opacity: 0; transition: opacity 0.3s ease; }
-        .summary-card:hover::before { opacity: 1; }
-        .summary-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4); }
-        .summary-card .icon { font-size: clamp(1.5rem, 4vw, 1.8rem); margin-bottom: 10px; }
-        .summary-card .value { font-size: clamp(1.75rem, 5vw, 2rem); font-weight: 700; }
+        .summary-card { background: var(--card-bg); border-radius: 15px; padding: 20px; text-align: center; border-left: 5px solid var(--info); }
+        .summary-card .icon { font-size: 1.8rem; margin-bottom: 10px; }
+        .summary-card .value { font-size: 2rem; font-weight: 700; }
         .summary-card .label { font-size: 0.9rem; color: var(--text-secondary); }
-        #summary-cgpa { border-color: var(--success); }
-        #summary-cgpa .icon { color: var(--success); }
-        #summary-credits .icon { color: var(--info); }
-        #summary-arrears { border-color: var(--danger); }
-        #summary-arrears .icon { color: var(--danger); }
+        #summary-cgpa { border-color: var(--success); } #summary-arrears { border-color: var(--danger); }
         .mini-chart-container { min-height: 150px; position: relative; }
-        
-        .dashboard-layout { display: grid; grid-template-columns: minmax(300px, 350px) 1fr; gap: 30px; }
+
+        .dashboard-layout { display: grid; grid-template-columns: 350px 1fr; gap: 30px; }
         .left-panel { display: flex; flex-direction: column; gap: 20px; }
-        .form-group, .arrears-section { background: var(--card-bg); padding: 20px; border-radius: 15px; transition: all 0.3s ease; }
-        .form-group:hover, .arrears-section:hover { box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); }
-        .arrears-section { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); }
-        .arrears-section h3 { color: var(--danger); }
-        .arrears-list { list-style: none; padding-left: 0; }
-        .arrears-list li { background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 8px; margin-bottom: 5px; transition: all 0.2s ease; }
-        .arrears-list li:hover { background: rgba(255,255,255,0.1); transform: translateX(5px); }
         
+        .form-group { background: var(--card-bg); padding: 20px; border-radius: 15px; }
+        .arrears-section { background: rgba(255, 65, 108, 0.1); padding: 20px; border-radius: 15px; border: 1px solid var(--danger); }
+        .arrears-section h3 { font-size: 1.2rem; margin-bottom: 10px; color: var(--danger); }
+        .arrears-list { list-style: none; padding-left: 0; }
+        .arrears-list li { background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 8px; margin-bottom: 5px; font-size: 0.9rem; }
+
         .branch-selection { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .branch-card { cursor: pointer; border: 2px solid transparent; background: rgba(255,255,255,0.05); text-align: center; padding: 15px 10px; border-radius: 10px; transition: all 0.3s ease; position: relative; overflow: hidden; }
-        .branch-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.1); opacity: 0; transition: opacity 0.3s ease; }
-        .branch-card:hover::before { opacity: 1; }
-        .branch-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); }
-        .branch-card.selected { border-color: var(--secondary-glow); background: rgba(0, 162, 255, 0.2); }
+        .branch-card { cursor: pointer; border: 2px solid transparent; background: rgba(255,255,255,0.05); text-align: center; padding: 15px 10px; border-radius: 10px; transition: all 0.3s ease; }
+        .branch-card:hover { background: rgba(255,255,255,0.1); }
+        .branch-card.selected { border-color: var(--secondary); background: rgba(37, 117, 252, 0.2); }
         .branch-card i { font-size: 1.5rem; }
         .branch-card .branch-name { font-size: 0.85rem; margin-top: 8px; font-weight: 500; }
         
-        .subject-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
-        .subject-card { background: var(--card-bg); border-radius: 15px; padding: 15px; transition: all 0.3s ease; border-left: 4px solid var(--secondary-glow); position: relative; overflow: hidden; }
-        .subject-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(255,255,255,0.05), transparent); opacity: 0; transition: opacity 0.3s ease; }
-        .subject-card:hover::before { opacity: 1; }
-        .subject-card:hover { border-left-color: var(--primary-glow); background-color: rgba(30, 30, 30, 0.9); transform: translateX(5px); }
-        .subject-card-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-
+        .subject-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
+        .subject-card { background: var(--card-bg); border-radius: 15px; padding: 15px; transition: all 0.3s ease; animation: stagger-in 0.5s ease both; }
+        
         .empty-state { text-align: center; padding: 40px; background: var(--card-bg); border-radius: 15px; margin-top: 20px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .empty-state i { font-size: 3rem; color: var(--secondary-glow); margin-bottom: 15px; }
-        
-        #gpaResult { background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow)); border-radius: 15px; padding: 25px; text-align: center; color: var(--dark-bg); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); transition: all 0.3s ease; }
-        #gpaResult:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4); }
-        
-        select, input { width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid var(--border-color); font-size: 1rem; background: rgba(0,0,0,0.3); color: var(--text-primary); transition: all 0.3s ease; margin-top: 10px; appearance: none; -webkit-appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23cccccc%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 15px center; background-size: .8em; cursor: pointer; }
-        select:focus, input:focus { outline: none; box-shadow: 0 0 0 3px var(--secondary-glow); border-color: var(--secondary-glow); }
-        
-        .btn { padding: 12px 24px; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; text-decoration: none; border: none; transition: all 0.3s ease; position: relative; overflow: hidden; }
-        .btn::before { content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); transition: left 0.5s; }
-        .btn:hover::before { left: 100%; }
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-danger:hover { transform: translateY(-3px); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
-        .btn-primary { background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow)); color: var(--dark-bg); }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0, 162, 255, 0.4); }
-        .btn-secondary { background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color);}
-        .btn-secondary:hover { background: rgba(255,255,255,0.1); }
-        
-        .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-secondary); }
-        .footer a { color: var(--primary-glow); text-decoration: none; }
-        
-        /* GPA Trend Chart */
-        .gpa-trend-container { background: var(--card-bg); border-radius: 15px; padding: 20px; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); }
-        .gpa-trend-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; color: var(--text-primary); }
-        .gpa-trend-chart { height: 200px; position: relative; }
-        
-        .export-container { display: flex; justify-content: flex-end; margin-bottom: 20px; }
-        
-        /* Toast notification */
-        #toast-container { position: fixed; top: 80px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 10px;}
-        .toast { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); display: flex; align-items: center; gap: 10px; transform: translateX(120%); transition: transform 0.4s ease-in-out; max-width: 350px; }
-        .toast.show { transform: translateX(0); }
-        .toast.success { border-left: 4px solid var(--success); }
-        .toast.error { border-left: 4px solid var(--danger); }
-        .toast.info { border-left: 4px solid var(--info); }
-        .toast i { font-size: 1.2rem; }
-        .toast.success i { color: var(--success); }
-        .toast.error i { color: var(--danger); }
-        .toast.info i { color: var(--info); }
-        
-        /* Modals */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal, .semester-modal { background: var(--card-bg); backdrop-filter: blur(20px); border-radius: 15px; border: 1px solid var(--border-color); width: 90%; max-width: 500px; padding: 30px; box-shadow: 0 8px 32px 0 var(--shadow-color); transform: scale(0.95); transition: transform 0.3s ease; max-height: 85vh; overflow-y: auto; }
-        .modal-overlay.active .modal, .modal-overlay.active .semester-modal { transform: scale(1); }
-        .modal-header, .semester-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .modal-title, .semester-modal-title { font-size: 1.5rem; font-weight: 600; }
-        .modal-close, .semester-modal-close { background: none; border: none; color: var(--text-primary); font-size: 1.5rem; cursor: pointer; transition: transform 0.3s ease; }
-        .modal-close:hover, .semester-modal-close:hover { transform: rotate(90deg); }
-        .modal-content { margin-bottom: 20px; }
-        .modal-content h4 { margin-bottom: 10px; color: var(--text-primary); }
-        .modal-content p, .modal-content li { margin-bottom: 10px; color: var(--text-secondary); }
-        .modal-content ul { margin-left: 20px; margin-bottom: 15px; }
-        .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+        .empty-state i { font-size: 3rem; color: var(--secondary); margin-bottom: 15px; }
 
-        .semester-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .semester-card { background: rgba(255, 255, 255, 0.05); border: 2px solid transparent; border-radius: 10px; padding: 15px; text-align: center; cursor: pointer; transition: all 0.3s ease; }
-        .semester-card:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-3px); border-color: var(--secondary-glow); }
-        .semester-card i { font-size: 1.5rem; color: var(--secondary-glow); margin-bottom: 8px; }
-        .semester-card .semester-name { font-weight: 500; }
+        #gpaResult { background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 15px; padding: 25px; text-align: center; }
         
-        /* Responsive Design */
-        @media (max-width: 1024px) { 
-            .dashboard-layout { 
-                grid-template-columns: 1fr; 
-            } 
+        select, input { width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid transparent; font-size: 16px; background: rgba(255, 255, 255, 0.9); color: #2c3e50; transition: all 0.3s ease; }
+        select:focus, input:focus { outline: none; box-shadow: 0 0 0 3px var(--secondary); }
+        
+        button.reset-btn {
+            background: linear-gradient(45deg, var(--danger), var(--warning));
+            padding: 10px 20px; font-size: 0.9rem; border: none; cursor: pointer; transition: all 0.3s ease;
+        }
+        button.reset-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); }
+
+        .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-secondary); }
+        .footer p { margin: 5px 0; }
+        .footer .brand-main { font-weight: 600; color: var(--text-primary); }
+        
+        /* Theme Toggle Styles */
+        #themeToggle {
+            position: fixed; 
+            top: 20px; 
+            right: 20px; 
+            background: rgba(255,255,255,0.1); 
+            border-radius: 50%; 
+            width: 50px; 
+            height: 50px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            z-index: 100;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        #themeToggle:hover {
+            transform: scale(1.1);
+            background: rgba(255,255,255,0.2);
         }
         
-        @media (max-width: 768px) { 
-            .container {
-                padding: 15px;
-            }
-            .summary-dashboard { 
-                grid-template-columns: 1fr 1fr; 
-            } 
-            .page-header { 
-                flex-direction: column; 
-                gap: 20px; 
-                margin: 10px;
-                padding: 20px;
-            }
-            .dark-mode-toggle {
-                top: 10px;
-                right: 10px;
-                width: 45px;
-                height: 45px;
-            }
-            .fab {
-                bottom: 20px;
-                right: 20px;
+        /* Help Button Styles */
+        .floating-help-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            font-size: 1.5rem;
+        }
+        .floating-help-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
+        /* Help Modal Styles */
+        .help-modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+        .help-modal-content {
+            background-color: var(--card-bg);
+            margin: 5% auto;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease;
+        }
+        .help-close {
+            color: var(--text-secondary);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .help-close:hover {
+            color: var(--danger);
+        }
+        .help-content h3 {
+            color: var(--secondary);
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+        .help-content ol, .help-content ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        .help-content li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        
+        /* --- Responsive Design --- */
+        @media (max-width: 1024px) {
+            .dashboard-layout { grid-template-columns: 1fr; }
+            .container { padding: 20px; margin: 20px; }
+            h1 { font-size: 2rem; }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 15px; margin: 15px; }
+            h1 { font-size: 1.8rem; }
+            .animated-brand { font-size: 1.2rem; }
+            .logo { width: 50px; height: 50px; }
+            .logo i { font-size: 1.5rem; }
+            .summary-dashboard { grid-template-columns: 1fr 1fr; }
+            .summary-card .value { font-size: 1.8rem; }
+            .subject-card { padding: 12px; }
+            .subject-grid { grid-template-columns: 1fr; } /* Stack subject cards */
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 1.6rem; }
+            .summary-dashboard { grid-template-columns: 1fr; } /* Single column for summary on very small screens */
+            .branch-selection { grid-template-columns: 1fr; } /* Single column for branches */
+            .summary-card { padding: 15px; }
+            .summary-card .value { font-size: 1.6rem; }
+            .form-group { padding: 15px; }
+            #gpaResult { padding: 20px; }
+            .floating-help-btn {
                 width: 50px;
                 height: 50px;
                 font-size: 1.2rem;
-            }
-            .branch-selection {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-        
-        @media (max-width: 480px) { 
-            .summary-dashboard { 
-                grid-template-columns: 1fr; 
-            } 
-            .page-title-header {
-                padding-left: 20px;
-            }
-            .branch-selection { 
-                grid-template-columns: 1fr; 
-            }
-            .export-container {
-                justify-content: center;
-                margin-bottom: 0;
-            }
-            .semester-grid {
-                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
 </head>
 <body>
-    <div class="background-container">
-        <div class="aurora-layer"></div>
-        <div class="noise-layer"></div>
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1001; backdrop-filter: blur(5px);">
+        <div style="width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: var(--secondary); animation: spin 1s ease-in-out infinite;"></div>
     </div>
     
-    <header class="page-header">
-        <a href="#" class="brand-logo">
-            <svg class="header-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <path fill="var(--primary-glow)" d="M50,2 A48,48 0 1,0 50,98 A48,48 0 1,0 50,2 Z" />
-                <g fill="var(--dark-bg)">
-                    <path d="M28,25 h10 v50 h-10 Z" />
-                    <path d="M45,25 H60 A12.5,12.5 0 0,1 60,50 H45 Z M45,50 H63 A12.5,12.5 0 0,1 63,75 H45 Z" />
-                </g>
-            </svg>
-            <h1 class="brand-title">IB STUDIOZ</h1>
-        </a>
-        <div class="export-container">
-            <button class="btn btn-primary" id="export-btn">
-                <i class="fas fa-download"></i> Export Results
-            </button>
-        </div>
-    </header>
+    <!-- Aurora Background -->
+    <div class="aurora-background"></div>
     
-    <main class="container">
-        <div class="page-title-header">
-            <h1>CGPA Calculator</h1>
-            <p>Select your branch and semester to calculate your grades and track overall performance.</p>
-        </div>
-        
-        <div class="gpa-trend-container">
-            <h3 class="gpa-trend-title">GPA Trend</h3>
-            <div class="gpa-trend-chart">
-                <canvas id="gpaTrendChart"></canvas>
+    <!-- Theme Toggle -->
+    <div id="themeToggle" title="Toggle Dark Mode">
+        <i class="fas fa-moon"></i>
+    </div>
+    
+    <!-- Help Button -->
+    <div id="helpButton" class="floating-help-btn" title="Help & Support">
+        <i class="fas fa-question"></i>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="helpModal" class="help-modal">
+        <div class="help-modal-content">
+            <span class="help-close">&times;</span>
+            <h2><i class="fas fa-info-circle"></i> Help & Support</h2>
+            <div class="help-content">
+                <h3>How to Use This Calculator</h3>
+                <ol>
+                    <li>Select your engineering branch from the options</li>
+                    <li>Choose your current semester</li>
+                    <li>Enter grades for all your subjects</li>
+                    <li>Your GPA will be calculated automatically</li>
+                    <li>CGPA will update as you add more semesters</li>
+                </ol>
+                
+                <h3>Grading Scale</h3>
+                <ul>
+                    <li>O (Outstanding) = 10 points</li>
+                    <li>A+ (Excellent) = 9 points</li>
+                    <li>A (Very Good) = 8 points</li>
+                    <li>B+ (Good) = 7 points</li>
+                    <li>B (Average) = 6 points</li>
+                    <li>C (Pass) = 5 points</li>
+                    <li>U (Fail) = 0 points</li>
+                </ul>
+                
+                <h3>Need More Help?</h3>
+                <p>Contact us at: <strong>support@ibstudioz.com</strong></p>
             </div>
         </div>
-        
+    </div>
+
+    <div class="container">
+        <header class="header">
+            <div class="logo"><i class="fas fa-calculator"></i></div>
+            <p class="animated-brand">IB studioz</p>
+            <h1>GPA & CGPA Calculator</h1>
+        </header>
+
         <section class="summary-dashboard">
             <div class="summary-card" id="summary-cgpa">
                 <div class="icon"><i class="fas fa-chart-line"></i></div>
@@ -395,12 +307,16 @@
                 </div>
             </div>
         </section>
-        
-        <div class="dashboard-layout">
+
+        <main class="dashboard-layout">
             <aside class="left-panel">
                 <div class="form-group">
-                    <label for="branchSelection"><i class="fas fa-university"></i> Select Branch</label>
+                    <label for="branchSelection"><i class="fas fa-university"></i> Branch</label>
                     <div class="branch-selection" id="branchSelection"></div>
+                </div>
+                <div class="form-group" id="semesterGroup" style="display: none;">
+                    <label for="semester"><i class="fas fa-graduation-cap"></i> Semester</label>
+                    <select id="semester"></select>
                 </div>
                 <div id="arrearsSection" class="arrears-section" style="display: none;">
                     <h3><i class="fas fa-flag"></i> Arrear Subjects</h3>
@@ -416,84 +332,23 @@
                 </div>
                 <div id="gpaResult" style="display: none; margin-top: 20px;"></div>
             </section>
-        </div>
+        </main>
         
         <footer class="footer">
-            <button class="btn btn-danger" onclick="resetCalculator()"><i class="fas fa-redo"></i> Reset All Data</button>
-            <p style="margin-top: 15px;">Powered by <a href="#">IB STUDIOZ</a></p>
+            <p><span class="brand-main">IB studioz</span></p>
+            <p>Powered by IB COMPANY</p>
+            <button class="reset-btn" onclick="resetCalculator()" style="margin-top: 15px;"><i class="fas fa-redo"></i> Reset Calculator</button>
         </footer>
-    </main>
-
-    <!-- UI Buttons -->
-    <div class="dark-mode-toggle" id="dark-mode-toggle" title="Toggle theme">
-        <i class="fas fa-sun"></i>
     </div>
-    <div class="fab" id="help-btn" title="Help">
-        <i class="fas fa-question"></i>
-    </div>
-    
-    <!-- Modals -->
-    <div class="modal-overlay" id="help-modal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 class="modal-title">CGPA Calculator Help</h3>
-                <button class="modal-close" id="modal-close">&times;</button>
-            </div>
-            <div class="modal-content">
-                <h4>How to Use</h4>
-                <ol>
-                    <li>Select your academic branch from the options provided.</li>
-                    <li>Choose the semester you want to calculate GPA for.</li>
-                    <li>Enter your grades for each subject in that semester.</li>
-                    <li>Your GPA for that semester will be automatically calculated.</li>
-                    <li>Repeat for all semesters to see your overall CGPA.</li>
-                </ol>
-                <h4>Grade Points</h4>
-                <ul>
-                    <li>O (Outstanding) - 10, A+ (Excellent) - 9, A (Very Good) - 8</li>
-                    <li>B+ (Good) - 7, B (Average) - 6, C (Below Average) - 5, U (Fail) - 0</li>
-                </ul>
-                <h4>Tips</h4>
-                <ul>
-                    <li>Your data is automatically saved in your browser.</li>
-                    <li>Use the Export button to download your results as a text file.</li>
-                    <li>Toggle between light and dark mode using the button in the top right.</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    
-    <div class="semester-modal-overlay modal-overlay" id="semester-modal">
-        <div class="semester-modal">
-            <div class="semester-modal-header">
-                <h3 class="semester-modal-title">Select Semester</h3>
-                <button class="semester-modal-close" id="semester-modal-close">&times;</button>
-            </div>
-            <div class="semester-grid" id="semester-grid"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="confirm-modal">
-        <div class="modal">
-            <div class="modal-header"> <h3 class="modal-title" id="confirm-title">Are you sure?</h3> </div>
-            <div class="modal-content"> <p id="confirm-text">This action cannot be undone.</p> </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" id="confirm-cancel">Cancel</button>
-                <button class="btn btn-danger" id="confirm-ok">Confirm</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="toast-container"></div>
     
     <script>
     const academicData = {
-        branches: {"CSE":{"name":"Computer Science","color":"var(--cse-color)","icon":"fas fa-laptop-code","semesters":{"1":[{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus With MATLAB","credits":4},{"code":"U23PHY103B","name":"Engineering Physics","credits":3},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23BEE106A","name":"Basic Electrical and Electronics Engineering","credits":3},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1},{"code":"U23PHL110","name":"Engineering Physics Lab","credits":1},{"code":"U23BEEL113","name":"Basic Electrical and Electronics Engineering Lab","credits":1},{"code":"U23PPL112","name":"Python Programming Lab","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202B","name":"Discrete Mathematics","credits":4},{"code":"U23CHE204B","name":"Chemistry For Computer Science","credits":3},{"code":"U23CPR205B","name":"Programming In C","credits":3},{"code":"U23EGR207","name":"Engineering Graphics","credits":3},{"code":"U23EC203","name":"Digital Principles And System Design","credits":3},{"code":"U23CHL211","name":"Chemistry Lab","credits":1},{"code":"U23CPL212","name":"C programming Lab","credits":1},{"code":"U23TAM201","name":"Tamils And Technology","credits":1}],"3":[{"code":"U23MAT301D","name":"Probability and Statistics","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming","credits":3},{"code":"U23CS304","name":"Operating Systems","credits":3},{"code":"U23CS305","name":"Computer Information and Ethics","credits":3},{"code":"U23CS306","name":"Data Structures Lab","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Lab","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1},{"code":"Noc24-mg72","name":"NPTEL:design Thinking-A Primer","credits":1}],"4":[{"code":"U23MAT401B","name":"Numerical Methods","credits":4},{"code":"U23CS401","name":"Design And Analysis of Algorithms","credits":3},{"code":"U23CS402","name":"Software Engineering","credits":3},{"code":"U23CS403","name":"DataBase Management Systems","credits":3},{"code":"U23CS404","name":"Embedded System Design ","credits":3},{"code":"U23CS405","name":"Software Development Lab","credits":1},{"code":"U23CS403","name":"Database Management Systems Lab","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CS502","name":"Artificial Intelligence","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":" U23CS947 / U23CS903","name":"Professional Elective ","credits":3},{"code":"U23CS505","name":"Computer Networks Laboratory","credits":2},{"code":"U23CS506","name":"Artificial Intelligence and Machine Learning Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude-III","credits":1}],"6":[],"7":[],"8":[]}},
+        branches: {"CSE":{"name":"Computer Science","color":"var(--cse-color)","icon":"fas fa-laptop-code","semesters":{"1":[{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus With MATLAB","credits":4},{"code":"U23PHY103B","name":"Engineering Physics","credits":3},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23BEE106A","name":"Basic Electrical and Electronics Engineering","credits":3},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1},{"code":"U23PHL110","name":"Engineering Physics Lab","credits":1},{"code":"U23BEEL113","name":"Basic Electrical and Electronics Engineering Lab","credits":1},{"code":"U23PPL112","name":"Python Programming Lab","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202B","name":"Discrete Mathematics","credits":4},{"code":"U23CHE204B","name":"Chemistry For Computer Science","credits":3},{"code":"U23CPR205B","name":"Programming In C","credits":3},{"code":"U23EGR207","name":"Engineering Graphics","credits":3},{"code":"U23EC203","name":"Digital Principles And System Design","credits":3},{"code":"U23CHL211","name":"Chemistry Lab","credits":1},{"code":"U23CPL212","name":"C programming Lab","credits":1},{"code":"U23TAM201","name":"Tamils And Technology","credits":1}],"3":[{"code":"U23MAT301D","name":"Probability and Statistics","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming","credits":3},{"code":"U23CS304","name":"Operating Systems","credits":3},{"code":"U23CS305","name":"Computer Information and Ethics","credits":3},{"code":"U23CS306","name":"Data Structures Lab","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Lab","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1},{"code":"Noc24-mg72","name":"NPTEL:design Thinking-A Primer","credits":1}],"4":[{"code":"U23MAT401B","name":"Numerical Methods","credits":4},{"code":"U23CS401","name":"Design And Analysis of Algorithms","credits":3},{"code":"U23CS402","name":"Software Engineering","credits":3},{"code":"U23CS403","name":"DataBase Management Systems","credits":3},{"code":"U23CS404","name":"Embedded System Design ","credits":3},{"code":"U23CS405","name":"Software Development Lab","credits":1},{"code":"U23CS403","name":"Database Management Systems Lab","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CS502","name":"Artificial Intelligence","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":" U23CS947 / U23CS903","name":"Professional Elective ","credits":3},{"code":"U23CS505","name":"Computer Networks Laboratory","credits":2},{"code":"U23CS506","name":"Artificial Intelligence and Machine Learning Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude -III","credits":1}],"6":[],"7":[],"8":[]}},
             "IT":{"name":"Info. Technology","color":"var(--it-color)","icon":"fas fa-network-wired","semesters":{"1":[{"code":"U23IT101","name":"Programming Fundamentals","credits":4},{"code":"U23IT102","name":"Discrete Mathematics","credits":4},{"code":"U23IT103","name":"Digital Systems","credits":3},{"code":"U23IT104","name":"Computer Organization","credits":3},{"code":"U23IT105","name":"Communication Skills","credits":2},{"code":"U23IT106","name":"Programming Lab","credits":1},{"code":"U23IT107","name":"Digital Systems Lab","credits":1}],"2":[{"code":"U23IT201","name":"Data Structures","credits":4},{"code":"U23IT202","name":"Database Systems","credits":4},{"code":"U23IT203","name":"Operating Systems","credits":3},{"code":"U23IT204","name":"Computer Networks","credits":3},{"code":"U23IT205","name":"Web Technologies","credits":3},{"code":"U23IT206","name":"Data Structures Lab","credits":1},{"code":"U23IT207","name":"Web Technologies Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
             "ECE":{"name":"Electronics & Comm","color":"var(--ece-color)","icon":"fas fa-satellite-dish","semesters":{"1":[{"code":"U23EC101","name":"Basic Electronics","credits":4},{"code":"U23EC102","name":"Circuit Theory","credits":4},{"code":"U23EC103","name":"Engineering Mathematics","credits":4},{"code":"U23EC104","name":"Programming in C","credits":3},{"code":"U23EC105","name":"Communication Skills","credits":2},{"code":"U23EC106","name":"Electronics Lab","credits":1},{"code":"U23EC107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EC201","name":"Analog Electronics","credits":4},{"code":"U23EC202","name":"Digital Electronics","credits":4},{"code":"U23EC203","name":"Signals and Systems","credits":4},{"code":"U23EC204","name":"Electromagnetic Theory","credits":3},{"code":"U23EC205","name":"Data Structures","credits":3},{"code":"U23EC206","name":"Analog Electronics Lab","credits":1},{"code":"U23EC207","name":"Digital Electronics Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
             "EEE":{"name":"Electrical & Electronics","color":"var(--eee-color)","icon":"fas fa-bolt","semesters":{"1":[{"code":"U23EE101","name":"Basic Electrical Engineering","credits":4},{"code":"U23EE102","name":"Engineering Mathematics","credits":4},{"code":"U23EE103","name":"Electronics Engineering","credits":3},{"code":"U23EE104","name":"Programming in C","credits":3},{"code":"U23EE105","name":"Communication Skills","credits":2},{"code":"U23EE106","name":"Electrical Lab","credits":1},{"code":"U23EE107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EE201","name":"Circuit Theory","credits":4},{"code":"U23EE202","name":"Electromagnetic Theory","credits":4},{"code":"U23EE203","name":"Digital Electronics","credits":4},{"code":"U23EE204","name":"Electrical Machines","credits":3},{"code":"U23EE205","name":"Data Structures","credits":3},{"code":"U23EE206","name":"Circuit Theory Lab","credits":1},{"code":"U23EE207","name":"Digital Electronics Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
             "MECH":{"name":"Mechanical","color":"var(--mech-color)","icon":"fas fa-cogs","semesters":{"1":[{"code":"U23ME101","name":"Engineering Mechanics","credits":4},{"code":"U23ME102","name":"Engineering Graphics","credits":4},{"code":"U23ME103","name":"Engineering Mathematics","credits":4},{"code":"U23ME104","name":"Basic Electrical Engineering","credits":3},{"code":"U23ME105","name":"Communication Skills","credits":2},{"code":"U23ME106","name":"Workshop Practice","credits":1},{"code":"U23ME107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23ME201","name":"Thermodynamics","credits":4},{"code":"U23ME202","name":"Mechanics of Materials","credits":4},{"code":"U23ME203","name":"Manufacturing Technology","credits":4},{"code":"U23ME204","name":"Fluid Mechanics","credits":3},{"code":"U23ME205","name":"Computer Programming","credits":3},{"code":"U23ME206","name":"Thermodynamics Lab","credits":1},{"code":"U23ME207","name":"Manufacturing Technology Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
-            "AIML":{"name":"AI & Machine Learning","color":"var(--aiml-color)","icon":"fas fa-brain","semesters":{"1":[{"code":"U23EG107","name":"Engineering Graphics","credits":3},{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus with MATLAB","credits":4},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23PHY103E","name":"Engineering Physics","credits":3},{"code":"U23PHL110","name":"Engineering Physics Laboratory","credits":1},{"code":"U23PPL112","name":"Python Programming Laboratory","credits":1},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202D","name":"Discrete Mathematics","credits":4},{"code":"U23BEEE206B","name":"Basics of Electrical and Electronics Engineering","credits":3},{"code":"U23CPR205","name":"Programming in C","credits":3},{"code":"U23CHE204C","name":"Applied Chemistry","credits":2},{"code":"U23EC203","name":"Digital Principles and System Design","credits":3},{"code":"U23CPL212","name":"C Programming Laboratory","credits":1},{"code":"U23CHL211","name":"Chemistry Laboratory","credits":1},{"code":"U23BEEL213B","name":"BEEE Laboratory","credits":1},{"code":"U23TAM201","name":"Tamils and Technology","credits":1}],"3":[{"code":"U23MAT301E","name":"Applied Probability and Statistics-I","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming Using Java","credits":3},{"code":"U23AML301","name":"Data Visualization","credits":3},{"code":"noc25-mg106","name":"NPTEL: Design Thinking - A Primer","credits":1},{"code":"U23CS306","name":"Data Structures Laboratory","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Using Java Laboratory","credits":1},{"code":"U23AML302","name":"Data Visualization Laboratory","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1}],"4":[{"code":"U23MAT401A","name":"Applied Probability and Statistics-II","credits":4},{"code":"U23CS403","name":"Database Management Systems","credits":3},{"code":"U23CS401","name":"Design and Analysis of Algorithms","credits":3},{"code":"U23AML401","name":"Artificial Intelligence","credits":3},{"code":"U23CSD402","name":"Operating Systems","credits":3},{"code":"U23AML402","name":"Artificial Intelligence Lab","credits":1},{"code":"U23CS405","name":"Database Management Systems Lab","credits":1},{"code":"U23GE401","name":"Soft Skills and Aptitude-II","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CSD502","name":"Software Engineering","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":"U19CS903","name":"Professional Elective - Agile Methodologies","credits":3},{"code":"U23AML501","name":"Machine Learning Laboratory","credits":2},{"code":"U23CSD504","name":"Software Development Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude -III","credits":1}],"6":[],"7":[],"8":[]}},
+            "AIML":{"name":"AI & Machine Learning","color":"var(--aiml-color)","icon":"fas fa-brain","semesters":{"1":[{"code":"U23EG107","name":"Engineering Graphics","credits":3},{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus with MATLAB","credits":4},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23PHY103E","name":"Engineering Physics","credits":3},{"code":"U23PHL110","name":"Engineering Physics Laboratory","credits":1},{"code":"U23PPL112","name":"Python Programming Laboratory","credits":1},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202D","name":"Discrete Mathematics","credits":4},{"code":"U23BEEE206B","name":"Basics of Electrical and Electronics Engineering","credits":3},{"code":"U23CPR205","name":"Programming in C","credits":3},{"code":"U23CHE204C","name":"Applied Chemistry","credits":2},{"code":"U23EC203","name":"Digital Principles and System Design","credits":3},{"code":"U23CPL212","name":"C Programming Laboratory","credits":1},{"code":"U23CHL211","name":"Chemistry Laboratory","credits":1},{"code":"U23BEEL213B","name":"BEEE Laboratory","credits":1},{"code":"U23TAM201","name":"Tamils And Technology","credits":1}],"3":[{"code":"U23MAT301E","name":"Applied Probability and Statistics-I","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming Using Java","credits":3},{"code":"U23AML301","name":"Data Visualization","credits":3},{"code":"noc25-mg106","name":"NPTEL: Design Thinking - A Primer","credits":1},{"code":"U23CS306","name":"Data Structures Laboratory","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Using Java Laboratory","credits":1},{"code":"U23AML302","name":"Data Visualization Laboratory","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1}],"4":[{"code":"U23MAT401A","name":"Applied Probability and Statistics-II","credits":4},{"code":"U23CS403","name":"Database Management Systems","credits":3},{"code":"U23CS401","name":"Design and Analysis of Algorithms","credits":3},{"code":"U23AML401","name":"Artificial Intelligence","credits":3},{"code":"U23CSD402","name":"Operating Systems","credits":3},{"code":"U23AML402","name":"Artificial Intelligence Lab","credits":1},{"code":"U23CS405","name":"Database Management Systems Lab","credits":1},{"code":"U23GE401","name":"Soft Skills and Aptitude-II","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CSD502","name":"Software Engineering","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":"U19CS903","name":"Professional Elective - Agile Methodologies","credits":3},{"code":"U23AML501","name":"Machine Learning Laboratory","credits":2},{"code":"U23CSD504","name":"Software Development Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude -III","credits":1}],"6":[{"code":"U23CS601","name":"Computer Vision","credits":3},{"code":"U23CS602","name":"Reinforcement Learning","credits":3},{"code":"U23CS603","name":"Robotics","credits":3},{"code":"U23CS604","name":"Cyber Security","credits":3},{"code":"U23CS605","name":"Blockchain Technology","credits":3},{"code":"U23CS606","name":"Elective III","credits":3},{"code":"U23CS607","name":"Project Work II","credits":3}],"7":[{"code":"U23CS701","name":"Advanced Machine Learning","credits":3},{"code":"U23CS702","name":"AI Ethics and Governance","credits":3},{"code":"U23CS703","name":"Elective IV","credits":3},{"code":"U23CS704","name":"Project Work III","credits":3}],"8":[{"code":"U23CS801","name":"Industry Internship","credits":6},{"code":"U23CS802","name":"Project Work IV","credits":6}]}},
             "CIVIL":{"name":"Civil Engineering","color":"var(--civil-color)","icon":"fas fa-building","semesters":{"1":[{"code":"U23CE101","name":"Engineering Mechanics","credits":4},{"code":"U23CE102","name":"Engineering Graphics","credits":4},{"code":"U23CE103","name":"Engineering Mathematics","credits":4},{"code":"U23CE104","name":"Basic Civil Engineering","credits":3},{"code":"U23CE105","name":"Communication Skills","credits":2},{"code":"U23CE106","name":"Surveying","credits":1},{"code":"U23CE107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23CE201","name":"Building Materials","credits":4},{"code":"U23CE202","name":"Structural Analysis","credits":4},{"code":"U23CE203","name":"Fluid Mechanics","credits":4},{"code":"U23CE204","name":"Surveying","credits":3},{"code":"U23CE205","name":"Computer Programming","credits":3},{"code":"U23CE206","name":"Building Materials Lab","credits":1},{"code":"U23CE207","name":"Surveying Lab","credits":1}]}},
             "BME":{"name":"Bio Medical","color":"var(--bme-color)","icon":"fas fa-heartbeat","semesters":{"1":[{"code":"U23BM101","name":"Human Anatomy","credits":4},{"code":"U23BM102","name":"Engineering Mathematics","credits":4},{"code":"U23BM103","name":"Basic Electronics","credits":3},{"code":"U23BM104","name":"Programming in C","credits":3},{"code":"U23BM105","name":"Communication Skills","credits":2},{"code":"U23BM106","name":"Human Anatomy Lab","credits":1},{"code":"U23BM107","name":"Programming Lab","credits":1}],"2":[{"code":"U23BM201","name":"Human Physiology","credits":4},{"code":"U23BM202","name":"Biochemistry","credits":4},{"code":"U23BM203","name":"Medical Electronics","credits":4},{"code":"U23BM204","name":"Biomechanics","credits":3},{"code":"U23BM205","name":"Data Structures","credits":3},{"code":"U23BM206","name":"Human Physiology Lab","credits":1},{"code":"U23BM207","name":"Medical Electronics Lab","credits":1}]}},
             "FT":{"name":"Fashion Technology","color":"var(--ft-color)","icon":"fas fa-tshirt","semesters":{"1":[{"code":"U23FT101","name":"Fiber Science","credits":4},{"code":"U23FT102","name":"Textile Chemistry","credits":4},{"code":"U23FT103","name":"Fashion Illustration","credits":3},{"code":"U23FT104","name":"Pattern Making","credits":3},{"code":"U23FT105","name":"Communication Skills","credits":2},{"code":"U23FT106","name":"Textile Chemistry Lab","credits":1},{"code":"U23FT107","name":"Pattern Making Lab","credits":1}],"2":[{"code":"U23FT201","name":"Textile Processing","credits":4},{"code":"U23FT202","name":"Apparel Manufacturing","credits":4},{"code":"U23FT203","name":"Fashion Design","credits":4},{"code":"U23FT204","name":"Garment Construction","credits":3},{"code":"U23FT205","name":"Computer Applications","credits":3},{"code":"U23FT206","name":"Apparel Manufacturing Lab","credits":1},{"code":"U23FT207","name":"Garment Construction Lab","credits":1}]}},
@@ -503,80 +358,73 @@
             "EFE":{"name":"Electrical & Computer","color":"var(--efe-color)","icon":"fas fa-microchip","semesters":{"1":[{"code":"U23EF101","name":"Circuit Theory","credits":4},{"code":"U23EF102","name":"Programming Fundamentals","credits":4},{"code":"U23EF103","name":"Digital Electronics","credits":3},{"code":"U23EF104","name":"Engineering Mathematics","credits":3},{"code":"U23EF105","name":"Communication Skills","credits":2},{"code":"U23EF106","name":"Circuit Theory Lab","credits":1},{"code":"U23EF107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EF201","name":"Signals and Systems","credits":4},{"code":"U23EF202","name":"Data Structures","credits":4},{"code":"U23EF203","name":"Analog Electronics","credits":4},{"code":"U23EF204","name":"Electromagnetic Theory","credits":3},{"code":"U23EF205","name":"Computer Organization","credits":3},{"code":"U23EF206","name":"Analog Electronics Lab","credits":1},{"code":"U23EF207","name":"Data Structures Lab","credits":1}]}},
             "EXE":{"name":"Electronics & Computer","color":"var(--exe-color)","icon":"fas fa-desktop","semesters":{"1":[{"code":"U23EX101","name":"Basic Electronics","credits":4},{"code":"U23EX102","name":"Programming Fundamentals","credits":4},{"code":"U23EX103","name":"Digital Logic Design","credits":3},{"code":"U23EX104","name":"Engineering Mathematics","credits":3},{"code":"U23EX105","name":"Communication Skills","credits":2},{"code":"U23EX106","name":"Electronics Lab","credits":1},{"code":"U23EX107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EX201","name":"Data Structures","credits":4},{"code":"U23EX202","name":"Analog Electronics","credits":4},{"code":"U23EX203","name":"Computer Organization","credits":4},{"code":"U23EX204","name":"Signals and Systems","credits":3},{"code":"U23EX205","name":"Database Systems","credits":3},{"code":"U23EX206","name":"Analog Electronics Lab","credits":1},{"code":"U23EX207","name":"Data Structures Lab","credits":1}]}}}
     };
-    
+
     const gradePoints = { "O": 10, "A+": 9, "A": 8, "B+": 7, "B": 6, "C": 5, "U": 0 };
-    let currentBranch = "", currentSemester = "", currentGrades = {}, gpaPerSem = {}, gradeDistSummaryChart, gpaTrendChart;
-    
+    let currentBranch = "", currentGrades = {}, gpaPerSem = {}, gradeDistSummaryChart;
     const debounce = (func, delay) => { let timeout; return (...args) => { clearTimeout(timeout); timeout = setTimeout(() => func.apply(this, args), delay); }; };
     const debouncedFullUpdate = debounce(() => updateAllDisplays(), 400);
-    
+
     document.addEventListener('DOMContentLoaded', () => {
+        const semesterSelect = document.getElementById('semester');
         const subjectForm = document.getElementById('subjectForm');
-        
-        // Initialize charts first to avoid errors
-        initCharts();
-        // Now load saved data and update the UI
+
         loadState();
         loadBranches();
-        setupEventListeners();
-        
+        initCharts();
+
         if (currentBranch && academicData.branches[currentBranch]) {
-            selectBranch(currentBranch, true); // Restore state without showing modal
-            if (currentSemester) {
-                loadSubjects(currentSemester);
-            }
+            selectBranch(currentBranch, true);
+            const lastSem = localStorage.getItem("lastSemester");
+            if (lastSem) { semesterSelect.value = lastSem; loadSubjects(); }
         } else {
             subjectForm.innerHTML = `<div class="empty-state"><i class="fas fa-hand-pointer"></i><p>Please select your branch to get started.</p></div>`;
         }
         
-        subjectForm.addEventListener('change', (e) => {
-            if (e.target.tagName === 'SELECT' && e.target.classList.contains('grade-select')) {
-                handleGradeChange(e);
+        semesterSelect.addEventListener('change', loadSubjects);
+        subjectForm.addEventListener('change', handleGradeChange);
+        document.getElementById('themeToggle').addEventListener('click', toggleDarkMode);
+        
+        // Help button functionality
+        const helpButton = document.getElementById('helpButton');
+        const helpModal = document.getElementById('helpModal');
+        const helpClose = document.querySelector('.help-close');
+        
+        helpButton.addEventListener('click', function() {
+            helpModal.style.display = 'block';
+        });
+        
+        helpClose.addEventListener('click', function() {
+            helpModal.style.display = 'none';
+        });
+        
+        window.addEventListener('click', function(event) {
+            if (event.target === helpModal) {
+                helpModal.style.display = 'none';
             }
         });
     });
 
-    function setupEventListeners() {
-        document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
-        document.getElementById('help-btn').addEventListener('click', () => document.getElementById('help-modal').classList.add('active'));
-        document.getElementById('modal-close').addEventListener('click', () => document.getElementById('help-modal').classList.remove('active'));
-        document.getElementById('semester-modal-close').addEventListener('click', () => document.getElementById('semester-modal').classList.remove('active'));
-        document.getElementById('export-btn').addEventListener('click', exportResults);
-    }
-    
-    function toggleDarkMode() {
-        const body = document.body;
-        const icon = document.querySelector('#dark-mode-toggle i');
-        body.classList.toggle('light-mode');
-        const isLightMode = body.classList.contains('light-mode');
-        icon.className = isLightMode ? 'fas fa-moon' : 'fas fa-sun';
-        localStorage.setItem('lightMode', isLightMode);
-        showToast(isLightMode ? 'Light mode enabled' : 'Dark mode enabled', 'info');
-        // Re-render charts to adapt to new theme colors if needed
-        updateAllDisplays();
-    }
-    
     function loadState() {
         currentGrades = JSON.parse(localStorage.getItem("currentGrades")) || {};
         gpaPerSem = JSON.parse(localStorage.getItem("gpaPerSem")) || {};
         currentBranch = localStorage.getItem("lastBranch") || "";
-        currentSemester = localStorage.getItem("lastSemester") || "";
-        
-        if (localStorage.getItem('lightMode') === 'true') {
-            document.body.classList.add('light-mode');
-            document.querySelector('#dark-mode-toggle i').className = 'fas fa-moon';
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
         }
         updateAllDisplays();
     }
-    
+
     function loadBranches() {
         const fragment = document.createDocumentFragment();
-        Object.keys(academicData.branches).forEach(code => {
+        Object.keys(academicData.branches).forEach((code, index) => {
             const branch = academicData.branches[code];
             const card = document.createElement('div');
-            card.className = 'branch-card';
+            card.className = 'branch-card stagger-in';
+            card.style.animationDelay = `${index * 30}ms`;
             card.dataset.branchCode = code;
-            card.innerHTML = `<i class="${branch.icon}" style="color: ${branch.color};"></i><div class="branch-name">${branch.name}</div>`;
+            card.innerHTML = `<div class="branch-icon" style="color: ${branch.color};"><i class="${branch.icon}"></i></div>
+                              <div class="branch-name">${branch.name}</div>`;
             fragment.appendChild(card);
         });
         const branchSelection = document.getElementById("branchSelection");
@@ -587,319 +435,218 @@
             if(card) selectBranch(card.dataset.branchCode);
         });
     }
-    
+
     function selectBranch(branchCode, isRestoring = false) {
-        if (!isRestoring && currentBranch === branchCode) {
-             showSemesterModal(); // Re-open semester choice if same branch is clicked
-             return;
-        }
-        
+        if (currentBranch === branchCode && !isRestoring) return;
         currentBranch = branchCode;
         localStorage.setItem("lastBranch", branchCode);
+
         document.querySelectorAll(".branch-card").forEach(c => c.classList.remove("selected"));
         document.querySelector(`.branch-card[data-branch-code="${branchCode}"]`).classList.add("selected");
+
+        const semSelect = document.getElementById("semester");
+        const availableSems = Object.keys(academicData.branches[branchCode].semesters).filter(sem => academicData.branches[branchCode].semesters[sem]?.length > 0);
+        semSelect.innerHTML = '<option value="">-- Select Semester --</option>' + availableSems.map(sem => `<option value="${sem}">Semester ${sem}</option>`).join('');
         
+        document.getElementById("semesterGroup").style.display = "block";
+
         if (!isRestoring) {
-            currentSemester = ""; // Reset semester when changing branch
-            localStorage.removeItem("lastSemester");
-            document.getElementById('subjectForm').innerHTML = `<div class="empty-state"><i class="fas fa-tasks"></i><p>Choose a semester to proceed.</p></div>`;
-            document.getElementById('gpaResult').style.display = 'none';
-            showSemesterModal();
+            semSelect.value = "";
+            loadSubjects();
         }
         updateAllDisplays();
     }
     
-    function showSemesterModal() {
-        const semesterModal = document.getElementById('semester-modal');
-        const semesterGrid = document.getElementById('semester-grid');
-        semesterGrid.innerHTML = '';
-        
-        const availableSems = Object.keys(academicData.branches[currentBranch].semesters).filter(sem => academicData.branches[currentBranch].semesters[sem]?.length > 0);
-        
-        availableSems.forEach(sem => {
-            const card = document.createElement('div');
-            card.className = 'semester-card';
-            card.innerHTML = `<i class="fas fa-book-open"></i><div class="semester-name">Semester ${sem}</div>`;
-            card.addEventListener('click', () => selectSemester(sem));
-            semesterGrid.appendChild(card);
-        });
-        semesterModal.classList.add('active');
-    }
-    
-    function selectSemester(sem) {
-        document.getElementById('semester-modal').classList.remove('active');
-        currentSemester = sem;
-        localStorage.setItem("lastSemester", sem);
-        loadSubjects(sem);
-    }
-    
-    function styleGradeSelect(selectElement) {
-        const grade = selectElement.value;
-        selectElement.style.borderColor = 'var(--border-color)';
-        if(document.body.classList.contains('light-mode')) {
-             selectElement.style.color = 'var(--light-text)';
-        } else {
-             selectElement.style.color = 'var(--text-primary)';
-        }
-        
-        const gradeColorMap = { 'O': 'var(--success)', 'A+': 'var(--success)', 'A': 'var(--info)', 'B+': 'var(--warning)', 'B': 'var(--warning)', 'C': 'var(--warning)', 'U': 'var(--danger)' };
-        if (gradeColorMap[grade]) {
-            selectElement.style.borderColor = gradeColorMap[grade];
-            selectElement.style.color = gradeColorMap[grade];
-        }
-    }
-    
-    function loadSubjects(sem) {
+    function loadSubjects() {
+        const sem = document.getElementById("semester").value;
         const form = document.getElementById("subjectForm");
         form.innerHTML = ''; 
-        document.getElementById("gpaResult").style.display = "none";
-        
-        const subjects = academicData.branches[currentBranch].semesters[sem];
-        if (!subjects || subjects.length === 0) {
-            form.innerHTML = `<div class="empty-state"><i class="fas fa-box-open"></i><p>Subjects for this semester aren't available yet.</p></div>`;
+
+        const gpaResultEl = document.getElementById("gpaResult");
+        gpaResultEl.style.display = "none";
+
+        if (!sem) {
+            form.innerHTML = `<div class="empty-state"><i class="fas fa-arrow-up"></i><p>Please select a semester to begin.</p></div>`;
+            updateArrearsList();
+            renderGradeDistributionChart();
             return;
         }
-        
+        localStorage.setItem("lastSemester", sem);
+
+        const subjects = academicData.branches[currentBranch].semesters[sem];
+        if (!subjects || subjects.length === 0) {
+            form.innerHTML = `<div class="empty-state"><i class="fas fa-box-open"></i><p>Subject data for this semester is not available yet.</p></div>`;
+            return;
+        }
+
         const grid = document.createElement('div');
         grid.className = 'subject-grid';
+        const fragment = document.createDocumentFragment();
         const semesterKey = `${currentBranch}_${sem}`;
-        currentGrades[semesterKey] = currentGrades[semesterKey] || Array(subjects.length).fill("");
+        if (!currentGrades[semesterKey]) currentGrades[semesterKey] = Array(subjects.length).fill("");
         
         subjects.forEach((sub, i) => {
             const card = document.createElement('div');
-            card.className = 'subject-card';
-            card.innerHTML = `<div class="subject-card-content">
-                                <span style="font-weight: 500;">${sub.name} (${sub.code})</span>
-                                <span style="font-weight: 600; white-space: nowrap;">Credits: ${sub.credits}</span>
+            card.className = 'subject-card stagger-in';
+            card.style.animationDelay = `${i * 30}ms`;
+            card.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 10px;">
+                                <span style="font-weight: 600; font-size: 0.9rem;">${sub.code}</span>
+                                <span style="background: rgba(0,0,0,0.4); padding: 4px 10px; border-radius: 20px; font-size: 0.85rem;">${sub.credits} Credits</span>
                               </div>
-                              <select data-index="${i}" data-semester="${sem}" data-branch="${currentBranch}" class="grade-select"></select>`;
+                              <div style="margin: 12px 0; font-size: 1.05rem; min-height: 40px;">${sub.name}</div>
+                              <select data-index="${i}"></select>`;
             
             const select = card.querySelector('select');
-            select.innerHTML = '<option value="">Grade</option>' + Object.keys(gradePoints).map(g => `<option value="${g}">${g}</option>`).join('');
+            select.innerHTML = '<option value="">-- Grade --</option>' + Object.keys(gradePoints).map(g => `<option value="${g}">${g}</option>`).join('');
             select.value = currentGrades[semesterKey][i] || "";
-            styleGradeSelect(select);
-            grid.appendChild(card);
+            fragment.appendChild(card);
         });
         
+        grid.appendChild(fragment);
         form.appendChild(grid);
         
-        // --- UPDATED CODE ---
-        // This call now correctly passes the currentBranch to the updated function.
-        calculateGPA(sem, currentBranch);
-        // --- END OF UPDATE ---
+        calculateGPA(sem);
+        updateAllDisplays();
     }
     
+    // --- Calculation & Logic ---
     function handleGradeChange(e) {
-        const select = e.target;
-        const { semester: sem, branch, index } = select.dataset;
-        const semesterKey = `${branch}_${sem}`;
-        
-        // Ensure the semester array is initialized before assigning to it
+        if (e.target.tagName !== 'SELECT') return;
+        const sem = document.getElementById("semester").value;
+        const index = parseInt(e.target.dataset.index, 10);
+        const grade = e.target.value;
+        const semesterKey = `${currentBranch}_${sem}`;
+
         if (!currentGrades[semesterKey]) {
-            const subjects = academicData.branches[branch].semesters[sem];
-            currentGrades[semesterKey] = Array(subjects.length).fill("");
+            const subjectCount = academicData.branches[currentBranch].semesters[sem].length;
+            currentGrades[semesterKey] = Array(subjectCount).fill("");
         }
-        
-        currentGrades[semesterKey][parseInt(index, 10)] = select.value;
-        styleGradeSelect(select);
+        currentGrades[semesterKey][index] = grade;
         localStorage.setItem("currentGrades", JSON.stringify(currentGrades));
         
-        calculateGPA(sem, branch);
+        calculateGPA(sem);
         debouncedFullUpdate();
     }
-    
-    function calculateGPA(sem, branch) { 
-        if (!branch) return; // Add a guard clause to prevent errors if branch is undefined
-        
-        const semesterKey = `${branch}_${sem}`;
-        const subjects = academicData.branches[branch].semesters[sem];
+
+    function calculateGPA(sem) {
+        const gpaResultEl = document.getElementById("gpaResult");
+        const semesterKey = `${currentBranch}_${sem}`;
+        const subjects = academicData.branches[currentBranch].semesters[sem];
         const activeGrades = currentGrades[semesterKey] || [];
-        
+
+        if (!subjects || subjects.length === 0) {
+            gpaResultEl.style.display = 'none';
+            return;
+        }
+
         let totalPoints = 0, totalCredits = 0;
         subjects.forEach((sub, i) => {
-            if (activeGrades[i]) { 
-                totalPoints += gradePoints[activeGrades[i]] * sub.credits; 
-                totalCredits += sub.credits; 
-            }
+            const grade = activeGrades[i];
+            if (grade) { totalPoints += gradePoints[grade] * sub.credits; totalCredits += sub.credits; }
         });
-        
+
         const gpa = totalCredits > 0 ? (totalPoints / totalCredits) : 0;
-        gpaPerSem[semesterKey] = { gpa: parseFloat(gpa.toFixed(2)), credits: totalCredits, semester: parseInt(sem) };
-        localStorage.setItem("gpaPerSem", JSON.stringify(gpaPerSem));
         
-        const gpaResultEl = document.getElementById("gpaResult");
+        gpaPerSem[semesterKey] = { gpa: parseFloat(gpa.toFixed(2)), credits: totalCredits };
+        localStorage.setItem("gpaPerSem", JSON.stringify(gpaPerSem));
+
         gpaResultEl.style.display = "block";
-        gpaResultEl.innerHTML = `<div style="font-size: 1.2rem; color: rgba(0,0,0,0.7);">Semester ${sem} GPA</div><div style="font-size: 3rem; font-weight: 700;">${gpa.toFixed(2)}</div>`;
+        gpaResultEl.innerHTML = `<div class="result-label" style="font-size: 1.2rem;">Semester ${sem} GPA</div>
+                                 <div class="result-value" style="font-size: 3rem;">${gpa.toFixed(2)}</div>
+                                 <div style="width: 80%; margin: 15px auto 0; height: 10px; background: rgba(255,255,255,0.1); border-radius: 5px;">
+                                    <div style="height: 100%; background: linear-gradient(90deg, var(--light), #c9d6ff); border-radius: 5px; transition: width 0.5s ease; width: ${(gpa/10)*100}%"></div>
+                                 </div>`;
     }
-    
+
     function calculateOverallCGPA() {
         let totalWeightedGpa = 0, totalCredits = 0;
         Object.keys(gpaPerSem).filter(k => k.startsWith(currentBranch)).forEach(key => {
             totalWeightedGpa += gpaPerSem[key].gpa * gpaPerSem[key].credits;
             totalCredits += gpaPerSem[key].credits;
         });
-        return { cgpa: totalCredits > 0 ? (totalWeightedGpa / totalCredits) : 0, totalCredits };
+        const cgpa = totalCredits > 0 ? (totalWeightedGpa / totalCredits) : 0;
+        return { cgpa, totalCredits };
     }
-    
+
     function updateAllDisplays() {
         const { cgpa, totalCredits } = calculateOverallCGPA();
         const arrears = updateArrearsList();
-        
+
         document.getElementById('summaryCgpaValue').textContent = cgpa.toFixed(2);
         document.getElementById('summaryCreditsValue').textContent = totalCredits;
         document.getElementById('summaryArrearsValue').textContent = arrears.count;
         
         renderGradeDistributionChart();
-        renderGpaTrendChart();
-        document.title = `${cgpa.toFixed(2)} CGPA | IB STUDIOZ`;
+        document.title = `${cgpa.toFixed(2)} CGPA | IB studioz`;
     }
-    
+
     function updateArrearsList() {
+        const arrearsSection = document.getElementById("arrearsSection");
         const arrearsList = document.getElementById("arrearsList");
         arrearsList.innerHTML = '';
         let arrearCount = 0;
-        
-        Object.keys(currentGrades).filter(k => k.startsWith(currentBranch)).forEach(key => {
-            const sem = key.split('_')[1];
-            const subjects = academicData.branches[currentBranch].semesters[sem];
-            if (subjects) {
-                currentGrades[key].forEach((grade, i) => {
-                    if (grade === 'U' && subjects[i]) {
-                        arrearCount++;
-                        const li = document.createElement('li');
-                        li.textContent = `${subjects[i].name} (Sem ${sem})`;
-                        arrearsList.appendChild(li);
-                    }
-                });
-            }
+        const sem = document.getElementById("semester").value;
+        if (!sem) { arrearsSection.style.display = "none"; return { count: 0 };}
+
+        const semesterKey = `${currentBranch}_${sem}`;
+        const subjects = academicData.branches[currentBranch].semesters[sem];
+        const grades = currentGrades[semesterKey] || [];
+        const arrearSubjects = [];
+
+        subjects.forEach((sub, i) => {
+            if (grades[i] === 'U') arrearSubjects.push(sub.name);
         });
         
-        document.getElementById("arrearsSection").style.display = arrearCount > 0 ? "block" : "none";
+        arrearCount = arrearSubjects.length;
+        if (arrearCount > 0) {
+            arrearsSection.style.display = "block";
+            const fragment = document.createDocumentFragment();
+            arrearSubjects.forEach(name => {
+                const li = document.createElement('li');
+                li.textContent = name;
+                fragment.appendChild(li);
+            });
+            arrearsList.appendChild(fragment);
+        } else {
+            arrearsSection.style.display = "none";
+        }
         return { count: arrearCount };
     }
     
+    // --- Charting & Utilities ---
     function initCharts() {
         const commonOptions = { plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false };
         if (gradeDistSummaryChart) gradeDistSummaryChart.destroy();
-        if (gpaTrendChart) gpaTrendChart.destroy();
-        
-        gradeDistSummaryChart = new Chart(document.getElementById('gradeDistSummaryChart'), { type: 'pie', data: {}, options: commonOptions });
-        
-        gpaTrendChart = new Chart(document.getElementById('gpaTrendChart'), {
-            type: 'line',
-            data: { labels: [], datasets: [{ label: 'GPA', data: [], borderColor: '#FFD700', backgroundColor: 'rgba(255, 215, 0, 0.1)', borderWidth: 3, pointBackgroundColor: '#FFD700', pointBorderColor: '#fff', pointRadius: 5, pointHoverRadius: 7, fill: true, tension: 0.3 }] },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, min: 6, max: 10, grid: { color: 'rgba(255, 255, 255, 0.1)' }, ticks: { color: '#A0A0A0' } }, x: { grid: { color: 'rgba(255, 255, 255, 0.1)' }, ticks: { color: '#A0A0A0' } } } }
-        });
+        gradeDistSummaryChart = new Chart(document.getElementById('gradeDistSummaryChart').getContext('2d'), { type: 'pie', data: {}, options: commonOptions });
     }
-    
     function renderGradeDistributionChart() {
-        if (!gradeDistSummaryChart) return; // Guard clause
-        const allGrades = Object.keys(currentGrades).filter(k => k.startsWith(currentBranch)).flatMap(key => currentGrades[key]);
+        if (!currentBranch || !gradeDistSummaryChart) return;
+        const sem = document.getElementById("semester").value;
+        const key = `${currentBranch}_${sem}`;
+        const grades = currentGrades[key] || [];
         const counts = {};
-        allGrades.filter(g => g).forEach(g => { counts[g] = (counts[g] || 0) + 1; });
-        gradeDistSummaryChart.data = { labels: Object.keys(counts), datasets: [{ data: Object.values(counts), backgroundColor: ['#10B981', '#2575fc', '#6dd5ed', '#A18CD1', '#ffb347', '#EF4444', '#F4D03F'] }]};
+        grades.filter(g => g).forEach(g => { counts[g] = (counts[g] || 0) + 1; });
+        
+        gradeDistSummaryChart.data = {
+            labels: Object.keys(counts),
+            datasets: [{ data: Object.values(counts), backgroundColor: ['#00b09b', '#4ECDC4', '#8BC34A', '#CDDC39', '#FFC107', '#FF9800', '#ff416c'] }]
+        };
         gradeDistSummaryChart.update();
     }
-    
-    function renderGpaTrendChart() {
-        if (!gpaTrendChart) return; // Guard clause
-        const branchGpaData = Object.keys(gpaPerSem).filter(key => key.startsWith(currentBranch)).map(key => gpaPerSem[key]).sort((a, b) => a.semester - b.semester);
-        gpaTrendChart.data.labels = branchGpaData.map(item => `Sem ${item.semester}`);
-        gpaTrendChart.data.datasets[0].data = branchGpaData.map(item => item.gpa);
-        gpaTrendChart.update();
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('darkMode', document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
+        document.getElementById('themeToggle').innerHTML = document.body.classList.contains('dark-mode') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
     }
-    
-    function exportResults() {
-        if (!currentBranch) {
-            showToast('Please select a branch first.', 'error');
-            return;
-        }
-        const { cgpa, totalCredits } = calculateOverallCGPA();
-        const arrears = updateArrearsList();
-        
-        let resultsText = `IB STUDIOZ CGPA CALCULATOR RESULTS\n=====================================\n\n` +
-                          `Branch: ${academicData.branches[currentBranch].name}\nOverall CGPA: ${cgpa.toFixed(2)}\n` +
-                          `Total Credits: ${totalCredits}\nArrears: ${arrears.count}\n\nSEMESTER WISE GPA:\n==================\n`;
-        
-        Object.keys(gpaPerSem).filter(key => key.startsWith(currentBranch)).sort((a, b) => parseInt(a.split('_')[1]) - parseInt(b.split('_')[1]))
-            .forEach(key => {
-                const sem = key.split('_')[1];
-                resultsText += `Semester ${sem}: ${gpaPerSem[key].gpa.toFixed(2)} (Credits: ${gpaPerSem[key].credits})\n`;
-            });
-        
-        if (arrears.count > 0) {
-            resultsText += `\nARREAR SUBJECTS:\n===============\n`;
-            Object.keys(currentGrades).filter(k => k.startsWith(currentBranch)).forEach(key => {
-                const sem = key.split('_')[1];
-                const subjects = academicData.branches[currentBranch].semesters[sem];
-                if(subjects){
-                    currentGrades[key].forEach((grade, i) => {
-                        if (grade === 'U' && subjects[i]) {
-                           resultsText += `- ${subjects[i].name} (Sem ${sem})\n`;
-                        }
-                    });
-                }
-            });
-        }
-        
-        const blob = new Blob([resultsText], { type: 'text/plain' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `CGPA_Results_${currentBranch}.txt`;
-        a.click();
-        URL.revokeObjectURL(a.href);
-        showToast('Results exported successfully!', 'success');
-    }
-    
     function resetCalculator() {
-        showConfirm(
-            "Reset All Data?", 
-            "Are you sure you want to reset all your grade data? This action cannot be undone.", 
-            () => {
-                localStorage.clear();
-                showToast('All data has been reset.', 'success');
-                setTimeout(() => location.reload(), 1000);
-            }
-        );
-    }
-    
-    function showConfirm(title, text, onConfirm) {
-        const confirmModal = document.getElementById('confirm-modal');
-        document.getElementById('confirm-title').textContent = title;
-        document.getElementById('confirm-text').textContent = text;
-        
-        const btnOk = document.getElementById('confirm-ok');
-        const btnCancel = document.getElementById('confirm-cancel');
-
-        const confirmHandler = () => {
-            onConfirm();
-            closeHandler();
-        };
-
-        const closeHandler = () => {
-            confirmModal.classList.remove('active');
-            btnOk.removeEventListener('click', confirmHandler);
-            btnCancel.removeEventListener('click', closeHandler);
-        };
-        
-        btnOk.addEventListener('click', confirmHandler);
-        btnCancel.addEventListener('click', closeHandler);
-
-        confirmModal.classList.add('active');
-    }
-
-    function showToast(message, type = 'info') {
-        const toastContainer = document.getElementById('toast-container');
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
-        toast.innerHTML = `<i class="fas ${icon}"></i><span>${message}</span>`;
-        toastContainer.appendChild(toast);
-        setTimeout(() => toast.classList.add('show'), 10);
-        setTimeout(() => {
-            toast.classList.remove('show');
-            toast.addEventListener('transitionend', () => toast.remove());
-        }, 3000);
+        if (confirm("Are you sure you want to reset all data? This action cannot be undone.")) {
+            document.getElementById('loadingSpinner').style.display = 'flex';
+            localStorage.clear();
+            // Wait a moment for the spinner to be visible before reloading
+            setTimeout(() => {
+                location.reload();
+            }, 800);
+        }
     }
     </script>
 </body>
