@@ -28,6 +28,24 @@
             --google: #DB4437;
             --microsoft: #0078D7;
             --info: #3498db;
+            --github: #333;
+            --facebook: #4267B2;
+            --twitter: #1DA1F2;
+            
+            /* Branch colors */
+            --cse-color: #3498db;
+            --it-color: #9b59b6;
+            --ece-color: #e74c3c;
+            --eee-color: #f39c12;
+            --mech-color: #2ecc71;
+            --civil-color: #16a085;
+            --bme-color: #e91e63;
+            --ft-color: #ff5722;
+            --mct-color: #00bcd4;
+            --csd-color: #ff9800;
+            --ads-color: #673ab7;
+            --efe-color: #795548;
+            --exe-color: #607d8b;
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -55,6 +73,34 @@
         body.dark-mode .btn-secondary {
             background: rgba(0, 0, 0, 0.1);
             color: var(--text-primary);
+        }
+        
+        body.dark-mode .social-login-options {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        
+        body.dark-mode .branch-modal {
+            background: var(--card-bg);
+        }
+        
+        body.dark-mode .branch-item {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        body.dark-mode .semester-item {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        body.dark-mode .language-selector {
+            background: rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+        }
+        
+        body.dark-mode .language-option {
+            background: rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.2);
         }
         
         /* --- KEYFRAME ANIMATIONS --- */
@@ -90,6 +136,22 @@
             0%, 100% { transform: translateX(0); }
             10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
             20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
         
         body { 
@@ -199,32 +261,105 @@
         }
         .btn-small { padding: 8px 15px; font-size: 0.9rem; }
         
-        /* Dark mode toggle */
+        /* Enhanced Dark mode toggle */
         .dark-mode-toggle {
             position: fixed;
             top: 20px;
             right: 20px;
             z-index: 1000;
             background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            width: 60px;
+            height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
         }
         
         .dark-mode-toggle:hover {
             transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            border-color: var(--primary);
+        }
+        
+        .dark-mode-toggle i {
+            font-size: 1.5rem;
+            color: var(--primary);
+            transition: all 0.3s ease;
+        }
+        
+        /* Language selector */
+        .language-selector {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .language-selector:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.05);
+        }
+        
+        .language-options {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px;
+            display: none;
+            min-width: 150px;
+            box-shadow: 0 8px 32px 0 var(--shadow-color);
+        }
+        
+        .language-selector.active .language-options {
+            display: block;
+        }
+        
+        .language-option {
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .language-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .language-option.active {
+            background: rgba(255, 195, 0, 0.2);
+            color: var(--primary);
         }
         
         /* Social login buttons */
         .btn-google { background: var(--google); color: white; }
         .btn-microsoft { background: var(--microsoft); color: white; }
+        .btn-github { background: var(--github); color: white; }
+        .btn-facebook { background: var(--facebook); color: white; }
+        .btn-twitter { background: var(--twitter); color: white; }
         .btn-social { margin: 8px 0; width: 100%; }
         .btn-social i { margin-right: 10px; }
         
@@ -554,8 +689,16 @@
             .container { padding: 15px; margin: 15px auto; }
             .modal { padding: 20px; }
             .dark-mode-toggle {
+                width: 50px;
+                height: 50px;
+            }
+            .language-selector {
                 width: 40px;
                 height: 40px;
+                padding: 8px;
+            }
+            .language-selector span {
+                display: none;
             }
             .btn {
                 padding: 12px 20px;
@@ -674,17 +817,496 @@
                 grid-template-columns: 1fr;
             }
         }
+        
+        /* Branch and Semester Modal */
+        .branch-modal {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            width: 90%;
+            max-width: 800px;
+            padding: 30px;
+            box-shadow: 0 8px 32px 0 var(--shadow-color);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .branch-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .branch-modal-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .branch-modal-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        .branch-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .branch-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .branch-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .branch-item.selected {
+            background: rgba(255, 195, 0, 0.2);
+            border-color: var(--primary);
+        }
+        
+        .branch-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .branch-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .branch-short {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .semester-container {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            display: none;
+        }
+        
+        .semester-container.active {
+            display: block;
+        }
+        
+        .semester-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+        
+        .semester-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        
+        .semester-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .semester-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+        
+        .semester-item.selected {
+            background: rgba(255, 195, 0, 0.2);
+            border-color: var(--primary);
+        }
+        
+        .semester-number {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .semester-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .branch-modal-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .branch-modal-actions .btn {
+            min-width: 120px;
+        }
+        
+        /* Course info */
+        .course-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+        
+        .course-info.active {
+            display: block;
+        }
+        
+        .course-info-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+        
+        .course-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .course-item {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+        
+        .course-item:last-child {
+            border-bottom: none;
+        }
+        
+        .course-code {
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .course-name {
+            color: var(--text-secondary);
+            margin-left: 10px;
+        }
+        
+        .course-credits {
+            float: right;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+        
+        /* Terms and privacy */
+        .terms-privacy {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .terms-privacy a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .terms-privacy a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Help section */
+        .help-section {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .help-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .help-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+        
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--card-bg);
+            color: var(--text-primary);
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        /* Accessibility features */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+        
+        /* Skip to content link for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary);
+            color: var(--dark);
+            padding: 8px;
+            text-decoration: none;
+            border-radius: 0 0 4px 0;
+            z-index: 100;
+        }
+        
+        .skip-link:focus {
+            top: 0;
+        }
+        
+        /* Focus styles for better accessibility */
+        a:focus, button:focus, input:focus, select:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+        
+        /* Reduced motion for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* Print styles */
+        @media print {
+            .aurora-background, .dark-mode-toggle, .language-selector, .help-section {
+                display: none;
+            }
+            
+            body {
+                background: white;
+                color: black;
+            }
+            
+            .auth-card {
+                border: 1px solid #ddd;
+                box-shadow: none;
+            }
+        }
+        
+        /* Floating action buttons */
+        .floating-actions {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-end;
+        }
+        
+        .floating-btn {
+            background: linear-gradient(135deg, var(--primary), var(--info));
+            color: var(--text-inverse);
+            border: none;
+            border-radius: 50px;
+            padding: 15px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .floating-btn.help {
+            animation-delay: 1s;
+        }
+        
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0px); 
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            }
+            50% { 
+                transform: translateY(-10px); 
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 215, 0, 0.3);
+            }
+        }
+        
+        .floating-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+        
+        .floating-btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+        
+        .floating-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 50px;
+            background: inherit;
+            z-index: -1;
+            animation: pulse 2s ease-out infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.3);
+                opacity: 0;
+            }
+        }
+        
+        .btn-text {
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        /* Hide text on mobile */
+        @media (max-width: 768px) {
+            .btn-text {
+                display: none;
+            }
+            
+            .floating-btn {
+                padding: 12px 16px;
+                font-size: 0.9rem;
+                width: 50px;
+                height: 50px;
+                justify-content: center;
+            }
+            
+            .floating-btn:hover .btn-text {
+                display: inline-block;
+                position: absolute;
+                right: 100%;
+                margin-right: 10px;
+                background: var(--card-bg);
+                padding: 5px 10px;
+                border-radius: 20px;
+                white-space: nowrap;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+        }
     </style>
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
     <div class="aurora-background"></div>
     
-    <!-- Dark mode toggle -->
-    <button class="dark-mode-toggle" id="dark-mode-toggle" title="Toggle dark mode">
+    <!-- Enhanced Dark mode toggle -->
+    <button class="dark-mode-toggle tooltip" id="dark-mode-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">
         <i class="fas fa-moon"></i>
     </button>
     
-    <div class="container auth-container">
+    <!-- Language selector -->
+    <div class="language-selector" id="language-selector">
+        <i class="fas fa-globe"></i>
+        <span id="current-language">English</span>
+        <div class="language-options">
+            <div class="language-option active" data-lang="en">
+                <i class="fas fa-flag-usa"></i>
+                <span>English</span>
+            </div>
+            <div class="language-option" data-lang="es">
+                <i class="fas fa-flag"></i>
+                <span>Spanish</span>
+            </div>
+            <div class="language-option" data-lang="fr">
+                <i class="fas fa-flag"></i>
+                <span>French</span>
+            </div>
+            <div class="language-option" data-lang="de">
+                <i class="fas fa-flag"></i>
+                <span>German</span>
+            </div>
+            <div class="language-option" data-lang="zh">
+                <i class="fas fa-flag"></i>
+                <span>Chinese</span>
+            </div>
+            <div class="language-option" data-lang="ja">
+                <i class="fas fa-flag"></i>
+                <span>Japanese</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container auth-container" id="main-content">
         <div class="auth-card">
             <div class="brand-logo">
                 <!-- Enhanced IB STUDIOZ logo -->
@@ -714,28 +1336,29 @@
                 <h1 class="brand-title-animated">IB STUDIOZ</h1>
             </div>
             <p class="auth-subtitle">Online Resources Hub</p>
+            
             <form id="authForm" novalidate>
                 <h2 id="form-title">Login</h2>
                 <div class="form-group" id="name-group" style="display: none;">
                     <label for="name"><i class="fas fa-user"></i> Full Name</label>
-                    <input type="text" id="name" placeholder="Enter your full name">
+                    <input type="text" id="name" placeholder="Enter your full name" aria-required="true">
                     <div class="error-message" id="name-error"></div>
                 </div>
                 <div class="form-group">
                     <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
-                    <input type="email" id="email" placeholder="Enter your email address" required>
+                    <input type="email" id="email" placeholder="Enter your email address" required aria-required="true">
                     <div class="error-message" id="email-error"></div>
                 </div>
                 <div class="form-group" id="admission-group" style="display: none;">
                     <label for="admissionNo"><i class="fas fa-id-card"></i> Admission No</label>
-                    <input type="text" id="admissionNo" placeholder="e.g., 717821F123">
+                    <input type="text" id="admissionNo" placeholder="e.g., 717821F123" aria-required="true">
                     <div class="error-message" id="admission-error"></div>
                 </div>
                 <div class="form-group">
                     <label for="password"><i class="fas fa-lock"></i> Password</label>
                     <div class="password-container">
-                        <input type="password" id="password" placeholder="Minimum 6 characters" required>
-                        <button type="button" class="password-toggle" id="password-toggle">
+                        <input type="password" id="password" placeholder="Minimum 6 characters" required aria-required="true">
+                        <button type="button" class="password-toggle" id="password-toggle" aria-label="Toggle password visibility">
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
@@ -750,50 +1373,49 @@
                 
                 <!-- Additional fields for registration -->
                 <div id="registration-fields" style="display: none;">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="branch"><i class="fas fa-graduation-cap"></i> Branch</label>
-                            <select id="branch">
-                                <option value="">Select branch</option>
-                                <option value="CSE">Computer Science</option>
-                                <option value="IT">Information Technology</option>
-                                <option value="ECE">Electronics</option>
-                                <option value="EEE">Electrical</option>
-                                <option value="MECH">Mechanical</option>
-                                <option value="CIVIL">Civil</option>
-                                <option value="AERO">Aeronautical</option>
-                                <option value="AUTO">Automobile</option>
-                                <option value="BME">Biomedical</option>
-                                <option value="CHEM">Chemical</option>
-                                <option value="IOT">Internet of Things</option>
-                                <option value="AI">Artificial Intelligence</option>
-                                <option value="DS">Data Science</option>
-                                <option value="CSBS">CS and Business Systems</option>
-                            </select>
-                            <div class="error-message" id="branch-error"></div>
-                        </div>
-                        <div class="form-group">
-                            <label for="semester"><i class="fas fa-calendar-alt"></i> Semester</label>
-                            <select id="semester">
-                                <option value="">Select semester</option>
-                                <option value="1">Semester 1</option>
-                                <option value="2">Semester 2</option>
-                                <option value="3">Semester 3</option>
-                                <option value="4">Semester 4</option>
-                                <option value="5">Semester 5</option>
-                                <option value="6">Semester 6</option>
-                                <option value="7">Semester 7</option>
-                                <option value="8">Semester 8</option>
-                            </select>
-                            <div class="error-message" id="semester-error"></div>
-                        </div>
+                    <div class="form-group">
+                        <label for="branch"><i class="fas fa-graduation-cap"></i> Branch</label>
+                        <select id="branch" aria-required="true">
+                            <option value="">Select branch</option>
+                            <option value="CSE">Computer Science</option>
+                            <option value="IT">Information Technology</option>
+                            <option value="ECE">Electronics</option>
+                            <option value="EEE">Electrical</option>
+                            <option value="MECH">Mechanical</option>
+                            <option value="CIVIL">Civil</option>
+                            <option value="BME">Biomedical</option>
+                            <option value="FT">Fashion Technology</option>
+                            <option value="MCT">Mechatronics</option>
+                            <option value="CSD">CS & Design</option>
+                            <option value="ADS">AI & Data Science</option>
+                            <option value="EFE">Electrical & Computer</option>
+                            <option value="EXE">Electronics & Computer</option>
+                            <option value="AIML">AI & Machine Learning</option>
+                        </select>
+                        <div class="error-message" id="branch-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="semester"><i class="fas fa-calendar-alt"></i> Semester</label>
+                        <select id="semester" aria-required="true">
+                            <option value="">Select semester</option>
+                            <option value="1">Semester 1</option>
+                            <option value="2">Semester 2</option>
+                            <option value="3">Semester 3</option>
+                            <option value="4">Semester 4</option>
+                            <option value="5">Semester 5</option>
+                            <option value="6">Semester 6</option>
+                            <option value="7">Semester 7</option>
+                            <option value="8">Semester 8</option>
+                        </select>
+                        <div class="error-message" id="semester-error"></div>
                     </div>
                 </div>
                 
                 <div class="forgot-password">
                     <a id="forgot-password-link">Forgot Password?</a>
                 </div>
-                <div id="message-area" class="message"></div>
+                <div id="message-area" class="message" role="alert" aria-live="polite"></div>
                 <button type="submit" class="btn btn-primary" id="submit-btn">
                     <span class="btn-text">Login</span>
                     <div class="btn-spinner"></div>
@@ -803,32 +1425,54 @@
                     <span>OR</span>
                 </div>
                 
-                <button type="button" class="btn btn-social btn-google" id="google-login">
-                    <i class="fab fa-google"></i> Continue with Google
-                </button>
-                
-                <button type="button" class="btn btn-social btn-microsoft" id="microsoft-login">
-                    <i class="fab fa-microsoft"></i> Continue with Microsoft
-                </button>
+                <div class="social-login-options">
+                    <div class="social-login-title">Continue with</div>
+                    <div class="social-buttons">
+                        <button type="button" class="btn btn-social btn-google" id="google-login" aria-label="Continue with Google">
+                            <i class="fab fa-google"></i>
+                        </button>
+                        <button type="button" class="btn btn-social btn-microsoft" id="microsoft-login" aria-label="Continue with Microsoft">
+                            <i class="fab fa-microsoft"></i>
+                        </button>
+                        <button type="button" class="btn btn-social btn-github" id="github-login" aria-label="Continue with GitHub">
+                            <i class="fab fa-github"></i>
+                        </button>
+                        <button type="button" class="btn btn-social btn-facebook" id="facebook-login" aria-label="Continue with Facebook">
+                            <i class="fab fa-facebook"></i>
+                        </button>
+                    </div>
+                </div>
             </form>
             <p class="toggle-auth"><span id="toggle-text">Don't have an account?</span> <a id="toggle-link">Register Now</a></p>
+            
+            <div class="terms-privacy">
+                By continuing, you agree to our <a href="#" id="terms-link">Terms of Service</a> and <a href="#" id="privacy-link">Privacy Policy</a>
+            </div>
         </div>
     </div>
     
+    <!-- Floating action buttons -->
+    <div class="floating-actions">
+        <button class="floating-btn help" id="chatbot-btn">
+            <i class="fas fa-comments"></i>
+            <span class="btn-text">IB HELP</span>
+        </button>
+    </div>
+    
     <!-- Forgot Password Modal -->
-    <div class="modal-overlay" id="forgot-password-modal">
+    <div class="modal-overlay" id="forgot-password-modal" role="dialog" aria-labelledby="forgot-password-title">
         <div class="modal">
             <div class="modal-header">
-                <h3 class="modal-title">Reset Password</h3>
-                <button class="modal-close" id="modal-close">&times;</button>
+                <h3 class="modal-title" id="forgot-password-title">Reset Password</h3>
+                <button class="modal-close" id="modal-close" aria-label="Close modal">&times;</button>
             </div>
             
             <div class="form-group">
                 <label for="reset-email"><i class="fas fa-envelope"></i> Email Address</label>
-                <input type="email" id="reset-email" placeholder="Enter your registered email">
+                <input type="email" id="reset-email" placeholder="Enter your registered email" aria-required="true">
                 <div class="error-message" id="reset-email-error"></div>
             </div>
-            <div id="reset-message" class="message"></div>
+            <div id="reset-message" class="message" role="alert" aria-live="polite"></div>
             <button class="btn btn-primary" id="send-reset-btn">
                 <span class="btn-text">Send Reset Link</span>
                 <div class="btn-spinner"></div>
@@ -837,11 +1481,11 @@
     </div>
     
     <!-- Social Registration Modal -->
-    <div class="modal-overlay social-registration-modal" id="social-registration-modal">
+    <div class="modal-overlay social-registration-modal" id="social-registration-modal" role="dialog" aria-labelledby="social-registration-title">
         <div class="modal">
             <div class="modal-header">
-                <h3 class="modal-title">Complete Your Registration</h3>
-                <button class="modal-close" id="social-modal-close">&times;</button>
+                <h3 class="modal-title" id="social-registration-title">Complete Your Registration</h3>
+                <button class="modal-close" id="social-modal-close" aria-label="Close modal">&times;</button>
             </div>
             
             <div class="social-user-info">
@@ -856,12 +1500,12 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="social-admission"><i class="fas fa-id-card"></i> Admission No</label>
-                        <input type="text" id="social-admission" placeholder="e.g., 717821F123" required>
+                        <input type="text" id="social-admission" placeholder="e.g., 717821F123" required aria-required="true">
                         <div class="error-message" id="social-admission-error"></div>
                     </div>
                     <div class="form-group">
                         <label for="social-branch"><i class="fas fa-graduation-cap"></i> Branch</label>
-                        <select id="social-branch" required>
+                        <select id="social-branch" required aria-required="true">
                             <option value="">Select branch</option>
                             <option value="CSE">Computer Science</option>
                             <option value="IT">Information Technology</option>
@@ -869,14 +1513,14 @@
                             <option value="EEE">Electrical</option>
                             <option value="MECH">Mechanical</option>
                             <option value="CIVIL">Civil</option>
-                            <option value="AERO">Aeronautical</option>
-                            <option value="AUTO">Automobile</option>
                             <option value="BME">Biomedical</option>
-                            <option value="CHEM">Chemical</option>
-                            <option value="IOT">Internet of Things</option>
-                            <option value="AI">Artificial Intelligence</option>
-                            <option value="DS">Data Science</option>
-                            <option value="CSBS">CS and Business Systems</option>
+                            <option value="FT">Fashion Technology</option>
+                            <option value="MCT">Mechatronics</option>
+                            <option value="CSD">CS & Design</option>
+                            <option value="ADS">AI & Data Science</option>
+                            <option value="EFE">Electrical & Computer</option>
+                            <option value="EXE">Electronics & Computer</option>
+                            <option value="AIML">AI & Machine Learning</option>
                         </select>
                         <div class="error-message" id="social-branch-error"></div>
                     </div>
@@ -885,7 +1529,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="social-semester"><i class="fas fa-calendar-alt"></i> Semester</label>
-                        <select id="social-semester" required>
+                        <select id="social-semester" required aria-required="true">
                             <option value="">Select semester</option>
                             <option value="1">Semester 1</option>
                             <option value="2">Semester 2</option>
@@ -905,12 +1549,140 @@
                     </div>
                 </div>
                 
-                <div id="social-message" class="message"></div>
+                <div id="social-message" class="message" role="alert" aria-live="polite"></div>
                 <button type="submit" class="btn btn-primary" id="social-submit-btn">
                     <span class="btn-text">Complete Registration</span>
                     <div class="btn-spinner"></div>
                 </button>
             </form>
+        </div>
+    </div>
+    
+    <!-- Branch and Semester Selection Modal -->
+    <div class="modal-overlay" id="branch-modal" role="dialog" aria-labelledby="branch-modal-title">
+        <div class="branch-modal">
+            <div class="branch-modal-header">
+                <div>
+                    <h3 class="branch-modal-title" id="branch-modal-title">Select Your Branch & Semester</h3>
+                    <p class="branch-modal-subtitle">Choose your academic branch and semester to personalize your experience</p>
+                </div>
+                <button class="modal-close" id="branch-modal-close" aria-label="Close modal">&times;</button>
+            </div>
+            
+            <div class="branch-grid" id="branch-grid">
+                <!-- Branch items will be populated by JavaScript -->
+            </div>
+            
+            <div class="semester-container" id="semester-container">
+                <h4 class="semester-title">Select Semester</h4>
+                <div class="semester-grid" id="semester-grid">
+                    <!-- Semester items will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="course-info" id="course-info">
+                <h4 class="course-info-title">Courses in Selected Semester</h4>
+                <div class="course-list" id="course-list">
+                    <!-- Course items will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="branch-modal-actions">
+                <button class="btn btn-secondary" id="branch-modal-cancel">Cancel</button>
+                <button class="btn btn-primary" id="branch-modal-confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Terms Modal -->
+    <div class="modal-overlay" id="terms-modal" role="dialog" aria-labelledby="terms-title">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="terms-title">Terms of Service</h3>
+                <button class="modal-close" id="terms-modal-close" aria-label="Close modal">&times;</button>
+            </div>
+            
+            <div class="modal-content">
+                <h4>1. Acceptance of Terms</h4>
+                <p>By accessing and using IB STUDIOZ, you accept and agree to be bound by the terms and provision of this agreement.</p>
+                
+                <h4>2. Use License</h4>
+                <p>Permission is granted to temporarily download one copy of the materials on IB STUDIOZ for personal, non-commercial transitory viewing only.</p>
+                
+                <h4>3. Disclaimer</h4>
+                <p>The materials on IB STUDIOZ are provided on an 'as is' basis. IB STUDIOZ makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.</p>
+                
+                <h4>4. Limitations</h4>
+                <p>In no event shall IB STUDIOZ or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on IB STUDIOZ.</p>
+                
+                <button class="btn btn-secondary" id="accept-terms-btn">I Accept</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Privacy Modal -->
+    <div class="modal-overlay" id="privacy-modal" role="dialog" aria-labelledby="privacy-title">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="privacy-title">Privacy Policy</h3>
+                <button class="modal-close" id="privacy-modal-close" aria-label="Close modal">&times;</button>
+            </div>
+            
+            <div class="modal-content">
+                <h4>Information Collection and Use</h4>
+                <p>We collect several different types of information for various purposes to provide and improve our service to you.</p>
+                
+                <h4>Types of Data Collected</h4>
+                <p><strong>Personal Data:</strong> While using our Service, we may ask you to provide us with certain personally identifiable information that can be used to contact or identify you.</p>
+                
+                <p><strong>Usage Data:</strong> We may also collect information on how the Service is accessed and used.</p>
+                
+                <h4>Use of Data</h4>
+                <p>IB STUDIOZ uses the collected data for various purposes:</p>
+                <ul>
+                    <li>To provide and maintain the Service</li>
+                    <li>To notify you about changes to our Service</li>
+                    <li>To provide customer support</li>
+                    <li>To monitor the usage of the Service</li>
+                    <li>To detect, prevent and address technical issues</li>
+                </ul>
+                
+                <button class="btn btn-secondary" id="accept-privacy-btn">I Accept</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Help Modal -->
+    <div class="modal-overlay" id="help-modal" role="dialog" aria-labelledby="help-title">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="help-title">Help & Support</h3>
+                <button class="modal-close" id="help-modal-close" aria-label="Close modal">&times;</button>
+            </div>
+            
+            <div class="modal-content">
+                <h4>Getting Started</h4>
+                <p>If you're new to IB STUDIOZ, follow these steps to get started:</p>
+                <ol>
+                    <li>Create an account using your email address</li>
+                    <li>Complete your profile with your academic details</li>
+                    <li>Browse through the available study materials</li>
+                    <li>Join study groups and participate in discussions</li>
+                </ol>
+                
+                <h4>Frequently Asked Questions</h4>
+                <p><strong>Q: How do I reset my password?</strong></p>
+                <p>A: Click on the "Forgot Password?" link on the login page and follow the instructions.</p>
+                
+                <p><strong>Q: Can I change my email address?</strong></p>
+                <p>A: Yes, you can update your email address from your profile settings after logging in.</p>
+                
+                <p><strong>Q: Is there a mobile app available?</strong></p>
+                <p>A: Currently, IB STUDIOZ is available as a web application. We're working on a mobile app and will announce its release soon.</p>
+                
+                <h4>Contact Support</h4>
+                <p>If you need further assistance, please contact our support team at support@ibstudioz.com.</p>
+            </div>
         </div>
     </div>
     
@@ -941,6 +1713,24 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
         
+        // Academic branches data
+        const branches = {
+            "CSE": {"name":"Computer Science","color":"var(--cse-color)","icon":"fas fa-laptop-code","semesters":{"1":[{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus With MATLAB","credits":4},{"code":"U23PHY103B","name":"Engineering Physics","credits":3},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23BEE106A","name":"Basic Electrical and Electronics Engineering","credits":3},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1},{"code":"U23PHL110","name":"Engineering Physics Lab","credits":1},{"code":"U23BEEL113","name":"Basic Electrical and Electronics Engineering Lab","credits":1},{"code":"U23PPL112","name":"Python Programming Lab","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202B","name":"Discrete Mathematics","credits":4},{"code":"U23CHE204B","name":"Chemistry For Computer Science","credits":3},{"code":"U23CPR205B","name":"Programming In C","credits":3},{"code":"U23EGR207","name":"Engineering Graphics","credits":3},{"code":"U23EC203","name":"Digital Principles And System Design","credits":3},{"code":"U23CHL211","name":"Chemistry Lab","credits":1},{"code":"U23CPL212","name":"C programming Lab","credits":1},{"code":"U23TAM201","name":"Tamils And Technology","credits":1}],"3":[{"code":"U23MAT301D","name":"Probability and Statistics","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming","credits":3},{"code":"U23CS304","name":"Operating Systems","credits":3},{"code":"U23CS305","name":"Computer Information and Ethics","credits":3},{"code":"U23CS306","name":"Data Structures Lab","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Lab","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1},{"code":"Noc24-mg72","name":"NPTEL:design Thinking-A Primer","credits":1}],"4":[{"code":"U23MAT401B","name":"Numerical Methods","credits":4},{"code":"U23CS401","name":"Design And Analysis of Algorithms","credits":3},{"code":"U23CS402","name":"Software Engineering","credits":3},{"code":"U23CS403","name":"DataBase Management Systems","credits":3},{"code":"U23CS404","name":"Embedded System Design ","credits":3},{"code":"U23CS405","name":"Software Development Lab","credits":1},{"code":"U23CS403","name":"Database Management Systems Lab","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CS502","name":"Artificial Intelligence","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":" U23CS947 / U23CS903","name":"Professional Elective ","credits":3},{"code":"U23CS505","name":"Computer Networks Laboratory","credits":2},{"code":"U23CS506","name":"Artificial Intelligence and Machine Learning Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude -III","credits":1}],"6":[],"7":[],"8":[]}},
+            "IT": {"name":"Info. Technology","color":"var(--it-color)","icon":"fas fa-network-wired","semesters":{"1":[{"code":"U23IT101","name":"Programming Fundamentals","credits":4},{"code":"U23IT102","name":"Discrete Mathematics","credits":4},{"code":"U23IT103","name":"Digital Systems","credits":3},{"code":"U23IT104","name":"Computer Organization","credits":3},{"code":"U23IT105","name":"Communication Skills","credits":2},{"code":"U23IT106","name":"Programming Lab","credits":1},{"code":"U23IT107","name":"Digital Systems Lab","credits":1}],"2":[{"code":"U23IT201","name":"Data Structures","credits":4},{"code":"U23IT202","name":"Database Systems","credits":4},{"code":"U23IT203","name":"Operating Systems","credits":3},{"code":"U23IT204","name":"Computer Networks","credits":3},{"code":"U23IT205","name":"Web Technologies","credits":3},{"code":"U23IT206","name":"Data Structures Lab","credits":1},{"code":"U23IT207","name":"Web Technologies Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
+            "ECE": {"name":"Electronics & Comm","color":"var(--ece-color)","icon":"fas fa-satellite-dish","semesters":{"1":[{"code":"U23EC101","name":"Basic Electronics","credits":4},{"code":"U23EC102","name":"Circuit Theory","credits":4},{"code":"U23EC103","name":"Engineering Mathematics","credits":4},{"code":"U23EC104","name":"Programming in C","credits":3},{"code":"U23EC105","name":"Communication Skills","credits":2},{"code":"U23EC106","name":"Electronics Lab","credits":1},{"code":"U23EC107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EC201","name":"Analog Electronics","credits":4},{"code":"U23EC202","name":"Digital Electronics","credits":4},{"code":"U23EC203","name":"Signals and Systems","credits":4},{"code":"U23EC204","name":"Electromagnetic Theory","credits":3},{"code":"U23EC205","name":"Data Structures","credits":3},{"code":"U23EC206","name":"Analog Electronics Lab","credits":1},{"code":"U23EC207","name":"Digital Electronics Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
+            "EEE": {"name":"Electrical & Electronics","color":"var(--eee-color)","icon":"fas fa-bolt","semesters":{"1":[{"code":"U23EE101","name":"Basic Electrical Engineering","credits":4},{"code":"U23EE102","name":"Engineering Mathematics","credits":4},{"code":"U23EE103","name":"Electronics Engineering","credits":3},{"code":"U23EE104","name":"Programming in C","credits":3},{"code":"U23EE105","name":"Communication Skills","credits":2},{"code":"U23EE106","name":"Electrical Lab","credits":1},{"code":"U23EE107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EE201","name":"Circuit Theory","credits":4},{"code":"U23EE202","name":"Electromagnetic Theory","credits":4},{"code":"U23EE203","name":"Digital Electronics","credits":4},{"code":"U23EE204","name":"Electrical Machines","credits":3},{"code":"U23EE205","name":"Data Structures","credits":3},{"code":"U23EE206","name":"Circuit Theory Lab","credits":1},{"code":"U23EE207","name":"Digital Electronics Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
+            "MECH": {"name":"Mechanical","color":"var(--mech-color)","icon":"fas fa-cogs","semesters":{"1":[{"code":"U23ME101","name":"Engineering Mechanics","credits":4},{"code":"U23ME102","name":"Engineering Graphics","credits":4},{"code":"U23ME103","name":"Engineering Mathematics","credits":4},{"code":"U23ME104","name":"Basic Electrical Engineering","credits":3},{"code":"U23ME105","name":"Communication Skills","credits":2},{"code":"U23ME106","name":"Workshop Practice","credits":1},{"code":"U23ME107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23ME201","name":"Thermodynamics","credits":4},{"code":"U23ME202","name":"Mechanics of Materials","credits":4},{"code":"U23ME203","name":"Manufacturing Technology","credits":4},{"code":"U23ME204","name":"Fluid Mechanics","credits":3},{"code":"U23ME205","name":"Computer Programming","credits":3},{"code":"U23ME206","name":"Thermodynamics Lab","credits":1},{"code":"U23ME207","name":"Manufacturing Technology Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
+            "AIML": {"name":"AI & Machine Learning","color":"var(--aiml-color)","icon":"fas fa-brain","semesters":{"1":[{"code":"U23EG107","name":"Engineering Graphics","credits":3},{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus with MATLAB","credits":4},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23PHY103E","name":"Engineering Physics","credits":3},{"code":"U23PHL110","name":"Engineering Physics Laboratory","credits":1},{"code":"U23PPL112","name":"Python Programming Laboratory","credits":1},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202D","name":"Discrete Mathematics","credits":4},{"code":"U23BEEE206B","name":"Basics of Electrical and Electronics Engineering","credits":3},{"code":"U23CPR205","name":"Programming in C","credits":3},{"code":"U23CHE204C","name":"Applied Chemistry","credits":2},{"code":"U23EC203","name":"Digital Principles and System Design","credits":3},{"code":"U23CPL212","name":"C Programming Laboratory","credits":1},{"code":"U23CHL211","name":"Chemistry Laboratory","credits":1},{"code":"U23BEEL213B","name":"BEEE Laboratory","credits":1},{"code":"U23TAM201","name":"Tamils and Technology","credits":1}],"3":[{"code":"U23MAT301E","name":"Applied Probability and Statistics-I","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming Using Java","credits":3},{"code":"U23AML301","name":"Data Visualization","credits":3},{"code":"noc25-mg106","name":"NPTEL: Design Thinking - A Primer","credits":1},{"code":"U23CS306","name":"Data Structures Laboratory","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Using Java Laboratory","credits":1},{"code":"U23AML302","name":"Data Visualization Laboratory","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1}],"4":[{"code":"U23MAT401A","name":"Applied Probability and Statistics-II","credits":4},{"code":"U23CS403","name":"Database Management Systems","credits":3},{"code":"U23CS401","name":"Design and Analysis of Algorithms","credits":3},{"code":"U23AML401","name":"Artificial Intelligence","credits":3},{"code":"U23CSD402","name":"Operating Systems","credits":3},{"code":"U23AML402","name":"Artificial Intelligence Lab","credits":1},{"code":"U23CS405","name":"Database Management Systems Lab","credits":1},{"code":"U23GE401","name":"Soft Skills and Aptitude-II","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CSD502","name":"Software Engineering","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":"U19CS903","name":"Professional Elective - Agile Methodologies","credits":3},{"code":"U23AML501","name":"Machine Learning Laboratory","credits":2},{"code":"U23CSD504","name":"Software Development Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude -III","credits":1}],"6":[{"code":"U23CS601","name":"Computer Vision","credits":3},{"code":"U23CS602","name":"Reinforcement Learning","credits":3},{"code":"U23CS603","name":"Robotics","credits":3},{"code":"U23CS604","name":"Cyber Security","credits":3},{"code":"U23CS605","name":"Blockchain Technology","credits":3},{"code":"U23CS606","name":"Elective III","credits":3},{"code":"U23CS607","name":"Project Work II","credits":3}],"7":[{"code":"U23CS701","name":"Advanced Machine Learning","credits":3},{"code":"U23CS702","name":"AI Ethics and Governance","credits":3},{"code":"U23CS703","name":"Elective IV","credits":3},{"code":"U23CS704","name":"Project Work III","credits":3}],"8":[{"code":"U23CS801","name":"Industry Internship","credits":6},{"code":"U23CS802","name":"Project Work IV","credits":6}]}},
+            "CIVIL": {"name":"Civil Engineering","color":"var(--civil-color)","icon":"fas fa-building","semesters":{"1":[{"code":"U23CE101","name":"Engineering Mechanics","credits":4},{"code":"U23CE102","name":"Engineering Graphics","credits":4},{"code":"U23CE103","name":"Engineering Mathematics","credits":4},{"code":"U23CE104","name":"Basic Civil Engineering","credits":3},{"code":"U23CE105","name":"Communication Skills","credits":2},{"code":"U23CE106","name":"Surveying","credits":1},{"code":"U23CE107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23CE201","name":"Building Materials","credits":4},{"code":"U23CE202","name":"Structural Analysis","credits":4},{"code":"U23CE203","name":"Fluid Mechanics","credits":4},{"code":"U23CE204","name":"Surveying","credits":3},{"code":"U23CE205","name":"Computer Programming","credits":3},{"code":"U23CE206","name":"Building Materials Lab","credits":1},{"code":"U23CE207","name":"Surveying Lab","credits":1}]}},
+            "BME": {"name":"Bio Medical","color":"var(--bme-color)","icon":"fas fa-heartbeat","semesters":{"1":[{"code":"U23BM101","name":"Human Anatomy","credits":4},{"code":"U23BM102","name":"Engineering Mathematics","credits":4},{"code":"U23BM103","name":"Basic Electronics","credits":3},{"code":"U23BM104","name":"Programming in C","credits":3},{"code":"U23BM105","name":"Communication Skills","credits":2},{"code":"U23BM106","name":"Human Anatomy Lab","credits":1},{"code":"U23BM107","name":"Programming Lab","credits":1}],"2":[{"code":"U23BM201","name":"Human Physiology","credits":4},{"code":"U23BM202","name":"Biochemistry","credits":4},{"code":"U23BM203","name":"Medical Electronics","credits":4},{"code":"U23BM204","name":"Biomechanics","credits":3},{"code":"U23BM205","name":"Data Structures","credits":3},{"code":"U23BM206","name":"Human Physiology Lab","credits":1},{"code":"U23BM207","name":"Medical Electronics Lab","credits":1}]}},
+            "FT": {"name":"Fashion Technology","color":"var(--ft-color)","icon":"fas fa-tshirt","semesters":{"1":[{"code":"U23FT101","name":"Fiber Science","credits":4},{"code":"U23FT102","name":"Textile Chemistry","credits":4},{"code":"U23FT103","name":"Fashion Illustration","credits":3},{"code":"U23FT104","name":"Pattern Making","credits":3},{"code":"U23FT105","name":"Communication Skills","credits":2},{"code":"U23FT106","name":"Textile Chemistry Lab","credits":1},{"code":"U23FT107","name":"Pattern Making Lab","credits":1}],"2":[{"code":"U23FT201","name":"Textile Processing","credits":4},{"code":"U23FT202","name":"Apparel Manufacturing","credits":4},{"code":"U23FT203","name":"Fashion Design","credits":4},{"code":"U23FT204","name":"Garment Construction","credits":3},{"code":"U23FT205","name":"Computer Applications","credits":3},{"code":"U23FT206","name":"Apparel Manufacturing Lab","credits":1},{"code":"U23FT207","name":"Garment Construction Lab","credits":1}]}},
+            "MCT": {"name":"Mechatronics","color":"var(--mct-color)","icon":"fas fa-robot","semesters":{"1":[{"code":"U23MT101","name":"Engineering Mechanics","credits":4},{"code":"U23MT102","name":"Engineering Graphics","credits":4},{"code":"U23MT103","name":"Engineering Mathematics","credits":4},{"code":"U23MT104","name":"Basic Electronics","credits":3},{"code":"U23MT105","name":"Communication Skills","credits":2},{"code":"U23MT106","name":"Workshop Practice","credits":1},{"code":"U23MT107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23MT201","name":"Thermodynamics","credits":4},{"code":"U23MT202","name":"Mechanics of Materials","credits":4},{"code":"U23MT203","name":"Digital Electronics","credits":4},{"code":"U23MT204","name":"Fluid Mechanics","credits":3},{"code":"U23MT205","name":"Computer Programming","credits":3},{"code":"U23MT206","name":"Thermodynamics Lab","credits":1},{"code":"U23MT207","name":"Digital Electronics Lab","credits":1}]}},
+            "CSD": {"name":"CS & Design","color":"var(--csd-color)","icon":"fas fa-paint-brush","semesters":{"1":[{"code":"U23CD101","name":"Design Fundamentals","credits":4},{"code":"U23CD102","name":"Programming Basics","credits":4},{"code":"U23CD103","name":"Visual Communication","credits":3},{"code":"U23CD104","name":"Mathematics for Design","credits":3},{"code":"U23CD105","name":"Communication Skills","credits":2},{"code":"U23CD106","name":"Design Studio","credits":1},{"code":"U23CD107","name":"Programming Lab","credits":1}],"2":[{"code":"U23CD201","name":"User Interface Design","credits":4},{"code":"U23CD202","name":"Data Structures","credits":4},{"code":"U23CD203","name":"Web Design","credits":4},{"code":"U23CD204","name":"Digital Illustration","credits":3},{"code":"U23CD205","name":"Human-Computer Interaction","credits":3},{"code":"U23CD206","name":"UI Design Lab","credits":1},{"code":"U23CD207","name":"Web Design Lab","credits":1}]}},
+            "ADS": {"name":"AI & Data Science","color":"var(--ads-color)","icon":"fas fa-database","semesters":{"1":[{"code":"U23DS101","name":"Programming Fundamentals","credits":4},{"code":"U23DS102","name":"Linear Algebra","credits":4},{"code":"U23DS103","name":"Statistics Basics","credits":3},{"code":"U23DS104","name":"Computational Thinking","credits":3},{"code":"U23DS105","name":"Communication Skills","credits":2},{"code":"U23DS106","name":"Programming Lab","credits":1},{"code":"U23DS107","name":"Statistics Lab","credits":1}],"2":[{"code":"U23DS201","name":"Data Structures","credits":4},{"code":"U23DS202","name":"Probability and Statistics","credits":4},{"code":"U23DS203","name":"Database Systems","credits":4},{"code":"U23DS204","name":"Data Visualization","credits":3},{"code":"U23DS205","name":"Python Programming","credits":3},{"code":"U23DS206","name":"Data Structures Lab","credits":1},{"code":"U23DS207","name":"Database Lab","credits":1}]}},
+            "EFE": {"name":"Electrical & Computer","color":"var(--efe-color)","icon":"fas fa-microchip","semesters":{"1":[{"code":"U23EF101","name":"Circuit Theory","credits":4},{"code":"U23EF102","name":"Programming Fundamentals","credits":4},{"code":"U23EF103","name":"Digital Electronics","credits":3},{"code":"U23EF104","name":"Engineering Mathematics","credits":3},{"code":"U23EF105","name":"Communication Skills","credits":2},{"code":"U23EF106","name":"Circuit Theory Lab","credits":1},{"code":"U23EF107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EF201","name":"Signals and Systems","credits":4},{"code":"U23EF202","name":"Data Structures","credits":4},{"code":"U23EF203","name":"Analog Electronics","credits":4},{"code":"U23EF204","name":"Electromagnetic Theory","credits":3},{"code":"U23EF205","name":"Computer Organization","credits":3},{"code":"U23EF206","name":"Analog Electronics Lab","credits":1},{"code":"U23EF207","name":"Data Structures Lab","credits":1}]}},
+            "EXE": {"name":"Electronics & Computer","color":"var(--exe-color)","icon":"fas fa-desktop","semesters":{"1":[{"code":"U23EX101","name":"Basic Electronics","credits":4},{"code":"U23EX102","name":"Programming Fundamentals","credits":4},{"code":"U23EX103","name":"Digital Logic Design","credits":3},{"code":"U23EX104","name":"Engineering Mathematics","credits":3},{"code":"U23EX105","name":"Communication Skills","credits":2},{"code":"U23EX106","name":"Electronics Lab","credits":1},{"code":"U23EX107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EX201","name":"Data Structures","credits":4},{"code":"U23EX202","name":"Analog Electronics","credits":4},{"code":"U23EX203","name":"Computer Organization","credits":4},{"code":"U23EX204","name":"Signals and Systems","credits":3},{"code":"U23EX205","name":"Database Systems","credits":3},{"code":"U23EX206","name":"Analog Electronics Lab","credits":1},{"code":"U23EX207","name":"Data Structures Lab","credits":1}]}}
+        };
+        
         // DOM Elements
         const authForm = document.getElementById('authForm');
         const messageArea = document.getElementById('message-area');
@@ -957,6 +1747,8 @@
         const resetEmailError = document.getElementById('reset-email-error');
         const googleLoginBtn = document.getElementById('google-login');
         const microsoftLoginBtn = document.getElementById('microsoft-login');
+        const githubLoginBtn = document.getElementById('github-login');
+        const facebookLoginBtn = document.getElementById('facebook-login');
         const darkModeToggle = document.getElementById('dark-mode-toggle');
         const passwordInput = document.getElementById('password');
         const passwordStrength = document.getElementById('password-strength');
@@ -967,6 +1759,36 @@
         const submitBtnSpinner = submitBtn.querySelector('.btn-spinner');
         const sendResetBtnText = sendResetBtn.querySelector('.btn-text');
         const sendResetBtnSpinner = sendResetBtn.querySelector('.btn-spinner');
+        
+        // Language selector elements
+        const languageSelector = document.getElementById('language-selector');
+        const currentLanguageElement = document.getElementById('current-language');
+        
+        // Branch modal elements
+        const branchModal = document.getElementById('branch-modal');
+        const branchModalClose = document.getElementById('branch-modal-close');
+        const branchGrid = document.getElementById('branch-grid');
+        const semesterContainer = document.getElementById('semester-container');
+        const semesterGrid = document.getElementById('semester-grid');
+        const courseInfo = document.getElementById('course-info');
+        const courseList = document.getElementById('course-list');
+        const branchModalCancel = document.getElementById('branch-modal-cancel');
+        const branchModalConfirm = document.getElementById('branch-modal-confirm');
+        
+        // Help modal elements
+        const helpBtn = document.getElementById('chatbot-btn');
+        const helpModal = document.getElementById('help-modal');
+        const helpModalClose = document.getElementById('help-modal-close');
+        
+        // Terms and privacy modal elements
+        const termsLink = document.getElementById('terms-link');
+        const privacyLink = document.getElementById('privacy-link');
+        const termsModal = document.getElementById('terms-modal');
+        const termsModalClose = document.getElementById('terms-modal-close');
+        const privacyModal = document.getElementById('privacy-modal');
+        const privacyModalClose = document.getElementById('privacy-modal-close');
+        const acceptTermsBtn = document.getElementById('accept-terms-btn');
+        const acceptPrivacyBtn = document.getElementById('accept-privacy-btn');
         
         // Password toggle elements
         const passwordToggle = document.getElementById('password-toggle');
@@ -988,11 +1810,21 @@
         let isLogin = true;
         let isSocialSignup = false;
         let socialUserData = null;
+        let selectedBranch = null;
+        let selectedSemester = null;
+        let userLanguage = 'en';
         
         // Load saved theme
         if (localStorage.getItem('darkMode') === 'true') {
             document.body.classList.add('dark-mode');
             darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+        
+        // Load saved language
+        const savedLanguage = localStorage.getItem('language');
+        if (savedLanguage) {
+            userLanguage = savedLanguage;
+            updateLanguageDisplay();
         }
         
         // Dark mode toggle
@@ -1002,6 +1834,52 @@
             localStorage.setItem('darkMode', isDarkMode);
             darkModeToggle.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
         });
+        
+        // Language selector
+        languageSelector.addEventListener('click', () => {
+            languageSelector.classList.toggle('active');
+        });
+        
+        // Language option selection
+        document.querySelectorAll('.language-option').forEach(option => {
+            option.addEventListener('click', () => {
+                const lang = option.getAttribute('data-lang');
+                userLanguage = lang;
+                localStorage.setItem('language', lang);
+                updateLanguageDisplay();
+                languageSelector.classList.remove('active');
+                
+                // Save language preference to Firebase if user is logged in
+                if (auth.currentUser) {
+                    db.collection('users').doc(auth.currentUser.uid).update({
+                        language: lang
+                    });
+                }
+            });
+        });
+        
+        // Update language display
+        function updateLanguageDisplay() {
+            const languageNames = {
+                'en': 'English',
+                'es': 'Spanish',
+                'fr': 'French',
+                'de': 'German',
+                'zh': 'Chinese',
+                'ja': 'Japanese'
+            };
+            
+            currentLanguageElement.textContent = languageNames[userLanguage] || 'English';
+            
+            // Update active language option
+            document.querySelectorAll('.language-option').forEach(option => {
+                if (option.getAttribute('data-lang') === userLanguage) {
+                    option.classList.add('active');
+                } else {
+                    option.classList.remove('active');
+                }
+            });
+        }
         
         // Page transition effect
         function navigateToPage(url) {
@@ -1015,6 +1893,8 @@
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'polite');
             
             let icon = 'fa-info-circle';
             if (type === 'success') icon = 'fa-check-circle';
@@ -1032,13 +1912,54 @@
                 toast.classList.add('show');
             }, 10);
             
-            // Remove toast after 4 seconds
+            // Remove toast after 3 seconds
             setTimeout(() => {
                 toast.classList.remove('show');
                 setTimeout(() => {
                     toast.remove();
                 }, 300);
-            }, 4000);
+            }, 3000);
+        }
+        
+        // Toggle between login and register
+        toggleLink.addEventListener('click', () => {
+            isLogin = !isLogin;
+            updateAuthForm();
+        });
+        
+        // Update auth form based on login/register state
+        function updateAuthForm() {
+            const formTitle = document.getElementById('form-title');
+            const toggleText = document.getElementById('toggle-text');
+            const nameGroup = document.getElementById('name-group');
+            const admissionGroup = document.getElementById('admission-group');
+            
+            if (isLogin) {
+                formTitle.textContent = 'Login';
+                toggleText.textContent = "Don't have an account?";
+                toggleLink.textContent = 'Register Now';
+                nameGroup.style.display = 'none';
+                admissionGroup.style.display = 'none';
+                registrationFields.style.display = 'none';
+                submitBtnText.textContent = 'Login';
+            } else {
+                formTitle.textContent = 'Register';
+                toggleText.textContent = 'Already have an account?';
+                toggleLink.textContent = 'Login Now';
+                nameGroup.style.display = 'block';
+                admissionGroup.style.display = 'block';
+                registrationFields.style.display = 'block';
+                submitBtnText.textContent = 'Register';
+            }
+            
+            // Clear any previous messages
+            messageArea.textContent = '';
+            messageArea.className = 'message';
+            
+            // Clear form errors
+            document.querySelectorAll('.form-group').forEach(group => {
+                group.classList.remove('error');
+            });
         }
         
         // Password visibility toggle
@@ -1057,588 +1978,547 @@
         });
         
         // Password strength checker
-        passwordInput.addEventListener('input', (e) => {
-            const password = e.target.value;
-            if (password.length === 0) {
-                passwordStrength.style.display = 'none';
-                return;
-            }
+        passwordInput.addEventListener('input', () => {
+            const password = passwordInput.value;
             
-            passwordStrength.style.display = 'block';
-            const strength = checkPasswordStrength(password);
-            
-            // Remove all strength classes
-            strengthFill.className = 'strength-fill';
-            
-            if (strength <= 1) {
-                strengthFill.classList.add('strength-weak');
-                strengthText.textContent = 'Weak password';
-            } else if (strength === 2) {
-                strengthFill.classList.add('strength-medium');
-                strengthText.textContent = 'Medium password';
-            } else if (strength === 3) {
-                strengthFill.classList.add('strength-strong');
-                strengthText.textContent = 'Strong password';
+            if (password.length > 0) {
+                passwordStrength.style.display = 'block';
+                
+                // Calculate password strength
+                let strength = 0;
+                
+                // Length check
+                if (password.length >= 8) strength += 25;
+                
+                // Contains lowercase
+                if (/[a-z]/.test(password)) strength += 15;
+                
+                // Contains uppercase
+                if (/[A-Z]/.test(password)) strength += 15;
+                
+                // Contains number
+                if (/[0-9]/.test(password)) strength += 15;
+                
+                // Contains special character
+                if (/[^A-Za-z0-9]/.test(password)) strength += 30;
+                
+                // Update strength bar
+                strengthFill.style.width = `${strength}%`;
+                
+                // Update strength text
+                if (strength < 30) {
+                    strengthFill.className = 'strength-fill strength-weak';
+                    strengthText.textContent = 'Weak password';
+                } else if (strength < 60) {
+                    strengthFill.className = 'strength-fill strength-medium';
+                    strengthText.textContent = 'Medium strength';
+                } else if (strength < 80) {
+                    strengthFill.className = 'strength-fill strength-strong';
+                    strengthText.textContent = 'Strong password';
+                } else {
+                    strengthFill.className = 'strength-fill strength-very-strong';
+                    strengthText.textContent = 'Very strong password';
+                }
             } else {
-                strengthFill.classList.add('strength-very-strong');
-                strengthText.textContent = 'Very strong password';
-            }
-        });
-        
-        function checkPasswordStrength(password) {
-            let strength = 0;
-            if (password.length >= 8) strength++;
-            if (password.match(/[a-z]+/)) strength++;
-            if (password.match(/[A-Z]+/)) strength++;
-            if (password.match(/[0-9]+/)) strength++;
-            if (password.match(/[$@#&!]+/)) strength++;
-            return strength;
-        }
-        
-        // AUTH GUARD: Checks if user is already logged in and redirects them
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                spinner.style.display = 'flex';
-                db.collection('users').doc(user.uid).get().then(doc => {
-                    if (doc.exists) {
-                        const path = doc.data().role === 'admin' ? '/admindashboard.html' : '/studentdashboard.html';
-                        navigateToPage(path);
-                    } else {
-                        // User is in auth but not DB, log them out to be safe
-                        auth.signOut();
-                        spinner.style.display = 'none';
-                    }
-                }).catch(error => {
-                    console.error("Error checking user role:", error);
-                    auth.signOut();
-                    spinner.style.display = 'none';
-                });
-            }
-        });
-        
-        // Toggles between Login and Register views with animation
-        toggleLink.addEventListener('click', () => {
-            // Add fade out effect
-            authForm.style.opacity = '0';
-            authForm.style.transform = 'translateY(20px)';
-            
-            setTimeout(() => {
-                isLogin = !isLogin; 
-                authForm.reset(); 
-                clearErrors();
-                messageArea.textContent = '';
                 passwordStrength.style.display = 'none';
-                document.getElementById('form-title').innerText = isLogin ? 'Login' : 'Register';
-                document.getElementById('name-group').style.display = isLogin ? 'none' : 'block';
-                document.getElementById('admission-group').style.display = isLogin ? 'none' : 'block';
-                document.getElementById('registration-fields').style.display = isLogin ? 'none' : 'block';
-                submitBtnText.innerText = isLogin ? 'Login' : 'Register';
-                document.getElementById('toggle-text').innerText = isLogin ? "Don't have an account?" : 'Already have an account?';
-                document.getElementById('toggle-link').innerText = isLogin ? 'Register Now' : 'Login';
-                
-                // Hide social signup fields when toggling
-                isSocialSignup = false;
-                document.getElementById('email').disabled = false;
-                
-                // Add fade in effect
-                authForm.style.opacity = '1';
-                authForm.style.transform = 'translateY(0)';
-            }, 300);
+            }
         });
         
-        // Form validation
-        function validateForm() {
-            clearErrors();
-            let isValid = true;
-            
-            // Email validation
-            const email = document.getElementById('email').value.trim();
-            if (!email) {
-                showError('email', 'Email is required');
-                isValid = false;
-            } else if (!isValidEmail(email)) {
-                showError('email', 'Please enter a valid email address');
-                isValid = false;
-            }
-            
-            // Password validation
-            const password = document.getElementById('password').value;
-            if (!password) {
-                showError('password', 'Password is required');
-                isValid = false;
-            } else if (password.length < 6) {
-                showError('password', 'Password must be at least 6 characters');
-                isValid = false;
-            }
-            
-            // Registration specific validation
-            if (!isLogin) {
-                const name = document.getElementById('name').value.trim();
-                if (!name) {
-                    showError('name', 'Full name is required');
-                    isValid = false;
-                }
-                
-                const admissionNo = document.getElementById('admissionNo').value.trim();
-                if (!admissionNo) {
-                    showError('admission', 'Admission number is required');
-                    isValid = false;
-                }
-                
-                const branch = document.getElementById('branch').value;
-                if (!branch) {
-                    showError('branch', 'Please select your branch');
-                    isValid = false;
-                }
-                
-                const semester = document.getElementById('semester').value;
-                if (!semester) {
-                    showError('semester', 'Please select your semester');
-                    isValid = false;
-                }
-            }
-            
-            return isValid;
-        }
-        
-        // Social registration form validation
-        function validateSocialForm() {
-            clearSocialErrors();
-            let isValid = true;
-            
-            const admission = document.getElementById('social-admission').value.trim();
-            if (!admission) {
-                showSocialError('social-admission', 'Admission number is required');
-                isValid = false;
-            }
-            
-            const branch = document.getElementById('social-branch').value;
-            if (!branch) {
-                showSocialError('social-branch', 'Please select your branch');
-                isValid = false;
-            }
-            
-            const semester = document.getElementById('social-semester').value;
-            if (!semester) {
-                showSocialError('social-semester', 'Please select your semester');
-                isValid = false;
-            }
-            
-            const phone = document.getElementById('social-phone').value.trim();
-            if (phone && !isValidPhone(phone)) {
-                showSocialError('social-phone', 'Please enter a valid phone number');
-                isValid = false;
-            }
-            
-            return isValid;
-        }
-        
-        function isValidEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        }
-        
-        function isValidPhone(phone) {
-            const re = /^[\d\s\-\+\(\)]+$/;
-            return re.test(phone) && phone.replace(/\D/g, '').length >= 10;
-        }
-        
-        function showError(field, message) {
-            const errorElement = document.getElementById(`${field}-error`);
-            errorElement.textContent = message;
-            document.getElementById(field === 'admission' ? 'admissionNo' : field).parentElement.classList.add('error');
-        }
-        
-        function showSocialError(field, message) {
-            const errorElement = document.getElementById(`${field}-error`);
-            errorElement.textContent = message;
-            document.getElementById(field).parentElement.classList.add('error');
-        }
-        
-        function clearErrors() {
-            const errorElements = document.querySelectorAll('.error-message');
-            errorElements.forEach(el => el.textContent = '');
-            
-            const formGroups = document.querySelectorAll('.form-group');
-            formGroups.forEach(group => group.classList.remove('error'));
-        }
-        
-        function clearSocialErrors() {
-            const errorElements = document.querySelectorAll('#social-registration-form .error-message');
-            errorElements.forEach(el => el.textContent = '');
-            
-            const formGroups = document.querySelectorAll('#social-registration-form .form-group');
-            formGroups.forEach(group => group.classList.remove('error'));
-        }
-        
-        // Handles form submission for both Login and Register
+        // Form submission
         authForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            if (!validateForm()) {
+            // Get form values
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const name = document.getElementById('name').value;
+            const admissionNo = document.getElementById('admissionNo').value;
+            const branch = document.getElementById('branch').value;
+            const semester = document.getElementById('semester').value;
+            
+            // Validate form
+            if (!validateForm(email, password, isLogin ? '' : name, isLogin ? '' : admissionNo, isLogin ? '' : branch, isLogin ? '' : semester)) {
                 return;
             }
             
-            // Show loading state
+            // Show loading
             submitBtn.classList.add('btn-loading');
-            submitBtnText.style.visibility = 'hidden';
-            submitBtnSpinner.style.display = 'block';
-            
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
             
             try {
                 if (isLogin) {
-                    // Login with email and password
-                    const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                    // Login user
+                    await auth.signInWithEmailAndPassword(email, password);
+                    showToast('Login successful!', 'success');
                     
-                    // Update last login
-                    await db.collection('users').doc(userCredential.user.uid).update({
-                        lastLoginAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        loginCount: firebase.firestore.FieldValue.increment(1)
+                    // Redirect to dashboard
+                    setTimeout(() => {
+                        navigateToPage('/dashboard.html');
+                    }, 1000);
+                } else {
+                    // Register user
+                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                    const user = userCredential.user;
+                    
+                    // Update user profile
+                    await user.updateProfile({
+                        displayName: name
                     });
                     
-                } else {
-                    const name = document.getElementById('name').value.trim();
-                    const admissionNo = document.getElementById('admissionNo').value.trim();
-                    const branch = document.getElementById('branch').value;
-                    const semester = document.getElementById('semester').value;
-                    
-                    // Create user with the actual email they provided
-                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                    
-                    // Store user data with the actual email
-                    const userData = { 
-                        name: name, 
-                        admissionNo: admissionNo, 
+                    // Save user data to Firestore
+                    await db.collection('users').doc(user.uid).set({
+                        name: name,
                         email: email,
-                        role: 'student',
+                        admissionNo: admissionNo,
                         branch: branch,
                         semester: semester,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        lastLoginAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        loginCount: 1
-                    };
+                        language: userLanguage,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
                     
-                    await db.collection('users').doc(userCredential.user.uid).set(userData);
+                    showToast('Registration successful!', 'success');
                     
-                    showToast('Registration successful! Please login.', 'success');
-                    
-                    // Auto switch to login after successful registration
+                    // Redirect to dashboard
                     setTimeout(() => {
-                        toggleLink.click();
-                    }, 1500);
+                        navigateToPage('/dashboard.html');
+                    }, 1000);
                 }
             } catch (error) {
-                handleAuthError(error);
+                // Handle errors
+                let errorMessage = '';
+                
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMessage = 'Email is already in use';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'Invalid email address';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage = 'Password is too weak';
+                        break;
+                    case 'auth/user-not-found':
+                        errorMessage = 'User not found';
+                        break;
+                    case 'auth/wrong-password':
+                        errorMessage = 'Incorrect password';
+                        break;
+                    default:
+                        errorMessage = error.message;
+                }
+                
+                messageArea.textContent = errorMessage;
+                messageArea.className = 'message error';
             } finally {
+                // Hide loading
                 submitBtn.classList.remove('btn-loading');
-                submitBtnText.style.visibility = 'visible';
-                submitBtnSpinner.style.display = 'none';
             }
         });
         
-        function handleAuthError(error) {
-            console.error("Auth Error:", error);
-            let errorMessage = error.message;
+        // Form validation
+        function validateForm(email, password, name, admissionNo, branch, semester) {
+            let isValid = true;
             
-            // More user-friendly error messages
-            if (error.code === 'auth/user-not-found') {
-                errorMessage = 'No account found with this email address';
-            } else if (error.code === 'auth/wrong-password') {
-                errorMessage = 'Incorrect password. Please try again';
-            } else if (error.code === 'auth/email-already-in-use') {
-                errorMessage = 'This email is already registered. Please login instead';
-            } else if (error.code === 'auth/weak-password') {
-                errorMessage = 'Password is too weak. Please use a stronger password';
-            } else if (error.code === 'auth/invalid-email') {
-                errorMessage = 'Please enter a valid email address';
-            } else if (error.code === 'auth/network-request-failed') {
-                errorMessage = 'Network error. Please check your connection and try again';
+            // Reset errors
+            document.querySelectorAll('.form-group').forEach(group => {
+                group.classList.remove('error');
+            });
+            document.querySelectorAll('.error-message').forEach(msg => {
+                msg.textContent = '';
+            });
+            
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email || !emailRegex.test(email)) {
+                document.getElementById('email-error').textContent = 'Please enter a valid email address';
+                document.getElementById('email').closest('.form-group').classList.add('error');
+                isValid = false;
             }
             
-            messageArea.textContent = errorMessage;
-            messageArea.className = 'message error';
-            spinner.style.display = 'none';
+            // Validate password
+            if (!password || password.length < 6) {
+                document.getElementById('password-error').textContent = 'Password must be at least 6 characters';
+                document.getElementById('password').closest('.form-group').classList.add('error');
+                isValid = false;
+            }
+            
+            // For registration, validate additional fields
+            if (!isLogin) {
+                if (!name || name.trim() === '') {
+                    document.getElementById('name-error').textContent = 'Please enter your full name';
+                    document.getElementById('name').closest('.form-group').classList.add('error');
+                    isValid = false;
+                }
+                
+                if (!admissionNo || admissionNo.trim() === '') {
+                    document.getElementById('admission-error').textContent = 'Please enter your admission number';
+                    document.getElementById('admissionNo').closest('.form-group').classList.add('error');
+                    isValid = false;
+                }
+                
+                if (!branch) {
+                    document.getElementById('branch-error').textContent = 'Please select your branch';
+                    document.getElementById('branch').closest('.form-group').classList.add('error');
+                    isValid = false;
+                }
+                
+                if (!semester) {
+                    document.getElementById('semester-error').textContent = 'Please select your semester';
+                    document.getElementById('semester').closest('.form-group').classList.add('error');
+                    isValid = false;
+                }
+            }
+            
+            return isValid;
         }
         
-        // Forgot Password Implementation
-        forgotPasswordLink.addEventListener('click', (e) => {
-            e.preventDefault();
+        // Forgot password
+        forgotPasswordLink.addEventListener('click', () => {
             forgotPasswordModal.classList.add('active');
-            resetMessage.textContent = '';
-            resetEmail.value = '';
-            resetEmailError.textContent = '';
         });
         
-        // Close modal
         modalClose.addEventListener('click', () => {
             forgotPasswordModal.classList.remove('active');
         });
         
-        // Close modal when clicking outside
-        forgotPasswordModal.addEventListener('click', (e) => {
-            if (e.target === forgotPasswordModal) {
-                forgotPasswordModal.classList.remove('active');
-            }
-        });
-        
-        // Send password reset email
         sendResetBtn.addEventListener('click', async () => {
-            const email = resetEmail.value.trim();
+            const email = resetEmail.value;
             
             if (!email) {
                 resetEmailError.textContent = 'Please enter your email address';
+                resetEmail.closest('.form-group').classList.add('error');
                 return;
             }
             
-            if (!isValidEmail(email)) {
-                resetEmailError.textContent = 'Please enter a valid email address';
-                return;
-            }
-            
-            // Show loading state
+            // Show loading
             sendResetBtn.classList.add('btn-loading');
-            sendResetBtnText.style.visibility = 'hidden';
-            sendResetBtnSpinner.style.display = 'block';
             
             try {
                 await auth.sendPasswordResetEmail(email);
-                
-                resetMessage.textContent = 'Password reset email sent! Check your inbox.';
+                resetMessage.textContent = 'Password reset email sent!';
                 resetMessage.className = 'message success';
                 
-                // Close modal after 3 seconds
+                // Close modal after delay
                 setTimeout(() => {
                     forgotPasswordModal.classList.remove('active');
-                }, 3000);
+                }, 2000);
             } catch (error) {
-                let errorMessage = error.message;
-                
-                // More user-friendly error messages
-                if (error.code === 'auth/user-not-found') {
-                    errorMessage = 'No account found with this email address';
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMessage = 'Please enter a valid email address';
-                } else if (error.code === 'auth/network-request-failed') {
-                    errorMessage = 'Network error. Please check your connection and try again';
-                }
-                
-                resetMessage.textContent = errorMessage;
+                resetMessage.textContent = error.message;
                 resetMessage.className = 'message error';
             } finally {
+                // Hide loading
                 sendResetBtn.classList.remove('btn-loading');
-                sendResetBtnText.style.visibility = 'visible';
-                sendResetBtnSpinner.style.display = 'none';
             }
         });
         
-        // Google Sign-In
-        googleLoginBtn.addEventListener('click', async () => {
-            spinner.style.display = 'flex';
-            
-            try {
-                const provider = new firebase.auth.GoogleAuthProvider();
-                const result = await auth.signInWithPopup(provider);
-                
-                // Check if user exists in Firestore
-                const userDoc = await db.collection('users').doc(result.user.uid).get();
-                
-                if (!userDoc.exists) {
-                    // New user, show registration modal
-                    isSocialSignup = true;
-                    socialUserData = {
-                        name: result.user.displayName || "Google User",
-                        email: result.user.email,
-                        photoURL: result.user.photoURL,
-                        provider: "Google"
-                    };
-                    
-                    // Populate social registration modal
-                    socialAvatar.src = socialUserData.photoURL || 'https://picsum.photos/seed/avatar/60/60.jpg';
-                    socialName.textContent = socialUserData.name;
-                    socialEmail.textContent = socialUserData.email;
-                    
-                    // Show modal
-                    socialRegistrationModal.classList.add('active');
-                    
-                } else {
-                    // Existing user, update login info
-                    await db.collection('users').doc(result.user.uid).update({
-                        lastLoginAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        loginCount: firebase.firestore.FieldValue.increment(1)
-                    });
-                }
-            } catch (error) {
-                console.error("Google sign-in error:", error);
-                showToast('Google sign-in failed. Please try again.', 'error');
-            } finally {
-                spinner.style.display = 'none';
-            }
+        // Social login
+        googleLoginBtn.addEventListener('click', () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            handleSocialLogin(provider);
         });
         
-        // Microsoft Sign-In
-        microsoftLoginBtn.addEventListener('click', async () => {
-            spinner.style.display = 'flex';
-            
-            try {
-                const provider = new firebase.auth.OAuthProvider('microsoft.com');
-                const result = await auth.signInWithPopup(provider);
-                
-                // Check if user exists in Firestore
-                const userDoc = await db.collection('users').doc(result.user.uid).get();
-                
-                if (!userDoc.exists) {
-                    // New user, show registration modal
-                    isSocialSignup = true;
-                    socialUserData = {
-                        name: result.user.displayName || "Microsoft User",
-                        email: result.user.email,
-                        photoURL: result.user.photoURL,
-                        provider: "Microsoft"
-                    };
-                    
-                    // Populate social registration modal
-                    socialAvatar.src = socialUserData.photoURL || 'https://picsum.photos/seed/avatar/60/60.jpg';
-                    socialName.textContent = socialUserData.name;
-                    socialEmail.textContent = socialUserData.email;
-                    
-                    // Show modal
-                    socialRegistrationModal.classList.add('active');
-                    
-                } else {
-                    // Existing user, update login info
-                    await db.collection('users').doc(result.user.uid).update({
-                        lastLoginAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        loginCount: firebase.firestore.FieldValue.increment(1)
-                    });
-                }
-            } catch (error) {
-                console.error("Microsoft sign-in error:", error);
-                showToast('Microsoft sign-in failed. Please try again.', 'error');
-            } finally {
-                spinner.style.display = 'none';
-            }
+        microsoftLoginBtn.addEventListener('click', () => {
+            const provider = new firebase.auth.OAuthProvider('microsoft.com');
+            handleSocialLogin(provider);
         });
         
-        // Social registration modal close
-        socialModalClose.addEventListener('click', () => {
-            socialRegistrationModal.classList.remove('active');
-            // If user closes the modal, sign them out
-            if (isSocialSignup) {
-                auth.signOut();
-                isSocialSignup = false;
-            }
+        githubLoginBtn.addEventListener('click', () => {
+            const provider = new firebase.auth.GithubAuthProvider();
+            handleSocialLogin(provider);
         });
         
-        // Close social modal when clicking outside
-        socialRegistrationModal.addEventListener('click', (e) => {
-            if (e.target === socialRegistrationModal) {
-                socialRegistrationModal.classList.remove('active');
-                // If user closes the modal, sign them out
-                if (isSocialSignup) {
-                    auth.signOut();
-                    isSocialSignup = false;
-                }
-            }
+        facebookLoginBtn.addEventListener('click', () => {
+            const provider = new firebase.auth.FacebookAuthProvider();
+            handleSocialLogin(provider);
         });
         
-        // Handle social registration form submission
+        function handleSocialLogin(provider) {
+            auth.signInWithPopup(provider)
+                .then((result) => {
+                    // Check if user is new
+                    if (result.additionalUserInfo.isNewUser) {
+                        // Show social registration modal
+                        socialUserData = {
+                            uid: result.user.uid,
+                            name: result.user.displayName,
+                            email: result.user.email,
+                            photoURL: result.user.photoURL
+                        };
+                        
+                        // Populate social registration modal
+                        socialAvatar.src = socialUserData.photoURL || 'https://via.placeholder.com/60';
+                        socialName.textContent = socialUserData.name;
+                        socialEmail.textContent = socialUserData.email;
+                        
+                        socialRegistrationModal.classList.add('active');
+                    } else {
+                        // Existing user, redirect to dashboard
+                        showToast('Login successful!', 'success');
+                        setTimeout(() => {
+                            navigateToPage('/dashboard.html');
+                        }, 1000);
+                    }
+                })
+                .catch((error) => {
+                    messageArea.textContent = error.message;
+                    messageArea.className = 'message error';
+                });
+        }
+        
+        // Social registration form submission
         socialRegistrationForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            if (!validateSocialForm()) {
+            // Get form values
+            const admissionNo = document.getElementById('social-admission').value;
+            const branch = document.getElementById('social-branch').value;
+            const semester = document.getElementById('social-semester').value;
+            const phone = document.getElementById('social-phone').value;
+            
+            // Validate form
+            if (!validateSocialForm(admissionNo, branch, semester)) {
                 return;
             }
             
-            // Show loading state
+            // Show loading
             socialSubmitBtn.classList.add('btn-loading');
-            socialSubmitBtnText.style.visibility = 'hidden';
-            socialSubmitBtnSpinner.style.display = 'block';
             
             try {
-                const admissionNo = document.getElementById('social-admission').value.trim();
-                const branch = document.getElementById('social-branch').value;
-                const semester = document.getElementById('social-semester').value;
-                const phone = document.getElementById('social-phone').value.trim();
-                
-                // Update user document with additional info
-                const userData = {
+                // Save user data to Firestore
+                await db.collection('users').doc(socialUserData.uid).set({
                     name: socialUserData.name,
-                    admissionNo: admissionNo,
                     email: socialUserData.email,
-                    role: 'student',
+                    admissionNo: admissionNo,
                     branch: branch,
                     semester: semester,
                     phone: phone,
-                    provider: socialUserData.provider,
                     photoURL: socialUserData.photoURL,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    lastLoginAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    loginCount: 1
-                };
+                    language: userLanguage,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
                 
-                await db.collection('users').doc(auth.currentUser.uid).set(userData);
+                showToast('Registration successful!', 'success');
                 
-                showToast('Registration successful! Redirecting...', 'success');
-                
-                // Reset form
-                isSocialSignup = false;
+                // Close modal
                 socialRegistrationModal.classList.remove('active');
-                socialRegistrationForm.reset();
-                clearSocialErrors();
                 
-                // Simulate successful login
+                // Redirect to dashboard
                 setTimeout(() => {
-                    navigateToPage('/studentdashboard.html');
-                }, 1500);
+                    navigateToPage('/dashboard.html');
+                }, 1000);
             } catch (error) {
-                console.error("Social registration error:", error);
-                socialMessage.textContent = 'Registration failed. Please try again.';
+                socialMessage.textContent = error.message;
                 socialMessage.className = 'message error';
             } finally {
+                // Hide loading
                 socialSubmitBtn.classList.remove('btn-loading');
-                socialSubmitBtnText.style.visibility = 'visible';
-                socialSubmitBtnSpinner.style.display = 'none';
             }
         });
         
-        // Add smooth transitions to form elements
-        authForm.style.transition = 'all 0.3s ease';
-        
-        // Prevent form submission on Enter key for social signup
-        document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && isSocialSignup) {
-                e.preventDefault();
-                document.getElementById('submit-btn').click();
-            }
-        });
-        
-        // Performance monitoring
-        if ('PerformanceObserver' in window) {
-            const perfObserver = new PerformanceObserver((list) => {
-                list.getEntries().forEach(entry => {
-                    if (entry.duration > 1000) {
-                        console.warn('Slow operation:', entry.name, entry.duration);
-                    }
-                });
+        // Social form validation
+        function validateSocialForm(admissionNo, branch, semester) {
+            let isValid = true;
+            
+            // Reset errors
+            document.querySelectorAll('.form-group').forEach(group => {
+                group.classList.remove('error');
             });
-            perfObserver.observe({ entryTypes: ['measure'] });
+            document.querySelectorAll('.error-message').forEach(msg => {
+                msg.textContent = '';
+            });
+            
+            if (!admissionNo || admissionNo.trim() === '') {
+                document.getElementById('social-admission-error').textContent = 'Please enter your admission number';
+                document.getElementById('social-admission').closest('.form-group').classList.add('error');
+                isValid = false;
+            }
+            
+            if (!branch) {
+                document.getElementById('social-branch-error').textContent = 'Please select your branch';
+                document.getElementById('social-branch').closest('.form-group').classList.add('error');
+                isValid = false;
+            }
+            
+            if (!semester) {
+                document.getElementById('social-semester-error').textContent = 'Please select your semester';
+                document.getElementById('social-semester').closest('.form-group').classList.add('error');
+                isValid = false;
+            }
+            
+            return isValid;
         }
         
-        // Error boundary
-        window.addEventListener('error', (e) => {
-            console.error('Global error:', e.error);
-            showToast('An error occurred. Please refresh the page.', 'error');
+        // Social modal close
+        socialModalClose.addEventListener('click', () => {
+            socialRegistrationModal.classList.remove('active');
         });
         
-        // Network status monitoring
-        window.addEventListener('online', () => {
-            showToast('Connection restored', 'success');
+        // Branch modal
+        function openBranchModal() {
+            // Populate branch grid
+            branchGrid.innerHTML = '';
+            
+            Object.keys(branches).forEach(branchCode => {
+                const branch = branches[branchCode];
+                
+                const branchItem = document.createElement('div');
+                branchItem.className = 'branch-item';
+                branchItem.dataset.branch = branchCode;
+                
+                branchItem.innerHTML = `
+                    <div class="branch-icon">
+                        <i class="${branch.icon}"></i>
+                    </div>
+                    <div class="branch-name">${branch.name}</div>
+                    <div class="branch-short">${branchCode}</div>
+                `;
+                
+                branchItem.addEventListener('click', () => {
+                    // Select branch
+                    document.querySelectorAll('.branch-item').forEach(item => {
+                        item.classList.remove('selected');
+                    });
+                    branchItem.classList.add('selected');
+                    
+                    selectedBranch = branchCode;
+                    
+                    // Show semester container
+                    semesterContainer.classList.add('active');
+                    
+                    // Populate semester grid
+                    semesterGrid.innerHTML = '';
+                    
+                    Object.keys(branch.semesters).forEach(semesterNum => {
+                        const semesterItem = document.createElement('div');
+                        semesterItem.className = 'semester-item';
+                        semesterItem.dataset.semester = semesterNum;
+                        
+                        semesterItem.innerHTML = `
+                            <div class="semester-number">${semesterNum}</div>
+                            <div class="semester-text">Semester ${semesterNum}</div>
+                        `;
+                        
+                        semesterItem.addEventListener('click', () => {
+                            // Select semester
+                            document.querySelectorAll('.semester-item').forEach(item => {
+                                item.classList.remove('selected');
+                            });
+                            semesterItem.classList.add('selected');
+                            
+                            selectedSemester = semesterNum;
+                            
+                            // Show course info
+                            courseInfo.classList.add('active');
+                            
+                            // Populate course list
+                            courseList.innerHTML = '';
+                            
+                            branch.semesters[semesterNum].forEach(course => {
+                                const courseItem = document.createElement('div');
+                                courseItem.className = 'course-item';
+                                
+                                courseItem.innerHTML = `
+                                    <span class="course-code">${course.code}</span>
+                                    <span class="course-name">${course.name}</span>
+                                    <span class="course-credits">${course.credits} credits</span>
+                                `;
+                                
+                                courseList.appendChild(courseItem);
+                            });
+                        });
+                        
+                        semesterGrid.appendChild(semesterItem);
+                    });
+                });
+                
+                branchGrid.appendChild(branchItem);
+            });
+            
+            branchModal.classList.add('active');
+        }
+        
+        // Branch modal close
+        branchModalClose.addEventListener('click', () => {
+            branchModal.classList.remove('active');
         });
         
-        window.addEventListener('offline', () => {
-            showToast('You are offline. Some features may not work.', 'error');
+        branchModalCancel.addEventListener('click', () => {
+            branchModal.classList.remove('active');
+        });
+        
+        branchModalConfirm.addEventListener('click', () => {
+            if (selectedBranch && selectedSemester) {
+                // Update form fields
+                document.getElementById('branch').value = selectedBranch;
+                document.getElementById('semester').value = selectedSemester;
+                
+                // Close modal
+                branchModal.classList.remove('active');
+                
+                showToast('Branch and semester selected successfully!', 'success');
+            } else {
+                showToast('Please select both branch and semester', 'error');
+            }
+        });
+        
+        // Help modal
+        helpBtn.addEventListener('click', () => {
+            helpModal.classList.add('active');
+        });
+        
+        helpModalClose.addEventListener('click', () => {
+            helpModal.classList.remove('active');
+        });
+        
+        // Terms and privacy modals
+        termsLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            termsModal.classList.add('active');
+        });
+        
+        privacyLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            privacyModal.classList.add('active');
+        });
+        
+        termsModalClose.addEventListener('click', () => {
+            termsModal.classList.remove('active');
+        });
+        
+        privacyModalClose.addEventListener('click', () => {
+            privacyModal.classList.remove('active');
+        });
+        
+        acceptTermsBtn.addEventListener('click', () => {
+            termsModal.classList.remove('active');
+        });
+        
+        acceptPrivacyBtn.addEventListener('click', () => {
+            privacyModal.classList.remove('active');
+        });
+        
+        // Check if user is already logged in
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // User is signed in
+                // Get user data from Firestore
+                db.collection('users').doc(user.uid).get().then((doc) => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        
+                        // Update user language if available
+                        if (userData.language) {
+                            userLanguage = userData.language;
+                            localStorage.setItem('language', userLanguage);
+                            updateLanguageDisplay();
+                        }
+                    }
+                });
+            }
+        });
+        
+        // Initialize branch modal for registration
+        document.getElementById('branch').addEventListener('click', () => {
+            openBranchModal();
         });
     </script>
 </body>
