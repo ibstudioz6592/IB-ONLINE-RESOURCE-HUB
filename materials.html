@@ -541,6 +541,56 @@
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
         
+        /* Branch-Semester-Course Selection Display */
+        .selection-display {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--surface-hover);
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+        }
+        
+        .selection-item {
+            flex: 1;
+            text-align: center;
+            padding: 0.75rem;
+            background: var(--background);
+            border-radius: calc(var(--radius) / 2);
+            border: 1px solid var(--border);
+        }
+        
+        .selection-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+        
+        .selection-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .change-selection-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .change-selection-btn:hover {
+            background: var(--primary-dark);
+        }
+        
         /* Custom Dropdown Styles */
         .custom-select {
             position: relative;
@@ -946,6 +996,223 @@
             gap: 1rem;
         }
         
+        /* Branch-Semester-Course Selection Modal */
+        .branch-semester-course-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        
+        .branch-semester-course-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .branch-semester-course-modal .modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 900px;
+            padding: 0;
+            box-shadow: var(--shadow-xl);
+            transform: translateY(20px);
+            transition: var(--transition);
+            max-height: 90vh;
+            overflow: hidden;
+        }
+        
+        .branch-semester-course-modal.active .modal {
+            transform: translateY(0);
+        }
+        
+        .selection-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .selection-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .selection-steps {
+            display: flex;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        
+        .step:not(:last-child):after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            right: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--border);
+        }
+        
+        .step.active:not(:last-child):after {
+            background: var(--primary);
+        }
+        
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--surface-hover);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: 600;
+        }
+        
+        .step.active .step-number {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .step-title {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .step.active .step-title {
+            color: var(--text-primary);
+        }
+        
+        .selection-content {
+            padding: 1.5rem;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+        
+        .selection-step {
+            display: none;
+        }
+        
+        .selection-step.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .selection-card {
+            background: var(--surface-hover);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .selection-card:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .selection-card.selected {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .selection-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .selection-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .selection-code {
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+        
+        .selection-actions {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .btn-step {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+        
+        .btn-prev {
+            background: var(--surface-hover);
+            color: var(--text-primary);
+        }
+        
+        .btn-prev:hover {
+            background: var(--border);
+        }
+        
+        .btn-next, .btn-finish {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-next:hover, .btn-finish:hover {
+            background: var(--primary-dark);
+        }
+        
+        .btn-finish {
+            display: none;
+        }
+        
+        .selection-step.active:last-child .btn-next {
+            display: none;
+        }
+        
+        .selection-step.active:last-child .btn-finish {
+            display: block;
+        }
+        
         /* Filter Modal */
         .filter-modal .modal-content {
             padding: 0;
@@ -1209,6 +1476,49 @@
                 padding: 0.5rem 1rem;
                 font-size: 0.75rem;
             }
+            
+            .selection-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .selection-card {
+                padding: 1rem;
+            }
+            
+            .selection-icon {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .filter-section {
+                padding: 1rem;
+            }
+            
+            .filter-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .filter-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+            }
+            
+            .material-actions {
+                flex-wrap: wrap;
+            }
+            
+            .material-action {
+                width: 32px;
+                height: 32px;
+            }
         }
     </style>
 </head>
@@ -1338,6 +1648,26 @@
                 </div>
             </div>
             
+            <!-- Branch-Semester-Course Selection Display -->
+            <div class="selection-display" id="selection-display" style="display: none;">
+                <div class="selection-item">
+                    <div class="selection-label">Branch</div>
+                    <div class="selection-value" id="selected-branch">-</div>
+                </div>
+                <div class="selection-item">
+                    <div class="selection-label">Semester</div>
+                    <div class="selection-value" id="selected-semester">-</div>
+                </div>
+                <div class="selection-item">
+                    <div class="selection-label">Course</div>
+                    <div class="selection-value" id="selected-course">-</div>
+                </div>
+                <button class="change-selection-btn" id="change-selection">
+                    <i class="fas fa-edit"></i>
+                    <span>Change</span>
+                </button>
+            </div>
+            
             <div class="filter-grid">
                 <div class="filter-group">
                     <label class="filter-label">Search</label>
@@ -1433,6 +1763,65 @@
         </div>
     </div>
     
+    <!-- Branch-Semester-Course Selection Modal -->
+    <div class="branch-semester-course-modal" id="branch-semester-course-modal">
+        <div class="modal">
+            <div class="selection-header">
+                <h2>Select Branch, Semester, and Course</h2>
+                <button class="modal-close" id="selection-modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="selection-steps">
+                <div class="step active" data-step="branch">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Branch</div>
+                </div>
+                <div class="step" data-step="semester">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Semester</div>
+                </div>
+                <div class="step" data-step="course">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Course</div>
+                </div>
+            </div>
+            
+            <div class="selection-content">
+                <!-- Branch Selection Step -->
+                <div class="selection-step active" id="branch-step">
+                    <h3 style="margin-bottom: 1rem;">Select Branch</h3>
+                    <div class="selection-grid" id="branch-options">
+                        <!-- Branch options will be populated here -->
+                    </div>
+                </div>
+                
+                <!-- Semester Selection Step -->
+                <div class="selection-step" id="semester-step">
+                    <h3 style="margin-bottom: 1rem;">Select Semester</h3>
+                    <div class="selection-grid" id="semester-options">
+                        <!-- Semester options will be populated here -->
+                    </div>
+                </div>
+                
+                <!-- Course Selection Step -->
+                <div class="selection-step" id="course-step">
+                    <h3 style="margin-bottom: 1rem;">Select Course</h3>
+                    <div class="selection-grid" id="course-options">
+                        <!-- Course options will be populated here -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="selection-actions">
+                <button class="btn-step btn-prev" id="prev-step-btn" style="display: none;">Previous</button>
+                <button class="btn-step btn-next" id="next-step-btn">Next</button>
+                <button class="btn-step btn-finish" id="finish-selection-btn">Finish</button>
+            </div>
+        </div>
+    </div>
+    
     <!-- Chatbot -->
     <button class="chatbot-toggle" id="chatbotToggle">
         <i class="fas fa-robot"></i>
@@ -1470,7 +1859,7 @@
                 "ECE": {"name":"Electronics & Communication Engineering","color":"var(--ece-color)","icon":"fas fa-satellite-dish","semesters":{"1":[{"code":"U23EC101","name":"Basic Electronics","credits":4},{"code":"U23EC102","name":"Circuit Theory","credits":4},{"code":"U23EC103","name":"Engineering Mathematics","credits":4},{"code":"U23EC104","name":"Programming in C","credits":3},{"code":"U23EC105","name":"Communication Skills","credits":2},{"code":"U23EC106","name":"Electronics Lab","credits":1},{"code":"U23EC107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EC201","name":"Analog Electronics","credits":4},{"code":"U23EC202","name":"Digital Electronics","credits":4},{"code":"U23EC203","name":"Signals and Systems","credits":4},{"code":"U23EC204","name":"Electromagnetic Theory","credits":3},{"code":"U23EC205","name":"Data Structures","credits":3},{"code":"U23EC206","name":"Analog Electronics Lab","credits":1},{"code":"U23EC207","name":"Digital Electronics Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
                 "EEE": {"name":"Electrical & Electronics Engineering","color":"var(--eee-color)","icon":"fas fa-bolt","semesters":{"1":[{"code":"U23EE101","name":"Basic Electrical Engineering","credits":4},{"code":"U23EE102","name":"Engineering Mathematics","credits":4},{"code":"U23EE103","name":"Electronics Engineering","credits":3},{"code":"U23EE104","name":"Programming in C","credits":3},{"code":"U23EE105","name":"Communication Skills","credits":2},{"code":"U23EE106","name":"Electrical Lab","credits":1},{"code":"U23EE107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EE201","name":"Circuit Theory","credits":4},{"code":"U23EE202","name":"Electromagnetic Theory","credits":4},{"code":"U23EE203","name":"Digital Electronics","credits":4},{"code":"U23EE204","name":"Electrical Machines","credits":3},{"code":"U23EE205","name":"Data Structures","credits":3},{"code":"U23EE206","name":"Circuit Theory Lab","credits":1},{"code":"U23EE207","name":"Digital Electronics Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
                 "MECH": {"name":"Mechanical Engineering","color":"var(--mech-color)","icon":"fas fa-cogs","semesters":{"1":[{"code":"U23ME101","name":"Engineering Mechanics","credits":4},{"code":"U23ME102","name":"Engineering Graphics","credits":4},{"code":"U23ME103","name":"Engineering Mathematics","credits":4},{"code":"U23ME104","name":"Basic Electrical Engineering","credits":3},{"code":"U23ME105","name":"Communication Skills","credits":2},{"code":"U23ME106","name":"Workshop Practice","credits":1},{"code":"U23ME107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23ME201","name":"Thermodynamics","credits":4},{"code":"U23ME202","name":"Mechanics of Materials","credits":4},{"code":"U23ME203","name":"Manufacturing Technology","credits":4},{"code":"U23ME204","name":"Fluid Mechanics","credits":3},{"code":"U23ME205","name":"Computer Programming","credits":3},{"code":"U23ME206","name":"Thermodynamics Lab","credits":1},{"code":"U23ME207","name":"Manufacturing Technology Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
-                "AIML": {"name":"AI & Machine Learning","color":"var(--aiml-color)","icon":"fas fa-brain","semesters":{"1":[{"code":"U23EG107","name":"Engineering Graphics","credits":3},{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus with MATLAB","credits":4},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23PHY103E","name":"Engineering Physics","credits":3},{"code":"U23PHL110","name":"Engineering Physics Laboratory","credits":1},{"code":"U23PPL112","name":"Python Programming Laboratory","credits":1},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202D","name":"Discrete Mathematics","credits":4},{"code":"U23BEEE206B","name":"Basics of Electrical and Electronics Engineering","credits":3},{"code":"U23CPR205","name":"Programming in C","credits":3},{"code":"U23CHE204C","name":"Applied Chemistry","credits":2},{"code":"U23EC203","name":"Digital Principles and System Design","credits":3},{"code":"U23CPL212","name":"C Programming Laboratory","credits":1},{"code":"U23CHL211","name":"Chemistry Laboratory","credits":1},{"code":"U23BEEL213B","name":"BEEE Laboratory","credits":1},{"code":"U23TAM201","name":"Tamils and Technology","credits":1}],"3":[{"code":"U23MAT301E","name":"Applied Probability and Statistics-I","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming Using Java","credits":3},{"code":"U23AML301","name":"Data Visualization","credits":3},{"code":"noc25-mg106","name":"NPTEL: Design Thinking - A Primer","credits":1},{"code":"U23CS306","name":"Data Structures Laboratory","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Using Java Laboratory","credits":1},{"code":"U23AML302","name":"Data Visualization Laboratory","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1}],"4":[{"code":"U23MAT401A","name":"Applied Probability and Statistics-II","credits":4},{"code":"U23CS403","name":"Database Management Systems","credits":3},{"code":"U23CS401","name":"Design and Analysis of Algorithms","credits":3},{"code":"U23AML401","name":"Artificial Intelligence","credits":3},{"code":"U23CSD402","name":"Operating Systems","credits":3},{"code":"U23AML402","name":"Artificial Intelligence Lab","credits":1},{"code":"U23CS405","name":"Database Management Systems Lab","credits":1},{"code":"U23GE401","name":"Soft Skills and Aptitude-II","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CSD502","name":"Software Engineering","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":"U19CS903","name":"Professional Elective - Agile Methodologies","credits":3},{"code":"U23AML501","name":"Machine Learning Laboratory","credits":2},{"code":"U23CSD504","name":"Software Development Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude -III","credits":1}],"6":[{"code":"U23CS601","name":"Computer Vision","credits":3},{"code":"U23CS602","name":"Reinforcement Learning","credits":3},{"code":"U23CS603","name":"Robotics","credits":3},{"code":"U23CS604","name":"Cyber Security","credits":3},{"code":"U23CS605","name":"Blockchain Technology","credits":3},{"code":"U23CS606","name":"Elective III","credits":3},{"code":"U23CS607","name":"Project Work II","credits":3}],"7":[{"code":"U23CS701","name":"Advanced Machine Learning","credits":3},{"code":"U23CS702","name":"AI Ethics and Governance","credits":3},{"code":"U23CS703","name":"Elective IV","credits":3},{"code":"U23CS704","name":"Project Work III","credits":3}],"8":[{"code":"U23CS801","name":"Industry Internship","credits":6},{"code":"U23CS802","name":"Project Work IV","credits":6}]}},
+                "AIML": {"name":"AI & Machine Learning","color":"var(--aiml-color)","icon":"fas fa-brain","semesters":{"1":[{"code":"U23EG107","name":"Engineering Graphics","credits":3},{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus with MATLAB","credits":4},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23PHY103E","name":"Engineering Physics","credits":3},{"code":"U23PHL110","name":"Engineering Physics Laboratory","credits":1},{"code":"U23PPL112","name":"Python Programming Laboratory","credits":1},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202D","name":"Discrete Mathematics","credits":4},{"code":"U23BEEE206B","name":"Basics of Electrical and Electronics Engineering","credits":3},{"code":"U23CPR205","name":"Programming in C","credits":3},{"code":"U23CHE204C","name":"Applied Chemistry","credits":2},{"code":"U23EC203","name":"Digital Principles and System Design","credits":3},{"code":"U23CPL212","name":"C Programming Laboratory","credits":1},{"code":"U23CHL211","name":"Chemistry Laboratory","credits":1},{"code":"U23BEEL213B","name":"BEEE Laboratory","credits":1},{"code":"U23TAM201","name":"Tamils And Technology","credits":1}],"3":[{"code":"U23MAT301E","name":"Applied Probability and Statistics-I","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming Using Java","credits":3},{"code":"U23AML301","name":"Data Visualization","credits":3},{"code":"noc25-mg106","name":"NPTEL: Design Thinking - A Primer","credits":1},{"code":"U23CS306","name":"Data Structures Laboratory","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Using Java Laboratory","credits":1},{"code":"U23AML302","name":"Data Visualization Laboratory","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1}],"4":[{"code":"U23MAT401A","name":"Applied Probability and Statistics-II","credits":4},{"code":"U23CS403","name":"Database Management Systems","credits":3},{"code":"U23CS401","name":"Design and Analysis of Algorithms","credits":3},{"code":"U23AML401","name":"Artificial Intelligence","credits":3},{"code":"U23CSD402","name":"Operating Systems","credits":3},{"code":"U23AML402","name":"Artificial Intelligence Lab","credits":1},{"code":"U23CS405","name":"Database Management Systems Lab","credits":1},{"code":"U23GE401","name":"Soft Skills and Aptitude-II","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CSD502","name":"Software Engineering","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":"U19CS903","name":"Professional Elective - Agile Methodologies","credits":3},{"code":"U23AML501","name":"Machine Learning Laboratory","credits":2},{"code":"U23CSD504","name":"Software Development Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude -III","credits":1}],"6":[{"code":"U23CS601","name":"Computer Vision","credits":3},{"code":"U23CS602","name":"Reinforcement Learning","credits":3},{"code":"U23CS603","name":"Robotics","credits":3},{"code":"U23CS604","name":"Cyber Security","credits":3},{"code":"U23CS605","name":"Blockchain Technology","credits":3},{"code":"U23CS606","name":"Elective III","credits":3},{"code":"U23CS607","name":"Project Work II","credits":3}],"7":[{"code":"U23CS701","name":"Advanced Machine Learning","credits":3},{"code":"U23CS702","name":"AI Ethics and Governance","credits":3},{"code":"U23CS703","name":"Elective IV","credits":3},{"code":"U23CS704","name":"Project Work III","credits":3}],"8":[{"code":"U23CS801","name":"Industry Internship","credits":6},{"code":"U23CS802","name":"Project Work IV","credits":6}]}},
                 "CIVIL": {"name":"Civil Engineering","color":"var(--civil-color)","icon":"fas fa-building","semesters":{"1":[{"code":"U23CE101","name":"Engineering Mechanics","credits":4},{"code":"U23CE102","name":"Engineering Graphics","credits":4},{"code":"U23CE103","name":"Engineering Mathematics","credits":4},{"code":"U23CE104","name":"Basic Civil Engineering","credits":3},{"code":"U23CE105","name":"Communication Skills","credits":2},{"code":"U23CE106","name":"Surveying","credits":1},{"code":"U23CE107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23CE201","name":"Building Materials","credits":4},{"code":"U23CE202","name":"Structural Analysis","credits":4},{"code":"U23CE203","name":"Fluid Mechanics","credits":4},{"code":"U23CE204","name":"Surveying","credits":3},{"code":"U23CE205","name":"Computer Programming","credits":3},{"code":"U23CE206","name":"Building Materials Lab","credits":1},{"code":"U23CE207","name":"Surveying Lab","credits":1}]}},
                 "BME": {"name":"Biomedical Engineering","color":"var(--bme-color)","icon":"fas fa-heartbeat","semesters":{"1":[{"code":"U23BM101","name":"Human Anatomy","credits":4},{"code":"U23BM102","name":"Engineering Mathematics","credits":4},{"code":"U23BM103","name":"Basic Electronics","credits":3},{"code":"U23BM104","name":"Programming in C","credits":3},{"code":"U23BM105","name":"Communication Skills","credits":2},{"code":"U23BM106","name":"Human Anatomy Lab","credits":1},{"code":"U23BM107","name":"Programming Lab","credits":1}],"2":[{"code":"U23BM201","name":"Human Physiology","credits":4},{"code":"U23BM202","name":"Biochemistry","credits":4},{"code":"U23BM203","name":"Medical Electronics","credits":4},{"code":"U23BM204","name":"Biomechanics","credits":3},{"code":"U23BM205","name":"Data Structures","credits":3},{"code":"U23BM206","name":"Human Physiology Lab","credits":1},{"code":"U23BM207","name":"Medical Electronics Lab","credits":1}]}},
                 "FT": {"name":"Fashion Technology","color":"var(--ft-color)","icon":"fas fa-tshirt","semesters":{"1":[{"code":"U23FT101","name":"Fiber Science","credits":4},{"code":"U23FT102","name":"Textile Chemistry","credits":4},{"code":"U23FT103","name":"Fashion Illustration","credits":3},{"code":"U23FT104","name":"Pattern Making","credits":3},{"code":"U23FT105","name":"Communication Skills","credits":2},{"code":"U23FT106","name":"Textile Chemistry Lab","credits":1},{"code":"U23FT107","name":"Pattern Making Lab","credits":1}],"2":[{"code":"U23FT201","name":"Textile Processing","credits":4},{"code":"U23FT202","name":"Apparel Manufacturing","credits":4},{"code":"U23FT203","name":"Fashion Design","credits":4},{"code":"U23FT204","name":"Garment Construction","credits":3},{"code":"U23FT205","name":"Computer Applications","credits":3},{"code":"U23FT206","name":"Apparel Manufacturing Lab","credits":1},{"code":"U23FT207","name":"Garment Construction Lab","credits":1}]}},
@@ -1503,7 +1892,9 @@
         let materials = [];
         let filteredMaterials = [];
         let downloadedMaterials = [];
-        let unsubscribeFunctions = [];
+        let selectedBranch = null;
+        let selectedSemester = null;
+        let selectedCourse = null;
         
         // DOM Elements
         const themeToggle = document.getElementById('themeToggle');
@@ -1537,6 +1928,25 @@
         const chatbotSend = document.getElementById('chatbotSend');
         const toast = document.getElementById('toast');
         const toastMessage = document.getElementById('toastMessage');
+        
+        // Branch-Semester-Course Selection Modal Elements
+        const branchSemesterCourseModal = document.getElementById('branch-semester-course-modal');
+        const selectionModalClose = document.getElementById('selection-modal-close');
+        const prevStepBtn = document.getElementById('prev-step-btn');
+        const nextStepBtn = document.getElementById('next-step-btn');
+        const finishSelectionBtn = document.getElementById('finish-selection-btn');
+        const branchStep = document.getElementById('branch-step');
+        const semesterStep = document.getElementById('semester-step');
+        const courseStep = document.getElementById('course-step');
+        const branchOptions = document.getElementById('branch-options');
+        const semesterOptions = document.getElementById('semester-options');
+        const courseOptions = document.getElementById('course-options');
+        const stepIndicators = document.querySelectorAll('.step');
+        const selectionDisplay = document.getElementById('selection-display');
+        const selectedBranchDisplay = document.getElementById('selected-branch');
+        const selectedSemesterDisplay = document.getElementById('selected-semester');
+        const selectedCourseDisplay = document.getElementById('selected-course');
+        const changeSelectionBtn = document.getElementById('change-selection');
         
         // Theme Management
         function initTheme() {
@@ -1800,6 +2210,12 @@
             modalTypeFilter.value = '';
             searchFilter.value = '';
             modalSearchFilter.value = '';
+            
+            // Reset selection display
+            selectedBranch = null;
+            selectedSemester = null;
+            selectedCourse = null;
+            selectionDisplay.style.display = 'none';
             
             updateSemesterFilter();
             updateCourseFilter();
@@ -2163,6 +2579,246 @@
             }
         }
         
+        // Branch-Semester-Course Selection Modal Functions
+        function initBranchSemesterCourseModal() {
+            // Initialize branch options
+            initializeBranchOptions();
+            
+            // Modal event listeners
+            selectionModalClose.addEventListener('click', () => {
+                branchSemesterCourseModal.classList.remove('active');
+            });
+            
+            prevStepBtn.addEventListener('click', goToPrevStep);
+            nextStepBtn.addEventListener('click', goToNextStep);
+            finishSelectionBtn.addEventListener('click', finishSelection);
+            
+            // Change selection button
+            changeSelectionBtn.addEventListener('click', () => {
+                branchSemesterCourseModal.classList.add('active');
+            });
+            
+            // Modal overlay click
+            branchSemesterCourseModal.addEventListener('click', (e) => {
+                if (e.target === branchSemesterCourseModal) {
+                    branchSemesterCourseModal.classList.remove('active');
+                }
+            });
+        }
+        
+        function initializeBranchOptions() {
+            branchOptions.innerHTML = '';
+            
+            for (const code in academicData.branches) {
+                const branch = academicData.branches[code];
+                const branchCard = document.createElement('div');
+                branchCard.className = 'selection-card';
+                branchCard.dataset.branch = code;
+                
+                branchCard.innerHTML = `
+                    <div class="selection-icon">
+                        <i class="${branch.icon}"></i>
+                    </div>
+                    <div class="selection-name">${branch.name}</div>
+                    <div class="selection-code">${code}</div>
+                `;
+                
+                branchCard.addEventListener('click', () => selectBranch(code));
+                branchOptions.appendChild(branchCard);
+            }
+        }
+        
+        function selectBranch(code) {
+            selectedBranch = code;
+            
+            // Update UI
+            document.querySelectorAll('#branch-options .selection-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector(`#branch-options .selection-card[data-branch="${code}"]`).classList.add('selected');
+            
+            // Enable next button
+            nextStepBtn.disabled = false;
+        }
+        
+        function initializeSemesterOptions() {
+            semesterOptions.innerHTML = '';
+            
+            if (!selectedBranch || !academicData.branches[selectedBranch]) return;
+            
+            const semesters = academicData.branches[selectedBranch].semesters;
+            
+            for (const semNum in semesters) {
+                const semesterCard = document.createElement('div');
+                semesterCard.className = 'selection-card';
+                semesterCard.dataset.semester = semNum;
+                
+                semesterCard.innerHTML = `
+                    <div class="selection-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="selection-name">Semester ${semNum}</div>
+                `;
+                
+                semesterCard.addEventListener('click', () => selectSemester(semNum));
+                semesterOptions.appendChild(semesterCard);
+            }
+        }
+        
+        function selectSemester(semNum) {
+            selectedSemester = semNum;
+            
+            // Update UI
+            document.querySelectorAll('#semester-options .selection-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector(`#semester-options .selection-card[data-semester="${semNum}"]`).classList.add('selected');
+            
+            // Enable next button
+            nextStepBtn.disabled = false;
+        }
+        
+        function initializeCourseOptions() {
+            courseOptions.innerHTML = '';
+            
+            if (!selectedBranch || !selectedSemester || !academicData.branches[selectedBranch]) return;
+            
+            const courses = academicData.branches[selectedBranch].semesters[selectedSemester] || [];
+            
+            if (courses.length === 0) {
+                courseOptions.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">No courses available for this semester</p>';
+                return;
+            }
+            
+            courses.forEach(course => {
+                const courseCard = document.createElement('div');
+                courseCard.className = 'selection-card';
+                courseCard.dataset.course = course.code;
+                
+                courseCard.innerHTML = `
+                    <div class="selection-name">${course.name}</div>
+                    <div class="selection-code">${course.code}</div>
+                    <div class="selection-code">${course.credits} Credits</div>
+                `;
+                
+                courseCard.addEventListener('click', () => selectCourse(course));
+                courseOptions.appendChild(courseCard);
+            });
+        }
+        
+        function selectCourse(course) {
+            selectedCourse = course;
+            
+            // Update UI
+            document.querySelectorAll('#course-options .selection-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector(`#course-options .selection-card[data-course="${course.code}"]`).classList.add('selected');
+            
+            // Enable finish button
+            finishSelectionBtn.disabled = false;
+        }
+        
+        function goToNextStep() {
+            if (branchStep.classList.contains('active')) {
+                if (!selectedBranch) {
+                    showToast('Please select a branch', 'error');
+                    return;
+                }
+                
+                // Move to semester step
+                branchStep.classList.remove('active');
+                semesterStep.classList.add('active');
+                
+                // Update step indicators
+                stepIndicators[0].classList.remove('active');
+                stepIndicators[1].classList.add('active');
+                
+                // Initialize semester options
+                initializeSemesterOptions();
+                
+                // Show previous button
+                prevStepBtn.style.display = 'block';
+                
+                // Disable next button until semester is selected
+                nextStepBtn.disabled = true;
+            } else if (semesterStep.classList.contains('active')) {
+                if (!selectedSemester) {
+                    showToast('Please select a semester', 'error');
+                    return;
+                }
+                
+                // Move to course step
+                semesterStep.classList.remove('active');
+                courseStep.classList.add('active');
+                
+                // Update step indicators
+                stepIndicators[1].classList.remove('active');
+                stepIndicators[2].classList.add('active');
+                
+                // Initialize course options
+                initializeCourseOptions();
+                
+                // Hide next button, show finish button
+                nextStepBtn.style.display = 'none';
+                finishSelectionBtn.style.display = 'block';
+                
+                // Disable finish button until course is selected
+                finishSelectionBtn.disabled = true;
+            }
+        }
+        
+        function goToPrevStep() {
+            if (semesterStep.classList.contains('active')) {
+                // Move to branch step
+                semesterStep.classList.remove('active');
+                branchStep.classList.add('active');
+                
+                // Update step indicators
+                stepIndicators[1].classList.remove('active');
+                stepIndicators[0].classList.add('active');
+                
+                // Hide previous button
+                prevStepBtn.style.display = 'none';
+            } else if (courseStep.classList.contains('active')) {
+                // Move to semester step
+                courseStep.classList.remove('active');
+                semesterStep.classList.add('active');
+                
+                // Update step indicators
+                stepIndicators[2].classList.remove('active');
+                stepIndicators[1].classList.add('active');
+                
+                // Show next button, hide finish button
+                nextStepBtn.style.display = 'block';
+                finishSelectionBtn.style.display = 'none';
+            }
+        }
+        
+        function finishSelection() {
+            if (!selectedCourse) {
+                showToast('Please select a course', 'error');
+                return;
+            }
+            
+            // Update display
+            selectedBranchDisplay.textContent = academicData.branches[selectedBranch].name;
+            selectedSemesterDisplay.textContent = `Semester ${selectedSemester}`;
+            selectedCourseDisplay.textContent = selectedCourse.name;
+            selectionDisplay.style.display = 'flex';
+            
+            // Update filters
+            branchFilter.value = selectedBranch;
+            semesterFilter.value = selectedSemester;
+            courseFilter.value = selectedCourse.code;
+            
+            // Apply filters
+            applyFilters();
+            
+            // Close modal
+            branchSemesterCourseModal.classList.remove('active');
+        }
+        
         // Chatbot
         function initChatbot() {
             const botResponses = {
@@ -2290,6 +2946,7 @@
             initFilters();
             initChatbot();
             initAccount();
+            initBranchSemesterCourseModal();
         });
     </script>
 </body>
