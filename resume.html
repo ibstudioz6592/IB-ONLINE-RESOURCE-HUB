@@ -588,7 +588,7 @@
     
     let app, auth, db, userId;
     let photoDataUrl = null;
-    let cropper;
+    let cropper = null;
     let geminiApiKey = localStorage.getItem('geminiApiKey') || '';
     
     // Store certificate data URLs in a map
@@ -1485,9 +1485,11 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
             cropperModal.style.display = 'flex';
             cropperImage.src = event.target.result;
             
-            // Initialize cropper after a small delay to ensure image is loaded
-            setTimeout(() => {
-              if (cropper) cropper.destroy();
+            // Initialize cropper after image is loaded
+            cropperImage.onload = () => {
+              if (cropper) {
+                cropper.destroy();
+              }
               cropper = new Cropper(cropperImage, {
                 aspectRatio: 1,
                 viewMode: 1,
@@ -1497,7 +1499,7 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
                 modal: false,
                 background: false
               });
-            }, 100);
+            };
           };
           reader.readAsDataURL(file);
         }
@@ -1521,8 +1523,8 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
               // Update the image source to the cropped data URL
               cropperImage.src = croppedImageDataURL;
               
-              // Reinitialize the cropper with the new image after a delay
-              setTimeout(() => {
+              // Reinitialize the cropper with the new image
+              cropperImage.onload = () => {
                 cropper = new Cropper(cropperImage, {
                   aspectRatio: 1,
                   viewMode: 1,
@@ -1532,7 +1534,7 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
                   modal: false,
                   background: false
                 });
-              }, 100);
+              };
             }
           } catch (error) {
             console.error('Error applying crop:', error);
@@ -1545,18 +1547,27 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
       document.getElementById('saveCroppedBtn').addEventListener('click', () => {
         if (cropper) {
           try {
-            const croppedCanvas = cropper.getCroppedCanvas({
-              width: 300,
-              height: 300,
-            });
+            // Get the cropped canvas without specifying dimensions to avoid issues
+            const croppedCanvas = cropper.getCroppedCanvas();
             
             if (croppedCanvas) {
-              photoDataUrl = croppedCanvas.toDataURL();
+              // Resize the canvas to 300x300
+              const resizedCanvas = document.createElement('canvas');
+              const ctx = resizedCanvas.getContext('2d');
+              resizedCanvas.width = 300;
+              resizedCanvas.height = 300;
+              
+              // Draw the cropped image on the resized canvas
+              ctx.drawImage(croppedCanvas, 0, 0, 300, 300);
+              
+              photoDataUrl = resizedCanvas.toDataURL();
               document.getElementById('photoPreview').src = photoDataUrl;
               cropperModal.style.display = 'none';
               cropper.destroy();
               cropper = null;
               updateResume();
+            } else {
+              alert('Failed to get cropped image. Please try again.');
             }
           } catch (error) {
             console.error('Error saving cropped image:', error);
