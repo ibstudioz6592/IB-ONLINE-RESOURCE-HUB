@@ -3618,18 +3618,30 @@
             }
             
             const usersHtml = users.map(user => {
+                // Try to use Gmail photo if available, fallback to avatar
+                let photo = user.photoURL;
+                if (!photo && user.email) {
+                    // Try to get Google profile photo from Firebase Auth if available
+                    const authUser = firebase.auth().currentUser;
+                    if (authUser && authUser.email === user.email && authUser.photoURL) {
+                        photo = authUser.photoURL;
+                    }
+                }
+                if (!photo) {
+                    photo = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name || 'User');
+                }
                 return `
                     <div class="content-card">
                         <div class="content-header">
                             <div style="display: flex; align-items: center; gap: 18px;">
-                                <img src="${user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name || 'User')}" alt="User Photo" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--primary-glow);">
+                                <img src="${photo}" alt="User Photo" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--primary-glow);">
                                 <div>
                                     <div class="content-title">${user.name || 'Unknown'}</div>
                                     <div style="color: var(--text-secondary); margin-bottom: 5px;">${user.email || 'No email'}</div>
                                 </div>
                             </div>
                             <div class="content-actions">
-                                <button class="btn-info" style="padding: 8px 12px; font-size: 0.9rem;" onclick="viewUserDetails('${user.id}')">
+                                <button class="btn-info" style="padding: 8px 12px; font-size: 0.9rem;" data-userid="${user.id}" onclick="viewUserDetails('${user.id}')">
                                     <i class="fas fa-eye"></i>
                                 </button>
                                 <button class="btn-secondary" style="padding: 8px 12px; font-size: 0.9rem;" onclick="editUser('${user.id}')">
@@ -3668,6 +3680,7 @@ function viewUserDetails(userId) {
                 // Disable all fields for view-only
                 const form = document.getElementById('user-form');
                 Array.from(form.elements).forEach(el => el.disabled = true);
+                // Show the modal
                 userModal.classList.add('active');
             }
         })
@@ -3678,12 +3691,14 @@ function viewUserDetails(userId) {
 }
 
 // When closing modal, re-enable fields for edit mode
-userModal.addEventListener('transitionend', function() {
-    if (!userModal.classList.contains('active')) {
-        const form = document.getElementById('user-form');
-        Array.from(form.elements).forEach(el => el.disabled = false);
-    }
-});
+if (typeof userModal !== 'undefined' && userModal) {
+    userModal.addEventListener('transitionend', function() {
+        if (!userModal.classList.contains('active')) {
+            const form = document.getElementById('user-form');
+            Array.from(form.elements).forEach(el => el.disabled = false);
+        }
+    });
+}
         }
         
         // Filter users based on search and filters
