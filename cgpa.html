@@ -682,7 +682,11 @@
         });
         
         form.appendChild(grid);
-        calculateGPA(sem, currentBranch); // Pass currentBranch here
+        
+        // --- UPDATED CODE ---
+        // This call now correctly passes the currentBranch to the updated function.
+        calculateGPA(sem, currentBranch);
+        // --- END OF UPDATE ---
     }
     
     function handleGradeChange(e) {
@@ -690,23 +694,26 @@
         const { semester: sem, branch, index } = select.dataset;
         const semesterKey = `${branch}_${sem}`;
         
+        // Ensure the semester array is initialized before assigning to it
+        if (!currentGrades[semesterKey]) {
+            const subjects = academicData.branches[branch].semesters[sem];
+            currentGrades[semesterKey] = Array(subjects.length).fill("");
+        }
+        
         currentGrades[semesterKey][parseInt(index, 10)] = select.value;
         styleGradeSelect(select);
         localStorage.setItem("currentGrades", JSON.stringify(currentGrades));
         
-        // --- UPDATED CODE ---
-        calculateGPA(sem, branch); // Pass the branch from the select element's data
-        // --- END OF UPDATE ---
-
+        calculateGPA(sem, branch);
         debouncedFullUpdate();
     }
     
-    // --- UPDATED CODE ---
-    function calculateGPA(sem, branch) { // Accept 'branch' as an argument
-        const semesterKey = `${branch}_${sem}`; // Use the passed branch argument
-        const subjects = academicData.branches[branch].semesters[sem]; // Use the passed branch argument
+    function calculateGPA(sem, branch) { 
+        if (!branch) return; // Add a guard clause to prevent errors if branch is undefined
+        
+        const semesterKey = `${branch}_${sem}`;
+        const subjects = academicData.branches[branch].semesters[sem];
         const activeGrades = currentGrades[semesterKey] || [];
-    // --- END OF UPDATE ---
         
         let totalPoints = 0, totalCredits = 0;
         subjects.forEach((sub, i) => {
