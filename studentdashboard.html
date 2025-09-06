@@ -1347,7 +1347,7 @@
             border-radius: var(--radius-xl);
             border: 1px solid var(--glass-border);
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: var(--shadow-xl);
@@ -1411,7 +1411,7 @@
             color: var(--text-secondary);
         }
         
-        .form-input, .form-textarea {
+        .form-input, .form-textarea, .form-select {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-md);
@@ -1421,7 +1421,7 @@
             transition: all 0.3s ease;
         }
         
-        .form-input:focus, .form-textarea:focus {
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
             outline: none;
             border-color: var(--primary-glow);
             background: rgba(255, 255, 255, 0.08);
@@ -1430,6 +1430,15 @@
         .form-textarea {
             min-height: 100px;
             resize: vertical;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: var(--space-md);
+        }
+        
+        .form-row .form-group {
+            flex: 1;
         }
         
         /* New Feature Panel Styles */
@@ -1909,16 +1918,6 @@
             padding: var(--space-xl);
             margin-bottom: var(--space-xl);
             border: 1px solid var(--glass-border);
-        }
-        
-        .form-row {
-            display: flex;
-            gap: var(--space-md);
-            margin-bottom: var(--space-md);
-        }
-        
-        .form-group {
-            flex: 1;
         }
         
         .goal-list {
@@ -3291,15 +3290,95 @@
                 <div class="profile-form">
                     <div class="form-group">
                         <label class="form-label">Full Name</label>
-                        <input type="text" class="form-input" id="profile-name">
+                        <input type="text" class="form-input" id="profile-name" placeholder="Enter your full name">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Email</label>
                         <input type="email" class="form-input" id="profile-email" disabled>
                     </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-input" id="profile-phone" placeholder="Enter your phone number">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Date of Birth</label>
+                            <input type="date" class="form-input" id="profile-dob">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Gender</label>
+                            <select class="form-select" id="profile-gender">
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                                <option value="prefer-not-to-say">Prefer not to say</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Admission Number</label>
+                            <input type="text" class="form-input" id="profile-admission" placeholder="Enter admission number">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Branch</label>
+                            <input type="text" class="form-input" id="profile-branch" placeholder="Enter your branch">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Semester</label>
+                            <select class="form-select" id="profile-semester">
+                                <option value="">Select Semester</option>
+                                <option value="1">Semester 1</option>
+                                <option value="2">Semester 2</option>
+                                <option value="3">Semester 3</option>
+                                <option value="4">Semester 4</option>
+                                <option value="5">Semester 5</option>
+                                <option value="6">Semester 6</option>
+                                <option value="7">Semester 7</option>
+                                <option value="8">Semester 8</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">College</label>
+                        <select class="form-select" id="profile-college">
+                            <option value="">Select College</option>
+                            <option value="iit-bombay">Indian Institute of Technology (IIT) Bombay</option>
+                            <option value="iit-delhi">Indian Institute of Technology (IIT) Delhi</option>
+                            <option value="iit-madras">Indian Institute of Technology (IIT) Madras</option>
+                            <option value="iit-kanpur">Indian Institute of Technology (IIT) Kanpur</option>
+                            <option value="iit-kharagpur">Indian Institute of Technology (IIT) Kharagpur</option>
+                            <option value="iit-roorkee">Indian Institute of Technology (IIT) Roorkee</option>
+                            <option value="iit-guwahati">Indian Institute of Technology (IIT) Guwahati</option>
+                            <option value="iit-hyderabad">Indian Institute of Technology (IIT) Hyderabad</option>
+                            <option value="iit-indore">Indian Institute of Technology (IIT) Indore</option>
+                            <option value="iit-ropar">Indian Institute of Technology (IIT) Ropar</option>
+                            <option value="iit-patna">Indian Institute of Technology (IIT) Patna</option>
+                            <option value="iit-gandhinagar">Indian Institute of Technology (IIT) Gandhinagar</option>
+                            <option value="iit-bhubaneswar">Indian Institute of Technology (IIT) Bhubaneswar</option>
+                            <option value="iit-jodhpur">Indian Institute of Technology (IIT) Jodhpur</option>
+                            <option value="iit-mandi">Indian Institute of Technology (IIT) Mandi</option>
+                            <option value="iit-dhanbad">Indian Institute of Technology (IIT) (ISM) Dhanbad</option>
+                            <option value="nit-trichy">National Institute of Technology (NIT) Trichy</option>
+                            <option value="nit-surathkal">National Institute of Technology (NIT) Surathkal</option>
+                            <option value="nit-warangal">National Institute of Technology (NIT) Warangal</option>
+                            <option value="du-delhi">Delhi University</option>
+                            <option value="jnu">Jawaharlal Nehru University (JNU)</option>
+                            <option value="uoh">University of Hyderabad</option>
+                            <option value="ou">Osmania University</option>
+                            <option value="anna-university">Anna University</option>
+                            <option value="mu">University of Mumbai</option>
+                            <option value="cu">University of Calcutta</option>
+                            <option value="bhu">Banaras Hindu University (BHU)</option>
+                            <option value="amu">Aligarh Muslim University (AMU)</option>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label class="form-label">Bio</label>
-                        <textarea class="form-textarea" id="profile-bio"></textarea>
+                        <textarea class="form-textarea" id="profile-bio" placeholder="Tell us about yourself"></textarea>
                     </div>
                     <div class="form-group">
                         <button class="btn btn-primary" id="save-profile-btn">Save Changes</button>
@@ -3411,6 +3490,13 @@
         const profilePhoto = document.getElementById('profile-photo');
         const profileName = document.getElementById('profile-name');
         const profileEmail = document.getElementById('profile-email');
+        const profilePhone = document.getElementById('profile-phone');
+        const profileDob = document.getElementById('profile-dob');
+        const profileGender = document.getElementById('profile-gender');
+        const profileAdmission = document.getElementById('profile-admission');
+        const profileBranch = document.getElementById('profile-branch');
+        const profileSemester = document.getElementById('profile-semester');
+        const profileCollege = document.getElementById('profile-college');
         const profileBio = document.getElementById('profile-bio');
         const saveProfileBtn = document.getElementById('save-profile-btn');
         
@@ -3624,6 +3710,7 @@
                             uid: currentUser.uid,
                             email: currentUser.email,
                             displayName: currentUser.displayName || 'Student',
+                            photoURL: currentUser.photoURL || null,
                             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                             studyStreak: 0,
                             totalStudyHours: 0,
@@ -3870,11 +3957,20 @@
             if (currentUser) {
                 profileName.value = currentUser.displayName || '';
                 profileEmail.value = currentUser.email || '';
+                profilePhone.value = userData.phone || '';
+                profileDob.value = userData.dob || '';
+                profileGender.value = userData.gender || '';
+                profileAdmission.value = userData.admissionNumber || '';
+                profileBranch.value = userData.branch || '';
+                profileSemester.value = userData.semester || '';
+                profileCollege.value = userData.college || '';
                 profileBio.value = userData.bio || '';
                 
                 // Load profile photo if exists
                 if (userData.photoURL) {
                     profilePhoto.src = userData.photoURL;
+                } else if (currentUser.photoURL) {
+                    profilePhoto.src = currentUser.photoURL;
                 }
             }
             
@@ -3919,11 +4015,25 @@
         // Save profile functionality
         saveProfileBtn.addEventListener('click', () => {
             const name = profileName.value;
+            const phone = profilePhone.value;
+            const dob = profileDob.value;
+            const gender = profileGender.value;
+            const admissionNumber = profileAdmission.value;
+            const branch = profileBranch.value;
+            const semester = profileSemester.value;
+            const college = profileCollege.value;
             const bio = profileBio.value;
             
             // Update user's profile in Firestore
             db.collection('users').doc(currentUser.uid).update({
                 displayName: name,
+                phone: phone,
+                dob: dob,
+                gender: gender,
+                admissionNumber: admissionNumber,
+                branch: branch,
+                semester: semester,
+                college: college,
                 bio: bio
             }).then(() => {
                 // Update the current user's display name in Firebase Auth
@@ -3931,6 +4041,13 @@
                     displayName: name
                 }).then(() => {
                     userData.displayName = name;
+                    userData.phone = phone;
+                    userData.dob = dob;
+                    userData.gender = gender;
+                    userData.admissionNumber = admissionNumber;
+                    userData.branch = branch;
+                    userData.semester = semester;
+                    userData.college = college;
                     userData.bio = bio;
                     studentNameEl.textContent = name;
                     showToast('Profile updated successfully', 'success');
