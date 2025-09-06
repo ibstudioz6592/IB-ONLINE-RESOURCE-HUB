@@ -933,24 +933,122 @@
             .role-modal-actions .btn {
                 margin: 5px 0;
             }
+            
+            /* Improved social buttons layout */
+            .social-buttons {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .btn-social {
+                margin: 0;
+                padding: clamp(10px, 2vw, 12px);
+            }
+            
+            .btn-social i {
+                font-size: clamp(1rem, 2.5vw, 1.2rem);
+            }
         }
         
         @media (max-width: 480px) {
             .form-row {
                 grid-template-columns: 1fr;
             }
+            
+            /* Improved social buttons for very small screens */
             .social-buttons {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
             }
+            
             .btn-social {
-                margin: 0;
+                padding: clamp(8px, 1.8vw, 10px);
+                font-size: clamp(0.8rem, 1.8vw, 0.9rem);
             }
+            
+            .btn-social i {
+                margin-right: 5px;
+                font-size: clamp(0.9rem, 2.2vw, 1rem);
+            }
+            
             .toast {
                 right: 10px;
                 left: 10px;
                 max-width: none;
+            }
+            
+            /* Improved modal layout */
+            .modal {
+                padding: clamp(15px, 3vw, 20px);
+            }
+            
+            .modal-header {
+                margin-bottom: clamp(10px, 2vw, 15px);
+            }
+            
+            .modal-title {
+                font-size: clamp(1rem, 2.5vw, 1.2rem);
+            }
+            
+            /* Improved floating buttons */
+            .floating-btn {
+                padding: clamp(10px, 2vw, 12px);
+                width: clamp(45px, 8vw, 55px);
+                height: clamp(45px, 8vw, 55px);
+            }
+            
+            .floating-btn i {
+                font-size: clamp(1rem, 2.5vw, 1.2rem);
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .branch-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .semester-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .role-option {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .role-icon {
+                margin: 0 auto;
+            }
+            
+            /* Further improved form layout */
+            .form-group {
+                margin-bottom: clamp(12px, 2.5vw, 15px);
+            }
+            
+            .form-group label {
+                margin-bottom: clamp(4px, 1vw, 6px);
+                font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+            }
+            
+            input, select {
+                padding: clamp(8px, 1.8vw, 10px) clamp(10px, 2vw, 12px);
+                font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+            }
+            
+            .btn {
+                padding: clamp(8px, 1.8vw, 10px);
+                font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+            }
+            
+            .social-buttons {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 6px;
+            }
+            
+            .btn-social {
+                padding: clamp(8px, 1.5vw, 10px);
             }
         }
         
@@ -2224,14 +2322,6 @@
             });
         }
         
-        // Page transition effect
-        function navigateToPage(url) {
-            pageTransition.classList.add('active');
-            setTimeout(() => {
-                window.location.href = url;
-            }, 500);
-        }
-        
         // Toast notification function
         function showToast(message, type = 'info') {
             // Remove existing toasts
@@ -2424,9 +2514,9 @@
                     
                     showToast('Registration successful!', 'success');
                     
-                    // Check user role and redirect accordingly
+                    // Show role selection modal for new users
                     setTimeout(() => {
-                        checkUserRoleAndRedirect();
+                        roleSelectionModal.classList.add('active');
                     }, 1000);
                 }
             } catch (error) {
@@ -2476,18 +2566,21 @@
                     
                     if (userRole) {
                         // User has a role, redirect directly
-                        switch (userRole) {
-                            case 'admin':
-                                navigateToPage('admindashboard.html');
-                                break;
-                            case 'faculty':
-                                navigateToPage('facultydashboard.html');
-                                break;
-                            case 'student':
-                            default:
-                                navigateToPage('studentdashboard.html');
-                                break;
-                        }
+                        showToast('Login successful!', 'success');
+                        setTimeout(() => {
+                            switch (userRole) {
+                                case 'admin':
+                                    window.location.href = 'admindashboard.html';
+                                    break;
+                                case 'faculty':
+                                    window.location.href = 'facultydashboard.html';
+                                    break;
+                                case 'student':
+                                default:
+                                    window.location.href = 'studentdashboard.html';
+                                    break;
+                            }
+                        }, 1000);
                     } else {
                         // User doesn't have a role, show role selection modal
                         roleSelectionModal.classList.add('active');
@@ -2499,7 +2592,10 @@
             } catch (error) {
                 console.error('Error checking user role:', error);
                 // Default to student dashboard
-                navigateToPage('studentdashboard.html');
+                showToast('Login successful!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'studentdashboard.html';
+                }, 1000);
             }
         }
         
@@ -2692,7 +2788,7 @@
                 
                 // Redirect to appropriate dashboard
                 setTimeout(() => {
-                    checkUserRoleAndRedirect();
+                    roleSelectionModal.classList.add('active');
                 }, 1000);
             } catch (error) {
                 socialMessage.textContent = error.message;
@@ -2783,19 +2879,24 @@
                 // Close modal
                 roleSelectionModal.classList.remove('active');
                 
-                // Redirect based on selected role
-                switch (selectedRole) {
-                    case 'admin':
-                        navigateToPage('admindashboard.html');
-                        break;
-                    case 'faculty':
-                        navigateToPage('facultydashboard.html');
-                        break;
-                    case 'student':
-                    default:
-                        navigateToPage('studentdashboard.html');
-                        break;
-                }
+                // Show success message
+                showToast('Role updated successfully!', 'success');
+                
+                // Redirect based on selected role after a short delay
+                setTimeout(() => {
+                    switch (selectedRole) {
+                        case 'admin':
+                            window.location.href = 'admindashboard.html';
+                            break;
+                        case 'faculty':
+                            window.location.href = 'facultydashboard.html';
+                            break;
+                        case 'student':
+                        default:
+                            window.location.href = 'studentdashboard.html';
+                            break;
+                    }
+                }, 1000);
             } catch (error) {
                 console.error('Error updating user role:', error);
                 showToast('Failed to update role. Please try again.', 'error');
@@ -2972,14 +3073,14 @@
                             // User has a role, redirect directly
                             switch (userData.role) {
                                 case 'admin':
-                                    navigateToPage('admindashboard.html');
+                                    window.location.href = 'admindashboard.html';
                                     break;
                                 case 'faculty':
-                                    navigateToPage('facultydashboard.html');
+                                    window.location.href = 'facultydashboard.html';
                                     break;
                                 case 'student':
                                 default:
-                                    navigateToPage('studentdashboard.html');
+                                    window.location.href = 'studentdashboard.html';
                                     break;
                             }
                         } else {
@@ -2993,7 +3094,7 @@
                 }).catch((error) => {
                     console.error('Error getting user data:', error);
                     // Default to student dashboard
-                    navigateToPage('studentdashboard.html');
+                    window.location.href = 'studentdashboard.html';
                 });
             }
         });
