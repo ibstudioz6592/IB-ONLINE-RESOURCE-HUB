@@ -350,6 +350,13 @@
             color: var(--text-secondary);
         }
         
+        .account-brand {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-top: 0.25rem;
+        }
+        
         .account-content {
             padding: 1rem;
         }
@@ -680,31 +687,6 @@
             border-color: var(--warning);
         }
         
-        /* Floating Action Button */
-        .fab {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            border: none;
-            cursor: pointer;
-            z-index: 100;
-            box-shadow: var(--shadow-xl);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.25rem;
-            transition: var(--transition);
-        }
-        
-        .fab:hover {
-            transform: scale(1.1);
-        }
-        
         /* Empty State */
         .empty-state {
             text-align: center;
@@ -890,25 +872,26 @@
         .chatbot-toggle {
             position: fixed;
             bottom: 2rem;
-            right: 5rem;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
+            right: 2rem;
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             border: none;
+            border-radius: 50px;
+            padding: 0.75rem 1.5rem;
             cursor: pointer;
             z-index: 99;
             box-shadow: var(--shadow-xl);
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 0.75rem;
             color: white;
-            font-size: 1.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
             transition: var(--transition);
         }
         
         .chatbot-toggle:hover {
-            transform: scale(1.1);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
         }
         
         .chatbot-container {
@@ -943,6 +926,7 @@
             font-weight: 600;
             text-align: center;
             background: var(--surface);
+            color: var(--primary);
         }
         
         .chatbot-messages {
@@ -1125,6 +1109,11 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
+            
+            .chatbot-toggle {
+                padding: 0.5rem 1rem;
+                font-size: 0.75rem;
+            }
         }
     </style>
 </head>
@@ -1137,7 +1126,7 @@
     <!-- Header -->
     <header class="header">
         <div class="header-content">
-            <a href="dashboard.html" class="logo">
+            <a href="studentdashboard.html" class="logo">
                 <div class="logo-icon">
                     <i class="fas fa-graduation-cap"></i>
                 </div>
@@ -1145,7 +1134,7 @@
             </a>
             
             <nav class="nav-links">
-                <a href="dashboard.html" class="nav-link">
+                <a href="studentdashboard.html" class="nav-link">
                     <button class="btn btn-special">
                         <i class="fas fa-home"></i>
                         <span>Dashboard</span>
@@ -1172,6 +1161,7 @@
                             <div class="account-info">
                                 <h3 id="accountName">Loading...</h3>
                                 <p id="accountEmail">Loading...</p>
+                                <p class="account-brand">IB STUDIOZ</p>
                             </div>
                         </div>
                         <div class="account-content">
@@ -1288,80 +1278,6 @@
         </div>
     </main>
     
-    <!-- Floating Action Button -->
-    <button class="fab" id="uploadBtn">
-        <i class="fas fa-plus"></i>
-    </button>
-    
-    <!-- Upload Modal -->
-    <div class="modal-overlay" id="uploadModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 class="modal-title">Upload Material</h2>
-                <button class="modal-close" id="uploadModalClose">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-content">
-                <form id="uploadForm">
-                    <div class="form-group">
-                        <label class="form-label">Title</label>
-                        <input type="text" class="form-input" id="materialTitle" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Description</label>
-                        <textarea class="form-textarea" id="materialDescription"></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Branch</label>
-                        <select class="form-select" id="materialBranch" required>
-                            <option value="">Select Branch</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Semester</label>
-                        <select class="form-select" id="materialSemester" required>
-                            <option value="">Select Semester</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Course</label>
-                        <select class="form-select" id="materialCourse" required>
-                            <option value="">Select Course</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Material Type</label>
-                        <select class="form-select" id="materialType" required>
-                            <option value="">Select Type</option>
-                            <option value="notes">Notes</option>
-                            <option value="ebook">E-Books</option>
-                            <option value="slides">Slides</option>
-                            <option value="video">Videos</option>
-                            <option value="lab">Lab Manuals</option>
-                            <option value="project">Projects</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">File</label>
-                        <input type="file" class="form-input" id="materialFile" required>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-outline" id="cancelUpload">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Upload</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    
     <!-- Filter Modal -->
     <div class="modal-overlay filter-modal" id="filterModal">
         <div class="modal">
@@ -1425,6 +1341,7 @@
     <!-- Chatbot -->
     <button class="chatbot-toggle" id="chatbotToggle">
         <i class="fas fa-robot"></i>
+        <span>IB Help AI Chatbot</span>
     </button>
     <div class="chatbot-container" id="chatbotContainer">
         <div class="chatbot-header">
@@ -1502,11 +1419,6 @@
         const accountName = document.getElementById('accountName');
         const accountEmail = document.getElementById('accountEmail');
         const accountLogout = document.getElementById('accountLogout');
-        const uploadBtn = document.getElementById('uploadBtn');
-        const uploadModal = document.getElementById('uploadModal');
-        const uploadModalClose = document.getElementById('uploadModalClose');
-        const cancelUpload = document.getElementById('cancelUpload');
-        const uploadForm = document.getElementById('uploadForm');
         const materialsGrid = document.getElementById('materialsGrid');
         const materialsCount = document.getElementById('materialsCount');
         const branchFilter = document.getElementById('branchFilter');
@@ -1517,9 +1429,6 @@
         const searchFilter = document.getElementById('searchFilter');
         const modalSearchFilter = document.getElementById('modalSearchFilter');
         const resetFilters = document.getElementById('resetFilters');
-        const materialBranch = document.getElementById('materialBranch');
-        const materialSemester = document.getElementById('materialSemester');
-        const materialCourse = document.getElementById('materialCourse');
         const openFilterModal = document.getElementById('openFilterModal');
         const filterModal = document.getElementById('filterModal');
         const filterModalClose = document.getElementById('filterModalClose');
@@ -1578,12 +1487,6 @@
                 option.value = code;
                 option.textContent = branch.name;
                 branchFilter.appendChild(option);
-                
-                // Also populate upload form branch
-                const uploadOption = document.createElement('option');
-                uploadOption.value = code;
-                uploadOption.textContent = branch.name;
-                materialBranch.appendChild(uploadOption);
             });
             
             // Add event listeners
@@ -1594,9 +1497,6 @@
             searchFilter.addEventListener('input', applyFilters);
             modalSearchFilter.addEventListener('input', applyFilters);
             resetFilters.addEventListener('reset', resetAllFilters);
-            
-            materialBranch.addEventListener('change', updateMaterialSemesterFilter);
-            materialSemester.addEventListener('change', updateMaterialCourseFilter);
             
             // Filter modal event listeners
             openFilterModal.addEventListener('click', () => {
@@ -1665,37 +1565,6 @@
             }
             
             applyFilters();
-        }
-        
-        function updateMaterialSemesterFilter() {
-            const branch = materialBranch.value;
-            materialSemester.innerHTML = '<option value="">Select Semester</option>';
-            materialCourse.innerHTML = '<option value="">Select Course</option>';
-            
-            if (branch && academicData.branches[branch]) {
-                Object.keys(academicData.branches[branch].semesters).forEach(sem => {
-                    const option = document.createElement('option');
-                    option.value = sem;
-                    option.textContent = `Semester ${sem}`;
-                    materialSemester.appendChild(option);
-                });
-            }
-        }
-        
-        function updateMaterialCourseFilter() {
-            const branch = materialBranch.value;
-            const semester = materialSemester.value;
-            materialCourse.innerHTML = '<option value="">Select Course</option>';
-            
-            if (branch && semester && academicData.branches[branch]) {
-                const courses = academicData.branches[branch].semesters[semester] || [];
-                courses.forEach(course => {
-                    const option = document.createElement('option');
-                    option.value = course.code;
-                    option.textContent = `${course.code} - ${course.name}`;
-                    materialCourse.appendChild(option);
-                });
-            }
         }
         
         function applyFilters() {
@@ -1888,7 +1757,7 @@
                     <div class="empty-state">
                         <div class="empty-icon"><i class="fas fa-folder-open"></i></div>
                         <h3 class="empty-title">No Materials Found</h3>
-                        <p class="empty-description">Try adjusting your filters or upload new materials</p>
+                        <p class="empty-description">Try adjusting your filters or check back later</p>
                     </div>
                 `;
                 return;
@@ -2101,115 +1970,6 @@
             }
         }
         
-        // Upload Material
-        function initUploadForm() {
-            uploadForm.addEventListener('submit', handleUpload);
-            cancelUpload.addEventListener('click', closeUploadModal);
-            uploadModalClose.addEventListener('click', closeUploadModal);
-            
-            uploadModal.addEventListener('click', (e) => {
-                if (e.target === uploadModal) {
-                    closeUploadModal();
-                }
-            });
-        }
-        
-        function openUploadModal() {
-            uploadModal.classList.add('active');
-        }
-        
-        function closeUploadModal() {
-            uploadModal.classList.remove('active');
-            uploadForm.reset();
-        }
-        
-        function handleUpload(e) {
-            e.preventDefault();
-            
-            if (!currentUser) {
-                showToast('Please login to upload materials', 'error');
-                return;
-            }
-            
-            const title = document.getElementById('materialTitle').value;
-            const description = document.getElementById('materialDescription').value;
-            const branch = document.getElementById('materialBranch').value;
-            const semester = document.getElementById('materialSemester').value;
-            const course = document.getElementById('materialCourse').value;
-            const type = document.getElementById('materialType').value;
-            const file = document.getElementById('materialFile').files[0];
-            
-            if (!file) {
-                showToast('Please select a file', 'error');
-                return;
-            }
-            
-            // Show loading
-            showToast('Uploading material...', 'info');
-            
-            // Upload file to Firebase Storage
-            const storageRef = storage.ref(`materials/${branch}/${semester}/${course}/${file.name}`);
-            const uploadTask = storageRef.put(file);
-            
-            uploadTask.on('state_changed', 
-                (snapshot) => {
-                    // Progress tracking could be added here
-                }, 
-                (error) => {
-                    console.error('Upload error:', error);
-                    showToast('Error uploading file', 'error');
-                }, 
-                () => {
-                    // Upload completed successfully
-                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                        // Save material data to Firestore
-                        db.collection('materials').add({
-                            title,
-                            description,
-                            branch,
-                            semester,
-                            course,
-                            type,
-                            fileUrl: downloadURL,
-                            fileName: file.name,
-                            fileSize: file.size,
-                            uploadedBy: currentUser.uid,
-                            uploadedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                            views: 0,
-                            downloads: 0
-                        }).then((docRef) => {
-                            // Add to user's uploaded materials
-                            db.collection('users').doc(currentUser.uid).update({
-                                uploadedMaterials: firebase.firestore.FieldValue.arrayUnion(docRef.id)
-                            });
-                            
-                            // Track activity
-                            db.collection('userActivities').add({
-                                userId: currentUser.uid,
-                                action: 'upload',
-                                materialId: docRef.id,
-                                materialData: {
-                                    title,
-                                    type
-                                },
-                                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                            });
-                            
-                            showToast('Material uploaded successfully', 'success');
-                            closeUploadModal();
-                            loadMaterials();
-                        }).catch((error) => {
-                            console.error('Error saving material data:', error);
-                            showToast('Error saving material', 'error');
-                        });
-                    }).catch((error) => {
-                        console.error('Error getting download URL:', error);
-                        showToast('Error processing file', 'error');
-                    });
-                }
-            );
-        }
-        
         // Chatbot
         function initChatbot() {
             const botResponses = {
@@ -2220,11 +1980,10 @@
                 'video': 'Video materials include recorded lectures, tutorials, and demonstrations.',
                 'lab': 'Lab manuals contain instructions and procedures for laboratory experiments.',
                 'project': 'Project materials include documentation, source code, and reports for academic projects.',
-                'upload': 'You can upload your own study materials using the + button at the bottom right corner.',
                 'filter': 'Use the filter options to narrow down materials by branch, semester, course, type, or search keywords.',
                 'download': 'Click the download button on any material to save it to your device.',
                 'favorite': 'Click the star button to add materials to your favorites for quick access.',
-                'default': 'I can help you with information about materials, uploading, filtering, and more. What would you like to know?'
+                'default': 'I can help you with information about materials, filtering, downloading, and more. What would you like to know?'
             };
             
             function addMessage(text, sender) {
@@ -2240,8 +1999,6 @@
                 
                 if (input.includes('material') || input.includes('note') || input.includes('book') || input.includes('slide') || input.includes('video') || input.includes('lab') || input.includes('project')) {
                     return botResponses.material;
-                } else if (input.includes('upload')) {
-                    return botResponses.upload;
                 } else if (input.includes('filter')) {
                     return botResponses.filter;
                 } else if (input.includes('download')) {
@@ -2304,15 +2061,15 @@
                 if (user) {
                     currentUser = user;
                     
-                    // Update account info
-                    accountName.textContent = user.displayName || 'User';
+                    // Update account info with Gmail account details
+                    accountName.textContent = user.displayName || user.email.split('@')[0];
                     accountEmail.textContent = user.email;
                     
                     // Set avatar with user initial
                     if (user.displayName) {
                         accountAvatar.textContent = user.displayName.charAt(0).toUpperCase();
                     } else {
-                        accountAvatar.innerHTML = '<i class="fas fa-user"></i>';
+                        accountAvatar.textContent = user.email.charAt(0).toUpperCase();
                     }
                     
                     loadMaterials();
@@ -2326,8 +2083,6 @@
         // Event Listeners
         themeToggle.addEventListener('click', toggleTheme);
         
-        uploadBtn.addEventListener('click', openUploadModal);
-        
         chatbotToggle.addEventListener('click', () => {
             chatbotContainer.classList.toggle('active');
             if (chatbotContainer.classList.contains('active')) {
@@ -2340,7 +2095,6 @@
             initTheme();
             initAuth();
             initFilters();
-            initUploadForm();
             initChatbot();
             initAccount();
         });
