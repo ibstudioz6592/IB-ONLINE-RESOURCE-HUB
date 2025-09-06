@@ -14,8 +14,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://unpkg.com/cropperjs/dist/cropper.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/cropperjs/dist/cropper.css">
   <style>
     /* General Styles & Variables */
     * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; transition: all 0.4s ease-in-out; }
@@ -121,48 +119,6 @@
       transition: background 0.3s ease;
     }
     #photoUploadLabel:hover, .certificate-upload-label:hover { background: var(--primary); }
-    .cropper-modal-container { 
-      position: fixed; 
-      top: 0; 
-      left: 0; 
-      width: 100%; 
-      height: 100%; 
-      background: rgba(0,0,0,0.9); 
-      z-index: 2000; 
-      display: none; 
-      justify-content: center; 
-      align-items: center;
-      padding: 20px;
-    }
-    .cropper-modal { 
-      background: var(--darker-bg); 
-      padding: 20px; 
-      border-radius: 10px; 
-      max-width: 90vw;
-      max-height: 90vh;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-    }
-    #cropperImage { 
-      max-width: 100%; 
-      max-height: 70vh;
-      object-fit: contain;
-    }
-    .cropper-actions {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 20px;
-      flex-wrap: wrap;
-    }
-    .image-info {
-      text-align: center;
-      margin-top: 10px;
-      font-size: 14px;
-      color: var(--light-text);
-      opacity: 0.8;
-    }
     /* Buttons */
     button {
       margin-top: 10px; padding: 12px 20px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;
@@ -386,8 +342,6 @@
       button { width: 100%; } 
       .modal-buttons { flex-direction: column; }
       .modal-buttons button { width: 100%; }
-      .cropper-actions { flex-direction: column; }
-      .cropper-actions button { width: 100%; }
     }
   </style>
 </head>
@@ -574,16 +528,6 @@
       </div>
     </div>
   </div>
-  <div id="cropperModal" class="cropper-modal-container">
-    <div class="cropper-modal">
-      <img id="cropperImage" src="#" alt="Image to crop">
-      <div class="image-info" id="imageInfo"></div>
-      <div class="cropper-actions">
-        <button id="saveCroppedBtn" class="primary"><i class="fas fa-save"></i> Save</button>
-        <button id="cancelCropBtn" class="secondary"><i class="fas fa-times"></i> Cancel</button>
-      </div>
-    </div>
-  </div>
   <script type="module">
     // Firebase Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -595,7 +539,6 @@
     
     let app, auth, db, userId;
     let photoDataUrl = null;
-    let cropper = null;
     let geminiApiKey = localStorage.getItem('geminiApiKey') || '';
     
     // Store certificate data URLs in a map
@@ -627,9 +570,6 @@
     const form = document.querySelector('.form-card');
     const output = document.getElementById('resumeOutput');
     const dynamicSectionsContainer = document.getElementById('dynamic-sections');
-    const cropperModal = document.getElementById('cropperModal');
-    const cropperImage = document.getElementById('cropperImage');
-    const imageInfo = document.getElementById('imageInfo');
     const modal = document.getElementById('modal');
     const modalTitle = document.getElementById('modalTitle');
     const modalText = document.getElementById('modalText');
@@ -1484,81 +1424,18 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
       document.getElementById('accentColor').addEventListener('input', updateResume);
       modalCloseBtn.addEventListener('click', hideImagePreviewModal);
       
-      // Photo Upload & Cropper - SIMPLIFIED VERSION
+      // Photo Upload - SIMPLIFIED VERSION WITHOUT CROPPER
       document.getElementById('photoUpload').addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
           const reader = new FileReader();
           reader.onload = (event) => {
-            cropperModal.style.display = 'flex';
-            cropperImage.src = event.target.result;
-            
-            // Show image dimensions
-            const img = new Image();
-            img.onload = function() {
-              imageInfo.textContent = `Original dimensions: ${this.naturalWidth} × ${this.naturalHeight} pixels`;
-            };
-            img.src = event.target.result;
-            
-            // Initialize cropper after image is loaded
-            setTimeout(() => {
-              if (cropper) {
-                cropper.destroy();
-              }
-              cropper = new Cropper(cropperImage, {
-                aspectRatio: 1,
-                viewMode: 1,
-                autoCropArea: 0.8,
-                responsive: true,
-                checkCrossOrigin: false,
-                modal: false,
-                background: false
-              });
-            }, 300);
+            // Directly set the uploaded image as the photo preview
+            photoDataUrl = event.target.result;
+            document.getElementById('photoPreview').src = photoDataUrl;
+            updateResume();
           };
           reader.readAsDataURL(file);
-        }
-      });
-      
-      // Save Cropped button - handles both cropping and saving
-      document.getElementById('saveCroppedBtn').addEventListener('click', () => {
-        if (cropper) {
-          try {
-            // Get the cropped canvas
-            const croppedCanvas = cropper.getCroppedCanvas({
-              width: 300,
-              height: 300,
-            });
-            
-            if (croppedCanvas) {
-              photoDataUrl = croppedCanvas.toDataURL();
-              document.getElementById('photoPreview').src = photoDataUrl;
-              cropperModal.style.display = 'none';
-              cropper.destroy();
-              cropper = null;
-              updateResume();
-            } else {
-              alert('Failed to get cropped image. Please try again.');
-            }
-          } catch (error) {
-            console.error('Error saving cropped image:', error);
-            alert('Error saving cropped image. Please try again.');
-          }
-        }
-      });
-      
-      document.getElementById('cancelCropBtn').addEventListener('click', () => {
-        cropperModal.style.display = 'none';
-        if (cropper) {
-          cropper.destroy();
-          cropper = null;
-        }
-      });
-      
-      // Handle window resize for cropper
-      window.addEventListener('resize', () => {
-        if (cropper) {
-          cropper.resize();
         }
       });
       
