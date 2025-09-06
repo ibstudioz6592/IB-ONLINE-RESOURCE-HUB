@@ -119,6 +119,12 @@
       transition: background 0.3s ease;
     }
     #photoUploadLabel:hover, .certificate-upload-label:hover { background: var(--primary); }
+    .upload-hint {
+      font-size: 12px;
+      margin-top: 5px;
+      opacity: 0.7;
+      font-style: italic;
+    }
     /* Buttons */
     button {
       margin-top: 10px; padding: 12px 20px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;
@@ -386,6 +392,7 @@
               <label for="photoUpload"><img id="photoPreview" src="https://placehold.co/120x120/16213e/f8f9fa?text=Photo" alt="Profile Photo Preview"></label>
               <input type="file" id="photoUpload" accept="image/*">
               <label for="photoUpload" id="photoUploadLabel"><i class="fas fa-camera"></i> Upload Photo</label>
+              <div class="upload-hint">Your photo will be automatically cropped to a professional square format</div>
             </div>
             <label for="name" class="required-field"><i class="fas fa-user"></i> Full Name:</label>
             <input type="text" id="name" name="name" required>
@@ -1294,6 +1301,32 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
         apiKeyStatus.style.color = 'var(--error)';
       }
     }
+    
+    // --- Auto Crop Function ---
+    function autoCropImage(imageSrc, callback) {
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Set canvas size to 300x300 (standard resume photo size)
+        canvas.width = 300;
+        canvas.height = 300;
+        
+        // Calculate crop dimensions to maintain aspect ratio
+        const size = Math.min(this.naturalWidth, this.naturalHeight);
+        const sx = (this.naturalWidth - size) / 2;
+        const sy = (this.naturalHeight - size) / 2;
+        
+        // Draw the cropped image on the canvas
+        ctx.drawImage(this, sx, sy, size, size, 0, 0, 300, 300);
+        
+        // Convert canvas to data URL and pass to callback
+        callback(canvas.toDataURL('image/jpeg', 0.9));
+      };
+      img.src = imageSrc;
+    }
+    
     // --- Event Listeners ---
     document.addEventListener('DOMContentLoaded', () => {
       initializeFirebase();
@@ -1424,16 +1457,19 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
       document.getElementById('accentColor').addEventListener('input', updateResume);
       modalCloseBtn.addEventListener('click', hideImagePreviewModal);
       
-      // Photo Upload - SIMPLIFIED VERSION WITHOUT CROPPER
+      // Photo Upload with Auto Crop
       document.getElementById('photoUpload').addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
           const reader = new FileReader();
           reader.onload = (event) => {
-            // Directly set the uploaded image as the photo preview
-            photoDataUrl = event.target.result;
-            document.getElementById('photoPreview').src = photoDataUrl;
-            updateResume();
+            // Auto crop the image
+            autoCropImage(event.target.result, (croppedImageDataUrl) => {
+              // Set the cropped image as the photo preview
+              photoDataUrl = croppedImageDataUrl;
+              document.getElementById('photoPreview').src = photoDataUrl;
+              updateResume();
+            });
           };
           reader.readAsDataURL(file);
         }
