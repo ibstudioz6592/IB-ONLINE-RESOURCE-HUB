@@ -307,24 +307,6 @@
             color: var(--success);
         }
         
-        /* Chart Container */
-        .chart-container {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .chart-container h3 {
-            margin-bottom: 20px;
-            color: var(--secondary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.3rem;
-        }
-        
         /* Main Dashboard Layout */
         .dashboard-layout { 
             display: grid; 
@@ -1089,7 +1071,7 @@
                 <h3>Features</h3>
                 <ul>
                     <li>Performance insights and analytics</li>
-                    <li>GPA trend visualization</li>
+                    <li>Grade distribution visualization</li>
                     <li>Export results as image</li>
                     <li>Share results with others</li>
                     <li>Predictive GPA analysis</li>
@@ -1177,11 +1159,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="chart-container">
-                <h3><i class="fas fa-chart-area"></i> GPA Trend</h3>
-                <canvas id="gpaTrendChart"></canvas>
-            </div>
         </section>
 
         <!-- Subjects Section -->
@@ -1256,7 +1233,7 @@
                 </ul>
                 
                 <h3>How It Works</h3>
-                <p>Simply select your engineering branch and semester, then input your grades for each subject. The calculator will automatically compute your GPA for that semester and update your overall CGPA. As you add more semesters, you'll see trends and patterns in your academic performance.</p>
+                <p>Simply select your engineering branch and semester, then input your grades for each subject. The calculator will automatically compute your GPA for that semester and update your overall CGPA. As you add more semesters, you'll see insights and patterns in your academic performance.</p>
                 
                 <h3>Our Commitment</h3>
                 <p>At IB studioz, we're committed to providing educational tools that empower students to take control of their academic journey. We continuously improve our calculator based on user feedback and the latest educational standards.</p>
@@ -1300,7 +1277,7 @@
     };
 
     const gradePoints = { "O": 10, "A+": 9, "A": 8, "B+": 7, "B": 6, "C": 5, "U": 0 };
-    let currentBranch = "", currentGrades = {}, gpaPerSem = {}, gradeDistSummaryChart, gpaTrendChart, gradeDistBySemChart;
+    let currentBranch = "", currentGrades = {}, gpaPerSem = {}, gradeDistSummaryChart, gradeDistBySemChart;
     const debounce = (func, delay) => { let timeout; return (...args) => { clearTimeout(timeout); timeout = setTimeout(() => func.apply(this, args), delay); }; };
     const debouncedFullUpdate = debounce(() => updateAllDisplays(), 400);
 
@@ -1563,7 +1540,6 @@
         
         updateInsights();
         renderGradeDistributionChart();
-        renderGpaTrendChart();
         document.title = `${cgpa.toFixed(2)} CGPA | IB studioz`;
     }
 
@@ -1656,50 +1632,6 @@
             options: commonOptions 
         });
         
-        if (gpaTrendChart) gpaTrendChart.destroy();
-        gpaTrendChart = new Chart(document.getElementById('gpaTrendChart').getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: 'GPA',
-                    data: [],
-                    borderColor: '#4ECDC4',
-                    backgroundColor: 'rgba(78, 205, 196, 0.2)',
-                    borderWidth: 3,
-                    pointBackgroundColor: '#fff',
-                    pointBorderColor: '#4ECDC4',
-                    pointRadius: 6,
-                    pointHoverRadius: 8,
-                    tension: 0.3,
-                    fill: true
-                }]
-            },
-            options: {
-                ...commonOptions,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 10,
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
-                        },
-                        ticks: {
-                            color: 'rgba(255, 255, 255, 0.7)'
-                        }
-                    },
-                    x: {
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
-                        },
-                        ticks: {
-                            color: 'rgba(255, 255, 255, 0.7)'
-                        }
-                    }
-                }
-            }
-        });
-        
         if (gradeDistBySemChart) gradeDistBySemChart.destroy();
         gradeDistBySemChart = new Chart(document.getElementById('gradeDistBySemChart').getContext('2d'), {
             type: 'bar',
@@ -1750,30 +1682,6 @@
             }]
         };
         gradeDistSummaryChart.update();
-    }
-    
-    function renderGpaTrendChart() {
-        if (!currentBranch || !gpaTrendChart) return;
-        
-        const semesterData = [];
-        const gpaData = [];
-        
-        Object.keys(gpaPerSem)
-            .filter(k => k.startsWith(currentBranch))
-            .sort((a, b) => {
-                const aSem = parseInt(a.replace(`${currentBranch}_`, ''));
-                const bSem = parseInt(b.replace(`${currentBranch}_`, ''));
-                return aSem - bSem;
-            })
-            .forEach(key => {
-                const sem = key.replace(`${currentBranch}_`, '');
-                semesterData.push(`Semester ${sem}`);
-                gpaData.push(gpaPerSem[key].gpa);
-            });
-        
-        gpaTrendChart.data.labels = semesterData;
-        gpaTrendChart.data.datasets[0].data = gpaData;
-        gpaTrendChart.update();
     }
     
     function renderGradeDistBySemChart() {
