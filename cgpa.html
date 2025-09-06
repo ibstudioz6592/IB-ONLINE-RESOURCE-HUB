@@ -682,7 +682,7 @@
         });
         
         form.appendChild(grid);
-        calculateGPA(sem);
+        calculateGPA(sem, currentBranch); // Pass currentBranch here
     }
     
     function handleGradeChange(e) {
@@ -694,14 +694,19 @@
         styleGradeSelect(select);
         localStorage.setItem("currentGrades", JSON.stringify(currentGrades));
         
-        calculateGPA(sem);
+        // --- UPDATED CODE ---
+        calculateGPA(sem, branch); // Pass the branch from the select element's data
+        // --- END OF UPDATE ---
+
         debouncedFullUpdate();
     }
     
-    function calculateGPA(sem) {
-        const semesterKey = `${currentBranch}_${sem}`;
-        const subjects = academicData.branches[currentBranch].semesters[sem];
+    // --- UPDATED CODE ---
+    function calculateGPA(sem, branch) { // Accept 'branch' as an argument
+        const semesterKey = `${branch}_${sem}`; // Use the passed branch argument
+        const subjects = academicData.branches[branch].semesters[sem]; // Use the passed branch argument
         const activeGrades = currentGrades[semesterKey] || [];
+    // --- END OF UPDATE ---
         
         let totalPoints = 0, totalCredits = 0;
         subjects.forEach((sub, i) => {
