@@ -3436,6 +3436,23 @@
         <span id="toast-message">Success!</span>
     </div>
     
+    <!-- Logout Confirmation Modal -->
+    <div class="modal" id="logout-confirm-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirm Logout</h2>
+                <button class="modal-close" id="logout-modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to logout?</p>
+                <div style="display: flex; gap: var(--space-md); margin-top: var(--space-xl);">
+                    <button class="btn btn-primary" id="confirm-logout-btn">Yes, Logout</button>
+                    <button class="btn btn-secondary" id="cancel-logout-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
@@ -3499,6 +3516,12 @@
         const profileCollege = document.getElementById('profile-college');
         const profileBio = document.getElementById('profile-bio');
         const saveProfileBtn = document.getElementById('save-profile-btn');
+        
+        // Logout confirmation modal elements
+        const logoutConfirmModal = document.getElementById('logout-confirm-modal');
+        const logoutModalClose = document.getElementById('logout-modal-close');
+        const confirmLogoutBtn = document.getElementById('confirm-logout-btn');
+        const cancelLogoutBtn = document.getElementById('cancel-logout-btn');
         
         // Dashboard counters
         const materialsCount = document.getElementById('materials-count');
@@ -3680,6 +3703,11 @@
         function loadUserData() {
             if (!currentUser) return;
             
+            // Set profile picture in header from Firebase Auth if available
+            if (currentUser.photoURL) {
+                headerProfileAvatar.src = currentUser.photoURL;
+            }
+            
             // Get user data from Firestore
             db.collection('users').doc(currentUser.uid).get()
                 .then(doc => {
@@ -3687,7 +3715,7 @@
                         userData = doc.data();
                         studentNameEl.textContent = userData.displayName || 'Student';
                         
-                        // Update profile photo in header
+                        // Update profile photo in header if available in Firestore
                         if (userData.photoURL) {
                             headerProfileAvatar.src = userData.photoURL;
                         }
@@ -4062,6 +4090,36 @@
             });
         });
         
+        // Logout confirmation modal functionality
+        logoutBtn.addEventListener('click', () => {
+            logoutConfirmModal.classList.add('active');
+        });
+        
+        logoutModalClose.addEventListener('click', () => {
+            logoutConfirmModal.classList.remove('active');
+        });
+        
+        cancelLogoutBtn.addEventListener('click', () => {
+            logoutConfirmModal.classList.remove('active');
+        });
+        
+        confirmLogoutBtn.addEventListener('click', () => {
+            auth.signOut()
+                .then(() => {
+                    showToast('Thank you for using IB STUDIOZ! You have been logged out successfully.', 'success');
+                    logoutConfirmModal.classList.remove('active');
+                    
+                    // Redirect to login page after a short delay
+                    setTimeout(() => {
+                        window.location.href = '/login.html';
+                    }, 2000);
+                })
+                .catch(error => {
+                    console.error('Error logging out:', error);
+                    showToast('Error logging out', 'error');
+                });
+        });
+        
         // Chatbot functionality
         chatbotBtn.addEventListener('click', () => {
             chatbotModal.classList.add('active');
@@ -4138,19 +4196,6 @@
             if (e.key === 'Enter') {
                 sendChatbotMessage();
             }
-        });
-        
-        // Logout functionality
-        logoutBtn.addEventListener('click', () => {
-            auth.signOut()
-                .then(() => {
-                    showToast('Logged out successfully', 'success');
-                    window.location.href = '/login.html';
-                })
-                .catch(error => {
-                    console.error('Error logging out:', error);
-                    showToast('Error logging out', 'error');
-                });
         });
         
         // Feature tabs functionality
