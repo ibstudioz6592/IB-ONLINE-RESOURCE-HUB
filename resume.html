@@ -1476,7 +1476,7 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
       document.getElementById('accentColor').addEventListener('input', updateResume);
       modalCloseBtn.addEventListener('click', hideImagePreviewModal);
       
-      // Photo Upload & Cropper
+      // Photo Upload & Cropper - FIXED VERSION
       document.getElementById('photoUpload').addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -1484,20 +1484,103 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
           reader.onload = (event) => {
             cropperModal.style.display = 'flex';
             cropperImage.src = event.target.result;
-            if (cropper) cropper.destroy();
-            cropper = new Cropper(cropperImage, {
-              aspectRatio: 1,
-              viewMode: 1,
-              autoCropArea: 0.8,
-              responsive: true,
-              checkCrossOrigin: false,
-              modal: false,
-              background: false
-            });
+            
+            // Initialize cropper after a small delay to ensure image is loaded
+            setTimeout(() => {
+              if (cropper) cropper.destroy();
+              cropper = new Cropper(cropperImage, {
+                aspectRatio: 1,
+                viewMode: 1,
+                autoCropArea: 0.8,
+                responsive: true,
+                checkCrossOrigin: false,
+                modal: false,
+                background: false
+              });
+            }, 100);
           };
           reader.readAsDataURL(file);
         }
       });
+      
+      // Apply Crop button - applies the crop but keeps the modal open
+      document.getElementById('applyCropBtn').addEventListener('click', () => {
+        if (cropper) {
+          try {
+            const croppedCanvas = cropper.getCroppedCanvas({
+              width: 300,
+              height: 300,
+            });
+            
+            if (croppedCanvas) {
+              const croppedImageDataURL = croppedCanvas.toDataURL();
+              
+              // Destroy the current cropper
+              cropper.destroy();
+              
+              // Update the image source to the cropped data URL
+              cropperImage.src = croppedImageDataURL;
+              
+              // Reinitialize the cropper with the new image after a delay
+              setTimeout(() => {
+                cropper = new Cropper(cropperImage, {
+                  aspectRatio: 1,
+                  viewMode: 1,
+                  autoCropArea: 0.8,
+                  responsive: true,
+                  checkCrossOrigin: false,
+                  modal: false,
+                  background: false
+                });
+              }, 100);
+            }
+          } catch (error) {
+            console.error('Error applying crop:', error);
+            alert('Error applying crop. Please try again.');
+          }
+        }
+      });
+      
+      // Save Cropped button - saves the cropped image and closes the modal
+      document.getElementById('saveCroppedBtn').addEventListener('click', () => {
+        if (cropper) {
+          try {
+            const croppedCanvas = cropper.getCroppedCanvas({
+              width: 300,
+              height: 300,
+            });
+            
+            if (croppedCanvas) {
+              photoDataUrl = croppedCanvas.toDataURL();
+              document.getElementById('photoPreview').src = photoDataUrl;
+              cropperModal.style.display = 'none';
+              cropper.destroy();
+              cropper = null;
+              updateResume();
+            }
+          } catch (error) {
+            console.error('Error saving cropped image:', error);
+            alert('Error saving cropped image. Please try again.');
+          }
+        }
+      });
+      
+      document.getElementById('cancelCropBtn').addEventListener('click', () => {
+        cropperModal.style.display = 'none';
+        if (cropper) {
+          cropper.destroy();
+          cropper = null;
+        }
+      });
+      
+      // Handle window resize for cropper
+      window.addEventListener('resize', () => {
+        if (cropper) {
+          cropper.resize();
+        }
+      });
+      
+      // Certificate upload handler
       document.addEventListener('change', e => {
           if (e.target.classList.contains('certificate-upload-input')) {
               const file = e.target.files[0];
@@ -1533,65 +1616,6 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
               }
               updateResume();
           }
-      });
-      
-      // Apply Crop button - applies the crop but keeps the modal open
-      document.getElementById('applyCropBtn').addEventListener('click', () => {
-        if (cropper) {
-          const croppedCanvas = cropper.getCroppedCanvas({
-            width: 300,
-            height: 300,
-          });
-          const croppedImageDataURL = croppedCanvas.toDataURL();
-          
-          // Destroy the current cropper
-          cropper.destroy();
-          
-          // Update the image source to the cropped data URL
-          cropperImage.src = croppedImageDataURL;
-          
-          // Reinitialize the cropper with the new image
-          cropper = new Cropper(cropperImage, {
-            aspectRatio: 1,
-            viewMode: 1,
-            autoCropArea: 0.8,
-            responsive: true,
-            checkCrossOrigin: false,
-            modal: false,
-            background: false
-          });
-        }
-      });
-      
-      // Save Cropped button - saves the cropped image and closes the modal
-      document.getElementById('saveCroppedBtn').addEventListener('click', () => {
-        if (cropper) {
-          const croppedCanvas = cropper.getCroppedCanvas({
-            width: 300,
-            height: 300,
-          });
-          photoDataUrl = croppedCanvas.toDataURL();
-          document.getElementById('photoPreview').src = photoDataUrl;
-          cropperModal.style.display = 'none';
-          cropper.destroy();
-          cropper = null;
-          updateResume();
-        }
-      });
-      
-      document.getElementById('cancelCropBtn').addEventListener('click', () => {
-        cropperModal.style.display = 'none';
-        if (cropper) {
-          cropper.destroy();
-          cropper = null;
-        }
-      });
-      
-      // Handle window resize for cropper
-      window.addEventListener('resize', () => {
-        if (cropper) {
-          cropper.resize();
-        }
       });
     });
   </script>
