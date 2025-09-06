@@ -878,7 +878,8 @@ Provide a JSON object with two keys: "score" (a percentage from 0-100 indicating
         if (tools) {
             payload.tools = tools;
         }
-        const apiKey = ""
+        // Use your provided API key here
+        const apiKey = "AIzaSyCaSF0AT441mIB7OM7kk2yoUjeEHqgp_KI";
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
         const response = await fetch(apiUrl, {
           method: 'POST',
