@@ -136,12 +136,15 @@
             background: var(--glass-bg); backdrop-filter: blur(20px);
             border-radius: 16px; border: 1px solid var(--glass-border);
             padding: 15px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
         .admin-nav-item {
             background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
             border-radius: 30px; padding: 10px 20px; font-size: 0.9rem;
             font-weight: 600; cursor: pointer; transition: all 0.3s ease;
             color: var(--text-secondary);
+            white-space: nowrap;
         }
         .admin-nav-item.active {
             background: var(--primary-glow); color: var(--dark-bg);
@@ -158,6 +161,7 @@
             border-radius: 20px; border: 1px solid var(--glass-border);
             padding: 30px; margin-bottom: 40px;
             min-height: 500px;
+            overflow: hidden;
         }
         .admin-panel {
             display: none;
@@ -175,6 +179,8 @@
         .section-header {
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--glass-border);
+            flex-wrap: wrap;
+            gap: 15px;
         }
         .section-title {
             font-size: 1.8rem; font-weight: 700;
@@ -256,6 +262,8 @@
             display: flex; justify-content: center; align-items: center; z-index: 2000; 
             opacity: 0; visibility: hidden; 
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            overflow-y: auto;
+            padding: 20px;
         }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal { 
@@ -305,6 +313,7 @@
             transform: translateX(400px); opacity: 0; 
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
             min-width: 300px;
+            max-width: calc(100% - 60px);
         }
         .toast.show { transform: translateX(0); opacity: 1; }
         .toast.success { border-left: 4px solid var(--success); }
@@ -412,6 +421,7 @@
             background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
             border-radius: 12px; padding: 20px; margin-bottom: 15px;
             transition: all 0.3s ease;
+            overflow: hidden;
         }
         .content-card:hover {
             background: rgba(255,255,255,0.06);
@@ -420,16 +430,21 @@
         .content-header {
             display: flex; justify-content: space-between; align-items: flex-start;
             margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
         .content-title {
             font-size: 1.2rem; font-weight: 600; color: var(--text-primary);
+            word-break: break-word;
         }
         .content-meta {
             display: flex; gap: 15px; margin-top: 10px;
             font-size: 0.85rem; color: var(--text-muted);
+            flex-wrap: wrap;
         }
         .content-actions {
             display: flex; gap: 10px;
+            flex-wrap: wrap;
         }
         
         /* File Upload */
@@ -477,6 +492,7 @@
         /* Filter Dropdown */
         .filter-container {
             display: flex; gap: 15px; margin-bottom: 20px;
+            flex-wrap: wrap;
         }
         .filter-select {
             padding: 10px 15px; background: rgba(255,255,255,0.05);
@@ -636,6 +652,7 @@
             opacity: 0;
             visibility: hidden;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 20px;
         }
         
         .branch-semester-course-modal.active {
@@ -671,6 +688,8 @@
             margin-bottom: 25px;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
         
         .selection-header h2 {
@@ -685,12 +704,15 @@
         .selection-steps {
             display: flex;
             margin-bottom: 30px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
         
         .step {
             flex: 1;
             text-align: center;
             position: relative;
+            min-width: 100px;
         }
         
         .step:not(:last-child):after {
@@ -783,6 +805,7 @@
         .selection-name {
             font-weight: 600;
             margin-bottom: 5px;
+            word-break: break-word;
         }
         
         .selection-code {
@@ -794,6 +817,8 @@
             display: flex;
             justify-content: space-between;
             margin-top: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
         
         .btn-step {
@@ -803,6 +828,8 @@
             cursor: pointer;
             transition: all 0.3s ease;
             border: none;
+            flex: 1;
+            min-width: 120px;
         }
         
         .btn-prev {
@@ -843,6 +870,7 @@
             background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
             margin-bottom: 15px;
+            flex-wrap: wrap;
         }
         
         .selected-item {
@@ -851,6 +879,7 @@
             background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
             text-align: center;
+            min-width: 120px;
         }
         
         .selected-label {
@@ -861,6 +890,7 @@
         
         .selected-value {
             font-weight: 600;
+            word-break: break-word;
         }
         
         .change-selection-btn {
@@ -873,6 +903,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            white-space: nowrap;
         }
         
         .change-selection-btn:hover {
@@ -972,31 +1003,111 @@
         
         /* Responsive Design */
         @media (max-width: 768px) {
-            .page-header { flex-direction: column; gap: 20px; margin: 15px; padding: 25px 20px; }
-            .form-row { grid-template-columns: 1fr; }
-            .modal { padding: 30px 20px; }
-            .dashboard-stats { grid-template-columns: repeat(2, 1fr); }
+            .page-header { 
+                flex-direction: column; 
+                gap: 20px; 
+                margin: 15px; 
+                padding: 25px 20px; 
+            }
+            
+            .form-row { 
+                grid-template-columns: 1fr; 
+            }
+            
+            .modal { 
+                padding: 30px 20px; 
+            }
+            
+            .dashboard-stats { 
+                grid-template-columns: repeat(2, 1fr); 
+            }
+            
             .admin-nav {
                 justify-content: center;
             }
+            
             .filter-container {
                 flex-direction: column;
             }
+            
             .selection-grid {
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             }
+            
             .selected-display {
                 flex-direction: column;
             }
-        }
-        
-        @media (max-width: 480px) {
-            .dashboard-stats { grid-template-columns: 1fr; }
-            .stat-number { font-size: 2rem; }
+            
+            .content-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .content-actions {
+                align-self: flex-start;
+            }
+            
+            .content-actions .btn-secondary,
+            .content-actions .btn-info,
+            .content-actions .btn-danger {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+            
             .section-header {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 15px;
+            }
+            
+            .selection-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .dashboard-stats { 
+                grid-template-columns: 1fr; 
+            }
+            
+            .stat-number { 
+                font-size: 2rem; 
+            }
+            
+            .content-meta {
+                gap: 8px;
+                font-size: 0.75rem;
+            }
+            
+            .content-card {
+                padding: 15px;
+            }
+            
+            .modal {
+                padding: 20px 15px;
+            }
+            
+            .branch-semester-course-modal .modal {
+                padding: 20px 15px;
+            }
+            
+            .selection-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-step {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .toast {
+                right: 15px;
+                bottom: 15px;
+                left: 15px;
+                min-width: auto;
             }
         }
     </style>
@@ -1038,7 +1149,7 @@
                 </svg>
                 <h1 class="brand-title">IB STUDIOZ</h1>
             </a>
-            <div style="display: flex; gap: 15px; align-items: center;">
+            <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
                 <div class="realtime-indicator">
                     <span class="realtime-dot"></span>
                     <span>Live</span>
@@ -1312,7 +1423,7 @@
                 <div class="admin-panel" id="payments-panel">
                     <div class="section-header">
                         <h2 class="section-title"><i class="fas fa-credit-card"></i> Payment History</h2>
-                        <div style="display: flex; gap: 10px;">
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                             <button class="btn-secondary" id="export-payments-btn">
                                 <i class="fas fa-download"></i> Export
                             </button>
@@ -3750,6 +3861,18 @@
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             };
             
+            // Validate required fields
+            if (!materialData.title || !materialData.subject || !materialData.link) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            // Validate Google Drive link
+            if (!materialData.link.includes('drive.google.com')) {
+                showToast('Please enter a valid Google Drive link', 'error');
+                return;
+            }
+            
             if (materialId) {
                 // Update existing material
                 db.collection('notes').doc(materialId).update(materialData)
@@ -3759,7 +3882,7 @@
                     })
                     .catch(error => {
                         console.error('Error updating material:', error);
-                        showToast('Failed to update material', 'error');
+                        showToast('Failed to update material: ' + error.message, 'error');
                     });
             } else {
                 // Add new material
@@ -3770,7 +3893,7 @@
                     })
                     .catch(error => {
                         console.error('Error adding material:', error);
-                        showToast('Failed to add material', 'error');
+                        showToast('Failed to add material: ' + error.message, 'error');
                     });
             }
         }
@@ -3970,6 +4093,18 @@
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             };
             
+            // Validate required fields
+            if (!pyqData.title || !pyqData.subject || !pyqData.year || !pyqData.link) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            // Validate Google Drive link
+            if (!pyqData.link.includes('drive.google.com')) {
+                showToast('Please enter a valid Google Drive link', 'error');
+                return;
+            }
+            
             if (pyqId) {
                 // Update existing PYQ
                 db.collection('pyqs').doc(pyqId).update(pyqData)
@@ -3979,7 +4114,7 @@
                     })
                     .catch(error => {
                         console.error('Error updating PYQ:', error);
-                        showToast('Failed to update PYQ', 'error');
+                        showToast('Failed to update PYQ: ' + error.message, 'error');
                     });
             } else {
                 // Add new PYQ
@@ -3990,7 +4125,7 @@
                     })
                     .catch(error => {
                         console.error('Error adding PYQ:', error);
-                        showToast('Failed to add PYQ', 'error');
+                        showToast('Failed to add PYQ: ' + error.message, 'error');
                     });
             }
         }
@@ -4179,6 +4314,12 @@
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             };
             
+            // Validate required fields
+            if (!quizData.title || !quizData.subject || !quizData.time) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
             if (quizId) {
                 // Update existing quiz
                 db.collection('quizzes').doc(quizId).update(quizData)
@@ -4188,7 +4329,7 @@
                     })
                     .catch(error => {
                         console.error('Error updating quiz:', error);
-                        showToast('Failed to update quiz', 'error');
+                        showToast('Failed to update quiz: ' + error.message, 'error');
                     });
             } else {
                 // Add new quiz
@@ -4199,7 +4340,7 @@
                     })
                     .catch(error => {
                         console.error('Error adding quiz:', error);
-                        showToast('Failed to add quiz', 'error');
+                        showToast('Failed to add quiz: ' + error.message, 'error');
                     });
             }
         }
@@ -4386,6 +4527,18 @@
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             };
             
+            // Validate required fields
+            if (!seminarData.title || !seminarData.speaker || !seminarData.datetime || !seminarData.link) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            // Validate video link
+            if (!seminarData.link.includes('youtube.com') && !seminarData.link.includes('youtu.be')) {
+                showToast('Please enter a valid YouTube link', 'error');
+                return;
+            }
+            
             if (seminarId) {
                 // Update existing seminar
                 db.collection('seminars').doc(seminarId).update(seminarData)
@@ -4395,7 +4548,7 @@
                     })
                     .catch(error => {
                         console.error('Error updating seminar:', error);
-                        showToast('Failed to update seminar', 'error');
+                        showToast('Failed to update seminar: ' + error.message, 'error');
                     });
             } else {
                 // Add new seminar
@@ -4406,7 +4559,7 @@
                     })
                     .catch(error => {
                         console.error('Error adding seminar:', error);
-                        showToast('Failed to add seminar', 'error');
+                        showToast('Failed to add seminar: ' + error.message, 'error');
                     });
             }
         }
@@ -4502,54 +4655,56 @@
             }
             
             const paymentsHtml = `
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>User</th>
-                            <th>Type</th>
-                            <th>Amount</th>
-                            <th>Description</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${payments.map(transaction => {
-                            // Get user name
-                            let userName = 'Unknown';
-                            if (transaction.userId) {
-                                db.collection('users').doc(transaction.userId).get()
-                                    .then(userDoc => {
-                                        if (userDoc.exists) {
-                                            const userData = userDoc.data();
-                                            const userElement = document.getElementById(`user-${transaction.id}`);
-                                            if (userElement) {
-                                                userElement.textContent = userData.name || 'Unknown';
+                <div style="overflow-x: auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>User</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Description</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${payments.map(transaction => {
+                                // Get user name
+                                let userName = 'Unknown';
+                                if (transaction.userId) {
+                                    db.collection('users').doc(transaction.userId).get()
+                                        .then(userDoc => {
+                                            if (userDoc.exists) {
+                                                const userData = userDoc.data();
+                                                const userElement = document.getElementById(`user-${transaction.id}`);
+                                                if (userElement) {
+                                                    userElement.textContent = userData.name || 'Unknown';
+                                                }
                                             }
-                                        }
-                                    })
-                                    .catch(error => {
-                                        console.error('Error getting user:', error);
-                                    });
-                            }
-                            
-                            return `
-                                <tr>
-                                    <td>${transaction.id.substring(0, 8)}...</td>
-                                    <td id="user-${transaction.id}">Loading...</td>
-                                    <td style="color: ${transaction.type === 'earn' ? 'var(--success)' : 'var(--danger)'};">
-                                        ${transaction.type === 'earn' ? 'Earn' : 'Spend'}
-                                    </td>
-                                    <td style="color: ${transaction.type === 'earn' ? 'var(--success)' : 'var(--danger)'};">
-                                        ${transaction.type === 'earn' ? '+' : '-'}${transaction.amount}
-                                    </td>
-                                    <td>${transaction.description || 'No description'}</td>
-                                    <td>${formatTimestamp(transaction.createdAt)}</td>
-                                </tr>
-                            `;
-                        }).join('')}
-                    </tbody>
-                </table>
+                                        })
+                                        .catch(error => {
+                                            console.error('Error getting user:', error);
+                                        });
+                                }
+                                
+                                return `
+                                    <tr>
+                                        <td>${transaction.id.substring(0, 8)}...</td>
+                                        <td id="user-${transaction.id}">Loading...</td>
+                                        <td style="color: ${transaction.type === 'earn' ? 'var(--success)' : 'var(--danger)'};">
+                                            ${transaction.type === 'earn' ? 'Earn' : 'Spend'}
+                                        </td>
+                                        <td style="color: ${transaction.type === 'earn' ? 'var(--success)' : 'var(--danger)'};">
+                                            ${transaction.type === 'earn' ? '+' : '-'}${transaction.amount}
+                                        </td>
+                                        <td>${transaction.description || 'No description'}</td>
+                                        <td>${formatTimestamp(transaction.createdAt)}</td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
             `;
             
             paymentsList.innerHTML = paymentsHtml;
