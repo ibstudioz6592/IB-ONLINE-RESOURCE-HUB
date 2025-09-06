@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -305,12 +304,14 @@
             border: 1px solid var(--border);
             border-radius: var(--radius);
             box-shadow: var(--shadow-lg);
-            width: 300px;
+            width: 320px;
+            max-width: 90vw;
             z-index: 100;
             opacity: 0;
             visibility: hidden;
             transform: translateY(-10px);
             transition: var(--transition);
+            overflow: hidden;
         }
         
         .account-menu.active {
@@ -320,28 +321,39 @@
         }
         
         .account-header {
-            padding: 1rem;
+            padding: 1.5rem;
             border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+            position: relative;
         }
         
         .account-avatar {
-            width: 50px;
-            height: 50px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 1.2rem;
+            font-size: 1.8rem;
             font-weight: 600;
+            margin: 0 auto 1rem;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .account-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .account-info {
+            text-align: center;
         }
         
         .account-info h3 {
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
             margin-bottom: 0.25rem;
         }
@@ -349,17 +361,42 @@
         .account-info p {
             font-size: 0.875rem;
             color: var(--text-secondary);
+            margin-bottom: 0.5rem;
         }
         
         .account-brand {
             font-size: 0.75rem;
             color: var(--text-muted);
             font-weight: 600;
-            margin-top: 0.25rem;
+        }
+        
+        .account-edit-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--surface-hover);
+            border: 1px solid var(--border);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+        }
+        
+        .account-edit-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
         }
         
         .account-content {
             padding: 1rem;
+            max-height: 50vh;
+            overflow-y: auto;
         }
         
         .account-section {
@@ -377,6 +414,7 @@
             margin-bottom: 0.5rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            padding: 0 0.5rem;
         }
         
         .account-list {
@@ -389,9 +427,10 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            padding: 0.5rem;
+            padding: 0.75rem;
             border-radius: calc(var(--radius) / 2);
             transition: var(--transition);
+            cursor: pointer;
         }
         
         .account-item:hover {
@@ -399,29 +438,37 @@
         }
         
         .account-item-icon {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             background: var(--surface-hover);
             color: var(--text-secondary);
+            flex-shrink: 0;
         }
         
         .account-item-info {
             flex: 1;
+            min-width: 0;
         }
         
         .account-item-title {
             font-weight: 500;
             font-size: 0.875rem;
             margin-bottom: 0.125rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .account-item-meta {
             font-size: 0.75rem;
             color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .account-footer {
@@ -429,6 +476,52 @@
             border-top: 1px solid var(--border);
             display: flex;
             justify-content: center;
+        }
+        
+        /* Profile Edit Form */
+        .profile-edit-form {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: none;
+        }
+        
+        .profile-edit-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--background);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            transition: var(--transition);
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
         }
         
         /* Main Container */
@@ -862,7 +955,6 @@
             background: var(--surface-hover);
             color: var(--text-primary);
         }
-
         .selection-steps {
             display: flex;
             padding: 1.5rem;
@@ -975,7 +1067,6 @@
             margin-bottom: 1rem;
             color: var(--primary);
         }
-
         .selection-card.selected .selection-icon {
             color: white;
         }
@@ -989,7 +1080,6 @@
             font-size: 0.875rem;
             opacity: 0.8;
         }
-
         .selection-card.selected .selection-code {
             opacity: 0.9;
         }
@@ -1010,7 +1100,6 @@
             transition: var(--transition);
             border: none;
         }
-
         .btn-step:disabled {
             opacity: 0.5;
             cursor: not-allowed;
@@ -1063,8 +1152,55 @@
         .toast.success .toast-icon { color: var(--success); }
         .toast.error .toast-icon { color: var(--danger); }
         .toast.info .toast-icon { color: var(--info); }
-        @media (max-width: 768px) { .header-content { padding: 1rem; } .container { padding: 1rem; } .nav-links { display: none; } .welcome-title { font-size: 1.5rem; } .filter-grid { grid-template-columns: 1fr; } .materials-grid { grid-template-columns: 1fr; } .chatbot-container { right: 1rem; left: 1rem; max-width: none; } .modal { width: 95%; max-height: 95vh; } .account-menu { width: 280px; } .materials-header { flex-direction: column; align-items: flex-start; } .chatbot-toggle { padding: 0.5rem 1rem; font-size: 0.75rem; } .selection-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); } .selection-card { padding: 1rem; } .selection-icon { font-size: 1.5rem; } }
-        @media (max-width: 480px) { .filter-section { padding: 1rem; } .filter-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; } .filter-actions { width: 100%; justify-content: space-between; } .btn { padding: 0.5rem 0.75rem; font-size: 0.8rem; } .material-actions { flex-wrap: wrap; } .material-action { width: 32px; height: 32px; } }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) { 
+            .header-content { padding: 1rem; } 
+            .container { padding: 1rem; } 
+            .nav-links { display: none; } 
+            .welcome-title { font-size: 1.5rem; } 
+            .filter-grid { grid-template-columns: 1fr; } 
+            .materials-grid { grid-template-columns: 1fr; } 
+            .chatbot-container { right: 1rem; left: 1rem; max-width: none; } 
+            .modal { width: 95%; max-height: 95vh; } 
+            .account-menu { width: 280px; } 
+            .materials-header { flex-direction: column; align-items: flex-start; } 
+            .chatbot-toggle { padding: 0.5rem 1rem; font-size: 0.75rem; } 
+            .selection-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); } 
+            .selection-card { padding: 1rem; } 
+            .selection-icon { font-size: 1.5rem; }
+            .account-menu {
+                width: 90vw;
+                right: 5vw;
+            }
+        }
+        
+        @media (max-width: 480px) { 
+            .filter-section { padding: 1rem; } 
+            .filter-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; } 
+            .filter-actions { width: 100%; justify-content: space-between; } 
+            .btn { padding: 0.5rem 0.75rem; font-size: 0.8rem; } 
+            .material-actions { flex-wrap: wrap; } 
+            .material-action { width: 32px; height: 32px; }
+            .account-header {
+                padding: 1rem;
+            }
+            .account-avatar {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+            .account-content {
+                max-height: 40vh;
+            }
+            .account-item {
+                padding: 0.5rem;
+            }
+            .account-item-icon {
+                width: 36px;
+                height: 36px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1113,8 +1249,65 @@
                                 <p id="accountEmail">Loading...</p>
                                 <p class="account-brand">IB STUDIOZ</p>
                             </div>
+                            <button class="account-edit-btn" id="editProfileBtn">
+                                <i class="fas fa-edit"></i>
+                            </button>
                         </div>
+                        
+                        <div class="profile-edit-form" id="profileEditForm">
+                            <div class="form-group">
+                                <label class="form-label" for="displayNameInput">Display Name</label>
+                                <input type="text" id="displayNameInput" class="form-input" placeholder="Enter your name">
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-outline" id="cancelEditBtn">Cancel</button>
+                                <button class="btn btn-primary" id="saveProfileBtn">Save</button>
+                            </div>
+                        </div>
+                        
                         <div class="account-content">
+                            <div class="account-section">
+                                <div class="account-section-title">Account Details</div>
+                                <div class="account-list">
+                                    <div class="account-item">
+                                        <div class="account-item-icon">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div class="account-item-info">
+                                            <div class="account-item-title">Full Name</div>
+                                            <div class="account-item-meta" id="accountFullName">Not set</div>
+                                        </div>
+                                    </div>
+                                    <div class="account-item">
+                                        <div class="account-item-icon">
+                                            <i class="fas fa-envelope"></i>
+                                        </div>
+                                        <div class="account-item-info">
+                                            <div class="account-item-title">Email</div>
+                                            <div class="account-item-meta" id="accountEmailDetail">Loading...</div>
+                                        </div>
+                                    </div>
+                                    <div class="account-item">
+                                        <div class="account-item-icon">
+                                            <i class="fas fa-calendar-alt"></i>
+                                        </div>
+                                        <div class="account-item-info">
+                                            <div class="account-item-title">Member Since</div>
+                                            <div class="account-item-meta" id="accountMemberSince">Loading...</div>
+                                        </div>
+                                    </div>
+                                    <div class="account-item">
+                                        <div class="account-item-icon">
+                                            <i class="fas fa-download"></i>
+                                        </div>
+                                        <div class="account-item-info">
+                                            <div class="account-item-title">Downloads</div>
+                                            <div class="account-item-meta" id="accountDownloads">0</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div class="account-section">
                                 <div class="account-section-title">Downloaded Materials</div>
                                 <div class="account-list" id="downloadedMaterials">
@@ -1123,23 +1316,32 @@
                                     </div>
                                 </div>
                             </div>
+                            
                             <div class="account-section">
                                 <div class="account-section-title">Account Settings</div>
                                 <div class="account-list">
-                                    <div class="account-item">
-                                        <div class="account-item-icon">
-                                            <i class="fas fa-user-edit"></i>
-                                        </div>
-                                        <div class="account-item-info">
-                                            <div class="account-item-title">Edit Profile</div>
-                                        </div>
-                                    </div>
                                     <div class="account-item">
                                         <div class="account-item-icon">
                                             <i class="fas fa-cog"></i>
                                         </div>
                                         <div class="account-item-info">
                                             <div class="account-item-title">Preferences</div>
+                                        </div>
+                                    </div>
+                                    <div class="account-item">
+                                        <div class="account-item-icon">
+                                            <i class="fas fa-shield-alt"></i>
+                                        </div>
+                                        <div class="account-item-info">
+                                            <div class="account-item-title">Privacy</div>
+                                        </div>
+                                    </div>
+                                    <div class="account-item">
+                                        <div class="account-item-icon">
+                                            <i class="fas fa-question-circle"></i>
+                                        </div>
+                                        <div class="account-item-info">
+                                            <div class="account-item-title">Help & Support</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1192,7 +1394,6 @@
                     </button>
                 </div>
             </div>
-
             <!-- Branch-Semester-Course Selection Display -->
             <div class="selection-display" id="selection-display" style="display: none;">
                 <div class="selection-item">
@@ -1404,6 +1605,10 @@
         const accountAvatar = document.getElementById('accountAvatar');
         const accountName = document.getElementById('accountName');
         const accountEmail = document.getElementById('accountEmail');
+        const accountFullName = document.getElementById('accountFullName');
+        const accountEmailDetail = document.getElementById('accountEmailDetail');
+        const accountMemberSince = document.getElementById('accountMemberSince');
+        const accountDownloads = document.getElementById('accountDownloads');
         const accountLogout = document.getElementById('accountLogout');
         const materialsGrid = document.getElementById('materialsGrid');
         const materialsCount = document.getElementById('materialsCount');
@@ -1422,6 +1627,13 @@
         const chatbotSend = document.getElementById('chatbotSend');
         const toast = document.getElementById('toast');
         const toastMessage = document.getElementById('toastMessage');
+        
+        // Profile Edit Elements
+        const editProfileBtn = document.getElementById('editProfileBtn');
+        const profileEditForm = document.getElementById('profileEditForm');
+        const displayNameInput = document.getElementById('displayNameInput');
+        const saveProfileBtn = document.getElementById('saveProfileBtn');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
         
         // Branch-Semester-Course Selection Modal Elements
         const branchSemesterCourseModal = document.getElementById('branch-semester-course-modal');
@@ -1579,6 +1791,9 @@
                             downloadedMaterials.push(activity.materialId);
                         }
                     });
+                    
+                    // Update download count
+                    accountDownloads.textContent = downloadedMaterials.length;
                     
                     renderDownloadedMaterials();
                 })
@@ -1879,26 +2094,21 @@
                 }
             });
         }
-
         function resetSelectionModal() {
             tempSelectedBranch = null;
             tempSelectedSemester = null;
             tempSelectedCourse = null;
-
             [semesterStep, courseStep].forEach(step => step.classList.remove('active'));
             branchStep.classList.add('active');
             
             [stepIndicators[1], stepIndicators[2]].forEach(ind => ind.classList.remove('active'));
             stepIndicators[0].classList.add('active');
-
             prevStepBtn.style.display = 'none';
             finishSelectionBtn.style.display = 'none';
             nextStepBtn.style.display = 'block';
             nextStepBtn.disabled = true;
-
             document.querySelectorAll('.selection-card.selected').forEach(card => card.classList.remove('selected'));
         }
-
         function initializeBranchOptions() {
             branchOptions.innerHTML = '';
             for (const code in academicData.branches) {
@@ -2092,6 +2302,36 @@
                     accountMenu.classList.remove('active');
                 }
             });
+            
+            // Profile edit functionality
+            editProfileBtn.addEventListener('click', () => {
+                profileEditForm.classList.add('active');
+                displayNameInput.value = currentUser.displayName || '';
+                displayNameInput.focus();
+            });
+            
+            saveProfileBtn.addEventListener('click', () => {
+                const newName = displayNameInput.value.trim();
+                if (newName) {
+                    currentUser.updateProfile({
+                        displayName: newName
+                    }).then(() => {
+                        accountName.textContent = newName;
+                        accountFullName.textContent = newName;
+                        profileEditForm.classList.remove('active');
+                        showToast('Profile updated successfully', 'success');
+                    }).catch(error => {
+                        console.error('Error updating profile:', error);
+                        showToast('Error updating profile', 'error');
+                    });
+                } else {
+                    showToast('Name cannot be empty', 'error');
+                }
+            });
+            
+            cancelEditBtn.addEventListener('click', () => {
+                profileEditForm.classList.remove('active');
+            });
         }
         
         // Authentication
@@ -2100,13 +2340,29 @@
                 if (user) {
                     currentUser = user;
                     
+                    // Update account header
                     accountName.textContent = user.displayName || user.email.split('@')[0];
                     accountEmail.textContent = user.email;
                     
-                    if (user.displayName) {
-                        accountAvatar.textContent = user.displayName.charAt(0).toUpperCase();
+                    // Update account details section
+                    accountFullName.textContent = user.displayName || 'Not set';
+                    accountEmailDetail.textContent = user.email;
+                    
+                    // Format member since date
+                    if (user.metadata.creationTime) {
+                        const createdDate = new Date(user.metadata.creationTime);
+                        accountMemberSince.textContent = createdDate.toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'short', 
+                            day: 'numeric' 
+                        });
+                    }
+                    
+                    // Update avatar with profile image if available
+                    if (user.photoURL) {
+                        accountAvatar.innerHTML = `<img src="${user.photoURL}" alt="Profile">`;
                     } else {
-                        accountAvatar.textContent = user.email.charAt(0).toUpperCase();
+                        accountAvatar.innerHTML = `<i class="fas fa-user"></i>`;
                     }
                     
                     loadMaterials();
