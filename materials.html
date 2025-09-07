@@ -1802,7 +1802,14 @@
         };
         
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        try {
+            firebase.initializeApp(firebaseConfig);
+            console.log("Firebase initialized successfully");
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+            showToast("Failed to initialize application. Please refresh the page.", "error");
+        }
+        
         const auth = firebase.auth();
         const db = firebase.firestore();
         const storage = firebase.storage();
@@ -1971,15 +1978,30 @@
         
         // Load Materials
         function loadMaterials() {
+            if (!currentUser) {
+                console.error("Cannot load materials: User not authenticated");
+                showToast("Please log in to view materials", "error");
+                return;
+            }
+            
             materialsGrid.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
             
-            db.collection('notes').orderBy('createdAt', 'desc').get().then(snapshot => {
+            console.log("Loading materials for user:", currentUser.uid);
+            
+            db.collection('materials').orderBy('createdAt', 'desc').get().then(snapshot => {
+                console.log("Materials query successful, document count:", snapshot.size);
+                
                 materials = [];
                 snapshot.forEach(doc => {
                     const material = doc.data();
                     material.id = doc.id;
                     materials.push(material);
+                    console.log("Loaded material:", material.title);
                 });
+                
+                if (materials.length === 0) {
+                    console.log("No materials found in database");
+                }
                 
                 filteredMaterials = [...materials];
                 renderMaterials();
@@ -1989,12 +2011,22 @@
                 }
             }).catch(error => {
                 console.error('Error loading materials:', error);
-                showToast('Error loading materials', 'error');
+                
+                // More specific error messages
+                let errorMessage = "Error loading materials";
+                if (error.code === "permission-denied") {
+                    errorMessage = "You don't have permission to view materials";
+                } else if (error.code === "unavailable") {
+                    errorMessage = "Service temporarily unavailable, please try again later";
+                }
+                
+                showToast(errorMessage, 'error');
                 materialsGrid.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-icon"><i class="fas fa-exclamation-circle"></i></div>
                         <h3 class="empty-title">Error Loading Materials</h3>
-                        <p class="empty-description">Please try again later</p>
+                        <p class="empty-description">${errorMessage}</p>
+                        <button class="btn btn-primary" onclick="loadMaterials()">Try Again</button>
                     </div>
                 `;
             });
@@ -2050,7 +2082,7 @@
             }
             
             const materialPromises = downloadedMaterials.map(materialId => {
-                return db.collection('notes').doc(materialId).get();
+                return db.collection('materials').doc(materialId).get();
             });
             
             Promise.all(materialPromises)
@@ -2554,7 +2586,7 @@
                     };
                     
                     // Send to Google Apps Script
-                    const response = await fetch(https://script.google.com/macros/s/AKfycbyaB4eUhTYg6a0p8h2A53UBT9FcoIHowgj_844omrQrYK9gTFdFzcgFj92H51ldhcvq/exec, {
+                    const response = await fetch(API_URL, {
                         method: 'POST',
                         body: JSON.stringify(payload),
                         headers: {
@@ -2709,6 +2741,7 @@
         function initAuth() {
             auth.onAuthStateChanged(user => {
                 if (user) {
+                    console.log("User authenticated:", user.uid);
                     currentUser = user;
                     
                     // Update account header
@@ -2738,8 +2771,17 @@
                     
                     loadMaterials();
                 } else {
-                    window.location.href = '/index.html';
+                    console.log("User not authenticated, redirecting to login");
+                    // Instead of immediate redirect, show a message
+                    showToast("Please log in to access materials", "info");
+                    // Delay redirect to allow message to be seen
+                    setTimeout(() => {
+                        window.location.href = '/index.html';
+                    }, 2000);
                 }
+            }, error => {
+                console.error("Authentication state error:", error);
+                showToast("Authentication error. Please try logging in again.", "error");
             });
         }
         
