@@ -1906,7 +1906,7 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
         
-        // IMPORTANT: Initialize EmailJS with your public key only
+        // IMPORTANT: Initialize EmailJS with your public key
         emailjs.init("Jdgw3kivxCnppgL9j");
         
         // Academic branches data
@@ -2174,7 +2174,7 @@
             }, 5000);
         }
         
-        // Fixed email sending function
+        // Fixed email sending function with correct EmailJS configuration
         async function sendGreetingEmail(userEmail, userName, type) {
             // Ensure we have valid data before sending
             if (!userEmail || !userName) {
@@ -2182,14 +2182,16 @@
                 return;
             }
             
-            const templateId = type === 'login' ? 'template_qd7hym3' : 'template_8jxjmny';
+            // Updated with your correct EmailJS configuration
+            const serviceId = 'service_xxl7ccs';
+            const templateId = type === 'login' ? 'template_8jxjmny' : 'template_qd7hym3';
             const params = { 
                 to_email: userEmail.trim(), 
                 to_name: userName.trim() 
             };
             
             try {
-                await emailjs.send('service_ndj9m3l', templateId, params);
+                await emailjs.send(serviceId, templateId, params);
                 console.log(`Email sent successfully to ${userEmail}`);
                 showEmailStatus('Email Sent!', 'Check your inbox for our greeting.', 'success');
             } catch (error) {
