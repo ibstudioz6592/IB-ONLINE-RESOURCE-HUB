@@ -2174,29 +2174,67 @@
             }, 5000);
         }
         
-        // Fixed email sending function with correct EmailJS configuration
+        // Email validation function
+        function validateEmail(email) {
+            const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(String(email).toLowerCase());
+        }
+        
+        // Fixed email sending function with proper error handling
         async function sendGreetingEmail(userEmail, userName, type) {
-            // Ensure we have valid data before sending
-            if (!userEmail || !userName) {
-                console.error("ERROR: Missing email or name for sending greeting", { userEmail, userName });
+            console.log("Attempting to send email to:", userEmail);
+            
+            // Validate email
+            if (!userEmail || !validateEmail(userEmail)) {
+                console.error("Invalid email address:", userEmail);
+                showEmailStatus('Email Error', 'Invalid email address', 'error');
+                return;
+            }
+            
+            // Validate name
+            if (!userName || userName.trim() === '') {
+                console.error("Invalid name:", userName);
+                showEmailStatus('Email Error', 'Invalid name', 'error');
                 return;
             }
             
             // Updated with your correct EmailJS configuration
             const serviceId = 'service_xxl7ccs';
             const templateId = type === 'login' ? 'template_8jxjmny' : 'template_qd7hym3';
+            
+            // Make sure we're using the correct parameter names for your EmailJS template
             const params = { 
-                to_email: userEmail.trim(), 
-                to_name: userName.trim() 
+                email: userEmail.trim(),  // Try 'email' instead of 'to_email'
+                name: userName.trim()     // Try 'name' instead of 'to_name'
             };
+            
+            console.log("EmailJS Parameters:", params);
             
             try {
                 await emailjs.send(serviceId, templateId, params);
                 console.log(`Email sent successfully to ${userEmail}`);
                 showEmailStatus('Email Sent!', 'Check your inbox for our greeting.', 'success');
+                return true;
             } catch (error) {
                 console.error('Email sending failed:', error);
-                showEmailStatus('Email Failed', 'Could not send greeting email.', 'error');
+                
+                // Try alternative parameter names if the first attempt fails
+                try {
+                    const altParams = { 
+                        to_email: userEmail.trim(),
+                        to_name: userName.trim()
+                    };
+                    console.log("Trying alternative parameters:", altParams);
+                    
+                    await emailjs.send(serviceId, templateId, altParams);
+                    console.log(`Email sent successfully to ${userEmail} with alternative parameters`);
+                    showEmailStatus('Email Sent!', 'Check your inbox for our greeting.', 'success');
+                    return true;
+                } catch (altError) {
+                    console.error('Alternative email sending also failed:', altError);
+                    showEmailStatus('Email Failed', 'Could not send greeting email.', 'error');
+                    return false;
+                }
             }
         }
         
@@ -2303,12 +2341,6 @@
             }
         });
         
-        // Email validation function
-        function validateEmail(email) {
-            const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            return re.test(String(email).toLowerCase());
-        }
-        
         // Fixed auth form submission handler
         authForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -2341,7 +2373,7 @@
                         const userName = userData.name || user.displayName || userEmail.split('@')[0];
                         
                         // Send greeting email
-                        await sendGreetingEmail(userEmail, userName, 'login');
+                        const emailSent = await sendGreetingEmail(userEmail, userName, 'login');
                         
                         messageArea.textContent = "Login successful! Redirecting...";
                         setTimeout(() => {
@@ -2350,7 +2382,7 @@
                     } else {
                         // Fallback if user document doesn't exist
                         const userName = user.displayName || email.split('@')[0];
-                        await sendGreetingEmail(user.email, userName, 'login');
+                        const emailSent = await sendGreetingEmail(user.email, userName, 'login');
                         
                         messageArea.textContent = "Login successful! Redirecting...";
                         setTimeout(() => {
@@ -2381,7 +2413,7 @@
                     await user.sendEmailVerification();
                     
                     // Send greeting email
-                    await sendGreetingEmail(email, name, 'register');
+                    const emailSent = await sendGreetingEmail(email, name, 'register');
                     
                     // Show success message
                     alert("Registration successful! A verification email has been sent. Please verify your account before logging in.");
@@ -2559,7 +2591,7 @@
                                 const role = userData.role || 'student'; // Default to student if role is not set
                                 
                                 // Send greeting email
-                                await sendGreetingEmail(userData.email, userData.name, 'login');
+                                const emailSent = await sendGreetingEmail(userData.email, userData.name, 'login');
                                 
                                 // Show success message
                                 showToast(`Login successful! Welcome back, ${userData.name}!`, 'success');
@@ -2632,7 +2664,7 @@
                 });
                 
                 // Send greeting email
-                await sendGreetingEmail(socialUserData.email, userName, 'register');
+                const emailSent = await sendGreetingEmail(socialUserData.email, userName, 'register');
                 
                 // Show registration success modal
                 verificationEmailDisplay.textContent = socialUserData.email;
