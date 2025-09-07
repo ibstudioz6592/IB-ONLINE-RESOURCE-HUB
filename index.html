@@ -3059,7 +3059,16 @@
         // Check if user is already logged in
         auth.onAuthStateChanged((user) => {
             if (user) {
-                // User is signed in
+                // Check if the user was created recently (within the last 5 seconds)
+                const creationTime = new Date(user.metadata.creationTime).getTime();
+                const now = Date.now();
+                const isNewUser = (now - creationTime < 5000);
+
+                // For new users, we'll handle the redirect in the registration function
+                if (isNewUser) {
+                    return;
+                }
+
                 // Get user data from Firestore
                 db.collection('users').doc(user.uid).get().then((doc) => {
                     if (doc.exists) {
@@ -3072,23 +3081,25 @@
                             updateLanguageDisplay();
                         }
                         
-                        // Check if user has a role
                         if (userData.role) {
                             // User has a role, redirect directly
-                            switch (userData.role) {
-                                case 'admin':
-                                    window.location.href = 'admindashboard.html';
-                                    break;
-                                case 'faculty':
-                                    window.location.href = 'facultydashboard.html';
-                                    break;
-                                case 'student':
-                                default:
-                                    window.location.href = 'studentdashboard.html';
-                                    break;
-                            }
+                            showToast('Login successful!', 'success');
+                            setTimeout(() => {
+                                switch (userData.role) {
+                                    case 'admin':
+                                        window.location.href = 'admindashboard.html';
+                                        break;
+                                    case 'faculty':
+                                        window.location.href = 'facultydashboard.html';
+                                        break;
+                                    case 'student':
+                                    default:
+                                        window.location.href = 'studentdashboard.html';
+                                        break;
+                                }
+                            }, 1000);
                         } else {
-                            // User doesn't have a role, show role selection modal
+                            // User exists but doesn't have a role, show role selection modal
                             roleSelectionModal.classList.add('active');
                         }
                     } else {
@@ -3098,7 +3109,10 @@
                 }).catch((error) => {
                     console.error('Error getting user data:', error);
                     // Default to student dashboard
-                    window.location.href = 'studentdashboard.html';
+                    showToast('Login successful!', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'studentdashboard.html';
+                    }, 1000);
                 });
             }
         });
