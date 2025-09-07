@@ -1290,6 +1290,98 @@
             margin-right: 10px;
         }
         
+        /* Email sending notification */
+        .email-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            max-width: 300px;
+        }
+        
+        .email-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .email-notification i {
+            font-size: 1.2rem;
+            color: var(--success);
+        }
+        
+        .email-notification-content {
+            flex: 1;
+        }
+        
+        .email-notification-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .email-notification-message {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Email sending status */
+        .email-status {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 2000;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .email-status.show {
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .email-status i {
+            font-size: 1.5rem;
+        }
+        
+        .email-status.success i {
+            color: var(--success);
+        }
+        
+        .email-status.error i {
+            color: var(--danger);
+        }
+        
+        .email-status-content {
+            flex: 1;
+        }
+        
+        .email-status-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+        
+        .email-status-message {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
         /* Responsive improvements for very small screens */
         @media (max-width: 360px) {
             .branch-grid {
@@ -1773,6 +1865,27 @@
     <!-- Toast container -->
     <div id="toast-container"></div>
     
+    <!-- Email notification -->
+    <div class="email-notification" id="email-notification">
+        <i class="fas fa-envelope"></i>
+        <div class="email-notification-content">
+            <div class="email-notification-title">Email Sent</div>
+            <div class="email-notification-message" id="email-notification-message">A greeting has been sent to your email</div>
+        </div>
+    </div>
+    
+    <!-- Email status notification -->
+    <div class="email-status" id="email-status">
+        <i class="fas fa-check-circle"></i>
+        <div class="email-status-content">
+            <div class="email-status-title">Email Sent Successfully</div>
+            <div class="email-status-message" id="email-status-message">Check your inbox for our greeting</div>
+        </div>
+    </div>
+    
+    <!-- Include EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -1791,6 +1904,9 @@
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
+        
+        // Initialize EmailJS with your service ID (replace with your actual service ID)
+        emailjs.init("YOUR_EMAILJS_SERVICE_ID");
         
         // Academic branches data
         const branches = {
@@ -1899,6 +2015,12 @@
         const registrationSuccessClose = document.getElementById('registration-success-close');
         const verificationEmailDisplay = document.getElementById('verification-email-display');
         const resendVerificationBtn = document.getElementById('resend-verification-btn');
+        
+        // Email notification elements
+        const emailNotification = document.getElementById('email-notification');
+        const emailNotificationMessage = document.getElementById('email-notification-message');
+        const emailStatus = document.getElementById('email-status');
+        const emailStatusMessage = document.getElementById('email-status-message');
         
         // State variables
         let isLogin = true;
@@ -2020,6 +2142,87 @@
                     toast.remove();
                 }, 300);
             }, 3000);
+        }
+        
+        // Show email notification
+        function showEmailNotification(message) {
+            emailNotificationMessage.textContent = message;
+            emailNotification.classList.add('show');
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                emailNotification.classList.remove('show');
+            }, 5000);
+        }
+        
+        // Show email status notification
+        function showEmailStatus(title, message, type = 'success') {
+            emailStatus.className = `email-status ${type} show`;
+            emailStatus.querySelector('.email-status-title').textContent = title;
+            emailStatusMessage.textContent = message;
+            
+            if (type === 'success') {
+                emailStatus.querySelector('i').className = 'fas fa-check-circle';
+            } else {
+                emailStatus.querySelector('i').className = 'fas fa-exclamation-circle';
+            }
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                emailStatus.classList.remove('show');
+            }, 5000);
+        }
+        
+        // Send greeting email function using EmailJS
+        async function sendGreetingEmail(email, name, type) {
+            try {
+                // Show sending status
+                showEmailStatus('Sending Email', 'Please wait while we send your greeting...', 'info');
+                
+                // Prepare template parameters
+                const templateParams = {
+                    to_email: email,
+                    to_name: name,
+                    from_name: 'IB STUDIOZ Team',
+                    message: type === 'login' 
+                        ? `Welcome back to IB STUDIOZ, ${name}! We're glad to see you again. Thank you for being part of our learning community.` 
+                        : `Welcome to IB STUDIOZ, ${name}! Thank you for joining our platform. We're excited to have you as part of our learning community.`,
+                    subject: type === 'login' ? 'Welcome Back to IB STUDIOZ!' : 'Welcome to IB STUDIOZ!',
+                    type: type
+                };
+                
+                // Send email using EmailJS
+                // Replace with your actual service ID, template ID, and user ID
+                const response = await emailjs.send(
+                    'YOUR_EMAILJS_SERVICE_ID',    // Replace with your EmailJS service ID
+                    'YOUR_EMAILJS_TEMPLATE_ID',   // Replace with your EmailJS template ID
+                    templateParams
+                );
+                
+                console.log('Email sent successfully:', response);
+                
+                // Show success notification
+                showEmailStatus(
+                    'Email Sent Successfully!', 
+                    type === 'login' 
+                        ? `Welcome back, ${name}! Check your inbox for our greeting.` 
+                        : `Welcome to IB STUDIOZ, ${name}! Check your inbox for our greeting.`, 
+                    'success'
+                );
+                
+                return true;
+            } catch (error) {
+                console.error('Error sending email:', error);
+                
+                // Show error notification
+                showEmailStatus(
+                    'Email Sending Failed', 
+                    'We couldn\'t send the greeting email. Please check your email address or try again later.', 
+                    'error'
+                );
+                
+                return false;
+            }
         }
         
         // Toggle between login and register
@@ -2180,12 +2383,33 @@
                         return;
                     }
                     
-                    showToast('Login successful!', 'success');
-                    
-                    // Redirect to student dashboard
-                    setTimeout(() => {
-                        window.location.href = 'studentdashboard.html';
-                    }, 1000);
+                    // Get user data from Firestore
+                    const userDoc = await db.collection('users').doc(user.uid).get();
+                    if (userDoc.exists) {
+                        const userData = userDoc.data();
+                        const role = userData.role || 'student'; // Default to student if role is not set
+                        
+                        // Send greeting email
+                        await sendGreetingEmail(userData.email, userData.name, 'login');
+                        
+                        // Show success message
+                        showToast(`Login successful! Welcome back, ${userData.name}!`, 'success');
+                        
+                        // Redirect based on role
+                        setTimeout(() => {
+                            if (role === 'admin') {
+                                window.location.href = 'admindashboard.html';
+                            } else {
+                                window.location.href = 'studentdashboard.html';
+                            }
+                        }, 1500);
+                    } else {
+                        // If user document doesn't exist, default to student
+                        showToast('Login successful!', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'studentdashboard.html';
+                        }, 1500);
+                    }
                 } else {
                     // Register user
                     const userCredential = await auth.createUserWithEmailAndPassword(email, password);
@@ -2199,7 +2423,7 @@
                     // Send verification email
                     await user.sendEmailVerification();
                     
-                    // Save user data to Firestore
+                    // Save user data to Firestore with default role as student
                     await db.collection('users').doc(user.uid).set({
                         name: name,
                         email: email,
@@ -2207,9 +2431,12 @@
                         branch: branch,
                         semester: semester,
                         language: userLanguage,
-                        role: 'student',
+                        role: 'student', // Default role is student
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
+                    
+                    // Send greeting email
+                    await sendGreetingEmail(email, name, 'register');
                     
                     // Show registration success modal
                     verificationEmailDisplay.textContent = email;
@@ -2389,7 +2616,7 @@
         
         function handleSocialLogin(provider) {
             auth.signInWithPopup(provider)
-                .then((result) => {
+                .then(async (result) => {
                     // Check if user is new
                     if (result.additionalUserInfo.isNewUser) {
                         // Show social registration modal
@@ -2407,11 +2634,33 @@
                         
                         socialRegistrationModal.classList.add('active');
                     } else {
-                        // Existing user, redirect to student dashboard
-                        showToast('Login successful!', 'success');
-                        setTimeout(() => {
-                            window.location.href = 'studentdashboard.html';
-                        }, 1000);
+                        // Existing user, get user data and redirect based on role
+                        const userDoc = await db.collection('users').doc(result.user.uid).get();
+                        if (userDoc.exists) {
+                            const userData = userDoc.data();
+                            const role = userData.role || 'student'; // Default to student if role is not set
+                            
+                            // Send greeting email
+                            await sendGreetingEmail(userData.email, userData.name, 'login');
+                            
+                            // Show success message
+                            showToast(`Login successful! Welcome back, ${userData.name}!`, 'success');
+                            
+                            // Redirect based on role
+                            setTimeout(() => {
+                                if (role === 'admin') {
+                                    window.location.href = 'admindashboard.html';
+                                } else {
+                                    window.location.href = 'studentdashboard.html';
+                                }
+                            }, 1500);
+                        } else {
+                            // If user document doesn't exist, default to student
+                            showToast('Login successful!', 'success');
+                            setTimeout(() => {
+                                window.location.href = 'studentdashboard.html';
+                            }, 1500);
+                        }
                     }
                 })
                 .catch((error) => {
@@ -2439,7 +2688,7 @@
             socialSubmitBtn.classList.add('btn-loading');
             
             try {
-                // Save user data to Firestore
+                // Save user data to Firestore with default role as student
                 await db.collection('users').doc(socialUserData.uid).set({
                     name: socialUserData.name,
                     email: socialUserData.email,
@@ -2449,9 +2698,12 @@
                     phone: phone,
                     photoURL: socialUserData.photoURL,
                     language: userLanguage,
-                    role: 'student',
+                    role: 'student', // Default role is student
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
+                
+                // Send greeting email
+                await sendGreetingEmail(socialUserData.email, socialUserData.name, 'register');
                 
                 // Show registration success modal
                 verificationEmailDisplay.textContent = socialUserData.email;
@@ -2565,18 +2817,20 @@
                             // Populate course list
                             courseList.innerHTML = '';
                             
-                            branch.semesters[semesterNum].forEach(course => {
-                                const courseItem = document.createElement('div');
-                                courseItem.className = 'course-item';
-                                
-                                courseItem.innerHTML = `
-                                    <span class="course-code">${course.code}</span>
-                                    <span class="course-name">${course.name}</span>
-                                    <span class="course-credits">${course.credits} credits</span>
-                                `;
-                                
-                                courseList.appendChild(courseItem);
-                            });
+                            if (branch.semesters[semesterNum]) {
+                                branch.semesters[semesterNum].forEach(course => {
+                                    const courseItem = document.createElement('div');
+                                    courseItem.className = 'course-item';
+                                    
+                                    courseItem.innerHTML = `
+                                        <span class="course-code">${course.code}</span>
+                                        <span class="course-name">${course.name}</span>
+                                        <span class="course-credits">${course.credits} credits</span>
+                                    `;
+                                    
+                                    courseList.appendChild(courseItem);
+                                });
+                            }
                         });
                         
                         semesterGrid.appendChild(semesterItem);
@@ -2680,7 +2934,7 @@
         });
         
         // Check if user is already logged in
-        auth.onAuthStateChanged((user) => {
+        auth.onAuthStateChanged(async (user) => {
             if (user) {
                 // Check if the user was created recently (within the last 5 seconds)
                 const creationTime = new Date(user.metadata.creationTime).getTime();
@@ -2693,9 +2947,11 @@
                 }
                 
                 // Get user data from Firestore
-                db.collection('users').doc(user.uid).get().then((doc) => {
-                    if (doc.exists) {
-                        const userData = doc.data();
+                try {
+                    const userDoc = await db.collection('users').doc(user.uid).get();
+                    if (userDoc.exists) {
+                        const userData = userDoc.data();
+                        const role = userData.role || 'student'; // Default to student if role is not set
                         
                         // Update user language if available
                         if (userData.language) {
@@ -2704,26 +2960,27 @@
                             updateLanguageDisplay();
                         }
                         
-                        // Redirect to student dashboard
-                        showToast('Welcome back!', 'success');
+                        // Redirect based on role
                         setTimeout(() => {
-                            window.location.href = 'studentdashboard.html';
+                            if (role === 'admin') {
+                                window.location.href = 'admindashboard.html';
+                            } else {
+                                window.location.href = 'studentdashboard.html';
+                            }
                         }, 1000);
                     } else {
-                        // User document doesn't exist, redirect to student dashboard
-                        showToast('Welcome back!', 'success');
+                        // User document doesn't exist, default to student
                         setTimeout(() => {
                             window.location.href = 'studentdashboard.html';
                         }, 1000);
                     }
-                }).catch((error) => {
+                } catch (error) {
                     console.error('Error getting user data:', error);
                     // Default to student dashboard
-                    showToast('Welcome back!', 'success');
                     setTimeout(() => {
                         window.location.href = 'studentdashboard.html';
                     }, 1000);
-                });
+                }
             }
         });
         
