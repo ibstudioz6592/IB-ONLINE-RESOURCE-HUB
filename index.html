@@ -2173,59 +2173,25 @@
             }, 5000);
         }
         
-        // Send greeting email function using EmailJS
         async function sendGreetingEmail(email, name, type) {
-            try {
-                // Show sending status
-                showEmailStatus('Sending Email', 'Please wait while we send your greeting...', 'info');
-                // templateParams
-                const templateParams = {
-    to_email: email,
-    to_name: name,
-    from_name: 'IB STUDIOZ Team',
-    message: type === 'login' 
-        ? `Welcome back to IB STUDIOZ, ${name}! We're glad to see you again. Thank you for being part of our learning community.` 
-        : `Welcome to IB STUDIOZ, ${name}! Thank you for joining our platform. We're excited to have you as part of our learning community.`,
-    subject: type === 'login' ? 'Welcome Back to IB STUDIOZ!' : 'Welcome to IB STUDIOZ!',
-    type: type,
-    year: new Date().getFullYear() // Add this line
-};
-                
-                // Select template based on type
-                const templateId = type === 'login' ? 'template_qd7hym3' : 'template_8jxjmny';
-                
-                // Send email using EmailJS
-                const response = await emailjs.send(
-    'service_xxl7ccs',
-    templateId,
-    templateParams
-);
-                
-                console.log('Email sent successfully:', response);
-                
-                // Show success notification
-                showEmailStatus(
-                    'Email Sent Successfully!', 
-                    type === 'login' 
-                        ? `Welcome back, ${name}! Check your inbox for our greeting.` 
-                        : `Welcome to IB STUDIOZ, ${name}! Check your inbox for our greeting.`, 
-                    'success'
-                );
-                
-                return true;
-            } catch (error) {
-                console.error('Error sending email:', error);
-                
-                // Show error notification
-                showEmailStatus(
-                    'Email Sending Failed', 
-                    'We couldn\'t send the greeting email. Please check your email address or try again later.', 
-                    'error'
-                );
-                
-                return false;
-            }
-        }
+    // Final check to ensure we have valid data before sending.
+    if (!email || !name) {
+        console.error("CRITICAL ERROR: Attempted to send email but email or name was missing.", { email, name });
+        return; // Stop execution if data is invalid
+    }
+    
+    const templateId = type === 'login' ? 'template_qd7hym3' : 'template_8jxjmny';
+    const params = { to_email: email, to_name: name };
+
+    try {
+        await emailjs.send('service_ndj9m3l', templateId, params);
+        console.log(`EmailJS: Successfully sent '${type}' email to ${email}`);
+        showEmailStatus('Email Sent!', 'Check your inbox for our greeting.', 'success');
+    } catch (error) {
+        console.error('EmailJS Sending Failed:', error);
+        showEmailStatus('Email Failed', 'Could not send a greeting email.', 'error');
+    }
+}
         
         // Toggle between login and register
         toggleLink.addEventListener('click', () => {
@@ -2336,159 +2302,68 @@
             return re.test(String(email).toLowerCase());
         }
         
-        // Form submission
         authForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+    e.preventDefault();
+    submitBtn.classList.add('btn-loading');
+    messageArea.textContent = '';
+    messageArea.className = 'message';
+    
+    const email = emailInput.value;
+    const password = passwordInput.value;
+    const name = nameInput.value;
+
+    try {
+        if (isLogin) {
+            const userCredential = await auth.signInWithEmailAndPassword(email, password);
+            const user = userCredential.user;
             
-            // Get form values
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const name = document.getElementById('name').value;
-            const admissionNo = document.getElementById('admissionNo').value;
-            const branch = document.getElementById('branch').value;
-            const semester = document.getElementById('semester').value;
-            
-            // Validate form
-            if (!validateForm(email, password, isLogin ? '' : name, isLogin ? '' : admissionNo, isLogin ? '' : branch, isLogin ? '' : semester)) {
-                return;
+            if (!user.emailVerified) {
+                await auth.signOut();
+                throw new Error("Please verify your email before logging in.");
             }
             
-            // Show loading
-            submitBtn.classList.add('btn-loading');
+            // This read will now SUCCEED because of the new rules.
+            const userDoc = await db.collection('users').doc(user.uid).get();
             
-            try {
-                if (isLogin) {
-                    // Login user
-                    const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                    const user = userCredential.user;
-                    
-                    // Check if email is verified
-                    if (!user.emailVerified) {
-                        // Sign out the user
-                        await auth.signOut();
-                        
-                        // Show error message
-                        messageArea.textContent = 'Please verify your email before logging in. Check your inbox for the verification email.';
-                        messageArea.className = 'message error';
-                        
-                        // Show resend verification option
-                        const resendLink = document.createElement('a');
-                        resendLink.textContent = ' Resend verification email';
-                        resendLink.style.color = 'var(--primary)';
-                        resendLink.style.cursor = 'pointer';
-                        resendLink.style.marginLeft = '5px';
-                        resendLink.addEventListener('click', () => {
-                            resendVerificationEmail(email);
-                        });
-                        messageArea.appendChild(resendLink);
-                        
-                        return;
-                    }
-                    
-                    // Get user data from Firestore with error handling
-                    try {
-                        const userDoc = await db.collection('users').doc(user.uid).get();
-                        if (userDoc.exists) {
-                            const userData = userDoc.data();
-                            const role = userData.role || 'student'; // Default to student if role is not set
-                            
-                            // Send greeting email
-                            await sendGreetingEmail(userData.email, userData.name, 'login');
-                            
-                            // Show success message
-                            showToast(`Login successful! Welcome back, ${userData.name}!`, 'success');
-                            
-                            // Redirect based on role
-                            setTimeout(() => {
-                                if (role === 'admin') {
-                                    window.location.href = 'admindashboard.html';
-                                } else {
-                                    window.location.href = 'studentdashboard.html';
-                                }
-                            }, 1500);
-                        } else {
-                            // If user document doesn't exist, default to student
-                            showToast('Login successful!', 'success');
-                            setTimeout(() => {
-                                window.location.href = 'studentdashboard.html';
-                            }, 1500);
-                        }
-                    } catch (firestoreError) {
-                        console.error('Firestore error:', firestoreError);
-                        // Fallback to student dashboard if Firestore fails
-                        showToast('Login successful!', 'success');
-                        setTimeout(() => {
-                            window.location.href = 'studentdashboard.html';
-                        }, 1500);
-                    }
-                } else {
-                    // Register user
-                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                    const user = userCredential.user;
-                    
-                    // Update user profile
-                    await user.updateProfile({
-                        displayName: name
-                    });
-                    
-                    // Send verification email
-                    await user.sendEmailVerification();
-                    
-                    // Save user data to Firestore with default role as student
-                    await db.collection('users').doc(user.uid).set({
-                        name: name,
-                        email: email,
-                        admissionNo: admissionNo,
-                        branch: branch,
-                        semester: semester,
-                        language: userLanguage,
-                        role: 'student', // Default role is student
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    
-                    // Send greeting email
-                    await sendGreetingEmail(email, name, 'register');
-                    
-                    // Show registration success modal
-                    verificationEmailDisplay.textContent = email;
-                    registrationSuccessModal.classList.add('active');
-                    
-                    // Reset form
-                    authForm.reset();
-                    isLogin = true;
-                    updateAuthForm();
-                }
-            } catch (error) {
-                // Handle errors
-                let errorMessage = '';
-                
-                switch (error.code) {
-                    case 'auth/email-already-in-use':
-                        errorMessage = 'Email is already in use';
-                        break;
-                    case 'auth/invalid-email':
-                        errorMessage = 'Invalid email address';
-                        break;
-                    case 'auth/weak-password':
-                        errorMessage = 'Password is too weak';
-                        break;
-                    case 'auth/user-not-found':
-                        errorMessage = 'User not found';
-                        break;
-                    case 'auth/wrong-password':
-                        errorMessage = 'Incorrect password';
-                        break;
-                    default:
-                        errorMessage = error.message;
-                }
-                
-                messageArea.textContent = errorMessage;
-                messageArea.className = 'message error';
-            } finally {
-                // Hide loading
-                submitBtn.classList.remove('btn-loading');
+            if (userDoc.exists) {
+                const userData = userDoc.data();
+                // This function will now be called with the correct user data.
+                await sendGreetingEmail(userData.email, userData.name, 'login');
+                messageArea.textContent = "Login successful! Redirecting...";
+                setTimeout(() => window.location.href = 'studentdashboard.html', 1500);
+            } else {
+                // This case handles if a user exists in Auth but not in the database.
+                throw new Error("Could not find user data. Please contact support.");
             }
-        });
+        } else { // Registration
+            if (name.trim() === '') throw new Error("Full name is required.");
+            const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+            const user = userCredential.user;
+            await user.updateProfile({ displayName: name });
+            
+            // This write will now SUCCEED because of the new rules.
+            await db.collection('users').doc(user.uid).set({
+                name: name,
+                email: email,
+                role: 'student', // All new users are students by default.
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            await user.sendEmailVerification();
+            // This function will be called with the correct registration data.
+            await sendGreetingEmail(email, name, 'register');
+            
+            alert("Registration successful! A verification email has been sent. Please verify your account before logging in.");
+            window.location.reload();
+        }
+    } catch (error) {
+        console.error("Authentication or Firestore Error:", error);
+        messageArea.textContent = error.message.replace('Firebase: ', '').replace(/ \(auth\/.*\)\.$/, '');
+        messageArea.className = 'message error';
+    } finally {
+        submitBtn.classList.remove('btn-loading');
+    }
+});
         
         // Resend verification email function
         async function resendVerificationEmail(email) {
