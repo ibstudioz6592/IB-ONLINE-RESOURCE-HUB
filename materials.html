@@ -2468,170 +2468,195 @@
             branchSemesterCourseModal.classList.remove('active');
         }
         
-        // Chatbot with Gemini API Integration
         function initChatbot() {
-            const API_KEY = "AIzaSyCaSF0AT441mIB7OM7kk2yoUjeEHqgp_KI";
-            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
-            
-            // Add event listener for chatbot toggle
-            chatbotToggle.addEventListener('click', () => {
-                chatbotContainer.classList.toggle('active');
-                if (chatbotContainer.classList.contains('active')) {
-                    chatbotInput.focus();
-                }
-            });
-            
-            // Add close button functionality
-            chatbotClose.addEventListener('click', () => {
-                chatbotContainer.classList.remove('active');
-            });
-            
-            function addMessage(text, sender, isLoading = false) {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${sender}`;
-                
-                if (isLoading) {
-                    messageDiv.innerHTML = `<div class="spinner"></div> Thinking...`;
-                } else {
-                    messageDiv.textContent = text;
-                }
-                
-                chatbotMessages.appendChild(messageDiv);
-                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-                
-                return messageDiv;
-            }
-            
-            async function getBotResponse(userInput) {
-                try {
-                    // Create a context-aware prompt
-                    const contextPrompt = `
-                        You are IB STUDIOZ Assistant, an AI study helper for engineering students. 
-                        Your goal is to provide helpful, accurate, and educational responses to student questions.
-                        You can help with:
-                        - Explaining complex engineering concepts
-                        - Providing study tips and strategies
-                        - Answering questions about programming, mathematics, physics, and other engineering subjects
-                        - Suggesting learning resources
-                        - Helping with assignment problems (but not doing the work for them)
-                        
-                        Be friendly, encouraging, and concise in your responses.
-                        If you don't know the answer, admit it and suggest where the student might find help.
-                        
-                        Student's question: ${userInput}
-                    `;
-                    
-                    const response = await fetch(API_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            contents: [{
-                                parts: [{
-                                    text: contextPrompt
-                                }]
-                            }]
-                        })
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error('API request failed');
-                    }
-                    
-                    const data = await response.json();
-                    const botResponse = data.candidates[0].content.parts[0].text;
-                    
-                    return botResponse;
-                } catch (error) {
-                    console.error('Error calling Gemini API:', error);
-                    return "I'm sorry, I'm having trouble responding right now. Please try again later or contact support if the issue persists.";
-                }
-            }
-            
-            async function sendMessage() {
-                const message = chatbotInput.value.trim();
-                if (!message) return;
-                
-                // Disable input and send button while processing
-                chatbotInput.disabled = true;
-                chatbotSend.disabled = true;
-                
-                // Add user message
-                addMessage(message, 'user');
-                chatbotInput.value = '';
-                
-                // Add loading indicator
-                const loadingMessage = addMessage('', 'bot', true);
-                
-                try {
-                    // Get bot response
-                    const botResponse = await getBotResponse(message);
-                    
-                    // Remove loading indicator
-                    loadingMessage.remove();
-                    
-                    // Add bot response
-                    addMessage(botResponse, 'bot');
-                } catch (error) {
-                    // Remove loading indicator
-                    loadingMessage.remove();
-                    
-                    // Add error message
-                    addMessage("I'm sorry, I encountered an error. Please try again.", 'bot');
-                    console.error('Error in chatbot:', error);
-                } finally {
-                    // Re-enable input and send button
-                    chatbotInput.disabled = false;
-                    chatbotSend.disabled = false;
-                    chatbotInput.focus();
-                }
-            }
-            
-            chatbotSend.addEventListener('click', sendMessage);
-            chatbotInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') sendMessage();
-            });
-            
-            // Add some example questions that students can click
-            const exampleQuestions = [
-                "Can you explain how a binary search tree works?",
-                "What are the best study techniques for engineering exams?",
-                "How do I approach solving differential equations?",
-                "Can you explain the concept of recursion in programming?",
-                "What's the difference between AC and DC current?"
-            ];
-            
-            // Add example questions after initial message
-            setTimeout(() => {
-                const examplesDiv = document.createElement('div');
-                examplesDiv.style.marginTop = '10px';
-                examplesDiv.style.fontSize = '0.8rem';
-                examplesDiv.style.color = 'var(--text-muted)';
-                examplesDiv.textContent = 'Try asking: ';
-                
-                exampleQuestions.forEach((question, index) => {
-                    const questionLink = document.createElement('span');
-                    questionLink.style.color = 'var(--primary)';
-                    questionLink.style.cursor = 'pointer';
-                    questionLink.style.marginRight = '5px';
-                    questionLink.textContent = question;
-                    
-                    if (index < exampleQuestions.length - 1) {
-                        questionLink.textContent += ' •';
-                    }
-                    
-                    questionLink.addEventListener('click', () => {
-                        chatbotInput.value = question;
-                        sendMessage();
-                    });
-                    
-                    examplesDiv.appendChild(questionLink);
-                });
-                
-                chatbotMessages.appendChild(examplesDiv);
-            }, 500);
-        }
+  // ====== CONFIG ======
+  const API_URL = "https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbwMMx4caZS2TooxXxCsuxAHY-vbn4zJ4G7OAtrA6z_TMSNIBQRr8-Lv4SZfp3USFZZP/exec/exec"; // <- replace with your Apps Script URL
+  const MAX_HISTORY_MESSAGES = 12; // keep last N messages to limit payload & cost
+
+  // ====== DOM ELEMENTS (ensure these IDs exist in your HTML) ======
+  const chatbotToggle = document.getElementById('chatbotToggle');
+  const chatbotContainer = document.getElementById('chatbotContainer');
+  const chatbotClose = document.getElementById('chatbotClose');
+  const chatbotMessages = document.getElementById('chatbotMessages');
+  const chatbotInput = document.getElementById('chatbotInput');
+  const chatbotSend = document.getElementById('chatbotSend');
+
+  // (Optional) Add a Reset button to header (if not already present)
+  let chatbotReset = document.getElementById('chatbotReset');
+  if (!chatbotReset) {
+    const header = document.querySelector('.chatbot-header');
+    if (header) {
+      chatbotReset = document.createElement('button');
+      chatbotReset.id = 'chatbotReset';
+      chatbotReset.className = 'chatbot-reset';
+      chatbotReset.title = 'Clear chat';
+      chatbotReset.innerHTML = '<i class="fas fa-redo"></i>';
+      header.appendChild(chatbotReset);
+    }
+  }
+            // optional: include user profile context
+const currentUser = firebase.auth().currentUser;
+if (currentUser) {
+  const uid = currentUser.uid;
+  // assuming firebase is initialized
+  firebase.firestore().doc(`users/${uid}`).get().then(doc => {
+    if (doc.exists) {
+      const p = doc.data();
+      // prepend a system message with profile context
+      chatHistory[0].text += ` Student profile: name=${p.name||''}, branch=${p.branch||''}, semester=${p.semester||''}.`;
+    }
+  }).catch(err => console.warn('profile fetch failed', err));
+}
+
+
+  // ====== Conversation history (system instruction + conversation) ======
+  // Use 'system' for instruction, 'user' and 'assistant' for messages.
+  let chatHistory = [
+    {
+      role: "system",
+      text: "You are IB STUDIOZ Assistant, an AI tutor for engineering students. Be friendly, concise, explain step-by-step and suggest resources when relevant. If you cannot answer, admit it and point to a reference."
+    },
+    {
+      role: "assistant",
+      text: "Hello! I'm your AI study assistant. Ask me anything about engineering, programming, math, or study strategies."
+    }
+  ];
+
+  // ====== Helper: sanitize & render messages ======
+  function addMessage(text, sender, isLoading = false) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${sender}`;
+
+    if (isLoading) {
+      messageDiv.innerHTML = `<div class="spinner"></div> Thinking...`;
+    } else {
+      // allow simple line breaks; do NOT insert untrusted HTML
+      const safeText = String(text).replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      messageDiv.innerHTML = safeText.replace(/\n/g, "<br>");
+    }
+
+    chatbotMessages.appendChild(messageDiv);
+    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    return messageDiv;
+  }
+
+  // ====== Trimming helper to keep history bounded ======
+  function trimHistory() {
+    // always keep the first system message + the last MAX_HISTORY_MESSAGES messages
+    const system = chatHistory[0];
+    const rest = chatHistory.slice(1);
+    const tail = rest.slice(-MAX_HISTORY_MESSAGES);
+    chatHistory = [system, ...tail];
+  }
+
+  // ====== Multi-turn API call: send chatHistory to Apps Script ======
+  async function getBotResponse(userInput) {
+    try {
+      // push user turn (already pushed by sendMessage as well, but ensure it's present)
+      chatHistory.push({ role: "user", text: userInput });
+      trimHistory();
+
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ history: chatHistory })
+      });
+
+      if (!res.ok) {
+        // attempt to surface server error message
+        const errText = await res.text();
+        throw new Error("API request failed: " + errText);
+      }
+
+      const data = await res.json();
+      // Apps Script forwards Gemini's response JSON. Try to read the candidate text robustly.
+      const botResponse =
+        data?.candidates?.[0]?.content?.parts?.[0]?.text
+        || data?.candidate?.content?.parts?.[0]?.text
+        || data?.response?.candidates?.[0]?.content?.parts?.[0]?.text
+        || data?.output?.text
+        || JSON.stringify(data).slice(0, 1000); // fallback
+
+      // add assistant reply to history
+      chatHistory.push({ role: "assistant", text: botResponse });
+      trimHistory();
+
+      return botResponse;
+    } catch (err) {
+      console.error("getBotResponse error:", err);
+      return "⚠️ Sorry — the assistant couldn't respond right now. Try again in a moment.";
+    }
+  }
+
+  // ====== sendMessage: UI flow ======
+  async function sendMessage() {
+    const message = chatbotInput.value.trim();
+    if (!message) return;
+
+    // disable while processing
+    chatbotInput.disabled = true;
+    chatbotSend.disabled = true;
+
+    // add user message visually and to history
+    addMessage(message, 'user');
+    chatHistory.push({ role: "user", text: message });
+    trimHistory();
+    chatbotInput.value = '';
+
+    // add loading indicator
+    const loadingEl = addMessage('', 'bot', true);
+
+    try {
+      const botText = await getBotResponse(message);
+
+      // remove loading indicator and add bot message
+      loadingEl.remove();
+      addMessage(botText, 'bot');
+    } catch (err) {
+      loadingEl.remove();
+      addMessage("I'm sorry — an error occurred. Please try again.", 'bot');
+      console.error('sendMessage error:', err);
+    } finally {
+      chatbotInput.disabled = false;
+      chatbotSend.disabled = false;
+      chatbotInput.focus();
+    }
+  }
+
+  // ====== Reset chat handler ======
+  if (chatbotReset) {
+    chatbotReset.addEventListener('click', () => {
+      chatHistory = [
+        chatHistory[0],
+        { role: "assistant", text: "Hello! I'm your AI study assistant. Ask me anything about engineering, programming, math, or study strategies." }
+      ];
+      chatbotMessages.innerHTML = '';
+      addMessage(chatHistory[1].text, 'bot');
+      chatbotInput.focus();
+    });
+  }
+
+  // ====== UI toggles & events ======
+  if (chatbotToggle) {
+    chatbotToggle.addEventListener('click', () => {
+      chatbotContainer.classList.toggle('active');
+      if (chatbotContainer.classList.contains('active')) chatbotInput.focus();
+    });
+  }
+  if (chatbotClose) {
+    chatbotClose.addEventListener('click', () => chatbotContainer.classList.remove('active'));
+  }
+  if (chatbotSend) chatbotSend.addEventListener('click', sendMessage);
+  if (chatbotInput) chatbotInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendMessage();
+  });
+
+  // show initial assistant message if chatMessages is empty
+  if (chatbotMessages && chatbotMessages.children.length === 0) {
+    addMessage(chatHistory[1].text, 'bot');
+  }
+}
+
         
         // Account Management
         function initAccount() {
