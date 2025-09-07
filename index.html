@@ -1905,8 +1905,8 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
         
-        // Initialize EmailJS with your service ID (replace with your actual service ID)
-        emailjs.init("YOUR_EMAILJS_SERVICE_ID");
+        // Initialize EmailJS with your service ID
+    emailjs.init("service_ndj9m3l", "Jdgw3kivxCnppgL9j");
         
         // Academic branches data
         const branches = {
@@ -2191,11 +2191,13 @@
                     type: type
                 };
                 
+                // Select template based on type
+                const templateId = type === 'login' ? 'template_qd7hym3' : 'template_8jxjmny';
+                
                 // Send email using EmailJS
-                // Replace with your actual service ID, template ID, and user ID
                 const response = await emailjs.send(
-                    'YOUR_EMAILJS_SERVICE_ID',    // Replace with your EmailJS service ID
-                    'YOUR_EMAILJS_TEMPLATE_ID',   // Replace with your EmailJS template ID
+                    'service_ndj9m3l',    // Your EmailJS service ID
+                    templateId,            // Template ID based on type
                     templateParams
                 );
                 
