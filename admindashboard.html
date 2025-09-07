@@ -1001,6 +1001,104 @@
             animation: fade-in 1s ease 0.6s both;
         }
         
+        /* User View Modal */
+        #user-view-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(15px);
+            align-items: center;
+            justify-content: center;
+            z-index: 1002;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        #user-view-modal.active {
+            display: flex;
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        #user-view-modal .modal {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        #user-view-modal .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        #user-view-modal .modal-header h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        #user-view-modal .modal-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        #user-view-modal .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(90deg);
+            color: var(--accent-glow);
+        }
+        
+        #user-view-modal .modal-body {
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        #user-view-modal .modal-body b {
+            color: var(--text-secondary);
+            display: inline-block;
+            margin-right: 8px;
+        }
+        
+        #user-view-modal .modal-body .content-title {
+            margin-bottom: 5px;
+        }
+        
+        #user-view-modal .modal-body .status-badge {
+            margin-top: 8px;
+        }
+        
         /* Responsive Design */
         @media (max-width: 768px) {
             .page-header { 
@@ -1066,6 +1164,23 @@
                 align-items: flex-start;
                 gap: 15px;
             }
+            
+            #user-view-modal .modal {
+                padding: 20px;
+            }
+            
+            #user-view-modal .modal-header h2 {
+                font-size: 1.4rem;
+            }
+            
+            #user-view-modal .modal-body {
+                font-size: 0.9rem;
+            }
+            
+            #user-view-modal .modal-body img {
+                width: 60px;
+                height: 60px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -1108,6 +1223,29 @@
                 bottom: 15px;
                 left: 15px;
                 min-width: auto;
+            }
+            
+            #user-view-modal .modal {
+                padding: 15px;
+                border-radius: 15px;
+            }
+            
+            #user-view-modal .modal-header h2 {
+                font-size: 1.2rem;
+            }
+            
+            #user-view-modal .modal-body {
+                font-size: 0.85rem;
+            }
+            
+            #user-view-modal .modal-body img {
+                width: 50px;
+                height: 50px;
+            }
+            
+            #user-view-modal .modal-body button {
+                padding: 8px 12px;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -2001,6 +2139,19 @@
             </div>
         </div>
         
+        <!-- User View Modal -->
+        <div id="user-view-modal" class="modal-overlay">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2 id="user-view-modal-title">User Profile</h2>
+                    <button class="modal-close" onclick="closeUserViewModal()">&times;</button>
+                </div>
+                <div class="modal-body" id="user-view-modal-body">
+                    <!-- User details will be injected here -->
+                </div>
+            </div>
+        </div>
+        
         <!-- Toast notification -->
         <div id="toast" class="toast">
             <i class="fas fa-check-circle"></i>
@@ -2009,28 +2160,6 @@
         </div>
     </main>
     
-    <!-- User View Modal (view-only, not a form) -->
-    <style>
-    #user-view-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1002; }
-    #user-view-modal.active { display: flex; }
-    #user-view-modal .modal { background: #fff; border-radius: 10px; max-width: 400px; width: 95vw; box-shadow: 0 8px 32px rgba(0,0,0,0.2); padding: 24px; }
-    #user-view-modal .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
-    #user-view-modal .modal-close { background: none; border: none; font-size: 2rem; cursor: pointer; color: #888; }
-    #user-view-modal .modal-body div { margin-bottom: 8px; }
-    </style>
-    
-    <div id="user-view-modal" class="modal-overlay">
-      <div class="modal">
-        <div class="modal-header">
-          <h2 id="user-view-modal-title">User Details</h2>
-          <button class="modal-close" onclick="closeUserViewModal()">&times;</button>
-        </div>
-        <div class="modal-body" id="user-view-modal-body">
-          <!-- User details will be injected here -->
-        </div>
-      </div>
-    </div>
-        
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -2647,6 +2776,7 @@
         
         // DOM Elements
         const logoutBtn = document.getElementById('logout-btn');
+        const profileBtn = document.getElementById('profile-btn');
         const adminNavItems = document.querySelectorAll('.admin-nav-item');
         const adminPanels = document.querySelectorAll('.admin-panel');
         const toast = document.getElementById('toast');
@@ -2662,6 +2792,7 @@
         const quizModal = document.getElementById('quiz-modal');
         const seminarModal = document.getElementById('seminar-modal');
         const branchSemesterCourseModal = document.getElementById('branch-semester-course-modal');
+        const userViewModal = document.getElementById('user-view-modal');
         
         // Form elements
         const noticeForm = document.getElementById('notice-form');
@@ -2735,6 +2866,76 @@
             
             // Initialize branch dropdowns
             initializeBranchDropdowns();
+            
+            // User profile button functionality
+            profileBtn.addEventListener('click', () => {
+                if (currentUser) {
+                    // Fetch current user's details
+                    db.collection('users').doc(currentUser.uid).get()
+                        .then(doc => {
+                            if (doc.exists) {
+                                const user = doc.data();
+                                displayUserModal(user);
+                            } else {
+                                showToast('User data not found', 'error');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error getting user data:', error);
+                            showToast('Failed to load user profile', 'error');
+                        });
+                } else {
+                    showToast('No user logged in', 'error');
+                }
+            });
+            
+            // Function to display user modal
+            function displayUserModal(user) {
+                let photo = user.photoURL;
+                if (!photo) {
+                    photo = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name || 'User');
+                }
+                
+                const html = `
+                    <div style="display:flex; align-items:center; gap:18px; margin-bottom:18px; flex-wrap: wrap;">
+                        <img src="${photo}" alt="User Photo" style="width:72px; height:72px; border-radius:50%; object-fit:cover; border:2px solid var(--primary-glow);">
+                        <div>
+                            <div class="content-title" style="font-size:1.3em;">${user.name || 'Unknown'}</div>
+                            <div style="color: var(--text-secondary);">${user.email || 'No email'}</div>
+                            <div style="margin-top: 5px;">
+                                <span class="status-badge ${user.role === 'admin' ? 'status-active' : ''}">${user.role || 'student'}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div><b>Phone:</b> ${user.phone || '-'}</div>
+                        <div><b>Date of Birth:</b> ${user.dob || '-'}</div>
+                        <div><b>Gender:</b> ${user.gender || '-'}</div>
+                        <div><b>Admission No:</b> ${user.admissionNo || '-'}</div>
+                        <div><b>Branch:</b> ${user.branch || '-'}</div>
+                        <div><b>Semester:</b> ${user.semester || '-'}</div>
+                        <div><b>College:</b> ${user.college || '-'}</div>
+                        <div><b>Credits:</b> ${user.credits || 0}</div>
+                    </div>
+                    ${user.bio ? `<div style="margin-top: 15px;"><b>Bio:</b> ${user.bio}</div>` : ''}
+                    <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-secondary" onclick="editUser('${currentUser.uid}')">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </button>
+                        <button class="btn-info" onclick="resetUserPassword('${currentUser.uid}', '${user.email}')">
+                            <i class="fas fa-key"></i> Reset Password
+                        </button>
+                    </div>
+                `;
+                
+                document.getElementById('user-view-modal-body').innerHTML = html;
+                userViewModal.classList.add('active');
+            }
+            
+            // Make sure the closeUserViewModal function is defined
+            function closeUserViewModal() {
+                userViewModal.classList.remove('active');
+            }
             
             // Logout functionality with confirmation and animation
             logoutBtn.addEventListener('click', () => {
@@ -3678,49 +3879,53 @@
                 `;
             }).join('');
             usersList.innerHTML = usersHtml;
-// View user details in modal (view-only mode)
-function viewUserDetails(userId) {
-    db.collection('users').doc(userId).get()
-        .then(doc => {
-            if (doc.exists) {
-                const user = doc.data();
-                let photo = user.photoURL;
-                if (!photo) {
-                    photo = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name || 'User');
-                }
-                const html = `
-                  <div style="display:flex;align-items:center;gap:18px;margin-bottom:18px;">
-                    <img src="${photo}" alt="User Photo" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid var(--primary-glow);">
-                    <div>
-                      <div class="content-title" style="font-size:1.3em;">${user.name || 'Unknown'}</div>
-                      <div style="color: var(--text-secondary);">${user.email || 'No email'}</div>
-                    </div>
-                  </div>
-                  <div><b>Phone:</b> ${user.phone || '-'}</div>
-                  <div><b>Date of Birth:</b> ${user.dob || '-'}</div>
-                  <div><b>Gender:</b> ${user.gender || '-'}</div>
-                  <div><b>Admission No:</b> ${user.admissionNo || '-'}</div>
-                  <div><b>Branch:</b> ${user.branch || '-'}</div>
-                  <div><b>Semester:</b> ${user.semester || '-'}</div>
-                  <div><b>College:</b> ${user.college || '-'}</div>
-                  <div><b>Role:</b> ${user.role || 'student'}</div>
-                  <div><b>Bio:</b> ${user.bio || '-'}</div>
-                  <div><b>Credits:</b> ${user.credits || 0}</div>
-                `;
-                document.getElementById('user-view-modal-body').innerHTML = html;
-                const modal = document.getElementById('user-view-modal');
-                modal.classList.add('active');
-            }
-        })
-        .catch(error => {
-            console.error('Error getting user:', error);
-            showToast('Failed to load user', 'error');
-        });
-}
-function closeUserViewModal() {
-    const modal = document.getElementById('user-view-modal');
-    modal.classList.remove('active');
-}
+        }
+        
+        // View user details in modal (view-only mode)
+        function viewUserDetails(userId) {
+            db.collection('users').doc(userId).get()
+                .then(doc => {
+                    if (doc.exists) {
+                        const user = doc.data();
+                        let photo = user.photoURL;
+                        if (!photo) {
+                            photo = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name || 'User');
+                        }
+                        const html = `
+                          <div style="display:flex;align-items:center;gap:18px;margin-bottom:18px;">
+                            <img src="${photo}" alt="User Photo" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid var(--primary-glow);">
+                            <div>
+                              <div class="content-title" style="font-size:1.3em;">${user.name || 'Unknown'}</div>
+                              <div style="color: var(--text-secondary);">${user.email || 'No email'}</div>
+                            </div>
+                          </div>
+                          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                            <div><b>Phone:</b> ${user.phone || '-'}</div>
+                            <div><b>Date of Birth:</b> ${user.dob || '-'}</div>
+                            <div><b>Gender:</b> ${user.gender || '-'}</div>
+                            <div><b>Admission No:</b> ${user.admissionNo || '-'}</div>
+                            <div><b>Branch:</b> ${user.branch || '-'}</div>
+                            <div><b>Semester:</b> ${user.semester || '-'}</div>
+                            <div><b>College:</b> ${user.college || '-'}</div>
+                            <div><b>Role:</b> ${user.role || 'student'}</div>
+                            <div><b>Bio:</b> ${user.bio || '-'}</div>
+                            <div><b>Credits:</b> ${user.credits || 0}</div>
+                          </div>
+                        `;
+                        document.getElementById('user-view-modal-body').innerHTML = html;
+                        const modal = document.getElementById('user-view-modal');
+                        modal.classList.add('active');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error getting user:', error);
+                    showToast('Failed to load user', 'error');
+                });
+        }
+        
+        function closeUserViewModal() {
+            const modal = document.getElementById('user-view-modal');
+            modal.classList.remove('active');
         }
         
         // Filter users based on search and filters
@@ -5803,4 +6008,3 @@ function closeUserViewModal() {
         console.log('Real-time Firebase integration active ✓');
     </script>
 </body>
-</html>
