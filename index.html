@@ -2178,28 +2178,28 @@
             try {
                 // Show sending status
                 showEmailStatus('Sending Email', 'Please wait while we send your greeting...', 'info');
-                
-                // Prepare template parameters
+                // templateParams
                 const templateParams = {
-                    to_email: email,
-                    to_name: name,
-                    from_name: 'IB STUDIOZ Team',
-                    message: type === 'login' 
-                        ? `Welcome back to IB STUDIOZ, ${name}! We're glad to see you again. Thank you for being part of our learning community.` 
-                        : `Welcome to IB STUDIOZ, ${name}! Thank you for joining our platform. We're excited to have you as part of our learning community.`,
-                    subject: type === 'login' ? 'Welcome Back to IB STUDIOZ!' : 'Welcome to IB STUDIOZ!',
-                    type: type
-                };
+    to_email: email,
+    to_name: name,
+    from_name: 'IB STUDIOZ Team',
+    message: type === 'login' 
+        ? `Welcome back to IB STUDIOZ, ${name}! We're glad to see you again. Thank you for being part of our learning community.` 
+        : `Welcome to IB STUDIOZ, ${name}! Thank you for joining our platform. We're excited to have you as part of our learning community.`,
+    subject: type === 'login' ? 'Welcome Back to IB STUDIOZ!' : 'Welcome to IB STUDIOZ!',
+    type: type,
+    year: new Date().getFullYear() // Add this line
+};
                 
                 // Select template based on type
                 const templateId = type === 'login' ? 'template_qd7hym3' : 'template_8jxjmny';
                 
                 // Send email using EmailJS
                 const response = await emailjs.send(
-                    'service_ndj9m3l',    // Your EmailJS service ID
-                    templateId,            // Template ID based on type
-                    templateParams
-                );
+    'service_xxl7ccs',
+    templateId,
+    templateParams
+);
                 
                 console.log('Email sent successfully:', response);
                 
