@@ -746,382 +746,6 @@
             background: rgba(255, 255, 255, 0.1);
         }
         
-        /* Role selection modal */
-        .role-selection-modal .modal {
-            max-width: 550px;
-        }
-        
-        .role-selection-title {
-            font-size: clamp(1.5rem, 4vw, 1.8rem);
-            font-weight: 600;
-            margin-bottom: clamp(10px, 2vw, 15px);
-            color: var(--text-primary);
-        }
-        
-        .role-selection-subtitle {
-            color: var(--text-secondary);
-            margin-bottom: clamp(20px, 4vw, 25px);
-            font-size: clamp(0.9rem, 2vw, 1rem);
-        }
-        
-        .role-options {
-            display: flex;
-            flex-direction: column;
-            gap: clamp(12px, 2.5vw, 15px);
-        }
-        
-        .role-option {
-            display: flex;
-            align-items: center;
-            padding: clamp(12px, 2.5vw, 15px);
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .role-option:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        
-        .role-option.selected {
-            border-color: var(--primary);
-            background: rgba(255, 195, 0, 0.1);
-        }
-        
-        .role-icon {
-            width: clamp(40px, 8vw, 50px);
-            height: clamp(40px, 8vw, 50px);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: clamp(12px, 2.5vw, 15px);
-            font-size: clamp(1.2rem, 3vw, 1.5rem);
-            color: white;
-            flex-shrink: 0;
-        }
-        
-        .role-icon.student {
-            background: var(--student-color);
-        }
-        
-        .role-icon.faculty {
-            background: var(--faculty-color);
-        }
-        
-        .role-details h3 {
-            margin: 0 0 clamp(4px, 1vw, 5px);
-            font-size: clamp(1rem, 2.5vw, 1.2rem);
-            color: var(--text-primary);
-        }
-        
-        .role-details p {
-            margin: 0;
-            font-size: clamp(0.8rem, 1.8vw, 0.9rem);
-            color: var(--text-secondary);
-        }
-        
-        .role-modal-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: clamp(20px, 4vw, 25px);
-            gap: 10px;
-        }
-        
-        .role-modal-actions .btn {
-            flex: 1;
-            min-width: auto;
-        }
-        
-        /* Toast notification */
-        .toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: clamp(12px, 2.5vw, 15px) clamp(15px, 3vw, 20px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 3000;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transform: translateX(400px);
-            transition: transform 0.3s ease;
-            max-width: clamp(280px, 60vw, 350px);
-        }
-        
-        .toast.show {
-            transform: translateX(0);
-        }
-        
-        .toast.success {
-            border-left: 4px solid var(--success);
-        }
-        
-        .toast.error {
-            border-left: 4px solid var(--danger);
-        }
-        
-        .toast.info {
-            border-left: 4px solid var(--info);
-        }
-        
-        .toast i {
-            font-size: clamp(1rem, 2.5vw, 1.2rem);
-            flex-shrink: 0;
-        }
-        
-        .toast.success i {
-            color: var(--success);
-        }
-        
-        .toast.error i {
-            color: var(--danger);
-        }
-        
-        .toast.info i {
-            color: var(--info);
-        }
-        
-        .toast span {
-            font-size: clamp(0.8rem, 1.8vw, 0.9rem);
-        }
-        
-        /* --- RESPONSIVE DESIGN --- */
-        @media (max-width: 768px) {
-            .container { 
-                padding: clamp(10px, 3vw, 20px); 
-                margin: clamp(10px, 3vw, 20px) auto; 
-            }
-            .auth-card { 
-                padding: clamp(20px, 4vw, 30px); 
-                margin: 0 auto;
-            }
-            .brand-logo img { 
-                width: clamp(35px, 6vw, 45px); 
-            }
-            .brand-title-animated { 
-                font-size: clamp(1.2rem, 4vw, 1.5rem); 
-            }
-            .modal { 
-                padding: clamp(15px, 3vw, 25px); 
-            }
-            .dark-mode-toggle {
-                width: clamp(45px, 7vw, 55px);
-                height: clamp(45px, 7vw, 55px);
-            }
-            .language-selector {
-                width: clamp(35px, 6vw, 45px);
-                height: clamp(35px, 6vw, 45px);
-                padding: clamp(6px, 1.5vw, 10px);
-                min-width: auto;
-            }
-            .language-selector span {
-                display: none;
-            }
-            .btn {
-                padding: clamp(10px, 2vw, 14px);
-            }
-            .role-modal-actions {
-                flex-direction: column;
-            }
-            .role-modal-actions .btn {
-                margin: 5px 0;
-            }
-            
-            /* Improved social buttons layout */
-            .social-buttons {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-            }
-            
-            .btn-social {
-                margin: 0;
-                padding: clamp(10px, 2vw, 12px);
-            }
-            
-            .btn-social i {
-                font-size: clamp(1rem, 2.5vw, 1.2rem);
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            
-            /* Improved social buttons for very small screens */
-            .social-buttons {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
-            }
-            
-            .btn-social {
-                padding: clamp(8px, 1.8vw, 10px);
-                font-size: clamp(0.8rem, 1.8vw, 0.9rem);
-            }
-            
-            .btn-social i {
-                margin-right: 5px;
-                font-size: clamp(0.9rem, 2.2vw, 1rem);
-            }
-            
-            .toast {
-                right: 10px;
-                left: 10px;
-                max-width: none;
-            }
-            
-            /* Improved modal layout */
-            .modal {
-                padding: clamp(15px, 3vw, 20px);
-            }
-            
-            .modal-header {
-                margin-bottom: clamp(10px, 2vw, 15px);
-            }
-            
-            .modal-title {
-                font-size: clamp(1rem, 2.5vw, 1.2rem);
-            }
-            
-            /* Improved floating buttons */
-            .floating-btn {
-                padding: clamp(10px, 2vw, 12px);
-                width: clamp(45px, 8vw, 55px);
-                height: clamp(45px, 8vw, 55px);
-            }
-            
-            .floating-btn i {
-                font-size: clamp(1rem, 2.5vw, 1.2rem);
-            }
-        }
-        
-        @media (max-width: 360px) {
-            .branch-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .semester-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .role-option {
-                flex-direction: column;
-                text-align: center;
-                gap: 10px;
-            }
-            
-            .role-icon {
-                margin: 0 auto;
-            }
-            
-            /* Further improved form layout */
-            .form-group {
-                margin-bottom: clamp(12px, 2.5vw, 15px);
-            }
-            
-            .form-group label {
-                margin-bottom: clamp(4px, 1vw, 6px);
-                font-size: clamp(0.8rem, 1.8vw, 0.9rem);
-            }
-            
-            input, select {
-                padding: clamp(8px, 1.8vw, 10px) clamp(10px, 2vw, 12px);
-                font-size: clamp(0.85rem, 1.8vw, 0.95rem);
-            }
-            
-            .btn {
-                padding: clamp(8px, 1.8vw, 10px);
-                font-size: clamp(0.85rem, 1.8vw, 0.95rem);
-            }
-            
-            .social-buttons {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 6px;
-            }
-            
-            .btn-social {
-                padding: clamp(8px, 1.5vw, 10px);
-            }
-        }
-        
-        .email-display {
-            background: rgba(255, 195, 0, 0.1);
-            border: 1px solid var(--primary);
-            border-radius: 8px;
-            padding: clamp(10px, 2vw, 12px);
-            margin: clamp(12px, 2.5vw, 15px) 0;
-            font-size: clamp(0.8rem, 1.8vw, 0.9rem);
-        }
-        
-        .email-display i {
-            color: var(--primary);
-            margin-right: 8px;
-        }
-        
-        /* Additional fields for social signup */
-        .social-signup-fields {
-            display: none;
-            margin-top: clamp(15px, 3vw, 20px);
-            padding-top: clamp(15px, 3vw, 20px);
-            border-top: 1px solid var(--border-color);
-        }
-        
-        /* Form validation styles */
-        .form-group.error input, 
-        .form-group.error select {
-            border-color: var(--danger);
-            animation: shake 0.5s ease;
-        }
-        
-        .error-message {
-            color: var(--danger);
-            font-size: clamp(0.7rem, 1.6vw, 0.8rem);
-            margin-top: 5px;
-            text-align: left;
-            display: none;
-        }
-        .form-group.error .error-message {
-            display: block;
-        }
-        
-        /* Page transition effect */
-        .page-transition {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--dark);
-            z-index: 9999;
-            transform: translateY(-100%);
-            transition: transform 0.5s ease;
-        }
-        
-        .page-transition.active {
-            transform: translateY(0);
-        }
-        
-        /* Loading skeleton */
-        .skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
-        }
-        
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        
         /* Social registration modal */
         .social-registration-modal .modal {
             max-width: 500px;
@@ -1626,6 +1250,46 @@
             font-size: 0.9rem;
         }
         
+        /* Registration Success Modal */
+        .registration-success-modal .modal {
+            max-width: 500px;
+        }
+        
+        .success-icon {
+            font-size: 4rem;
+            color: var(--success);
+            margin-bottom: 20px;
+        }
+        
+        .success-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+        
+        .success-message {
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        .success-email {
+            background: rgba(0, 176, 155, 0.1);
+            border: 1px solid var(--success);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .success-email i {
+            color: var(--success);
+            margin-right: 10px;
+        }
+        
         /* Responsive improvements for very small screens */
         @media (max-width: 360px) {
             .branch-grid {
@@ -1864,42 +1528,34 @@
         </div>
     </div>
     
-    <!-- Role Selection Modal -->
-    <div class="modal-overlay role-selection-modal" id="role-selection-modal" role="dialog" aria-labelledby="role-selection-title">
+    <!-- Registration Success Modal -->
+    <div class="modal-overlay registration-success-modal" id="registration-success-modal" role="dialog" aria-labelledby="registration-success-title">
         <div class="modal">
             <div class="modal-header">
-                <h3 class="modal-title" id="role-selection-title">Select Your Role</h3>
-                <button class="modal-close" id="role-modal-close" aria-label="Close modal">&times;</button>
+                <h3 class="modal-title" id="registration-success-title">Registration Successful!</h3>
+                <button class="modal-close" id="registration-success-close" aria-label="Close modal">&times;</button>
             </div>
             
-            <p class="role-selection-subtitle">Please select your role to continue to the appropriate dashboard</p>
-            
-            <div class="role-options">
-                <div class="role-option" data-role="student">
-                    <div class="role-icon student">
-                        <i class="fas fa-user-graduate"></i>
-                    </div>
-                    <div class="role-details">
-                        <h3>Student</h3>
-                        <p>Access learning materials, quizzes, and seminars</p>
-                    </div>
-                </div>
-                <div class="role-option disabled" data-role="faculty" aria-disabled="true" tabindex="-1" style="pointer-events:none;opacity:0.6;cursor:not-allowed;">
-                    <div class="role-icon faculty">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                        <i class="fas fa-lock" style="margin-left:6px;color:#888;" aria-label="Locked"></i>
-                    </div>
-                    <div class="role-details">
-                        <h3>Faculty <span style="font-size:0.9em;color:#888;vertical-align:middle;">(Locked)</span></h3>
-                        <p>Manage courses, materials, and student progress</p>
-                    </div>
-                </div>
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
             </div>
             
-            <div class="role-modal-actions">
-                <button class="btn btn-secondary" id="role-modal-cancel">Cancel</button>
-                <button class="btn btn-primary" id="role-modal-confirm">Continue</button>
+            <div class="success-message">
+                <p>Congratulations! Your account has been created successfully.</p>
+                <p>We've sent a confirmation email to:</p>
             </div>
+            
+            <div class="success-email">
+                <i class="fas fa-envelope"></i>
+                <span id="verification-email-display"></span>
+            </div>
+            
+            <div class="success-message">
+                <p>Please check your inbox and click on the verification link to activate your account.</p>
+                <p>If you don't see the email, check your spam folder.</p>
+            </div>
+            
+            <button class="btn btn-primary" id="resend-verification-btn">Resend Verification Email</button>
         </div>
     </div>
     
@@ -2184,13 +1840,6 @@
         const languageSelector = document.getElementById('language-selector');
         const currentLanguageElement = document.getElementById('current-language');
         
-        // Role selection modal elements
-        const roleSelectionModal = document.getElementById('role-selection-modal');
-        const roleModalClose = document.getElementById('role-modal-close');
-        const roleModalCancel = document.getElementById('role-modal-cancel');
-        const roleModalConfirm = document.getElementById('role-modal-confirm');
-        const roleOptions = document.querySelectorAll('.role-option');
-        
         // Branch modal elements
         const branchModal = document.getElementById('branch-modal');
         const branchModalClose = document.getElementById('branch-modal-close');
@@ -2245,13 +1894,18 @@
         // Registration fields
         const registrationFields = document.getElementById('registration-fields');
         
+        // Registration success modal elements
+        const registrationSuccessModal = document.getElementById('registration-success-modal');
+        const registrationSuccessClose = document.getElementById('registration-success-close');
+        const verificationEmailDisplay = document.getElementById('verification-email-display');
+        const resendVerificationBtn = document.getElementById('resend-verification-btn');
+        
         // State variables
         let isLogin = true;
         let isSocialSignup = false;
         let socialUserData = null;
         let selectedBranch = null;
         let selectedSemester = null;
-        let selectedRole = null;
         let userLanguage = 'en';
         
         // Load saved theme
@@ -2471,6 +2125,12 @@
             }
         });
         
+        // Email validation function
+        function validateEmail(email) {
+            const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(String(email).toLowerCase());
+        }
+        
         // Form submission
         authForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -2494,12 +2154,37 @@
             try {
                 if (isLogin) {
                     // Login user
-                    await auth.signInWithEmailAndPassword(email, password);
+                    const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                    const user = userCredential.user;
+                    
+                    // Check if email is verified
+                    if (!user.emailVerified) {
+                        // Sign out the user
+                        await auth.signOut();
+                        
+                        // Show error message
+                        messageArea.textContent = 'Please verify your email before logging in. Check your inbox for the verification email.';
+                        messageArea.className = 'message error';
+                        
+                        // Show resend verification option
+                        const resendLink = document.createElement('a');
+                        resendLink.textContent = ' Resend verification email';
+                        resendLink.style.color = 'var(--primary)';
+                        resendLink.style.cursor = 'pointer';
+                        resendLink.style.marginLeft = '5px';
+                        resendLink.addEventListener('click', () => {
+                            resendVerificationEmail(email);
+                        });
+                        messageArea.appendChild(resendLink);
+                        
+                        return;
+                    }
+                    
                     showToast('Login successful!', 'success');
                     
-                    // Check user role and redirect accordingly
+                    // Redirect to student dashboard
                     setTimeout(() => {
-                        checkUserRoleAndRedirect();
+                        window.location.href = 'studentdashboard.html';
                     }, 1000);
                 } else {
                     // Register user
@@ -2510,6 +2195,9 @@
                     await user.updateProfile({
                         displayName: name
                     });
+                    
+                    // Send verification email
+                    await user.sendEmailVerification();
                     
                     // Save user data to Firestore
                     await db.collection('users').doc(user.uid).set({
@@ -2522,10 +2210,15 @@
                         role: 'student',
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
-                    showToast('Registration successful! Redirecting...', 'success');
-                    setTimeout(() => {
-                        window.location.href = 'studentdashboard.html';
-                    }, 1500);
+                    
+                    // Show registration success modal
+                    verificationEmailDisplay.textContent = email;
+                    registrationSuccessModal.classList.add('active');
+                    
+                    // Reset form
+                    authForm.reset();
+                    isLogin = true;
+                    updateAuthForm();
                 }
             } catch (error) {
                 // Handle errors
@@ -2559,51 +2252,22 @@
             }
         });
         
-        // Check user role and redirect accordingly
-        async function checkUserRoleAndRedirect() {
-            const user = auth.currentUser;
-            if (!user) return;
-            
+        // Resend verification email function
+        async function resendVerificationEmail(email) {
             try {
-                // Get user data from Firestore
-                const userDoc = await db.collection('users').doc(user.uid).get();
+                // Find user by email
+                const methods = await auth.fetchSignInMethodsForEmail(email);
                 
-                if (userDoc.exists) {
-                    const userData = userDoc.data();
-                    const userRole = userData.role;
-                    
-                    if (userRole) {
-                        // User has a role, redirect directly
-                        showToast('Login successful!', 'success');
-                        setTimeout(() => {
-                            switch (userRole) {
-                                case 'admin':
-                                    window.location.href = 'admindashboard.html';
-                                    break;
-                                case 'faculty':
-                                    window.location.href = 'facultydashboard.html';
-                                    break;
-                                case 'student':
-                                default:
-                                    window.location.href = 'studentdashboard.html';
-                                    break;
-                            }
-                        }, 1000);
-                    } else {
-                        // User doesn't have a role, show role selection modal
-                        roleSelectionModal.classList.add('active');
-                    }
+                if (methods.length > 0) {
+                    // Send password reset email as a way to verify the email exists
+                    await auth.sendPasswordResetEmail(email);
+                    showToast('Verification email resent! Please check your inbox.', 'success');
                 } else {
-                    // User document doesn't exist, show role selection modal
-                    roleSelectionModal.classList.add('active');
+                    showToast('Email not found in our system', 'error');
                 }
             } catch (error) {
-                console.error('Error checking user role:', error);
-                // Default to student dashboard
-                showToast('Login successful!', 'success');
-                setTimeout(() => {
-                    window.location.href = 'studentdashboard.html';
-                }, 1000);
+                console.error('Error resending verification email:', error);
+                showToast('Failed to resend verification email', 'error');
             }
         }
         
@@ -2620,8 +2284,7 @@
             });
             
             // Validate email
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!email || !emailRegex.test(email)) {
+            if (!email || !validateEmail(email)) {
                 document.getElementById('email-error').textContent = 'Please enter a valid email address';
                 document.getElementById('email').closest('.form-group').classList.add('error');
                 isValid = false;
@@ -2676,8 +2339,8 @@
         sendResetBtn.addEventListener('click', async () => {
             const email = resetEmail.value;
             
-            if (!email) {
-                resetEmailError.textContent = 'Please enter your email address';
+            if (!email || !validateEmail(email)) {
+                resetEmailError.textContent = 'Please enter a valid email address';
                 resetEmail.closest('.form-group').classList.add('error');
                 return;
             }
@@ -2744,10 +2407,10 @@
                         
                         socialRegistrationModal.classList.add('active');
                     } else {
-                        // Existing user, redirect to appropriate dashboard
+                        // Existing user, redirect to student dashboard
                         showToast('Login successful!', 'success');
                         setTimeout(() => {
-                            checkUserRoleAndRedirect();
+                            window.location.href = 'studentdashboard.html';
                         }, 1000);
                     }
                 })
@@ -2789,11 +2452,12 @@
                     role: 'student',
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
-                showToast('Registration successful! Redirecting...', 'success');
+                
+                // Show registration success modal
+                verificationEmailDisplay.textContent = socialUserData.email;
+                registrationSuccessModal.classList.add('active');
                 socialRegistrationModal.classList.remove('active');
-                setTimeout(() => {
-                    window.location.href = 'studentdashboard.html';
-                }, 1500);
+                
             } catch (error) {
                 socialMessage.textContent = error.message;
                 socialMessage.className = 'message error';
@@ -2839,72 +2503,6 @@
         // Social modal close
         socialModalClose.addEventListener('click', () => {
             socialRegistrationModal.classList.remove('active');
-        });
-        
-        // Role selection modal
-        roleModalClose.addEventListener('click', () => {
-            roleSelectionModal.classList.remove('active');
-        });
-        
-        roleModalCancel.addEventListener('click', () => {
-            roleSelectionModal.classList.remove('active');
-        });
-        
-        // Role option selection
-        roleOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                // Remove selected class from all options
-                roleOptions.forEach(opt => opt.classList.remove('selected'));
-                
-                // Add selected class to clicked option
-                option.classList.add('selected');
-                
-                // Set selected role
-                selectedRole = option.getAttribute('data-role');
-            });
-        });
-        
-        // Role modal confirm
-        roleModalConfirm.addEventListener('click', async () => {
-            if (!selectedRole) {
-                showToast('Please select a role', 'error');
-                return;
-            }
-            
-            const user = auth.currentUser;
-            if (!user) return;
-            
-            try {
-                // Update user role in Firestore
-                await db.collection('users').doc(user.uid).update({
-                    role: selectedRole
-                });
-                
-                // Close modal
-                roleSelectionModal.classList.remove('active');
-                
-                // Show success message
-                showToast('Role updated successfully!', 'success');
-                
-                // Redirect based on selected role after a short delay
-                setTimeout(() => {
-                    switch (selectedRole) {
-                        case 'admin':
-                            window.location.href = 'admindashboard.html';
-                            break;
-                        case 'faculty':
-                            window.location.href = 'facultydashboard.html';
-                            break;
-                        case 'student':
-                        default:
-                            window.location.href = 'studentdashboard.html';
-                            break;
-                    }
-                }, 1000);
-            } catch (error) {
-                console.error('Error updating user role:', error);
-                showToast('Failed to update role. Please try again.', 'error');
-            }
         });
         
         // Branch modal
@@ -3051,6 +2649,31 @@
             privacyModal.classList.remove('active');
         });
         
+        // Registration success modal close
+        registrationSuccessClose.addEventListener('click', () => {
+            registrationSuccessModal.classList.remove('active');
+        });
+        
+        // Resend verification email button
+        resendVerificationBtn.addEventListener('click', async () => {
+            const email = verificationEmailDisplay.textContent;
+            
+            if (email) {
+                resendVerificationBtn.classList.add('btn-loading');
+                resendVerificationBtn.disabled = true;
+                
+                try {
+                    await resendVerificationEmail(email);
+                    showToast('Verification email resent successfully!', 'success');
+                } catch (error) {
+                    showToast('Failed to resend verification email', 'error');
+                } finally {
+                    resendVerificationBtn.classList.remove('btn-loading');
+                    resendVerificationBtn.disabled = false;
+                }
+            }
+        });
+        
         // Initialize branch modal for registration
         document.getElementById('branch').addEventListener('click', () => {
             openBranchModal();
@@ -3063,12 +2686,12 @@
                 const creationTime = new Date(user.metadata.creationTime).getTime();
                 const now = Date.now();
                 const isNewUser = (now - creationTime < 5000);
-
+                
                 // For new users, we'll handle the redirect in the registration function
                 if (isNewUser) {
                     return;
                 }
-
+                
                 // Get user data from Firestore
                 db.collection('users').doc(user.uid).get().then((doc) => {
                     if (doc.exists) {
@@ -3081,35 +2704,22 @@
                             updateLanguageDisplay();
                         }
                         
-                        if (userData.role) {
-                            // User has a role, redirect directly
-                            showToast('Login successful!', 'success');
-                            setTimeout(() => {
-                                switch (userData.role) {
-                                    case 'admin':
-                                        window.location.href = 'admindashboard.html';
-                                        break;
-                                    case 'faculty':
-                                        window.location.href = 'facultydashboard.html';
-                                        break;
-                                    case 'student':
-                                    default:
-                                        window.location.href = 'studentdashboard.html';
-                                        break;
-                                }
-                            }, 1000);
-                        } else {
-                            // User exists but doesn't have a role, show role selection modal
-                            roleSelectionModal.classList.add('active');
-                        }
+                        // Redirect to student dashboard
+                        showToast('Welcome back!', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'studentdashboard.html';
+                        }, 1000);
                     } else {
-                        // User document doesn't exist, show role selection modal
-                        roleSelectionModal.classList.add('active');
+                        // User document doesn't exist, redirect to student dashboard
+                        showToast('Welcome back!', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'studentdashboard.html';
+                        }, 1000);
                     }
                 }).catch((error) => {
                     console.error('Error getting user data:', error);
                     // Default to student dashboard
-                    showToast('Login successful!', 'success');
+                    showToast('Welcome back!', 'success');
                     setTimeout(() => {
                         window.location.href = 'studentdashboard.html';
                     }, 1000);
