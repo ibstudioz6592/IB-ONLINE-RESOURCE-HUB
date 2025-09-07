@@ -2468,8 +2468,24 @@
             branchSemesterCourseModal.classList.remove('active');
         }
         
-        // Chatbot with Google Apps Script Proxy
+        // Chatbot with Google Apps Script Integration
         function initChatbot() {
+            // Configuration
+            const API_URL = "https://script.google.com/macros/s/AKfycbyaB4eUhTYg6a0p8h2A53UBT9FcoIHowgj_844omrQrYK9gTFdFzcgFj92H51ldhcvq/exec";
+            const MAX_HISTORY = 10; // Keep last 10 messages to limit context
+            
+            // State
+            let chatHistory = [
+                {
+                    role: "system",
+                    content: "You are IB STUDIOZ Assistant, an AI tutor for engineering students. Be friendly, concise, explain step-by-step and suggest resources when relevant. If you cannot answer, admit it and point to a reference."
+                },
+                {
+                    role: "assistant",
+                    content: "Hello! I'm your AI study assistant. Ask me anything about engineering, programming, math, or study strategies."
+                }
+            ];
+            
             // DOM Elements
             const chatbotToggle = document.getElementById('chatbotToggle');
             const chatbotContainer = document.getElementById('chatbotContainer');
@@ -2478,44 +2494,23 @@
             const chatbotInput = document.getElementById('chatbotInput');
             const chatbotSend = document.getElementById('chatbotSend');
             
-            // Add a reset button to the header if it doesn't exist
-            let chatbotReset = document.getElementById('chatbotReset');
-            if (!chatbotReset) {
-                const header = document.querySelector('.chatbot-header');
-                if (header) {
-                    chatbotReset = document.createElement('button');
-                    chatbotReset.id = 'chatbotReset';
-                    chatbotReset.className = 'chatbot-reset';
-                    chatbotReset.title = 'Clear chat';
-                    chatbotReset.innerHTML = '<i class="fas fa-redo"></i>';
-                    header.appendChild(chatbotReset);
-                }
-            }
+            // Add reset button to header
+            const chatbotReset = document.createElement('button');
+            chatbotReset.id = 'chatbotReset';
+            chatbotReset.className = 'chatbot-reset';
+            chatbotReset.title = 'Clear chat';
+            chatbotReset.innerHTML = '<i class="fas fa-redo"></i>';
+            document.querySelector('.chatbot-header').appendChild(chatbotReset);
             
-            // Google Apps Script URL (replace with your script)
-            const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwMMx4caZS2TooxXxCsuxAHY-vbn4zJ4G7OAtrA6z_TMSNIBQRr8-Lv4SZfp3USFZZP/exec";
-            
-            // Conversation history (system instruction + conversation)
-            let chatHistory = [
-                {
-                    role: "user",
-                    parts: [{ text: "You are IB STUDIOZ Assistant, an AI tutor for engineering students. Be friendly, concise, explain step-by-step and suggest resources when relevant. If you cannot answer, admit it and point to a reference." }]
-                },
-                {
-                    role: "model",
-                    parts: [{ text: "Hello! I'm your AI study assistant. Ask me anything about engineering, programming, math, or study strategies." }]
-                }
-            ];
-            
-            // Helper: sanitize & render messages
+            // Helper: add message to UI
             function addMessage(text, sender, isLoading = false) {
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `message ${sender}`;
                 if (isLoading) {
                     messageDiv.innerHTML = `<div class="spinner"></div> Thinking...`;
                 } else {
-                    // Allow simple line breaks; do NOT insert untrusted HTML
-                    const safeText = String(text).replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                    // Sanitize text to prevent XSS
+                    const safeText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
                     messageDiv.innerHTML = safeText.replace(/\n/g, "<br>");
                 }
                 chatbotMessages.appendChild(messageDiv);
@@ -2523,131 +2518,119 @@
                 return messageDiv;
             }
             
-            // Trimming helper to keep history bounded
+            // Helper: trim history to max length
             function trimHistory() {
-                // Always keep the first two messages (system instruction and first model response)
-                const systemAndFirst = chatHistory.slice(0, 2);
-                const rest = chatHistory.slice(2);
-                const tail = rest.slice(-12); // Keep last 12 messages
-                chatHistory = [...systemAndFirst, ...tail];
-            }
-            
-            // Multi-turn API call: send chatHistory to Google Apps Script
-            async function getBotResponse(userInput) {
-                try {
-                    // Push user turn to history
-                    chatHistory.push({ role: "user", parts: [{ text: userInput }] });
-                    trimHistory();
-                    
-                    const res = await fetch(https://script.google.com/macros/s/AKfycbwMMx4caZS2TooxXxCsuxAHY-vbn4zJ4G7OAtrA6z_TMSNIBQRr8-Lv4SZfp3USFZZP/exec, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ 
-                            history: chatHistory,
-                            message: userInput 
-                        })
-                    });
-                    
-                    if (!res.ok) {
-                        // Attempt to surface server error message
-                        const errText = await res.text();
-                        throw new Error("API request failed: " + errText);
-                    }
-                    
-                    const data = await res.json();
-                    
-                    // Extract the response text from the Apps Script response
-                    const botResponse = data.response || 
-                                      data.candidates?.[0]?.content?.parts?.[0]?.text || 
-                                      "I'm sorry, I couldn't generate a response at this moment.";
-                    
-                    // Add assistant reply to history
-                    chatHistory.push({ role: "model", parts: [{ text: botResponse }] });
-                    trimHistory();
-                    
-                    return botResponse;
-                } catch (err) {
-                    console.error("getBotResponse error:", err);
-                    return "⚠️ Sorry — the assistant couldn't respond right now. Try again in a moment.";
+                if (chatHistory.length > MAX_HISTORY + 2) { // +2 for system and first assistant message
+                    const system = chatHistory[0];
+                    const firstAssistant = chatHistory[1];
+                    const rest = chatHistory.slice(2);
+                    const tail = rest.slice(-MAX_HISTORY);
+                    chatHistory = [system, firstAssistant, ...tail];
                 }
             }
             
-            // Send message function
+            // Send message to API
             async function sendMessage() {
                 const message = chatbotInput.value.trim();
                 if (!message) return;
                 
-                // Disable while processing
+                // Disable input while processing
                 chatbotInput.disabled = true;
                 chatbotSend.disabled = true;
                 
-                // Add user message visually
+                // Add user message to UI and history
                 addMessage(message, 'user');
+                chatHistory.push({ role: "user", content: message });
+                trimHistory();
                 chatbotInput.value = '';
                 
                 // Add loading indicator
                 const loadingEl = addMessage('', 'bot', true);
                 
                 try {
-                    const botText = await getBotResponse(message);
-                    // Remove loading indicator and add bot message
+                    // Prepare payload for Apps Script
+                    const payload = {
+                        history: chatHistory
+                    };
+                    
+                    // Send to Google Apps Script
+                    const response = await fetch(https://script.google.com/macros/s/AKfycbyaB4eUhTYg6a0p8h2A53UBT9FcoIHowgj_844omrQrYK9gTFdFzcgFj92H51ldhcvq/exec, {
+                        method: 'POST',
+                        body: JSON.stringify(payload),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`API error: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    // Extract response text
+                    const botResponse = data.response || "I'm sorry, I couldn't generate a response.";
+                    
+                    // Remove loading indicator
                     loadingEl.remove();
-                    addMessage(botText, 'bot');
-                } catch (err) {
+                    
+                    // Add bot response to UI and history
+                    addMessage(botResponse, 'bot');
+                    chatHistory.push({ role: "assistant", content: botResponse });
+                    trimHistory();
+                    
+                } catch (error) {
+                    console.error('Chatbot error:', error);
                     loadingEl.remove();
-                    addMessage("I'm sorry — an error occurred. Please try again.", 'bot');
-                    console.error('sendMessage error:', err);
+                    addMessage("I'm sorry, I encountered an error. Please try again later.", 'bot');
                 } finally {
+                    // Re-enable input
                     chatbotInput.disabled = false;
                     chatbotSend.disabled = false;
                     chatbotInput.focus();
                 }
             }
             
-            // Reset chat handler
-            if (chatbotReset) {
-                chatbotReset.addEventListener('click', () => {
-                    chatHistory = [
-                        {
-                            role: "user",
-                            parts: [{ text: "You are IB STUDIOZ Assistant, an AI tutor for engineering students. Be friendly, concise, explain step-by-step and suggest resources when relevant. If you cannot answer, admit it and point to a reference." }]
-                        },
-                        {
-                            role: "model",
-                            parts: [{ text: "Hello! I'm your AI study assistant. Ask me anything about engineering, programming, math, or study strategies." }]
-                        }
-                    ];
-                    chatbotMessages.innerHTML = '';
-                    addMessage(chatHistory[1].parts[0].text, 'bot');
+            // Reset chat
+            function resetChat() {
+                chatHistory = [
+                    {
+                        role: "system",
+                        content: "You are IB STUDIOZ Assistant, an AI tutor for engineering students. Be friendly, concise, explain step-by-step and suggest resources when relevant. If you cannot answer, admit it and point to a reference."
+                    },
+                    {
+                        role: "assistant",
+                        content: "Hello! I'm your AI study assistant. Ask me anything about engineering, programming, math, or study strategies."
+                    }
+                ];
+                chatbotMessages.innerHTML = '';
+                addMessage(chatHistory[1].content, 'bot');
+                chatbotInput.focus();
+            }
+            
+            // Event listeners
+            chatbotToggle.addEventListener('click', () => {
+                chatbotContainer.classList.toggle('active');
+                if (chatbotContainer.classList.contains('active')) {
                     chatbotInput.focus();
-                });
-            }
+                }
+            });
             
-            // UI toggles & events
-            if (chatbotToggle) {
-                chatbotToggle.addEventListener('click', () => {
-                    chatbotContainer.classList.toggle('active');
-                    if (chatbotContainer.classList.contains('active')) chatbotInput.focus();
-                });
-            }
+            chatbotClose.addEventListener('click', () => {
+                chatbotContainer.classList.remove('active');
+            });
             
-            if (chatbotClose) {
-                chatbotClose.addEventListener('click', () => chatbotContainer.classList.remove('active'));
-            }
+            chatbotSend.addEventListener('click', sendMessage);
             
-            if (chatbotSend) {
-                chatbotSend.addEventListener('click', sendMessage);
-            }
+            chatbotInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendMessage();
+            });
             
-            if (chatbotInput) {
-                chatbotInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') sendMessage();
-                });
-            }
+            chatbotReset.addEventListener('click', resetChat);
             
-            // Show initial assistant message if chatMessages is empty
-            if (chatbotMessages && chatbotMessages.children.length === 0) {
-                addMessage(chatHistory[1].parts[0].text, 'bot');
+            // Initialize with welcome message if empty
+            if (chatbotMessages.children.length === 0) {
+                addMessage(chatHistory[1].content, 'bot');
             }
         }
         
