@@ -1905,8 +1905,8 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
         
-        // Initialize EmailJS with your service ID
-    emailjs.init("service_ndj9m3l", "Jdgw3kivxCnppgL9j");
+        // IMPORTANT: Initialize EmailJS with your public key only
+        emailjs.init("Jdgw3kivxCnppgL9j");
         
         // Academic branches data
         const branches = {
@@ -2385,28 +2385,37 @@
                         return;
                     }
                     
-                    // Get user data from Firestore
-                    const userDoc = await db.collection('users').doc(user.uid).get();
-                    if (userDoc.exists) {
-                        const userData = userDoc.data();
-                        const role = userData.role || 'student'; // Default to student if role is not set
-                        
-                        // Send greeting email
-                        await sendGreetingEmail(userData.email, userData.name, 'login');
-                        
-                        // Show success message
-                        showToast(`Login successful! Welcome back, ${userData.name}!`, 'success');
-                        
-                        // Redirect based on role
-                        setTimeout(() => {
-                            if (role === 'admin') {
-                                window.location.href = 'admindashboard.html';
-                            } else {
+                    // Get user data from Firestore with error handling
+                    try {
+                        const userDoc = await db.collection('users').doc(user.uid).get();
+                        if (userDoc.exists) {
+                            const userData = userDoc.data();
+                            const role = userData.role || 'student'; // Default to student if role is not set
+                            
+                            // Send greeting email
+                            await sendGreetingEmail(userData.email, userData.name, 'login');
+                            
+                            // Show success message
+                            showToast(`Login successful! Welcome back, ${userData.name}!`, 'success');
+                            
+                            // Redirect based on role
+                            setTimeout(() => {
+                                if (role === 'admin') {
+                                    window.location.href = 'admindashboard.html';
+                                } else {
+                                    window.location.href = 'studentdashboard.html';
+                                }
+                            }, 1500);
+                        } else {
+                            // If user document doesn't exist, default to student
+                            showToast('Login successful!', 'success');
+                            setTimeout(() => {
                                 window.location.href = 'studentdashboard.html';
-                            }
-                        }, 1500);
-                    } else {
-                        // If user document doesn't exist, default to student
+                            }, 1500);
+                        }
+                    } catch (firestoreError) {
+                        console.error('Firestore error:', firestoreError);
+                        // Fallback to student dashboard if Firestore fails
                         showToast('Login successful!', 'success');
                         setTimeout(() => {
                             window.location.href = 'studentdashboard.html';
@@ -2637,27 +2646,36 @@
                         socialRegistrationModal.classList.add('active');
                     } else {
                         // Existing user, get user data and redirect based on role
-                        const userDoc = await db.collection('users').doc(result.user.uid).get();
-                        if (userDoc.exists) {
-                            const userData = userDoc.data();
-                            const role = userData.role || 'student'; // Default to student if role is not set
-                            
-                            // Send greeting email
-                            await sendGreetingEmail(userData.email, userData.name, 'login');
-                            
-                            // Show success message
-                            showToast(`Login successful! Welcome back, ${userData.name}!`, 'success');
-                            
-                            // Redirect based on role
-                            setTimeout(() => {
-                                if (role === 'admin') {
-                                    window.location.href = 'admindashboard.html';
-                                } else {
+                        try {
+                            const userDoc = await db.collection('users').doc(result.user.uid).get();
+                            if (userDoc.exists) {
+                                const userData = userDoc.data();
+                                const role = userData.role || 'student'; // Default to student if role is not set
+                                
+                                // Send greeting email
+                                await sendGreetingEmail(userData.email, userData.name, 'login');
+                                
+                                // Show success message
+                                showToast(`Login successful! Welcome back, ${userData.name}!`, 'success');
+                                
+                                // Redirect based on role
+                                setTimeout(() => {
+                                    if (role === 'admin') {
+                                        window.location.href = 'admindashboard.html';
+                                    } else {
+                                        window.location.href = 'studentdashboard.html';
+                                    }
+                                }, 1500);
+                            } else {
+                                // If user document doesn't exist, default to student
+                                showToast('Login successful!', 'success');
+                                setTimeout(() => {
                                     window.location.href = 'studentdashboard.html';
-                                }
-                            }, 1500);
-                        } else {
-                            // If user document doesn't exist, default to student
+                                }, 1500);
+                            }
+                        } catch (firestoreError) {
+                            console.error('Firestore error:', firestoreError);
+                            // Fallback to student dashboard if Firestore fails
                             showToast('Login successful!', 'success');
                             setTimeout(() => {
                                 window.location.href = 'studentdashboard.html';
@@ -2948,7 +2966,7 @@
                     return;
                 }
                 
-                // Get user data from Firestore
+                // Get user data from Firestore with error handling
                 try {
                     const userDoc = await db.collection('users').doc(user.uid).get();
                     if (userDoc.exists) {
@@ -2976,9 +2994,9 @@
                             window.location.href = 'studentdashboard.html';
                         }, 1000);
                     }
-                } catch (error) {
-                    console.error('Error getting user data:', error);
-                    // Default to student dashboard
+                } catch (firestoreError) {
+                    console.error('Firestore error:', firestoreError);
+                    // Fallback to student dashboard if Firestore fails
                     setTimeout(() => {
                         window.location.href = 'studentdashboard.html';
                     }, 1000);
