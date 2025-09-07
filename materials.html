@@ -2468,195 +2468,188 @@
             branchSemesterCourseModal.classList.remove('active');
         }
         
+        // Chatbot with Google Apps Script Proxy
         function initChatbot() {
-  // ====== CONFIG ======
-  const API_URL = "https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbwMMx4caZS2TooxXxCsuxAHY-vbn4zJ4G7OAtrA6z_TMSNIBQRr8-Lv4SZfp3USFZZP/exec/exec"; // <- replace with your Apps Script URL
-  const MAX_HISTORY_MESSAGES = 12; // keep last N messages to limit payload & cost
-
-  // ====== DOM ELEMENTS (ensure these IDs exist in your HTML) ======
-  const chatbotToggle = document.getElementById('chatbotToggle');
-  const chatbotContainer = document.getElementById('chatbotContainer');
-  const chatbotClose = document.getElementById('chatbotClose');
-  const chatbotMessages = document.getElementById('chatbotMessages');
-  const chatbotInput = document.getElementById('chatbotInput');
-  const chatbotSend = document.getElementById('chatbotSend');
-
-  // (Optional) Add a Reset button to header (if not already present)
-  let chatbotReset = document.getElementById('chatbotReset');
-  if (!chatbotReset) {
-    const header = document.querySelector('.chatbot-header');
-    if (header) {
-      chatbotReset = document.createElement('button');
-      chatbotReset.id = 'chatbotReset';
-      chatbotReset.className = 'chatbot-reset';
-      chatbotReset.title = 'Clear chat';
-      chatbotReset.innerHTML = '<i class="fas fa-redo"></i>';
-      header.appendChild(chatbotReset);
-    }
-  }
-            // optional: include user profile context
-const currentUser = firebase.auth().currentUser;
-if (currentUser) {
-  const uid = currentUser.uid;
-  // assuming firebase is initialized
-  firebase.firestore().doc(`users/${uid}`).get().then(doc => {
-    if (doc.exists) {
-      const p = doc.data();
-      // prepend a system message with profile context
-      chatHistory[0].text += ` Student profile: name=${p.name||''}, branch=${p.branch||''}, semester=${p.semester||''}.`;
-    }
-  }).catch(err => console.warn('profile fetch failed', err));
-}
-
-
-  // ====== Conversation history (system instruction + conversation) ======
-  // Use 'system' for instruction, 'user' and 'assistant' for messages.
-  let chatHistory = [
-    {
-      role: "system",
-      text: "You are IB STUDIOZ Assistant, an AI tutor for engineering students. Be friendly, concise, explain step-by-step and suggest resources when relevant. If you cannot answer, admit it and point to a reference."
-    },
-    {
-      role: "assistant",
-      text: "Hello! I'm your AI study assistant. Ask me anything about engineering, programming, math, or study strategies."
-    }
-  ];
-
-  // ====== Helper: sanitize & render messages ======
-  function addMessage(text, sender, isLoading = false) {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${sender}`;
-
-    if (isLoading) {
-      messageDiv.innerHTML = `<div class="spinner"></div> Thinking...`;
-    } else {
-      // allow simple line breaks; do NOT insert untrusted HTML
-      const safeText = String(text).replace(/</g, "&lt;").replace(/>/g, "&gt;");
-      messageDiv.innerHTML = safeText.replace(/\n/g, "<br>");
-    }
-
-    chatbotMessages.appendChild(messageDiv);
-    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-    return messageDiv;
-  }
-
-  // ====== Trimming helper to keep history bounded ======
-  function trimHistory() {
-    // always keep the first system message + the last MAX_HISTORY_MESSAGES messages
-    const system = chatHistory[0];
-    const rest = chatHistory.slice(1);
-    const tail = rest.slice(-MAX_HISTORY_MESSAGES);
-    chatHistory = [system, ...tail];
-  }
-
-  // ====== Multi-turn API call: send chatHistory to Apps Script ======
-  async function getBotResponse(userInput) {
-    try {
-      // push user turn (already pushed by sendMessage as well, but ensure it's present)
-      chatHistory.push({ role: "user", text: userInput });
-      trimHistory();
-
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ history: chatHistory })
-      });
-
-      if (!res.ok) {
-        // attempt to surface server error message
-        const errText = await res.text();
-        throw new Error("API request failed: " + errText);
-      }
-
-      const data = await res.json();
-      // Apps Script forwards Gemini's response JSON. Try to read the candidate text robustly.
-      const botResponse =
-        data?.candidates?.[0]?.content?.parts?.[0]?.text
-        || data?.candidate?.content?.parts?.[0]?.text
-        || data?.response?.candidates?.[0]?.content?.parts?.[0]?.text
-        || data?.output?.text
-        || JSON.stringify(data).slice(0, 1000); // fallback
-
-      // add assistant reply to history
-      chatHistory.push({ role: "assistant", text: botResponse });
-      trimHistory();
-
-      return botResponse;
-    } catch (err) {
-      console.error("getBotResponse error:", err);
-      return "⚠️ Sorry — the assistant couldn't respond right now. Try again in a moment.";
-    }
-  }
-
-  // ====== sendMessage: UI flow ======
-  async function sendMessage() {
-    const message = chatbotInput.value.trim();
-    if (!message) return;
-
-    // disable while processing
-    chatbotInput.disabled = true;
-    chatbotSend.disabled = true;
-
-    // add user message visually and to history
-    addMessage(message, 'user');
-    chatHistory.push({ role: "user", text: message });
-    trimHistory();
-    chatbotInput.value = '';
-
-    // add loading indicator
-    const loadingEl = addMessage('', 'bot', true);
-
-    try {
-      const botText = await getBotResponse(message);
-
-      // remove loading indicator and add bot message
-      loadingEl.remove();
-      addMessage(botText, 'bot');
-    } catch (err) {
-      loadingEl.remove();
-      addMessage("I'm sorry — an error occurred. Please try again.", 'bot');
-      console.error('sendMessage error:', err);
-    } finally {
-      chatbotInput.disabled = false;
-      chatbotSend.disabled = false;
-      chatbotInput.focus();
-    }
-  }
-
-  // ====== Reset chat handler ======
-  if (chatbotReset) {
-    chatbotReset.addEventListener('click', () => {
-      chatHistory = [
-        chatHistory[0],
-        { role: "assistant", text: "Hello! I'm your AI study assistant. Ask me anything about engineering, programming, math, or study strategies." }
-      ];
-      chatbotMessages.innerHTML = '';
-      addMessage(chatHistory[1].text, 'bot');
-      chatbotInput.focus();
-    });
-  }
-
-  // ====== UI toggles & events ======
-  if (chatbotToggle) {
-    chatbotToggle.addEventListener('click', () => {
-      chatbotContainer.classList.toggle('active');
-      if (chatbotContainer.classList.contains('active')) chatbotInput.focus();
-    });
-  }
-  if (chatbotClose) {
-    chatbotClose.addEventListener('click', () => chatbotContainer.classList.remove('active'));
-  }
-  if (chatbotSend) chatbotSend.addEventListener('click', sendMessage);
-  if (chatbotInput) chatbotInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') sendMessage();
-  });
-
-  // show initial assistant message if chatMessages is empty
-  if (chatbotMessages && chatbotMessages.children.length === 0) {
-    addMessage(chatHistory[1].text, 'bot');
-  }
-}
-
+            // DOM Elements
+            const chatbotToggle = document.getElementById('chatbotToggle');
+            const chatbotContainer = document.getElementById('chatbotContainer');
+            const chatbotClose = document.getElementById('chatbotClose');
+            const chatbotMessages = document.getElementById('chatbotMessages');
+            const chatbotInput = document.getElementById('chatbotInput');
+            const chatbotSend = document.getElementById('chatbotSend');
+            
+            // Add a reset button to the header if it doesn't exist
+            let chatbotReset = document.getElementById('chatbotReset');
+            if (!chatbotReset) {
+                const header = document.querySelector('.chatbot-header');
+                if (header) {
+                    chatbotReset = document.createElement('button');
+                    chatbotReset.id = 'chatbotReset';
+                    chatbotReset.className = 'chatbot-reset';
+                    chatbotReset.title = 'Clear chat';
+                    chatbotReset.innerHTML = '<i class="fas fa-redo"></i>';
+                    header.appendChild(chatbotReset);
+                }
+            }
+            
+            // Google Apps Script URL (replace with your script)
+            const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwMMx4caZS2TooxXxCsuxAHY-vbn4zJ4G7OAtrA6z_TMSNIBQRr8-Lv4SZfp3USFZZP/exec";
+            
+            // Conversation history (system instruction + conversation)
+            let chatHistory = [
+                {
+                    role: "user",
+                    parts: [{ text: "You are IB STUDIOZ Assistant, an AI tutor for engineering students. Be friendly, concise, explain step-by-step and suggest resources when relevant. If you cannot answer, admit it and point to a reference." }]
+                },
+                {
+                    role: "model",
+                    parts: [{ text: "Hello! I'm your AI study assistant. Ask me anything about engineering, programming, math, or study strategies." }]
+                }
+            ];
+            
+            // Helper: sanitize & render messages
+            function addMessage(text, sender, isLoading = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}`;
+                if (isLoading) {
+                    messageDiv.innerHTML = `<div class="spinner"></div> Thinking...`;
+                } else {
+                    // Allow simple line breaks; do NOT insert untrusted HTML
+                    const safeText = String(text).replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                    messageDiv.innerHTML = safeText.replace(/\n/g, "<br>");
+                }
+                chatbotMessages.appendChild(messageDiv);
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+                return messageDiv;
+            }
+            
+            // Trimming helper to keep history bounded
+            function trimHistory() {
+                // Always keep the first two messages (system instruction and first model response)
+                const systemAndFirst = chatHistory.slice(0, 2);
+                const rest = chatHistory.slice(2);
+                const tail = rest.slice(-12); // Keep last 12 messages
+                chatHistory = [...systemAndFirst, ...tail];
+            }
+            
+            // Multi-turn API call: send chatHistory to Google Apps Script
+            async function getBotResponse(userInput) {
+                try {
+                    // Push user turn to history
+                    chatHistory.push({ role: "user", parts: [{ text: userInput }] });
+                    trimHistory();
+                    
+                    const res = await fetch(APPS_SCRIPT_URL, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ 
+                            history: chatHistory,
+                            message: userInput 
+                        })
+                    });
+                    
+                    if (!res.ok) {
+                        // Attempt to surface server error message
+                        const errText = await res.text();
+                        throw new Error("API request failed: " + errText);
+                    }
+                    
+                    const data = await res.json();
+                    
+                    // Extract the response text from the Apps Script response
+                    const botResponse = data.response || 
+                                      data.candidates?.[0]?.content?.parts?.[0]?.text || 
+                                      "I'm sorry, I couldn't generate a response at this moment.";
+                    
+                    // Add assistant reply to history
+                    chatHistory.push({ role: "model", parts: [{ text: botResponse }] });
+                    trimHistory();
+                    
+                    return botResponse;
+                } catch (err) {
+                    console.error("getBotResponse error:", err);
+                    return "⚠️ Sorry — the assistant couldn't respond right now. Try again in a moment.";
+                }
+            }
+            
+            // Send message function
+            async function sendMessage() {
+                const message = chatbotInput.value.trim();
+                if (!message) return;
+                
+                // Disable while processing
+                chatbotInput.disabled = true;
+                chatbotSend.disabled = true;
+                
+                // Add user message visually
+                addMessage(message, 'user');
+                chatbotInput.value = '';
+                
+                // Add loading indicator
+                const loadingEl = addMessage('', 'bot', true);
+                
+                try {
+                    const botText = await getBotResponse(message);
+                    // Remove loading indicator and add bot message
+                    loadingEl.remove();
+                    addMessage(botText, 'bot');
+                } catch (err) {
+                    loadingEl.remove();
+                    addMessage("I'm sorry — an error occurred. Please try again.", 'bot');
+                    console.error('sendMessage error:', err);
+                } finally {
+                    chatbotInput.disabled = false;
+                    chatbotSend.disabled = false;
+                    chatbotInput.focus();
+                }
+            }
+            
+            // Reset chat handler
+            if (chatbotReset) {
+                chatbotReset.addEventListener('click', () => {
+                    chatHistory = [
+                        {
+                            role: "user",
+                            parts: [{ text: "You are IB STUDIOZ Assistant, an AI tutor for engineering students. Be friendly, concise, explain step-by-step and suggest resources when relevant. If you cannot answer, admit it and point to a reference." }]
+                        },
+                        {
+                            role: "model",
+                            parts: [{ text: "Hello! I'm your AI study assistant. Ask me anything about engineering, programming, math, or study strategies." }]
+                        }
+                    ];
+                    chatbotMessages.innerHTML = '';
+                    addMessage(chatHistory[1].parts[0].text, 'bot');
+                    chatbotInput.focus();
+                });
+            }
+            
+            // UI toggles & events
+            if (chatbotToggle) {
+                chatbotToggle.addEventListener('click', () => {
+                    chatbotContainer.classList.toggle('active');
+                    if (chatbotContainer.classList.contains('active')) chatbotInput.focus();
+                });
+            }
+            
+            if (chatbotClose) {
+                chatbotClose.addEventListener('click', () => chatbotContainer.classList.remove('active'));
+            }
+            
+            if (chatbotSend) {
+                chatbotSend.addEventListener('click', sendMessage);
+            }
+            
+            if (chatbotInput) {
+                chatbotInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') sendMessage();
+                });
+            }
+            
+            // Show initial assistant message if chatMessages is empty
+            if (chatbotMessages && chatbotMessages.children.length === 0) {
+                addMessage(chatHistory[1].parts[0].text, 'bot');
+            }
+        }
         
         // Account Management
         function initAccount() {
