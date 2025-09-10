@@ -9,19 +9,19 @@
     <meta property="og:type" content="website">
     <title>Study Materials - IB STUDIOZ</title>
     
-    <script src="[https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js](https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js)"></script>
-    <script src="[https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js](https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js)"></script>
-    <script src="[https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js](https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js)"></script>
-    <script src="[https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js](https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js)"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
     
-    <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap)" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css](https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css)">
-    <script src="[https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js](https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js)"></script>
-    <script src="[https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js](https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js)"></script>
-    <script src="[https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js](https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js)"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
 
     <style>
         :root {
@@ -1318,7 +1318,7 @@
             width: 16px;
             height: 16px;
             border-width: 2px;
-            border-top: 2px solid white; /* Make the spinner white for visibility */
+            border-top: 2px solid var(--text-muted); /* Make the spinner visible on the gray background */
         }
         
         /* Updated: Message streaming / typewriter effect */
@@ -1794,7 +1794,7 @@
     <div class="chatbot-container" id="chatbotContainer">
         <div class="chatbot-header">
             <div>
-                <i class="fas fa-robot"></i> IB STUDIOZ Assistant
+                <i class="fas fa-robot"></i> IB Assistant
             </div>
             <div>
                 <button class="chatbot-reset" id="chatbotReset" title="Clear Chat">
@@ -1874,8 +1874,6 @@
         let tempSelectedCourse = null;
 
         // --- DOM ELEMENT VARIABLES ---
-        // We declare them here, but we will assign them inside DOMContentLoaded
-        // to make sure the elements exist on the page first.
         let themeToggle, themeIcon, accountBtn, accountMenu, accountAvatar, accountName, 
             accountEmail, accountFullName, accountEmailDetail, accountMemberSince, 
             accountDownloads, accountLogout, materialsGrid, materialsCount, branchFilter, 
@@ -1959,7 +1957,7 @@
         function resetAllFilters() {
             branchFilter.value = '';
             semesterFilter.value = '';
-            courseFilter.value = '';
+            courseFilter.innerHTML = '';
             typeFilter.value = '';
             searchFilter.value = '';
             selectionDisplay.style.display = 'none';
@@ -2216,11 +2214,12 @@
         
         // Chatbot with Vercel Backend
         function initChatbot() {
-            const API_URL = "/api/chat";
+            // Replace with your Vercel backend URL
+            const API_URL = "YOUR_VERCEL_BACKEND_URL/api/chat"; 
             const MAX_HISTORY = 10;
             let chatHistory = [];
         
-            function addMessage(text, sender, isLoading = false, isTyping = false) {
+            function addMessage(text, sender, isLoading = false) {
                 const messageRow = document.createElement('div');
                 messageRow.className = `message-row ${sender}`;
                 
@@ -2235,15 +2234,11 @@
                 messageDiv.className = `message ${sender}`;
         
                 if (isLoading) {
-                    messageDiv.innerHTML = `<div class="spinner"></div>`; // Simplified to just a spinner
+                    messageDiv.innerHTML = `<div class="spinner"></div>`; 
                     messageDiv.classList.add('loading');
-                } else if (isTyping) {
-                    messageDiv.textContent = text;
-                    messageDiv.classList.add('typing');
                 } else {
                     const parsedText = parseResponseForCodeBlocks(text);
                     messageDiv.innerHTML = parsedText;
-                    // Apply syntax highlighting
                     messageDiv.querySelectorAll('pre code').forEach((block) => {
                         hljs.highlightElement(block);
                     });
@@ -2256,83 +2251,115 @@
             }
         
             function parseResponseForCodeBlocks(text) {
-                // Regex to find ```<lang>...``` blocks
                 const codeBlockRegex = /```(.*?)```/gs;
                 let lastIndex = 0;
                 let result = '';
                 let match;
                 
                 while ((match = codeBlockRegex.exec(text)) !== null) {
-                    // Add text before the code block
                     result += text.substring(lastIndex, match.index).replace(/\n/g, '<br>');
                     
-                    // Extract code content and language
                     const codeContent = match[1].trim();
                     let lang = '';
                     const firstLineEnd = codeContent.indexOf('\n');
                     if (firstLineEnd !== -1) {
                         lang = codeContent.substring(0, firstLineEnd).trim();
                         if (lang.length > 0) {
-                            // Trim the first line (language) from the code content
                             const actualCode = codeContent.substring(firstLineEnd).trim();
                             result += `<div class="code-block"><pre><code class="language-${lang}">${actualCode}</code></pre></div>`;
                         } else {
-                            // If no language is specified, just use a plain code block
                             result += `<div class="code-block"><pre><code>${codeContent}</code></pre></div>`;
                         }
                     } else {
-                        // Handle single-line code blocks without language
                         result += `<div class="code-block"><pre><code>${codeContent}</code></pre></div>`;
                     }
                     
                     lastIndex = codeBlockRegex.lastIndex;
                 }
                 
-                // Add any remaining text after the last code block
                 result += text.substring(lastIndex).replace(/\n/g, '<br>');
                 
                 return result;
             }
-        
-            function typeText(element, text, callback) {
-                let i = 0;
-                const speed = 15; // Typing speed in milliseconds
-        
-                function type() {
-                    if (i < text.length) {
-                        const char = text.charAt(i);
-                        element.innerHTML += char;
-                        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-        
-                        // Find the next character
-                        const nextChar = text.charAt(i + 1);
-        
-                        // Check for start of code block or new paragraph
-                        if (char === '`' && nextChar === '`' && text.charAt(i + 2) === '`') {
-                            const codeBlockStart = text.indexOf('```', i + 3);
-                            if (codeBlockStart !== -1) {
-                                // Type until end of code block and then restart the typing loop
-                                const codeBlockEnd = text.indexOf('```', codeBlockStart + 3);
-                                if (codeBlockEnd !== -1) {
-                                    element.innerHTML += text.substring(i + 1, codeBlockEnd + 3);
-                                    i = codeBlockEnd + 2;
-                                }
+
+            // Function to stream the response text
+            async function streamResponse(element, response) {
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let fullText = '';
+            
+                // Create a temporary span for the typewriter effect
+                const tempSpan = document.createElement('span');
+                element.appendChild(tempSpan);
+                tempSpan.classList.add('typing');
+            
+                // Function to type out a chunk of text
+                const typeChunk = (chunk) => {
+                    return new Promise(resolve => {
+                        let i = 0;
+                        const speed = 15;
+                        function type() {
+                            if (i < chunk.length) {
+                                tempSpan.textContent += chunk.charAt(i);
+                                i++;
+                                setTimeout(type, speed);
+                            } else {
+                                resolve();
                             }
                         }
-        
-                        i++;
-                        setTimeout(type, speed);
-                    } else {
-                        element.classList.remove('typing');
-                        if (callback) callback();
+                        type();
+                    });
+                };
+            
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    
+                    const chunk = decoder.decode(value, { stream: true });
+                    
+                    // Add the chunk to the full text
+                    fullText += chunk;
+                    
+                    // Remove the current content and typewriter span
+                    element.innerHTML = '';
+                    
+                    // Process the full text and add it back
+                    const parsed = parseResponseForCodeBlocks(fullText);
+                    element.innerHTML = parsed;
+            
+                    // Re-append the typing span and apply effects
+                    element.querySelector('.code-block:last-child pre code:last-child')?.appendChild(tempSpan);
+                    if (!element.querySelector('.code-block:last-child')) {
+                        element.appendChild(tempSpan);
                     }
+            
+                    // Re-highlight the code blocks
+                    element.querySelectorAll('pre code').forEach(block => {
+                        hljs.highlightElement(block);
+                    });
+                    
+                    await typeChunk(chunk); // Animate the typing for the new chunk
+                    
+                    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
                 }
-                type();
+            
+                // Final clean up and highlight
+                tempSpan.classList.remove('typing');
+                element.innerHTML = parseResponseForCodeBlocks(fullText);
+                element.querySelectorAll('pre code').forEach(block => {
+                    hljs.highlightElement(block);
+                });
+
+                // Update chat history with the final, complete message
+                chatHistory.push({ role: "assistant", content: fullText.trim() });
+                if (chatHistory.length > MAX_HISTORY) {
+                    chatHistory = chatHistory.slice(chatHistory.length - MAX_HISTORY);
+                }
             }
-        
+
             function initializeChat() {
                 chatbotMessages.innerHTML = '';
-                chatHistory = [{ role: "assistant", content: "Hello! I'm your AI study assistant. I can help with topics in engineering, programming, math, and more. Ask me anything!" }];
+                chatHistory = [{ role: "assistant", content: "Hello! I'm IB, your AI study assistant. I was created by AJ COMPANY. How can I help you today?" }];
                 addMessage(chatHistory[0].content, 'bot');
             }
         
@@ -2363,19 +2390,13 @@
                         const errorData = await response.json();
                         throw new Error(errorData.error || `API error: ${response.status}`);
                     }
-        
-                    const data = await response.json();
-                    const botResponse = data.response || "Sorry, I couldn't get a response.";
                     
                     loadingEl.remove();
-                    const typingEl = addMessage("", 'bot', false, true);
-                    typeText(typingEl, botResponse, () => {
-                        chatHistory.push({ role: "assistant", content: botResponse });
-                        if (chatHistory.length > MAX_HISTORY) {
-                            chatHistory = chatHistory.slice(chatHistory.length - MAX_HISTORY);
-                        }
-                    });
-        
+                    
+                    // Stream the response directly to the message element
+                    const messageEl = addMessage('', 'bot');
+                    await streamResponse(messageEl, response);
+
                 } catch (error) {
                     console.error('Chatbot error:', error);
                     loadingEl.remove();
@@ -2412,7 +2433,6 @@
                     accountMenu.classList.remove('active');
                 }
             });
-            // Add listeners for profile edit, etc.
         }
         
         // Authentication
