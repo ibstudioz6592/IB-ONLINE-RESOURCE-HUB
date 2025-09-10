@@ -172,7 +172,7 @@
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 1.5rem; /* Increased gap */
         }
         
         .nav-links {
@@ -273,6 +273,64 @@
             transform: translateY(-2px);
             box-shadow: var(--shadow-lg);
         }
+
+        /* NEW: Stylish Theme Toggle */
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+        }
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+        .slider .fa-sun, .slider .fa-moon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .slider .fa-sun { left: 5px; opacity: 1; }
+        .slider .fa-moon { right: 5px; }
+        input:checked ~ .slider .fa-sun { opacity: 0; }
+        input:checked ~ .slider .fa-moon { opacity: 1; }
         
         /* Account Dropdown */
         .account-dropdown {
@@ -1275,43 +1333,67 @@
             border-bottom-left-radius: 0.25rem;
         }
         
-        /* Updated: Code block styling */
-        .message .code-block {
-            background: #1e1e1e;
-            color: #d4d4d4;
-            padding: 0.75rem;
-            border-radius: var(--radius);
-            font-size: 0.8rem;
-            margin: 0.5rem 0;
-            overflow-x: auto;
-            font-family: 'Courier New', Courier, monospace;
+        /* NEW: Enriched Bot Message Styling */
+        .message.bot h1, .message.bot h2, .message.bot h3 {
+            color: var(--primary);
+            font-weight: 700;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+        .message.bot strong {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .message.bot ul, .message.bot ol {
+            padding-left: 1.5rem;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .message.bot li {
+            margin-bottom: 0.25rem;
         }
 
-        /* Updated: Loading state with three floating dots */
+        /* NEW: Code block styling */
+        .message.bot .code-block {
+            background: #282c34; /* Atom One Dark background */
+            color: #abb2bf;
+            padding: 1rem;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            margin: 0.75rem 0;
+            overflow-x: auto;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+        .message.bot .code-block pre {
+            margin: 0;
+            white-space: pre;
+        }
+        .message.bot .code-block code {
+            font-family: inherit;
+        }
+
+        /* NEW: Loading spinner */
         .message.loading {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-style: italic;
             color: var(--text-muted);
         }
-        
         .message.loading .spinner {
             width: 16px;
             height: 16px;
             border-width: 2px;
-            border-top: 2px solid var(--text-muted); /* Make the spinner visible on the gray background */
+            border-top-color: var(--text-muted);
         }
         
-        /* Updated: Message streaming / typewriter effect */
+        /* NEW: Typing effect */
         .typing::after {
-            content: '|';
+            content: '▍';
             animation: blink-caret .75s step-end infinite;
         }
-        
         @keyframes blink-caret {
-            from, to { color: transparent; }
-            50% { color: var(--text-primary); }
+            from, to { opacity: 0; }
+            50% { opacity: 1; }
         }
         
         .chatbot-input {
@@ -1674,9 +1756,16 @@
                         </div>
                     </div>
                 </div>
-                <button class="theme-toggle" id="themeToggle">
-                    <i class="fas fa-moon" id="themeIcon"></i>
-                </button>
+                 <!-- NEW: Stylish Theme Toggle -->
+                <div class="theme-switch-wrapper">
+                    <label class="theme-switch" for="themeToggle">
+                        <input type="checkbox" id="themeToggle">
+                        <span class="slider">
+                            <i class="fas fa-sun"></i>
+                            <i class="fas fa-moon"></i>
+                        </span>
+                    </label>
+                </div>
             </div>
         </div>
     </header>
@@ -1976,7 +2065,7 @@
         let tempSelectedCourse = null;
 
         // --- DOM ELEMENT VARIABLES ---
-        let themeToggle, themeIcon, accountBtn, accountMenu, accountAvatar, accountName, 
+        let themeToggle, accountBtn, accountMenu, accountAvatar, accountName, 
             accountEmail, accountFullName, accountEmailDetail, accountMemberSince, 
             accountDownloads, accountLogout, materialsGrid, materialsCount, branchFilter, 
             semesterFilter, courseFilter, typeFilter, searchFilter, resetFilters, 
@@ -1997,20 +2086,14 @@
         function initTheme() {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
-            updateThemeIcon(savedTheme);
-            themeToggle.addEventListener('click', toggleTheme);
+            themeToggle.checked = savedTheme === 'dark';
+            themeToggle.addEventListener('change', toggleTheme);
         }
         
-        function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        function toggleTheme(e) {
+            const newTheme = e.target.checked ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
-            updateThemeIcon(newTheme);
-        }
-        
-        function updateThemeIcon(theme) {
-            themeIcon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
         }
         
         // Toast Notifications
@@ -2342,7 +2425,7 @@
                     messageDiv.innerHTML = `<div class="spinner"></div>`; 
                     messageDiv.classList.add('loading');
                 } else {
-                    const parsedText = parseResponseForCodeBlocks(text);
+                    const parsedText = parseResponse(text);
                     messageDiv.innerHTML = parsedText;
                     messageDiv.querySelectorAll('pre code').forEach((block) => {
                         hljs.highlightElement(block);
@@ -2355,36 +2438,29 @@
                 return messageDiv;
             }
         
-            function parseResponseForCodeBlocks(text) {
-                const codeBlockRegex = /```(.*?)```/gs;
-                let lastIndex = 0;
-                let result = '';
-                let match;
-                
-                while ((match = codeBlockRegex.exec(text)) !== null) {
-                    result += text.substring(lastIndex, match.index).replace(/\n/g, '<br>');
-                    
-                    const codeContent = match[1].trim();
-                    let lang = '';
-                    const firstLineEnd = codeContent.indexOf('\n');
-                    if (firstLineEnd !== -1) {
-                        lang = codeContent.substring(0, firstLineEnd).trim();
-                        if (lang.length > 0) {
-                            const actualCode = codeContent.substring(firstLineEnd).trim();
-                            result += `<div class="code-block"><pre><code class="language-${lang}">${actualCode}</code></pre></div>`;
-                        } else {
-                            result += `<div class="code-block"><pre><code>${codeContent}</code></pre></div>`;
-                        }
-                    } else {
-                        result += `<div class="code-block"><pre><code>${codeContent}</code></pre></div>`;
-                    }
-                    
-                    lastIndex = codeBlockRegex.lastIndex;
-                }
-                
-                result += text.substring(lastIndex).replace(/\n/g, '<br>');
-                
-                return result;
+            // IMPROVED: Function to parse markdown-like syntax for rich content
+            function parseResponse(text) {
+                 // Convert markdown for code blocks ```lang\ncode```
+                let html = text.replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
+                    const language = lang || 'plaintext';
+                    const escapedCode = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    return `<div class="code-block"><pre><code class="language-${language}">${escapedCode.trim()}</code></pre></div>`;
+                });
+
+                // Convert markdown for headings, bold, and lists
+                html = html
+                    .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                    .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                    .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                    .replace(/^\s*\n\*/gm, '<ul>\n*')
+                    .replace(/^(\*.+)\s*\n([^*])/gm, '$1\n</ul>\n\n$2')
+                    .replace(/^\*(.+)/gm, '<li>$1</li>')
+                    .replace(/<\/ul>\n<ul>/g, '');
+
+
+                return html.trim();
             }
 
             // Function to stream the response text
@@ -2394,10 +2470,10 @@
                 let fullText = '';
                 isTyping = true;
                 
-                // Keep the typing cursor visible until done
                 const typingSpan = document.createElement('span');
                 typingSpan.classList.add('typing');
                 element.appendChild(typingSpan);
+                element.scrollIntoView({ behavior: 'smooth', block: 'end' });
 
                 while (true) {
                     const { done, value } = await reader.read();
@@ -2407,28 +2483,24 @@
                     fullText += chunk;
                     
                     // Update the element's content with the new text and re-highlight
-                    const parsed = parseResponseForCodeBlocks(fullText);
-                    element.innerHTML = parsed;
+                    const parsedHtml = parseResponse(fullText);
+                    element.innerHTML = parsedHtml;
                     
                     element.querySelectorAll('pre code').forEach((block) => {
-                        hljs.highlightElement(block);
+                        // Check if block has been highlighted already to avoid re-processing
+                        if (!block.dataset.highlighted) {
+                            hljs.highlightElement(block);
+                            block.dataset.highlighted = 'true';
+                        }
                     });
-
-                    // Re-add the typing cursor at the end of the last block or message
-                    const lastCodeBlock = element.querySelector('.code-block:last-of-type pre code');
-                    if (lastCodeBlock) {
-                        lastCodeBlock.appendChild(typingSpan);
-                    } else {
-                        element.appendChild(typingSpan);
-                    }
                     
+                    element.appendChild(typingSpan);
                     chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
                 }
                 
                 isTyping = false;
-                typingSpan.remove(); // Remove the typing cursor
+                typingSpan.remove();
             
-                // Final update of chat history with the complete response
                 chatHistory.push({ role: "assistant", content: fullText.trim() });
                 if (chatHistory.length > MAX_HISTORY) {
                     chatHistory = chatHistory.slice(chatHistory.length - MAX_HISTORY);
@@ -2437,7 +2509,7 @@
 
             function initializeChat() {
                 chatbotMessages.innerHTML = '';
-                chatHistory = [{ role: "system", content: "You are Gemini, a helpful AI assistant built by Google. The user is a student at a college named IB STUDIOZ. Your goal is to answer their queries accurately, without hallucination. You have a deep understanding of academic subjects in Computer Science, IT, and related fields. When providing code, use markdown. Your responses should be accurate, concise, and helpful." }, { role: "assistant", content: "Hello! I'm IB, your AI study assistant. I was created by AJ COMPANY. How can I help you today?" }];
+                chatHistory = [{ role: "system", content: "You are Gemini, a helpful AI assistant built by Google. The user is a student at a college named IB STUDIOZ. Your goal is to answer their queries accurately, without hallucination. You have a deep understanding of academic subjects in Computer Science, IT, and related fields. Format your responses using markdown (e.g., # Heading, **bold**, *italic*, ```lang\ncode```). Your responses should be accurate, concise, and helpful." }, { role: "assistant", content: "Hello! I'm IB, your AI study assistant. I was created by AJ COMPANY. How can I help you today?" }];
                 addMessage(chatHistory[1].content, 'bot');
             }
         
@@ -2469,7 +2541,7 @@
                         throw new Error(errorData.error || `API error: ${response.status}`);
                     }
                     
-                    loadingEl.remove();
+                    loadingEl.parentElement.remove(); // remove the whole row
                     
                     // Stream the response directly to the message element
                     const messageEl = addMessage('', 'bot');
@@ -2477,7 +2549,7 @@
 
                 } catch (error) {
                     console.error('Chatbot error:', error);
-                    loadingEl.remove();
+                    loadingEl.parentElement.remove();
                     addMessage(`Error: ${error.message}. Please try again.`, 'bot');
                 } finally {
                     chatbotInput.disabled = false;
@@ -2579,7 +2651,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             // First, cache all DOM elements now that the document is ready.
             themeToggle = document.getElementById('themeToggle');
-            themeIcon = document.getElementById('themeIcon');
             accountBtn = document.getElementById('accountBtn');
             accountMenu = document.getElementById('accountMenu');
             accountAvatar = document.getElementById('accountAvatar');
