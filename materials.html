@@ -2500,171 +2500,149 @@
             branchSemesterCourseModal.classList.remove('active');
         }
         
-        // Chatbot with Google Apps Script Integration
-        function initChatbot() {
-            // Configuration
-            const API_URL = "https://script.google.com/macros/s/AKfycbyaB4eUhTYg6a0p8h2A53UBT9FcoIHowgj_844omrQrYK9gTFdFzcgFj92H51ldhcvq/exec";
-            const MAX_HISTORY = 10; // Keep last 10 messages to limit context
-            
-            // State
-            let chatHistory = [
-                {
-                    role: "system",
-                    content: "You are IB STUDIOZ Assistant, an AI tutor for engineering students. Be friendly, concise, explain step-by-step and suggest resources when relevant. If you cannot answer, admit it and point to a reference."
-                },
-                {
-                    role: "assistant",
-                    content: "Hello! I'm your AI study assistant. Ask me anything about engineering, programming, math, or study strategies."
-                }
-            ];
-            
-            // DOM Elements
-            const chatbotToggle = document.getElementById('chatbotToggle');
-            const chatbotContainer = document.getElementById('chatbotContainer');
-            const chatbotClose = document.getElementById('chatbotClose');
-            const chatbotMessages = document.getElementById('chatbotMessages');
-            const chatbotInput = document.getElementById('chatbotInput');
-            const chatbotSend = document.getElementById('chatbotSend');
-            
-            // Add reset button to header
-            const chatbotReset = document.createElement('button');
-            chatbotReset.id = 'chatbotReset';
-            chatbotReset.className = 'chatbot-reset';
-            chatbotReset.title = 'Clear chat';
-            chatbotReset.innerHTML = '<i class="fas fa-redo"></i>';
-            document.querySelector('.chatbot-header').appendChild(chatbotReset);
-            
-            // Helper: add message to UI
-            function addMessage(text, sender, isLoading = false) {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${sender}`;
-                if (isLoading) {
-                    messageDiv.innerHTML = `<div class="spinner"></div> Thinking...`;
-                } else {
-                    // Sanitize text to prevent XSS
-                    const safeText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                    messageDiv.innerHTML = safeText.replace(/\n/g, "<br>");
-                }
-                chatbotMessages.appendChild(messageDiv);
-                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-                return messageDiv;
-            }
-            
-            // Helper: trim history to max length
-            function trimHistory() {
-                if (chatHistory.length > MAX_HISTORY + 2) { // +2 for system and first assistant message
-                    const system = chatHistory[0];
-                    const firstAssistant = chatHistory[1];
-                    const rest = chatHistory.slice(2);
-                    const tail = rest.slice(-MAX_HISTORY);
-                    chatHistory = [system, firstAssistant, ...tail];
-                }
-            }
-            
-            // Send message to API
-            async function sendMessage() {
-                const message = chatbotInput.value.trim();
-                if (!message) return;
-                
-                // Disable input while processing
-                chatbotInput.disabled = true;
-                chatbotSend.disabled = true;
-                
-                // Add user message to UI and history
-                addMessage(message, 'user');
-                chatHistory.push({ role: "user", content: message });
-                trimHistory();
-                chatbotInput.value = '';
-                
-                // Add loading indicator
-                const loadingEl = addMessage('', 'bot', true);
-                
-                try {
-                    // Prepare payload for Apps Script
-                    const payload = {
-                        history: chatHistory
-                    };
-                    
-                    // Send to Google Apps Script
-                    const response = await fetch(API_URL, {
-                        method: 'POST',
-                        body: JSON.stringify(payload),
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error(`API error: ${response.status}`);
-                    }
-                    
-                    const data = await response.json();
-                    
-                    // Extract response text
-                    const botResponse = data.response || "I'm sorry, I couldn't generate a response.";
-                    
-                    // Remove loading indicator
-                    loadingEl.remove();
-                    
-                    // Add bot response to UI and history
-                    addMessage(botResponse, 'bot');
-                    chatHistory.push({ role: "assistant", content: botResponse });
-                    trimHistory();
-                    
-                } catch (error) {
-                    console.error('Chatbot error:', error);
-                    loadingEl.remove();
-                    addMessage("I'm sorry, I encountered an error. Please try again later.", 'bot');
-                } finally {
-                    // Re-enable input
-                    chatbotInput.disabled = false;
-                    chatbotSend.disabled = false;
-                    chatbotInput.focus();
-                }
-            }
-            
-            // Reset chat
-            function resetChat() {
-                chatHistory = [
-                    {
-                        role: "system",
-                        content: "You are IB STUDIOZ Assistant, an AI tutor for engineering students. Be friendly, concise, explain step-by-step and suggest resources when relevant. If you cannot answer, admit it and point to a reference."
-                    },
-                    {
-                        role: "assistant",
-                        content: "Hello! I'm your AI study assistant. Ask me anything about engineering, programming, math, or study strategies."
-                    }
-                ];
-                chatbotMessages.innerHTML = '';
-                addMessage(chatHistory[1].content, 'bot');
-                chatbotInput.focus();
-            }
-            
-            // Event listeners
-            chatbotToggle.addEventListener('click', () => {
-                chatbotContainer.classList.toggle('active');
-                if (chatbotContainer.classList.contains('active')) {
-                    chatbotInput.focus();
-                }
-            });
-            
-            chatbotClose.addEventListener('click', () => {
-                chatbotContainer.classList.remove('active');
-            });
-            
-            chatbotSend.addEventListener('click', sendMessage);
-            
-            chatbotInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') sendMessage();
-            });
-            
-            chatbotReset.addEventListener('click', resetChat);
-            
-            // Initialize with welcome message if empty
-            if (chatbotMessages.children.length === 0) {
-                addMessage(chatHistory[1].content, 'bot');
-            }
+        // =====================================================================
+// Chatbot with Vercel Serverless Function Backend
+// =====================================================================
+function initChatbot() {
+    // Configuration
+    const API_URL = "/api/chat"; // This relative URL points to your Vercel function
+    const MAX_HISTORY = 12; // Keeps the conversation context from getting too long
+
+    // State
+    let chatHistory = [];
+
+    // DOM Elements
+    const chatbotToggle = document.getElementById('chatbotToggle');
+    const chatbotContainer = document.getElementById('chatbotContainer');
+    const chatbotClose = document.getElementById('chatbotClose');
+    const chatbotMessages = document.getElementById('chatbotMessages');
+    const chatbotInput = document.getElementById('chatbotInput');
+    const chatbotSend = document.getElementById('chatbotSend');
+    const chatbotReset = document.getElementById('chatbotReset');
+
+    // Helper: Add a message to the chat window UI
+    function addMessage(text, sender, isLoading = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}`;
+        if (isLoading) {
+            messageDiv.innerHTML = `<div class="spinner"></div> Thinking...`;
+        } else {
+            // Sanitize text to prevent HTML injection and format newlines
+            const safeText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            messageDiv.innerHTML = safeText.replace(/\n/g, "<br>");
         }
+        chatbotMessages.appendChild(messageDiv);
+        // Scroll to the latest message
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        return messageDiv;
+    }
+
+    // Helper: Trim chat history to prevent sending an overly large payload
+    function trimHistory() {
+        if (chatHistory.length > MAX_HISTORY) {
+            // Keep the system prompt and the most recent conversations
+            const systemPrompt = chatHistory[0];
+            const recentHistory = chatHistory.slice(-MAX_HISTORY);
+            chatHistory = [systemPrompt, ...recentHistory];
+        }
+    }
+
+    // Send message to the backend API
+    async function sendMessage() {
+        const message = chatbotInput.value.trim();
+        if (!message) return;
+
+        // Disable input while processing
+        chatbotInput.disabled = true;
+        chatbotSend.disabled = true;
+
+        // Add user's message to UI and history
+        addMessage(message, 'user');
+        chatHistory.push({ role: "user", content: message });
+        trimHistory();
+        chatbotInput.value = '';
+
+        // Show a loading indicator
+        const loadingEl = addMessage('', 'bot', true);
+
+        try {
+            // Fetch response from our own backend API endpoint
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ history: chatHistory })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.details || errorData.error || "An API error occurred.");
+            }
+
+            const data = await response.json();
+            const botResponse = data.response || "I couldn't generate a response at the moment.";
+
+            // Remove loading indicator
+            loadingEl.remove();
+
+            // Add bot's response to UI and history
+            addMessage(botResponse, 'bot');
+            chatHistory.push({ role: "assistant", content: botResponse });
+            trimHistory();
+
+        } catch (error) {
+            console.error('Chatbot error:', error);
+            loadingEl.remove();
+            addMessage(`I'm sorry, I encountered an error: ${error.message}. Please try again later.`, 'bot');
+        } finally {
+            // Re-enable input
+            chatbotInput.disabled = false;
+            chatbotSend.disabled = false;
+            chatbotInput.focus();
+        }
+    }
+
+    // Reset the chat to its initial state
+    function resetChat() {
+        chatbotMessages.innerHTML = '';
+
+        const initialBotMessage = "Hello! I'm your AI study assistant. I can help you with:\n- Answering academic questions\n- Explaining complex concepts\n- Providing study tips\n- Helping with assignments\n- Suggesting learning resources\n\nHow can I assist you today?";
+
+        addMessage(initialBotMessage, 'bot');
+
+        // Initialize the conversation history with a system prompt for the AI
+        chatHistory = [
+            {
+                role: "system",
+                content: "You are IB STUDIOZ Assistant, a friendly and helpful AI tutor for engineering students. Your goal is to provide clear, concise, and accurate answers. Explain complex topics step-by-step. If you don't know an answer, say so and suggest where the user might find it. Keep your personality encouraging and supportive."
+            },
+            {
+                role: "assistant",
+                content: initialBotMessage
+            }
+        ];
+        chatbotInput.focus();
+    }
+
+    // --- Event Listeners ---
+    chatbotToggle.addEventListener('click', () => {
+        chatbotContainer.classList.toggle('active');
+        if (chatbotContainer.classList.contains('active')) {
+            chatbotInput.focus();
+        }
+    });
+
+    chatbotClose.addEventListener('click', () => chatbotContainer.classList.remove('active'));
+    chatbotSend.addEventListener('click', sendMessage);
+    chatbotInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
+    });
+    chatbotReset.addEventListener('click', resetChat);
+
+    // Initialize the chat when the script loads
+    resetChat();
+}
+                    
+            
         
         // Account Management
         function initAccount() {
