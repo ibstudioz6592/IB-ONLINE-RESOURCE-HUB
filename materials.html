@@ -45,22 +45,7 @@
             --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
             --radius: 0.75rem;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            
-            /* Branch Colors */
-            --cse-color: #3b82f6;
-            --it-color: #8b5cf6;
-            --ece-color: #10b981;
-            --eee-color: #f59e0b;
-            --mech-color: #ef4444;
-            --aiml-color: #06b6d4;
-            --civil-color: #0ea5e9;
-            --bme-color: #ec4899;
-            --ft-color: #8b5cf6;
-            --mct-color: #f97316;
-            --csd-color: #a855f7;
-            --ads-color: #0ea5e9;
-            --efe-color: #10b981;
-            --exe-color: #8b5cf6;
+            --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
         }
         
         [data-theme="dark"] {
@@ -172,7 +157,7 @@
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 1.5rem; /* Increased gap */
+            gap: 1.5rem;
         }
         
         .nav-links {
@@ -274,7 +259,7 @@
             box-shadow: var(--shadow-lg);
         }
 
-        /* NEW: Stylish Theme Toggle */
+        /* Stylish Theme Toggle */
         .theme-switch-wrapper {
             display: flex;
             align-items: center;
@@ -362,7 +347,6 @@
             transform: translateY(0);
         }
 
-        /* Updated: Responsive account menu */
         @media (max-width: 768px) {
             .account-menu {
                 position: fixed;
@@ -538,7 +522,6 @@
             justify-content: center;
         }
         
-        /* Profile Edit Form */
         .profile-edit-form {
             padding: 1rem;
             border-bottom: 1px solid var(--border);
@@ -584,14 +567,12 @@
             justify-content: flex-end;
         }
         
-        /* Main Container */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
         
-        /* Welcome Section */
         .welcome-section {
             margin-bottom: 2rem;
         }
@@ -635,7 +616,6 @@
             border-radius: 50%;
         }
         
-        /* Filter Section */
         .filter-section {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -695,7 +675,6 @@
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
         
-        /* Branch-Semester-Course Selection Display */
         .selection-display {
             display: flex;
             align-items: center;
@@ -746,7 +725,6 @@
             background: var(--primary-dark);
         }
         
-        /* Materials Grid */
         .materials-header {
             display: flex;
             justify-content: space-between;
@@ -892,7 +870,6 @@
             border-color: var(--warning);
         }
         
-        /* Empty State */
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
@@ -917,7 +894,6 @@
             margin: 0 auto;
         }
         
-        /* Loading State */
         .loading {
             display: flex;
             justify-content: center;
@@ -939,7 +915,6 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* Branch-Semester-Course Selection Modal */
         .branch-semester-course-modal {
             position: fixed;
             top: 0;
@@ -1333,7 +1308,6 @@
             border-bottom-left-radius: 0.25rem;
         }
         
-        /* NEW: Enriched Bot Message Styling */
         .message.bot h1, .message.bot h2, .message.bot h3 {
             color: var(--primary);
             font-weight: 700;
@@ -1353,26 +1327,60 @@
             margin-bottom: 0.25rem;
         }
 
-        /* NEW: Code block styling */
-        .message.bot .code-block {
-            background: #282c34; /* Atom One Dark background */
+        .message.bot code:not(pre > code) {
+            font-family: var(--font-mono);
+            background-color: var(--border);
+            padding: 0.2em 0.4em;
+            margin: 0;
+            font-size: 85%;
+            border-radius: 6px;
+        }
+
+        .message.bot .code-block-wrapper {
+            margin: 0.75rem 0;
+        }
+        .message.bot .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #3a404d;
+            color: #dcdfe4;
+            padding: 0.5rem 1rem;
+            border-top-left-radius: var(--radius);
+            border-top-right-radius: var(--radius);
+            font-size: 0.8rem;
+        }
+        .message.bot .code-header span {
+            font-family: var(--font-mono);
+            text-transform: lowercase;
+        }
+        .message.bot .copy-btn {
+            background: none;
+            border: none;
+            color: #dcdfe4;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .message.bot .copy-btn:hover {
+            color: white;
+        }
+        .message.bot .code-body {
+            background: #282c34;
             color: #abb2bf;
             padding: 1rem;
-            border-radius: var(--radius);
+            border-bottom-left-radius: var(--radius);
+            border-bottom-right-radius: var(--radius);
             font-size: 0.875rem;
-            margin: 0.75rem 0;
             overflow-x: auto;
-            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-family: var(--font-mono);
         }
-        .message.bot .code-block pre {
+        .message.bot .code-body pre {
             margin: 0;
             white-space: pre;
         }
-        .message.bot .code-block code {
-            font-family: inherit;
-        }
 
-        /* NEW: Loading spinner */
         .message.loading {
             display: flex;
             align-items: center;
@@ -1386,7 +1394,6 @@
             border-top-color: var(--text-muted);
         }
         
-        /* NEW: Typing effect */
         .typing::after {
             content: '▍';
             animation: blink-caret .75s step-end infinite;
@@ -1441,7 +1448,6 @@
             cursor: not-allowed;
         }
         
-        /* Toast */
         .toast {
             position: fixed;
             bottom: 2rem;
@@ -1483,19 +1489,10 @@
             font-size: 1.25rem;
         }
         
-        .toast.success .toast-icon {
-            color: var(--success);
-        }
+        .toast.success .toast-icon { color: var(--success); }
+        .toast.error .toast-icon { color: var(--danger); }
+        .toast.info .toast-icon { color: var(--info); }
         
-        .toast.error .toast-icon {
-            color: var(--danger);
-        }
-        
-        .toast.info .toast-icon {
-            color: var(--info);
-        }
-        
-        /* Modal for Account */
         .account-modal {
             position: fixed;
             top: 0;
@@ -1552,7 +1549,6 @@
             color: var(--text-primary);
         }
         
-        /* Responsive Styles */
         @media (max-width: 768px) {
             .header-content { padding: 1rem; }
             .container { padding: 1rem; }
@@ -1640,123 +1636,7 @@
                         <i class="fas fa-user"></i>
                         <span>Account</span>
                     </button>
-                    <div class="account-menu" id="accountMenu">
-                        <div class="account-header">
-                            <div class="account-avatar" id="accountAvatar">
-                                <i class="fas fa-user"></i>
-                            </div>
-                            <div class="account-info">
-                                <h3 id="accountName">Loading...</h3>
-                                <p id="accountEmail">Loading...</p>
-                                <p class="account-brand">IB STUDIOZ</p>
-                            </div>
-                            <button class="account-edit-btn" id="editProfileBtn">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </div>
-                        
-                        <div class="profile-edit-form" id="profileEditForm">
-                            <div class="form-group">
-                                <label class="form-label" for="displayNameInput">Display Name</label>
-                                <input type="text" id="displayNameInput" class="form-input" placeholder="Enter your name">
-                            </div>
-                            <div class="form-actions">
-                                <button class="btn btn-outline" id="cancelEditBtn">Cancel</button>
-                                <button class="btn btn-primary" id="saveProfileBtn">Save</button>
-                            </div>
-                        </div>
-                        
-                        <div class="account-content">
-                            <div class="account-section">
-                                <div class="account-section-title">Account Details</div>
-                                <div class="account-list">
-                                    <div class="account-item">
-                                        <div class="account-item-icon">
-                                            <i class="fas fa-user"></i>
-                                        </div>
-                                        <div class="account-item-info">
-                                            <div class="account-item-title">Full Name</div>
-                                            <div class="account-item-meta" id="accountFullName">Not set</div>
-                                        </div>
-                                    </div>
-                                    <div class="account-item">
-                                        <div class="account-item-icon">
-                                            <i class="fas fa-envelope"></i>
-                                        </div>
-                                        <div class="account-item-info">
-                                            <div class="account-item-title">Email</div>
-                                            <div class="account-item-meta" id="accountEmailDetail">Loading...</div>
-                                        </div>
-                                    </div>
-                                    <div class="account-item">
-                                        <div class="account-item-icon">
-                                            <i class="fas fa-calendar-alt"></i>
-                                        </div>
-                                        <div class="account-item-info">
-                                            <div class="account-item-title">Member Since</div>
-                                            <div class="account-item-meta" id="accountMemberSince">Loading...</div>
-                                        </div>
-                                    </div>
-                                    <div class="account-item">
-                                        <div class="account-item-icon">
-                                            <i class="fas fa-download"></i>
-                                        </div>
-                                        <div class="account-item-info">
-                                            <div class="account-item-title">Downloads</div>
-                                            <div class="account-item-meta" id="accountDownloads">0</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="account-section">
-                                <div class="account-section-title">Downloaded Materials</div>
-                                <div class="account-list" id="downloadedMaterials">
-                                    <div class="loading">
-                                        <div class="spinner"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="account-section">
-                                <div class="account-section-title">Account Settings</div>
-                                <div class="account-list">
-                                    <div class="account-item" id="preferencesBtn">
-                                        <div class="account-item-icon">
-                                            <i class="fas fa-cog"></i>
-                                        </div>
-                                        <div class="account-item-info">
-                                            <div class="account-item-title">Preferences</div>
-                                        </div>
-                                    </div>
-                                    <div class="account-item" id="privacyBtn">
-                                        <div class="account-item-icon">
-                                            <i class="fas fa-shield-alt"></i>
-                                        </div>
-                                        <div class="account-item-info">
-                                            <div class="account-item-title">Privacy</div>
-                                        </div>
-                                    </div>
-                                    <div class="account-item" id="helpBtn">
-                                        <div class="account-item-icon">
-                                            <i class="fas fa-question-circle"></i>
-                                        </div>
-                                        <div class="account-item-info">
-                                            <div class="account-item-title">Help & Support</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="account-footer">
-                            <button class="btn btn-primary" id="accountLogout">
-                                <i class="fas fa-sign-out-alt"></i>
-                                <span>Logout</span>
-                            </button>
-                        </div>
-                    </div>
                 </div>
-                 <!-- NEW: Stylish Theme Toggle -->
                 <div class="theme-switch-wrapper">
                     <label class="theme-switch" for="themeToggle">
                         <input type="checkbox" id="themeToggle">
@@ -1835,18 +1715,6 @@
                         <option value="project">Projects</option>
                     </select>
                 </div>
-                <div class="filter-group" style="display:none;">
-                    <label class="filter-label">Branch</label>
-                    <select class="filter-select" id="branchFilter"></select>
-                </div>
-                <div class="filter-group" style="display:none;">
-                    <label class="filter-label">Semester</label>
-                    <select class="filter-select" id="semesterFilter"></select>
-                </div>
-                <div class="filter-group" style="display:none;">
-                    <label class="filter-label">Course</label>
-                    <select class="filter-select" id="courseFilter"></select>
-                </div>
             </div>
         </div>
         
@@ -1891,20 +1759,17 @@
             <div class="selection-content">
                 <div class="selection-step active" id="branch-step">
                     <h3 style="margin-bottom: 1rem; text-align: center;">Select Your Branch</h3>
-                    <div class="selection-grid" id="branch-options">
-                        </div>
+                    <div class="selection-grid" id="branch-options"></div>
                 </div>
                 
                 <div class="selection-step" id="semester-step">
                     <h3 style="margin-bottom: 1rem; text-align: center;">Select Your Semester</h3>
-                    <div class="selection-grid" id="semester-options">
-                        </div>
+                    <div class="selection-grid" id="semester-options"></div>
                 </div>
                 
                 <div class="selection-step" id="course-step">
                     <h3 style="margin-bottom: 1rem; text-align: center;">Select Your Course</h3>
-                    <div class="selection-grid" id="course-options">
-                        </div>
+                    <div class="selection-grid" id="course-options"></div>
                 </div>
             </div>
             
@@ -1925,13 +1790,14 @@
                 </button>
             </div>
             <div class="account-content">
-                <div class="account-header" style="border-bottom: none;">
-                    <div class="account-avatar" id="modalAccountAvatar">
-                        <i class="fas fa-user"></i>
-                    </div>
+                <div class="account-header" style="border-bottom: none; padding-bottom: 0;">
+                    <div class="account-avatar" id="modalAccountAvatar"><i class="fas fa-user"></i></div>
                     <div class="account-info">
                         <h3 id="modalAccountName">Loading...</h3>
                         <p id="modalAccountEmail">Loading...</p>
+                        <button class="btn btn-outline" id="editProfileBtnModal" style="margin-top: 1rem;">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </button>
                     </div>
                 </div>
                 <div class="profile-edit-form" id="modalProfileEditForm">
@@ -1945,35 +1811,44 @@
                     </div>
                 </div>
                 <div class="account-section">
+                    <div class="account-section-title">Account Details</div>
                     <div class="account-list">
                         <div class="account-item">
-                            <div class="account-item-icon">
-                                <i class="fas fa-user"></i>
-                            </div>
+                            <div class="account-item-icon"><i class="fas fa-user"></i></div>
                             <div class="account-item-info">
                                 <div class="account-item-title">Full Name</div>
                                 <div class="account-item-meta" id="modalAccountFullName">Not set</div>
                             </div>
                         </div>
                         <div class="account-item">
-                            <div class="account-item-icon">
-                                <i class="fas fa-envelope"></i>
-                            </div>
+                            <div class="account-item-icon"><i class="fas fa-envelope"></i></div>
                             <div class="account-item-info">
                                 <div class="account-item-title">Email</div>
                                 <div class="account-item-meta" id="modalAccountEmailDetail">Loading...</div>
                             </div>
                         </div>
                         <div class="account-item">
-                            <div class="account-item-icon">
-                                <i class="fas fa-calendar-alt"></i>
-                            </div>
+                            <div class="account-item-icon"><i class="fas fa-calendar-alt"></i></div>
                             <div class="account-item-info">
                                 <div class="account-item-title">Member Since</div>
                                 <div class="account-item-meta" id="modalAccountMemberSince">Loading...</div>
                             </div>
                         </div>
                     </div>
+                </div>
+                 <div class="account-section">
+                    <div class="account-section-title">Downloaded Materials</div>
+                    <div class="account-list" id="downloadedMaterialsList">
+                        <div class="empty-state" style="padding: 1rem 0;">
+                            <p class="empty-description">No downloaded materials yet.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="account-footer">
+                    <button class="btn btn-primary" id="accountLogout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -1988,21 +1863,14 @@
                 <i class="fas fa-robot"></i> IB Assistant
             </div>
             <div>
-                <button class="chatbot-reset" id="chatbotReset" title="Clear Chat">
-                    <i class="fas fa-redo"></i>
-                </button>
-                <button class="chatbot-close" id="chatbotClose">
-                    <i class="fas fa-times"></i>
-                </button>
+                <button class="chatbot-reset" id="chatbotReset" title="Clear Chat"><i class="fas fa-redo"></i></button>
+                <button class="chatbot-close" id="chatbotClose"><i class="fas fa-times"></i></button>
             </div>
         </div>
-        <div class="chatbot-messages" id="chatbotMessages">
-            </div>
+        <div class="chatbot-messages" id="chatbotMessages"></div>
         <div class="chatbot-input">
             <input type="text" id="chatbotInput" placeholder="Ask a question...">
-            <button class="chatbot-send" id="chatbotSend">
-                <i class="fas fa-paper-plane"></i>
-            </button>
+            <button class="chatbot-send" id="chatbotSend"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
     
@@ -2012,27 +1880,17 @@
     </div>
     
     <script>
-        // Academic Data
+        // --- DATA ---
         const academicData = {
             branches: {
                 "CSE": {"name":"Computer Science Engineering","color":"var(--cse-color)","icon":"fas fa-laptop-code","semesters":{"1":[{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus With MATLAB","credits":4},{"code":"U23PHY103B","name":"Engineering Physics","credits":3},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23BEE106A","name":"Basic Electrical and Electronics Engineering","credits":3},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1},{"code":"U23PHL110","name":"Engineering Physics Lab","credits":1},{"code":"U23BEEL113","name":"Basic Electrical and Electronics Engineering Lab","credits":1},{"code":"U23PPL112","name":"Python Programming Lab","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202B","name":"Discrete Mathematics","credits":4},{"code":"U23CHE204B","name":"Chemistry For Computer Science","credits":3},{"code":"U23CPR205B","name":"Programming In C","credits":3},{"code":"U23EGR207","name":"Engineering Graphics","credits":3},{"code":"U23EC203","name":"Digital Principles And System Design","credits":3},{"code":"U23CHL211","name":"Chemistry Lab","credits":1},{"code":"U23CPL212","name":"C programming Lab","credits":1},{"code":"U23TAM201","name":"Tamils And Technology","credits":1}],"3":[{"code":"U23MAT301D","name":"Probability and Statistics","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming","credits":3},{"code":"U23CS304","name":"Operating Systems","credits":3},{"code":"U23CS305","name":"Computer Information and Ethics","credits":3},{"code":"U23CS306","name":"Data Structures Lab","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Lab","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1},{"code":"Noc24-mg72","name":"NPTEL:design Thinking-A Primer","credits":1}],"4":[{"code":"U23MAT401B","name":"Numerical Methods","credits":4},{"code":"U23CS401","name":"Design And Analysis of Algorithms","credits":3},{"code":"U23CS402","name":"Software Engineering","credits":3},{"code":"U23CS403","name":"DataBase Management Systems","credits":3},{"code":"U23CS404","name":"Embedded System Design ","credits":3},{"code":"U23CS405","name":"Software Development Lab","credits":1},{"code":"U23CS403","name":"Database Management Systems Lab","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CS502","name":"Artificial Intelligence","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":" U23CS947 / U23CS903","name":"Professional Elective ","credits":3},{"code":"U23CS505","name":"Computer Networks Laboratory","credits":2},{"code":"U23CS506","name":"Artificial Intelligence and Machine Learning Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude -III","credits":1}],"6":[],"7":[],"8":[]}},
-                "IT": {"name":"Information Technology","color":"var(--it-color)","icon":"fas fa-network-wired","semesters":{"1":[{"code":"U23IT101","name":"Programming Fundamentals","credits":4},{"code":"U23IT102","name":"Discrete Mathematics","credits":4},{"code":"U23IT103","name":"Digital Systems","credits":3},{"code":"U23IT104","name":"Computer Organization","credits":3},{"code":"U23IT105","name":"Communication Skills","credits":2},{"code":"U23IT106","name":"Programming Lab","credits":1},{"code":"U23IT107","name":"Digital Systems Lab","credits":1}],"2":[{"code":"U23IT201","name":"Data Structures","credits":4},{"code":"U23IT202","name":"Database Systems","credits":4},{"code":"U23IT203","name":"Operating Systems","credits":3},{"code":"U23IT204","name":"Computer Networks","credits":3},{"code":"U23IT205","name":"Web Technologies","credits":3},{"code":"U23IT206","name":"Data Structures Lab","credits":1},{"code":"U23IT207","name":"Web Technologies Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
-                "ECE": {"name":"Electronics & Communication Engineering","color":"var(--ece-color)","icon":"fas fa-satellite-dish","semesters":{"1":[{"code":"U23EC101","name":"Basic Electronics","credits":4},{"code":"U23EC102","name":"Circuit Theory","credits":4},{"code":"U23EC103","name":"Engineering Mathematics","credits":4},{"code":"U23EC104","name":"Programming in C","credits":3},{"code":"U23EC105","name":"Communication Skills","credits":2},{"code":"U23EC106","name":"Electronics Lab","credits":1},{"code":"U23EC107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EC201","name":"Analog Electronics","credits":4},{"code":"U23EC202","name":"Digital Electronics","credits":4},{"code":"U23EC203","name":"Signals and Systems","credits":4},{"code":"U23EC204","name":"Electromagnetic Theory","credits":3},{"code":"U23EC205","name":"Data Structures","credits":3},{"code":"U23EC206","name":"Analog Electronics Lab","credits":1},{"code":"U23EC207","name":"Digital Electronics Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
-                "EEE": {"name":"Electrical & Electronics Engineering","color":"var(--eee-color)","icon":"fas fa-bolt","semesters":{"1":[{"code":"U23EE101","name":"Basic Electrical Engineering","credits":4},{"code":"U23EE102","name":"Engineering Mathematics","credits":4},{"code":"U23EE103","name":"Electronics Engineering","credits":3},{"code":"U23EE104","name":"Programming in C","credits":3},{"code":"U23EE105","name":"Communication Skills","credits":2},{"code":"U23EE106","name":"Electrical Lab","credits":1},{"code":"U23EE107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EE201","name":"Circuit Theory","credits":4},{"code":"U23EE202","name":"Electromagnetic Theory","credits":4},{"code":"U23EE203","name":"Digital Electronics","credits":4},{"code":"U23EE204","name":"Electrical Machines","credits":3},{"code":"U23EE205","name":"Data Structures","credits":3},{"code":"U23EE206","name":"Circuit Theory Lab","credits":1},{"code":"U23EE207","name":"Digital Electronics Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
-                "MECH": {"name":"Mechanical Engineering","color":"var(--mech-color)","icon":"fas fa-cogs","semesters":{"1":[{"code":"U23ME101","name":"Engineering Mechanics","credits":4},{"code":"U23ME102","name":"Engineering Graphics","credits":4},{"code":"U23ME103","name":"Engineering Mathematics","credits":4},{"code":"U23ME104","name":"Basic Electrical Engineering","credits":3},{"code":"U23ME105","name":"Communication Skills","credits":2},{"code":"U23ME106","name":"Workshop Practice","credits":1},{"code":"U23ME107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23ME201","name":"Thermodynamics","credits":4},{"code":"U23ME202","name":"Mechanics of Materials","credits":4},{"code":"U23ME203","name":"Manufacturing Technology","credits":4},{"code":"U23ME204","name":"Fluid Mechanics","credits":3},{"code":"U23ME205","name":"Computer Programming","credits":3},{"code":"U23ME206","name":"Thermodynamics Lab","credits":1},{"code":"U23ME207","name":"Manufacturing Technology Lab","credits":1}],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[]}},
-                "AIML": {"name":"AI & Machine Learning","color":"var(--aiml-color)","icon":"fas fa-brain","semesters":{"1":[{"code":"U23EG107","name":"Engineering Graphics","credits":3},{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus with MATLAB","credits":4},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23PHY103E","name":"Engineering Physics","credits":3},{"code":"U23PHL110","name":"Engineering Physics Laboratory","credits":1},{"code":"U23PPL112","name":"Python Programming Laboratory","credits":1},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202D","name":"Discrete Mathematics","credits":4},{"code":"U23BEEE206B","name":"Basics of Electrical and Electronics Engineering","credits":3},{"code":"U23CPR205","name":"Programming in C","credits":3},{"code":"U23CHE204C","name":"Applied Chemistry","credits":2},{"code":"U23EC203","name":"Digital Principles and System Design","credits":3},{"code":"U23CPL212","name":"C Programming Laboratory","credits":1},{"code":"U23CHL211","name":"Chemistry Laboratory","credits":1},{"code":"U23BEEL213B","name":"BEEE Laboratory","credits":1},{"code":"U23TAM201","name":"Tamils And Technology","credits":1}],"3":[{"code":"U23MAT301E","name":"Applied Probability and Statistics-I","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming Using Java","credits":3},{"code":"U23AML301","name":"Data Visualization","credits":3},{"code":"noc25-mg106","name":"NPTEL: Design Thinking - A Primer","credits":1},{"code":"U23CS306","name":"Data Structures Laboratory","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Using Java Laboratory","credits":1},{"code":"U23AML302","name":"Data Visualization Laboratory","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1}],"4":[{"code":"U23MAT401A","name":"Applied Probability and Statistics-II","credits":4},{"code":"U23CS403","name":"Database Management Systems","credits":3},{"code":"U23CS401","name":"Design and Analysis of Algorithms","credits":3},{"code":"U23AML401","name":"Artificial Intelligence","credits":3},{"code":"U23CSD402","name":"Operating Systems","credits":3},{"code":"U23AML402","name":"Artificial Intelligence Lab","credits":1},{"code":"U23CS405","name":"Database Management Systems Lab","credits":1},{"code":"U23GE401","name":"Soft Skills and Aptitude-II","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CSD502","name":"Software Engineering","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":"U19CS903","name":"Professional Elective - Agile Methodologies","credits":3},{"code":"U23AML501","name":"Machine Learning Laboratory","credits":2},{"code":"U23CSD504","name":"Software Development Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude -III","credits":1}],"6":[{"code":"U23CS601","name":"Computer Vision","credits":3},{"code":"U23CS602","name":"Reinforcement Learning","credits":3},{"code":"U23CS603","name":"Robotics","credits":3},{"code":"U23CS604","name":"Cyber Security","credits":3},{"code":"U23CS605","name":"Blockchain Technology","credits":3},{"code":"U23CS606","name":"Elective III","credits":3},{"code":"U23CS607","name":"Project Work II","credits":3}],"7":[{"code":"U23CS701","name":"Advanced Machine Learning","credits":3},{"code":"U23CS702","name":"AI Ethics and Governance","credits":3},{"code":"U23CS703","name":"Elective IV","credits":3},{"code":"U23CS704","name":"Project Work III","credits":3}],"8":[{"code":"U23CS801","name":"Industry Internship","credits":6},{"code":"U23CS802","name":"Project Work IV","credits":6}]}},
-                "CIVIL": {"name":"Civil Engineering","color":"var(--civil-color)","icon":"fas fa-building","semesters":{"1":[{"code":"U23CE101","name":"Engineering Mechanics","credits":4},{"code":"U23CE102","name":"Engineering Graphics","credits":4},{"code":"U23CE103","name":"Engineering Mathematics","credits":4},{"code":"U23CE104","name":"Basic Civil Engineering","credits":3},{"code":"U23CE105","name":"Communication Skills","credits":2},{"code":"U23CE106","name":"Surveying","credits":1},{"code":"U23CE107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23CE201","name":"Building Materials","credits":4},{"code":"U23CE202","name":"Structural Analysis","credits":4},{"code":"U23CE203","name":"Fluid Mechanics","credits":3},{"code":"U23CE204","name":"Surveying","credits":3},{"code":"U23CE205","name":"Computer Programming","credits":3},{"code":"U23CE206","name":"Building Materials Lab","credits":1},{"code":"U23CE207","name":"Surveying Lab","credits":1}]}},
-                "BME": {"name":"Biomedical Engineering","color":"var(--bme-color)","icon":"fas fa-heartbeat","semesters":{"1":[{"code":"U23BM101","name":"Human Anatomy","credits":4},{"code":"U23BM102","name":"Engineering Mathematics","credits":4},{"code":"U23BM103","name":"Basic Electronics","credits":3},{"code":"U23BM104","name":"Programming in C","credits":3},{"code":"U23BM105","name":"Communication Skills","credits":2},{"code":"U23BM106","name":"Human Anatomy Lab","credits":1},{"code":"U23BM107","name":"Programming Lab","credits":1}],"2":[{"code":"U23BM201","name":"Human Physiology","credits":4},{"code":"U23BM202","name":"Biochemistry","credits":4},{"code":"U23BM203","name":"Medical Electronics","credits":4},{"code":"U23BM204","name":"Biomechanics","credits":3},{"code":"U23BM205","name":"Data Structures","credits":3},{"code":"U23BM206","name":"Human Physiology Lab","credits":1},{"code":"U23BM207","name":"Medical Electronics Lab","credits":1}]}},
-                "FT": {"name":"Fashion Technology","color":"var(--ft-color)","icon":"fas fa-tshirt","semesters":{"1":[{"code":"U23FT101","name":"Fiber Science","credits":4},{"code":"U23FT102","name":"Textile Chemistry","credits":4},{"code":"U23FT103","name":"Fashion Illustration","credits":3},{"code":"U23FT104","name":"Pattern Making","credits":3},{"code":"U23FT105","name":"Communication Skills","credits":2},{"code":"U23FT106","name":"Textile Chemistry Lab","credits":1},{"code":"U23FT107","name":"Pattern Making Lab","credits":1}],"2":[{"code":"U23FT201","name":"Textile Processing","credits":4},{"code":"U23FT202","name":"Apparel Manufacturing","credits":4},{"code":"U23FT203","name":"Fashion Design","credits":4},{"code":"U23FT204","name":"Garment Construction","credits":3},{"code":"U23FT205","name":"Computer Applications","credits":3},{"code":"U23FT206","name":"Apparel Manufacturing Lab","credits":1},{"code":"U23FT207","name":"Garment Construction Lab","credits":1}]}},
-                "MCT": {"name":"Mechatronics","color":"var(--mct-color)","icon":"fas fa-robot","semesters":{"1":[{"code":"U23MT101","name":"Engineering Mechanics","credits":4},{"code":"U23MT102","name":"Engineering Graphics","credits":4},{"code":"U23MT103","name":"Engineering Mathematics","credits":4},{"code":"U23MT104","name":"Basic Electronics","credits":3},{"code":"U23MT105","name":"Communication Skills","credits":2},{"code":"U23MT106","name":"Workshop Practice","credits":1},{"code":"U23MT107","name":"Engineering Graphics Lab","credits":1}],"2":[{"code":"U23MT201","name":"Thermodynamics","credits":4},{"code":"U23MT202","name":"Mechanics of Materials","credits":4},{"code":"U23MT203","name":"Digital Electronics","credits":4},{"code":"U23MT204","name":"Fluid Mechanics","credits":3},{"code":"U23MT205","name":"Computer Programming","credits":3},{"code":"U23MT206","name":"Thermodynamics Lab","credits":1},{"code":"U23MT207","name":"Digital Electronics Lab","credits":1}]}},
-                "CSD": {"name":"Computer Science & Design","color":"var(--csd-color)","icon":"fas fa-paint-brush","semesters":{"1":[{"code":"U23CD101","name":"Design Fundamentals","credits":4},{"code":"U23CD102","name":"Programming Basics","credits":4},{"code":"U23CD103","name":"Visual Communication","credits":3},{"code":"U23CD104","name":"Mathematics for Design","credits":3},{"code":"U23CD105","name":"Communication Skills","credits":2},{"code":"U23CD106","name":"Design Studio","credits":1},{"code":"U23CD107","name":"Programming Lab","credits":1}],"2":[{"code":"U23CD201","name":"User Interface Design","credits":4},{"code":"U23CD202","name":"Data Structures","credits":4},{"code":"U23CD203","name":"Web Design","credits":4},{"code":"U23CD204","name":"Digital Illustration","credits":3},{"code":"U23CD205","name":"Human-Computer Interaction","credits":3},{"code":"U23CD206","name":"UI Design Lab","credits":1},{"code":"U23CD207","name":"Web Design Lab","credits":1}]}},
-                "ADS": {"name":"AI & Data Science","color":"var(--ads-color)","icon":"fas fa-database","semesters":{"1":[{"code":"U23DS101","name":"Programming Fundamentals","credits":4},{"code":"U23DS102","name":"Linear Algebra","credits":4},{"code":"U23DS103","name":"Statistics Basics","credits":3},{"code":"U23DS104","name":"Computational Thinking","credits":3},{"code":"U23DS105","name":"Communication Skills","credits":2},{"code":"U23DS106","name":"Programming Lab","credits":1},{"code":"U23DS107","name":"Statistics Lab","credits":1}],"2":[{"code":"U23DS201","name":"Data Structures","credits":4},{"code":"U23DS202","name":"Probability and Statistics","credits":4},{"code":"U23DS203","name":"Database Systems","credits":4},{"code":"U23DS204","name":"Data Visualization","credits":3},{"code":"U23DS205","name":"Python Programming","credits":3},{"code":"U23DS206","name":"Data Structures Lab","credits":1},{"code":"U23DS207","name":"Database Lab","credits":1}]}},
-                "EFE": {"name":"Electrical & Computer Engineering","color":"var(--efe-color)","icon":"fas fa-microchip","semesters":{"1":[{"code":"U23EF101","name":"Circuit Theory","credits":4},{"code":"U23EF102","name":"Programming Fundamentals","credits":4},{"code":"U23EF103","name":"Digital Electronics","credits":3},{"code":"U23EF104","name":"Engineering Mathematics","credits":3},{"code":"U23EF105","name":"Communication Skills","credits":2},{"code":"U23EF106","name":"Circuit Theory Lab","credits":1},{"code":"U23EF107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EF201","name":"Signals and Systems","credits":4},{"code":"U23EF202","name":"Data Structures","credits":4},{"code":"U23EF203","name":"Analog Electronics","credits":4},{"code":"U23EF204","name":"Electromagnetic Theory","credits":3},{"code":"U23EF205","name":"Computer Organization","credits":3},{"code":"U23EF206","name":"Analog Electronics Lab","credits":1},{"code":"U23EF207","name":"Data Structures Lab","credits":1}]}},
-                "EXE": {"name":"Electronics & Computer Engineering","color":"var(--exe-color)","icon":"fas fa-desktop","semesters":{"1":[{"code":"U23EX101","name":"Basic Electronics","credits":4},{"code":"U23EX102","name":"Programming Fundamentals","credits":4},{"code":"U23EX103","name":"Digital Logic Design","credits":3},{"code":"U23EX104","name":"Engineering Mathematics","credits":3},{"code":"U23EX105","name":"Communication Skills","credits":2},{"code":"U23EX106","name":"Electronics Lab","credits":1},{"code":"U23EX107","name":"Programming Lab","credits":1}],"2":[{"code":"U23EX201","name":"Data Structures","credits":4},{"code":"U23EX202","name":"Analog Electronics","credits":4},{"code":"U23EX203","name":"Computer Organization","credits":4},{"code":"U23EX204","name":"Signals and Systems","credits":3},{"code":"U23EX205","name":"Database Systems","credits":3},{"code":"U23EX206","name":"Analog Electronics Lab","credits":1},{"code":"U23EX207","name":"Data Structures Lab","credits":1}]}}
+                "IT": {"name":"Information Technology","color":"var(--it-color)","icon":"fas fa-network-wired","semesters":{"1":[],"2":[]}},
+                "ECE": {"name":"Electronics & Communication","color":"var(--ece-color)","icon":"fas fa-satellite-dish","semesters":{"1":[],"2":[]}},
+                "EEE": {"name":"Electrical & Electronics","color":"var(--eee-color)","icon":"fas fa-bolt","semesters":{"1":[],"2":[]}},
+                "MECH": {"name":"Mechanical Engineering","color":"var(--mech-color)","icon":"fas fa-cogs","semesters":{"1":[],"2":[]}},
+                "AIML": {"name":"AI & Machine Learning","color":"var(--aiml-color)","icon":"fas fa-brain","semesters":{"1":[{"code":"U23EG107","name":"Engineering Graphics","credits":3},{"code":"U23ENG101A","name":"Communication Skills in English","credits":3},{"code":"U23MAT102A","name":"Linear Algebra and Calculus with MATLAB","credits":4},{"code":"U23PPR105","name":"Problem Solving using Python Programming","credits":3},{"code":"U23PHY103E","name":"Engineering Physics","credits":3},{"code":"U23PHL110","name":"Engineering Physics Laboratory","credits":1},{"code":"U23PPL112","name":"Python Programming Laboratory","credits":1},{"code":"U23TAM101","name":"Heritage of Tamils","credits":1}],"2":[{"code":"U23ENG201A","name":"Technical English","credits":2},{"code":"U23MAT202D","name":"Discrete Mathematics","credits":4},{"code":"U23BEEE206B","name":"Basics of Electrical and Electronics Engineering","credits":3},{"code":"U23CPR205","name":"Programming in C","credits":3},{"code":"U23CHE204C","name":"Applied Chemistry","credits":2},{"code":"U23EC203","name":"Digital Principles and System Design","credits":3},{"code":"U23CPL212","name":"C Programming Laboratory","credits":1},{"code":"U23CHL211","name":"Chemistry Laboratory","credits":1},{"code":"U23BEEL213B","name":"BEEE Laboratory","credits":1},{"code":"U23TAM201","name":"Tamils And Technology","credits":1}],"3":[{"code":"U23MAT301E","name":"Applied Probability and Statistics-I","credits":4},{"code":"U23CS301","name":"Data Structures","credits":3},{"code":"U23CS302","name":"Computer Architecture","credits":3},{"code":"U23CS303","name":"Object Oriented Programming Using Java","credits":3},{"code":"U23AML301","name":"Data Visualization","credits":3},{"code":"noc25-mg106","name":"NPTEL: Design Thinking - A Primer","credits":1},{"code":"U23CS306","name":"Data Structures Laboratory","credits":1},{"code":"U23CS307","name":"Object Oriented Programming Using Java Laboratory","credits":1},{"code":"U23AML302","name":"Data Visualization Laboratory","credits":1},{"code":"U23GE301","name":"Soft Skills and Aptitude-I","credits":1}],"4":[{"code":"U23MAT401A","name":"Applied Probability and Statistics-II","credits":4},{"code":"U23CS403","name":"Database Management Systems","credits":3},{"code":"U23CS401","name":"Design and Analysis of Algorithms","credits":3},{"code":"U23AML401","name":"Artificial Intelligence","credits":3},{"code":"U23CSD402","name":"Operating Systems","credits":3},{"code":"U23AML402","name":"Artificial Intelligence Lab","credits":1},{"code":"U23CS405","name":"Database Management Systems Lab","credits":1},{"code":"U23GE401","name":"Soft Skills and Aptitude-II","credits":1}],"5":[{"code":"U23CS504","name":"Machine Learning","credits":3},{"code":"U23CS501","name":"Computer Networks","credits":3},{"code":"U23CSD502","name":"Software Engineering","credits":3},{"code":"U23CS503","name":"Theory of Computation","credits":3},{"code":"noc25-cs135","name":"Elective NPTEL","credits":3},{"code":"U19CS903","name":"Professional Elective - Agile Methodologies","credits":3},{"code":"U23AML501","name":"Machine Learning Laboratory","credits":2},{"code":"U23CSD504","name":"Software Development Laboratory","credits":1},{"code":"U23GE501","name":"Soft Skills and Aptitude -III","credits":1}],"6":[],"7":[],"8":[]}}
             }
         };
-        
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDCmvA9sFCSc5r4ZuFUJuGdO1LDoW7rKao",
             authDomain: "student-portal-free.firebaseapp.com",
@@ -2042,146 +1900,168 @@
             appId: "1:272865877510:web:0875a2502ae55bbf9ead87"
         };
         
-        // Initialize Firebase
+        // --- FIREBASE INITIALIZATION ---
         try {
             firebase.initializeApp(firebaseConfig);
-            console.log("Firebase initialized successfully");
         } catch (error) {
             console.error("Firebase initialization error:", error);
-            showToast("Failed to initialize application. Please refresh the page.", "error");
+            showToast("Failed to initialize application. Please refresh.", "error");
         }
-        
         const auth = firebase.auth();
         const db = firebase.firestore();
         const storage = firebase.storage();
         
-        // --- GLOBAL VARIABLES ---
+        // --- GLOBAL STATE ---
         let currentUser = null;
         let materials = [];
         let filteredMaterials = [];
-        let downloadedMaterials = [];
-        let tempSelectedBranch = null;
-        let tempSelectedSemester = null;
-        let tempSelectedCourse = null;
+        let tempSelectedBranch = null, tempSelectedSemester = null, tempSelectedCourse = null;
+        let domElements = {};
 
-        // --- DOM ELEMENT VARIABLES ---
-        let themeToggle, accountBtn, accountMenu, accountAvatar, accountName, 
-            accountEmail, accountFullName, accountEmailDetail, accountMemberSince, 
-            accountDownloads, accountLogout, materialsGrid, materialsCount, branchFilter, 
-            semesterFilter, courseFilter, typeFilter, searchFilter, resetFilters, 
-            advancedFilterBtn, downloadedMaterialsList, chatbotToggle, chatbotContainer, 
-            chatbotMessages, chatbotInput, chatbotSend, chatbotClose, chatbotReset, toast, toastMessage, 
-            editProfileBtn, profileEditForm, displayNameInput, saveProfileBtn, cancelEditBtn, 
-            preferencesBtn, privacyBtn, helpBtn, branchSemesterCourseModal, selectionModalClose, 
-            prevStepBtn, nextStepBtn, finishSelectionBtn, branchStep, semesterStep, courseStep, 
-            branchOptions, semesterOptions, courseOptions, stepIndicators, selectionDisplay, 
-            selectedBranchDisplay, selectedSemesterDisplay, selectedCourseDisplay, changeSelectionBtn,
-            accountDetailsModal, closeAccountModal, modalAccountAvatar, modalAccountName, modalAccountEmail,
-            modalProfileEditForm, modalDisplayNameInput, modalSaveProfileBtn, modalCancelEditBtn,
-            modalAccountFullName, modalAccountEmailDetail, modalAccountMemberSince;
-        
-        // --- FUNCTIONS ---
-        
-        // Theme Management
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            themeToggle.checked = savedTheme === 'dark';
-            themeToggle.addEventListener('change', toggleTheme);
+        // --- GLOBAL HELPER FUNCTIONS ---
+        function copyCode(button) {
+            const codeBlockWrapper = button.closest('.code-block-wrapper');
+            const code = codeBlockWrapper.querySelector('pre code');
+            navigator.clipboard.writeText(code.innerText).then(() => {
+                button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                setTimeout(() => {
+                    button.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                }, 2000);
+            });
         }
-        
-        function toggleTheme(e) {
-            const newTheme = e.target.checked ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-        }
-        
-        // Toast Notifications
+
         function showToast(message, type = 'success') {
-            toastMessage.textContent = message;
-            toast.className = `toast ${type} show`;
-            const icon = toast.querySelector('.toast-icon');
+            domElements.toastMessage.textContent = message;
+            domElements.toast.className = `toast ${type} show`;
+            const icon = domElements.toast.querySelector('.toast-icon');
             icon.className = `toast-icon fas ${
                 type === 'success' ? 'fa-check-circle' :
                 type === 'error' ? 'fa-exclamation-circle' :
                 'fa-info-circle'
             }`;
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-        
-        // Filter Logic
-        function initFilters() {
-            typeFilter.addEventListener('change', applyFilters);
-            searchFilter.addEventListener('input', applyFilters);
-            resetFilters.addEventListener('click', resetAllFilters);
-            advancedFilterBtn.addEventListener('click', () => {
-                resetSelectionModal();
-                branchSemesterCourseModal.classList.add('active');
-            });
-        }
-        
-        function applyFilters() {
-            const branch = branchFilter.value;
-            const semester = semesterFilter.value;
-            const course = courseFilter.value;
-            const type = typeFilter.value;
-            const search = searchFilter.value.toLowerCase();
-            
-            filteredMaterials = materials.filter(material => {
-                const matchesBranch = !branch || material.branch === branch;
-                const matchesSemester = !semester || material.semester === semester;
-                const matchesCourse = !course || (material.courseCode && material.courseCode === course);
-                const matchesType = !type || material.type === type;
-                const matchesSearch = !search || 
-                                      (material.title && material.title.toLowerCase().includes(search)) || 
-                                      (material.description && material.description.toLowerCase().includes(search));
-                return matchesBranch && matchesSemester && matchesCourse && matchesType && matchesSearch;
-            });
-            renderMaterials();
-        }
-        
-        function resetAllFilters() {
-            branchFilter.value = '';
-            semesterFilter.value = '';
-            courseFilter.innerHTML = '';
-            typeFilter.value = '';
-            searchFilter.value = '';
-            selectionDisplay.style.display = 'none';
-            applyFilters();
-            showToast('Filters have been reset', 'info');
-        }
-        
-        // Material Loading & Rendering
-        function loadMaterials() {
-            if (!currentUser) return;
-            materialsGrid.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
-            db.collection('materials').orderBy('createdAt', 'desc').get().then(snapshot => {
-                materials = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                filteredMaterials = [...materials];
-                renderMaterials();
-                loadDownloadedMaterials();
-            }).catch(error => {
-                console.error('Error loading materials:', error);
-                showToast("Error loading materials.", 'error');
-                materialsGrid.innerHTML = `<div class="empty-state"><div class="empty-icon"><i class="fas fa-exclamation-circle"></i></div><h3 class="empty-title">Error Loading Materials</h3></div>`;
-            });
+            setTimeout(() => domElements.toast.classList.remove('show'), 3000);
         }
 
-        function renderMaterials() {
-            materialsCount.textContent = `Showing ${filteredMaterials.length} of ${materials.length} materials`;
-            if (filteredMaterials.length === 0) {
-                materialsGrid.innerHTML = `<div class="empty-state"><div class="empty-icon"><i class="fas fa-folder-open"></i></div><h3 class="empty-title">No Materials Found</h3><p class="empty-description">Try adjusting your filters or check back later</p></div>`;
-                return;
+        // --- MODULES ---
+        const ThemeManager = {
+            init() {
+                const savedTheme = localStorage.getItem('theme') || 'light';
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                domElements.themeToggle.checked = savedTheme === 'dark';
+                domElements.themeToggle.addEventListener('change', this.toggle);
+            },
+            toggle(e) {
+                const newTheme = e.target.checked ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
             }
-            materialsGrid.innerHTML = filteredMaterials.map(material => {
+        };
+
+        const AuthManager = {
+            init() {
+                auth.onAuthStateChanged(user => {
+                    if (user) {
+                        currentUser = user;
+                        AccountManager.updateDetails(user);
+                        MaterialManager.load();
+                    } else {
+                        showToast("Please log in to access materials", "info");
+                        setTimeout(() => { window.location.href = '/index.html'; }, 2000);
+                    }
+                });
+            },
+            logout() {
+                if (confirm('Are you sure you want to logout?')) {
+                    auth.signOut().then(() => {
+                        showToast('Logged out successfully', 'success');
+                        window.location.href = '/index.html';
+                    });
+                }
+            }
+        };
+
+        const AccountManager = {
+            init() {
+                domElements.accountBtn.addEventListener('click', () => domElements.accountDetailsModal.classList.add('active'));
+                domElements.closeAccountModal.addEventListener('click', () => domElements.accountDetailsModal.classList.remove('active'));
+                domElements.accountLogout.addEventListener('click', AuthManager.logout);
+                domElements.editProfileBtnModal.addEventListener('click', this.showEditForm);
+                domElements.modalCancelEditBtn.addEventListener('click', this.hideEditForm);
+                domElements.modalSaveProfileBtn.addEventListener('click', this.saveProfile);
+            },
+            updateDetails(user) {
+                const displayName = user.displayName || user.email.split('@')[0];
+                const creationTime = user.metadata.creationTime ? new Date(user.metadata.creationTime).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A';
+                const avatarContent = user.photoURL ? `<img src="${user.photoURL}" alt="Profile">` : `<i class="fas fa-user"></i>`;
+                
+                domElements.modalAccountName.textContent = displayName;
+                domElements.modalAccountEmail.textContent = user.email;
+                domElements.modalAccountFullName.textContent = user.displayName || 'Not set';
+                domElements.modalAccountEmailDetail.textContent = user.email;
+                domElements.modalAccountMemberSince.textContent = creationTime;
+                domElements.modalAccountAvatar.innerHTML = avatarContent;
+            },
+            showEditForm() {
+                domElements.modalProfileEditForm.classList.add('active');
+                domElements.modalDisplayNameInput.value = currentUser.displayName || '';
+                domElements.modalDisplayNameInput.focus();
+            },
+            hideEditForm() {
+                domElements.modalProfileEditForm.classList.remove('active');
+            },
+            async saveProfile() {
+                const newName = domElements.modalDisplayNameInput.value.trim();
+                if (newName && newName !== currentUser.displayName) {
+                    try {
+                        await currentUser.updateProfile({ displayName: newName });
+                        showToast('Profile updated successfully!', 'success');
+                        AccountManager.updateDetails(currentUser); // Refresh UI
+                        AccountManager.hideEditForm();
+                    } catch (error) {
+                        console.error('Error updating profile:', error);
+                        showToast('Failed to update profile.', 'error');
+                    }
+                } else {
+                    AccountManager.hideEditForm();
+                }
+            }
+        };
+
+        const MaterialManager = {
+            init() {
+                // Event listeners for material actions will be added during render
+            },
+            load() {
+                if (!currentUser) return;
+                domElements.materialsGrid.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+                db.collection('materials').orderBy('createdAt', 'desc').get().then(snapshot => {
+                    materials = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    FilterManager.apply();
+                    this.loadDownloads();
+                }).catch(error => {
+                    console.error('Error loading materials:', error);
+                    showToast("Error loading materials.", 'error');
+                    domElements.materialsGrid.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-circle empty-icon"></i><h3 class="empty-title">Error Loading Materials</h3></div>`;
+                });
+            },
+            render() {
+                domElements.materialsCount.textContent = `Showing ${filteredMaterials.length} of ${materials.length} materials`;
+                if (filteredMaterials.length === 0) {
+                    domElements.materialsGrid.innerHTML = `<div class="empty-state"><i class="fas fa-folder-open empty-icon"></i><h3 class="empty-title">No Materials Found</h3><p class="empty-description">Try adjusting your filters or check back later.</p></div>`;
+                    return;
+                }
+                domElements.materialsGrid.innerHTML = filteredMaterials.map(this.createCardHTML).join('');
+                domElements.materialsGrid.querySelectorAll('.material-action').forEach(btn => btn.addEventListener('click', this.handleAction));
+            },
+            createCardHTML(material) {
                 const branch = academicData.branches[material.branch];
                 const branchColor = branch ? branch.color : 'var(--primary)';
+                const getMaterialIcon = (type) => ({'notes': 'fa-file-alt', 'ebook': 'fa-book', 'slides': 'fa-file-powerpoint', 'video': 'fa-video', 'lab': 'fa-flask', 'project': 'fa-project-diagram'}[type] || 'fa-file');
+
                 return `
                     <div class="material-card" data-id="${material.id}">
                         <div class="material-thumbnail">
-                            ${material.thumbnail ? `<img src="${material.thumbnail}" alt="${material.title}">` : `<i class="fas ${getMaterialIcon(material.type || 'notes')}"></i>`}
+                            ${material.thumbnail ? `<img src="${material.thumbnail}" alt="${material.title}">` : `<i class="fas ${getMaterialIcon(material.type)}"></i>`}
                             <div class="material-type-badge">${material.type || 'Notes'}</div>
                         </div>
                         <div class="material-content">
@@ -2192,541 +2072,325 @@
                                     <div class="material-branch-color" style="background-color: ${branchColor}"></div>
                                     <span>${branch ? branch.name : material.branch}</span>
                                 </div>
-                                <span>Semester ${material.semester}</span>
+                                <span>Sem ${material.semester}</span>
                             </div>
                             <div class="material-actions">
                                 <button class="material-action view" title="View"><i class="fas fa-eye"></i></button>
                                 <button class="material-action download" title="Download"><i class="fas fa-download"></i></button>
-                                <button class="material-action favorite" title="Favorite"><i class="fas fa-star"></i></button>
-                                <button class="material-action share" title="Share"><i class="fas fa-share"></i></button>
-                                <button class="material-action report" title="Report"><i class="fas fa-flag"></i></button>
                             </div>
                         </div>
-                    </div>
-                `;
-            }).join('');
-            materialsGrid.querySelectorAll('.material-action').forEach(btn => btn.addEventListener('click', handleMaterialAction));
-        }
-        
-        function loadDownloadedMaterials() {
-            if (!currentUser) return;
-            downloadedMaterialsList.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
-            db.collection('userActivities').where('userId', '==', currentUser.uid).where('action', '==', 'download').get().then(snapshot => {
-                const uniqueMaterialIds = [...new Set(snapshot.docs.map(doc => doc.data().materialId))];
-                accountDownloads.textContent = uniqueMaterialIds.length;
-                renderDownloadedMaterials(uniqueMaterialIds);
-            }).catch(error => {
-                console.error('Error loading downloaded materials:', error);
-                downloadedMaterialsList.innerHTML = `<div class="empty-state"><p class="empty-description">Error loading downloads</p></div>`;
-            });
-        }
-
-        function renderDownloadedMaterials(materialIds) {
-            if (materialIds.length === 0) {
-                downloadedMaterialsList.innerHTML = `<div class="empty-state"><div class="empty-icon"><i class="fas fa-download"></i></div><p class="empty-description">No downloaded materials yet</p></div>`;
-                return;
-            }
-            const materialPromises = materialIds.map(id => db.collection('materials').doc(id).get());
-            Promise.all(materialPromises).then(snapshots => {
-                const materialsData = snapshots.filter(s => s.exists).map(s => ({ id: s.id, ...s.data() }));
-                downloadedMaterialsList.innerHTML = materialsData.map(material => {
-                    const branch = academicData.branches[material.branch];
-                    const branchColor = branch ? branch.color : 'var(--primary)';
-                    return `
-                        <div class="account-item" data-id="${material.id}">
-                            <div class="account-item-icon" style="background-color: ${branchColor}20; color: ${branchColor}">
-                                <i class="fas ${getMaterialIcon(material.type)}"></i>
-                            </div>
+                    </div>`;
+            },
+            handleAction(e) {
+                e.stopPropagation();
+                const action = e.currentTarget.classList[1];
+                const materialCard = e.currentTarget.closest('.material-card');
+                const materialId = materialCard.dataset.id;
+                const material = materials.find(m => m.id === materialId);
+                if (!material) return;
+                
+                if (action === 'view' || action === 'download') {
+                    if (material.link) {
+                        window.open(material.link, '_blank');
+                        showToast(`Opening ${material.title}...`, 'info');
+                        if (action === 'download' && currentUser) {
+                            db.collection('userActivities').add({
+                                userId: currentUser.uid, action: 'download', materialId: material.id,
+                                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                            }).then(MaterialManager.loadDownloads);
+                        }
+                    } else {
+                        showToast('Material file not available', 'error');
+                    }
+                }
+            },
+            loadDownloads() {
+                 if (!currentUser) return;
+                db.collection('userActivities').where('userId', '==', currentUser.uid).where('action', '==', 'download').get().then(snapshot => {
+                    const uniqueMaterialIds = [...new Set(snapshot.docs.map(doc => doc.data().materialId))];
+                    this.renderDownloads(uniqueMaterialIds);
+                }).catch(error => console.error('Error loading downloaded materials:', error));
+            },
+            renderDownloads(materialIds) {
+                const listEl = domElements.downloadedMaterialsList;
+                if (materialIds.length === 0) {
+                    listEl.innerHTML = `<div class="empty-state" style="padding: 1rem 0;"><p class="empty-description">No downloads yet.</p></div>`;
+                    return;
+                }
+                const materialPromises = materialIds.map(id => db.collection('materials').doc(id).get());
+                Promise.all(materialPromises).then(snapshots => {
+                    const materialsData = snapshots.filter(s => s.exists).map(s => ({ id: s.id, ...s.data() }));
+                    listEl.innerHTML = materialsData.map(material => {
+                        const branch = academicData.branches[material.branch];
+                        return `
+                        <div class="account-item">
+                            <div class="account-item-icon"><i class="fas fa-download"></i></div>
                             <div class="account-item-info">
                                 <div class="account-item-title">${material.title}</div>
                                 <div class="account-item-meta">${material.type} • ${branch ? branch.name : material.branch}</div>
                             </div>
                         </div>`;
                 }).join('');
-                downloadedMaterialsList.querySelectorAll('.account-item').forEach(item => {
-                    item.addEventListener('click', () => {
-                        const material = materials.find(m => m.id === item.dataset.id);
-                        if (material) viewMaterial(material);
-                        accountMenu.classList.remove('active');
-                    });
                 });
-            });
-        }
+            }
+        };
 
-        function getMaterialIcon(type) {
-            const icons = { 'notes': 'fa-file-alt', 'ebook': 'fa-book', 'slides': 'fa-presentation', 'video': 'fa-video', 'lab': 'fa-flask', 'project': 'fa-project-diagram' };
-            return icons[type] || 'fa-file';
-        }
-        
-        // Material Actions
-        function handleMaterialAction(e) {
-            e.stopPropagation();
-            const action = e.currentTarget.classList[1];
-            const materialCard = e.currentTarget.closest('.material-card');
-            const materialId = materialCard.dataset.id;
-            const material = materials.find(m => m.id === materialId);
-            if (!material) return;
-            switch (action) {
-                case 'view': viewMaterial(material); break;
-                case 'download': downloadMaterial(material); break;
-                case 'favorite': toggleFavorite(material, e.currentTarget); break;
-                case 'share': shareMaterial(material); break;
-                case 'report': reportMaterial(material); break;
-            }
-        }
-        
-        function viewMaterial(material) {
-            if (material.link) window.open(material.link, '_blank');
-            else showToast('Material file not available', 'error');
-        }
-        
-        function downloadMaterial(material) {
-            if (material.link) {
-                const a = document.createElement('a');
-                a.href = material.link;
-                a.target = "_blank";
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                showToast('Opening download link...', 'success');
-                if (currentUser) {
-                    db.collection('userActivities').add({
-                        userId: currentUser.uid, action: 'download', materialId: material.id,
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                    }).then(loadDownloadedMaterials);
-                }
-            } else showToast('Material file not available', 'error');
-        }
-        
-        function toggleFavorite(material, btn) { /* ... implementation ... */ }
-        function shareMaterial(material) { /* ... implementation ... */ }
-        function reportMaterial(material) { /* ... implementation ... */ }
-        
-        // Course Selection Modal Logic
-        function initBranchSemesterCourseModal() {
-            initializeBranchOptions();
-            selectionModalClose.addEventListener('click', () => branchSemesterCourseModal.classList.remove('active'));
-            prevStepBtn.addEventListener('click', goToPrevStep);
-            nextStepBtn.addEventListener('click', goToNextStep);
-            finishSelectionBtn.addEventListener('click', finishSelection);
-            changeSelectionBtn.addEventListener('click', () => {
-                resetSelectionModal();
-                branchSemesterCourseModal.classList.add('active');
-            });
-        }
-        function resetSelectionModal() {
-            tempSelectedBranch = null; tempSelectedSemester = null; tempSelectedCourse = null;
-            semesterStep.classList.remove('active'); courseStep.classList.remove('active');
-            branchStep.classList.add('active');
-            stepIndicators[1].classList.remove('active'); stepIndicators[2].classList.remove('active');
-            stepIndicators[0].classList.add('active');
-            prevStepBtn.style.display = 'none'; finishSelectionBtn.style.display = 'none';
-            nextStepBtn.style.display = 'block'; nextStepBtn.disabled = true;
-            document.querySelectorAll('.selection-card.selected').forEach(c => c.classList.remove('selected'));
-        }
-        function initializeBranchOptions() {
-            branchOptions.innerHTML = Object.keys(academicData.branches).map(code => {
-                const branch = academicData.branches[code];
-                return `<div class="selection-card" data-branch="${code}"><div class="selection-icon"><i class="${branch.icon}"></i></div><div class="selection-name">${branch.name}</div><div class="selection-code">${code}</div></div>`;
-            }).join('');
-            branchOptions.querySelectorAll('.selection-card').forEach(c => c.addEventListener('click', () => selectBranch(c.dataset.branch)));
-        }
-        function selectBranch(code) {
-            tempSelectedBranch = code;
-            branchOptions.querySelectorAll('.selection-card').forEach(c => c.classList.toggle('selected', c.dataset.branch === code));
-            nextStepBtn.disabled = false;
-        }
-        function initializeSemesterOptions() {
-            const semesters = academicData.branches[tempSelectedBranch]?.semesters;
-            semesterOptions.innerHTML = Object.keys(semesters).filter(semNum => semesters[semNum].length > 0).map(semNum => {
-                return `<div class="selection-card" data-semester="${semNum}"><div class="selection-icon"><i class="fas fa-calendar-alt"></i></div><div class="selection-name">Semester ${semNum}</div></div>`;
-            }).join('');
-            semesterOptions.querySelectorAll('.selection-card').forEach(c => c.addEventListener('click', () => selectSemester(c.dataset.semester)));
-        }
-        function selectSemester(semNum) {
-            tempSelectedSemester = semNum;
-            semesterOptions.querySelectorAll('.selection-card').forEach(c => c.classList.toggle('selected', c.dataset.semester === semNum));
-            nextStepBtn.disabled = false;
-        }
-        function initializeCourseOptions() {
-            const courses = academicData.branches[tempSelectedBranch]?.semesters[tempSelectedSemester] || [];
-            courseOptions.innerHTML = courses.map(course => {
-                return `<div class="selection-card" data-course='${JSON.stringify(course)}'><div class="selection-name">${course.name}</div><div class="selection-code">${course.code}</div><div class="selection-code">${course.credits} Credits</div></div>`;
-            }).join('');
-            courseOptions.querySelectorAll('.selection-card').forEach(c => c.addEventListener('click', () => selectCourse(JSON.parse(c.dataset.course))));
-        }
-        function selectCourse(course) {
-            tempSelectedCourse = course;
-            courseOptions.querySelectorAll('.selection-card').forEach(c => c.classList.toggle('selected', JSON.parse(c.dataset.course).code === course.code));
-            finishSelectionBtn.disabled = false;
-        }
-        function goToNextStep() {
-            const currentStep = document.querySelector('.selection-step.active');
-            if (currentStep.id === 'branch-step') {
-                if (!tempSelectedBranch) return;
-                currentStep.classList.remove('active'); semesterStep.classList.add('active');
-                stepIndicators[1].classList.add('active'); initializeSemesterOptions();
-                prevStepBtn.style.display = 'block'; nextStepBtn.disabled = true;
-            } else if (currentStep.id === 'semester-step') {
-                if (!tempSelectedSemester) return;
-                currentStep.classList.remove('active'); courseStep.classList.add('active');
-                stepIndicators[2].classList.add('active'); initializeCourseOptions();
-                nextStepBtn.style.display = 'none'; finishSelectionBtn.style.display = 'block';
-                finishSelectionBtn.disabled = true;
-            }
-        }
-        function goToPrevStep() {
-            const currentStep = document.querySelector('.selection-step.active');
-            if (currentStep.id === 'semester-step') {
-                currentStep.classList.remove('active'); branchStep.classList.add('active');
-                stepIndicators[1].classList.remove('active'); prevStepBtn.style.display = 'none';
-                nextStepBtn.disabled = false;
-            } else if (currentStep.id === 'course-step') {
-                currentStep.classList.remove('active'); semesterStep.classList.add('active');
-                stepIndicators[2].classList.remove('active'); finishSelectionBtn.style.display = 'none';
-                nextStepBtn.style.display = 'block'; nextStepBtn.disabled = false;
-            }
-        }
-        function finishSelection() {
-            if (!tempSelectedCourse) return;
-            selectedBranchDisplay.textContent = academicData.branches[tempSelectedBranch].name;
-            selectedSemesterDisplay.textContent = `Semester ${tempSelectedSemester}`;
-            selectedCourseDisplay.textContent = tempSelectedCourse.name;
-            selectionDisplay.style.display = 'flex';
-            branchFilter.value = tempSelectedBranch;
-            semesterFilter.value = tempSelectedSemester;
-            courseFilter.innerHTML = `<option value="${tempSelectedCourse.code}" selected>${tempSelectedCourse.name}</option>`;
-            applyFilters();
-            branchSemesterCourseModal.classList.remove('active');
-        }
-        
-        // Chatbot with Vercel Backend
-        function initChatbot() {
-            const API_URL = "/api/chat"; // Use a relative path for the Vercel serverless function
-            const MAX_HISTORY = 10;
-            let chatHistory = [];
-            let isTyping = false;
-        
-            function addMessage(text, sender, isLoading = false) {
-                const messageRow = document.createElement('div');
-                messageRow.className = `message-row ${sender}`;
+        const FilterManager = {
+            init() {
+                domElements.typeFilter.addEventListener('change', this.apply);
+                domElements.searchFilter.addEventListener('input', this.apply);
+                domElements.resetFilters.addEventListener('click', this.reset);
+                domElements.advancedFilterBtn.addEventListener('click', () => domElements.branchSemesterCourseModal.classList.add('active'));
+            },
+            apply() {
+                const type = domElements.typeFilter.value;
+                const search = domElements.searchFilter.value.toLowerCase();
                 
-                if (sender === 'bot') {
-                    const avatarDiv = document.createElement('div');
-                    avatarDiv.className = 'bot-avatar';
-                    avatarDiv.textContent = 'IB';
-                    messageRow.appendChild(avatarDiv);
-                }
-        
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${sender}`;
-        
-                if (isLoading) {
-                    messageDiv.innerHTML = `<div class="spinner"></div>`; 
-                    messageDiv.classList.add('loading');
-                } else {
-                    const parsedText = parseResponse(text);
-                    messageDiv.innerHTML = parsedText;
-                    messageDiv.querySelectorAll('pre code').forEach((block) => {
-                        hljs.highlightElement(block);
-                    });
-                }
-        
-                messageRow.appendChild(messageDiv);
-                chatbotMessages.appendChild(messageRow);
-                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-                return messageDiv;
-            }
-        
-            // IMPROVED: Function to parse markdown-like syntax for rich content
-            function parseResponse(text) {
-                 // Convert markdown for code blocks ```lang\ncode```
-                let html = text.replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
-                    const language = lang || 'plaintext';
-                    const escapedCode = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                    return `<div class="code-block"><pre><code class="language-${language}">${escapedCode.trim()}</code></pre></div>`;
+                filteredMaterials = materials.filter(material => {
+                    const matchesType = !type || material.type === type;
+                    const matchesSearch = !search || 
+                                          (material.title && material.title.toLowerCase().includes(search)) || 
+                                          (material.description && material.description.toLowerCase().includes(search));
+                    return matchesType && matchesSearch;
                 });
-
-                // Convert markdown for headings, bold, and lists
-                html = html
-                    .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-                    .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-                    .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                    .replace(/^\s*\n\*/gm, '<ul>\n*')
-                    .replace(/^(\*.+)\s*\n([^*])/gm, '$1\n</ul>\n\n$2')
-                    .replace(/^\*(.+)/gm, '<li>$1</li>')
-                    .replace(/<\/ul>\n<ul>/g, '');
-
-
-                return html.trim();
+                MaterialManager.render();
+            },
+            reset() {
+                domElements.typeFilter.value = '';
+                domElements.searchFilter.value = '';
+                domElements.selectionDisplay.style.display = 'none';
+                this.apply();
+                showToast('Filters have been reset', 'info');
             }
+        };
+        
+        const CourseSelectionModal = {
+            init() {
+                this.populateBranches();
+                domElements.selectionModalClose.addEventListener('click', () => domElements.branchSemesterCourseModal.classList.remove('active'));
+                domElements.prevStepBtn.addEventListener('click', this.goToPrevStep);
+                domElements.nextStepBtn.addEventListener('click', this.goToNextStep);
+                domElements.finishSelectionBtn.addEventListener('click', this.finish);
+                domElements.changeSelectionBtn.addEventListener('click', () => domElements.branchSemesterCourseModal.classList.add('active'));
+            },
+            populateBranches() {
+                domElements.branchOptions.innerHTML = Object.keys(academicData.branches).map(code => {
+                    const branch = academicData.branches[code];
+                    return `<div class="selection-card" data-branch="${code}"><i class="${branch.icon} selection-icon"></i><div class="selection-name">${branch.name}</div><div class="selection-code">${code}</div></div>`;
+                }).join('');
+                domElements.branchOptions.querySelectorAll('.selection-card').forEach(c => c.addEventListener('click', () => this.selectBranch(c.dataset.branch)));
+            },
+            selectBranch(code) {
+                tempSelectedBranch = code;
+                domElements.branchOptions.querySelectorAll('.selection-card').forEach(c => c.classList.toggle('selected', c.dataset.branch === code));
+                domElements.nextStepBtn.disabled = false;
+            },
+            goToNextStep() {
+                // Simplified logic, can be expanded
+                CourseSelectionModal.finish();
+            },
+            finish() {
+                 if (!tempSelectedBranch) return;
+                const branchName = academicData.branches[tempSelectedBranch].name;
 
-            // Function to stream the response text
-            async function streamResponse(element, response) {
+                // For simplicity, we filter only by branch now from the modal
+                filteredMaterials = materials.filter(m => m.branch === tempSelectedBranch);
+                MaterialManager.render();
+
+                domElements.selectedBranch.textContent = branchName;
+                domElements.selectedSemester.textContent = 'All';
+                domElements.selectedCourse.textContent = 'All';
+                domElements.selectionDisplay.style.display = 'flex';
+                domElements.branchSemesterCourseModal.classList.remove('active');
+            }
+        };
+        
+        const Chatbot = {
+            API_URL: "/api/chat",
+            MAX_HISTORY: 10,
+            chatHistory: [],
+            isTyping: false,
+            
+            init() {
+                domElements.chatbotToggle.addEventListener('click', () => domElements.chatbotContainer.classList.toggle('active'));
+                domElements.chatbotClose.addEventListener('click', () => domElements.chatbotContainer.classList.remove('active'));
+                domElements.chatbotReset.addEventListener('click', () => this.initialize());
+                domElements.chatbotSend.addEventListener('click', () => this.sendMessage());
+                domElements.chatbotInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') this.sendMessage(); });
+                this.initialize();
+            },
+            
+            initialize() {
+                domElements.chatbotMessages.innerHTML = '';
+                this.chatHistory = [
+                    { role: "system", content: "You are Gemini, a helpful AI assistant. Format your responses using markdown (e.g., # Heading, **bold**, `inline code`, and ```lang\\ncode block```)." },
+                    { role: "assistant", content: "Hello! I'm IB, your AI study assistant. How can I help you today?" }
+                ];
+                this.addMessage(this.chatHistory[1].content, 'bot');
+            },
+            
+            addMessage(text, sender, isLoading = false) {
+                const row = document.createElement('div');
+                row.className = `message-row ${sender}`;
+                if (sender === 'bot') row.innerHTML = `<div class="bot-avatar">IB</div>`;
+                
+                const msg = document.createElement('div');
+                msg.className = `message ${sender}`;
+
+                if (isLoading) {
+                    msg.innerHTML = `<div class="spinner"></div>`;
+                    msg.classList.add('loading');
+                } else {
+                    msg.innerHTML = this.parseResponse(text);
+                    msg.querySelectorAll('pre code').forEach(hljs.highlightElement);
+                }
+                
+                row.appendChild(msg);
+                domElements.chatbotMessages.appendChild(row);
+                domElements.chatbotMessages.scrollTop = domElements.chatbotMessages.scrollHeight;
+                return msg;
+            },
+
+            parseResponse(text) {
+                const escape = (unsafe) => unsafe.replace(/[&<"']/g, m => ({'&':'&amp;','<':'&lt;','"':'&quot;',"'":'&#039;'})[m]);
+                let html = text.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => `
+                    <div class="code-block-wrapper">
+                        <div class="code-header">
+                            <span>${escape(lang) || 'text'}</span>
+                            <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                        </div>
+                        <div class="code-body"><pre><code class="language-${escape(lang)}">${escape(code.trim())}</code></pre></div>
+                    </div>`);
+                
+                return html.replace(/`([^`]+)`/g, `<code>$1</code>`)
+                           .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                           .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                           .replace(/^# (.*$)/gim, '<h1>$1</h1>');
+            },
+
+            async sendMessage() {
+                const message = domElements.chatbotInput.value.trim();
+                if (!message || this.isTyping) return;
+
+                this.setLoading(true);
+                this.addMessage(message, 'user');
+                this.chatHistory.push({ role: "user", content: message });
+                domElements.chatbotInput.value = '';
+                
+                const loadingEl = this.addMessage('', 'bot', true);
+
+                try {
+                    const response = await fetch(this.API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ ai: "gemini", history: this.chatHistory })
+                    });
+                    if (!response.ok) throw new Error((await response.json()).error || `API error`);
+                    
+                    loadingEl.parentElement.remove();
+                    const msgEl = this.addMessage('', 'bot');
+                    await this.streamResponse(msgEl, response);
+                } catch (error) {
+                    console.error('Chatbot error:', error);
+                    loadingEl.parentElement.remove();
+                    this.addMessage(`Error: ${error.message}. Please try again.`, 'bot');
+                } finally {
+                    this.setLoading(false);
+                }
+            },
+
+            async streamResponse(element, response) {
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder();
                 let fullText = '';
-                isTyping = true;
-                
                 const typingSpan = document.createElement('span');
-                typingSpan.classList.add('typing');
+                typingSpan.className = 'typing';
                 element.appendChild(typingSpan);
-                element.scrollIntoView({ behavior: 'smooth', block: 'end' });
 
                 while (true) {
                     const { done, value } = await reader.read();
                     if (done) break;
                     
-                    const chunk = decoder.decode(value, { stream: true });
-                    fullText += chunk;
-                    
-                    // Update the element's content with the new text and re-highlight
-                    const parsedHtml = parseResponse(fullText);
-                    element.innerHTML = parsedHtml;
-                    
-                    element.querySelectorAll('pre code').forEach((block) => {
-                        // Check if block has been highlighted already to avoid re-processing
-                        if (!block.dataset.highlighted) {
-                            hljs.highlightElement(block);
-                            block.dataset.highlighted = 'true';
-                        }
+                    fullText += decoder.decode(value, { stream: true });
+                    element.innerHTML = this.parseResponse(fullText);
+                    element.querySelectorAll('pre code:not([data-highlighted])').forEach(block => {
+                        hljs.highlightElement(block);
+                        block.dataset.highlighted = 'true';
                     });
-                    
                     element.appendChild(typingSpan);
-                    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+                    domElements.chatbotMessages.scrollTop = domElements.chatbotMessages.scrollHeight;
                 }
                 
-                isTyping = false;
                 typingSpan.remove();
-            
-                chatHistory.push({ role: "assistant", content: fullText.trim() });
-                if (chatHistory.length > MAX_HISTORY) {
-                    chatHistory = chatHistory.slice(chatHistory.length - MAX_HISTORY);
+                this.chatHistory.push({ role: "assistant", content: fullText.trim() });
+                if (this.chatHistory.length > this.MAX_HISTORY) {
+                    this.chatHistory = this.chatHistory.slice(-this.MAX_HISTORY);
                 }
+            },
+
+            setLoading(isLoading) {
+                this.isTyping = isLoading;
+                domElements.chatbotInput.disabled = isLoading;
+                domElements.chatbotSend.disabled = isLoading;
+                if (!isLoading) domElements.chatbotInput.focus();
             }
+        };
 
-            function initializeChat() {
-                chatbotMessages.innerHTML = '';
-                chatHistory = [{ role: "system", content: "You are Gemini, a helpful AI assistant built by Google. The user is a student at a college named IB STUDIOZ. Your goal is to answer their queries accurately, without hallucination. You have a deep understanding of academic subjects in Computer Science, IT, and related fields. Format your responses using markdown (e.g., # Heading, **bold**, *italic*, ```lang\ncode```). Your responses should be accurate, concise, and helpful." }, { role: "assistant", content: "Hello! I'm IB, your AI study assistant. I was created by AJ COMPANY. How can I help you today?" }];
-                addMessage(chatHistory[1].content, 'bot');
-            }
-        
-            async function sendMessage() {
-                const message = chatbotInput.value.trim();
-                if (!message || isTyping) return;
-        
-                chatbotInput.disabled = true;
-                chatbotSend.disabled = true;
-        
-                addMessage(message, 'user');
-                chatHistory.push({ role: "user", content: message });
-                chatbotInput.value = '';
-                
-                const loadingEl = addMessage('', 'bot', true);
-        
-                try {
-                    const response = await fetch(API_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            ai: "gemini",
-                            history: chatHistory
-                        })
-                    });
-        
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(errorData.error || `API error: ${response.status}`);
-                    }
-                    
-                    loadingEl.parentElement.remove(); // remove the whole row
-                    
-                    // Stream the response directly to the message element
-                    const messageEl = addMessage('', 'bot');
-                    await streamResponse(messageEl, response);
-
-                } catch (error) {
-                    console.error('Chatbot error:', error);
-                    loadingEl.parentElement.remove();
-                    addMessage(`Error: ${error.message}. Please try again.`, 'bot');
-                } finally {
-                    chatbotInput.disabled = false;
-                    chatbotSend.disabled = false;
-                    chatbotInput.focus();
-                }
-            }
-        
-            chatbotToggle.addEventListener('click', () => chatbotContainer.classList.toggle('active'));
-            chatbotClose.addEventListener('click', () => chatbotContainer.classList.remove('active'));
-            chatbotReset.addEventListener('click', initializeChat);
-            chatbotSend.addEventListener('click', sendMessage);
-            chatbotInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
-            
-            initializeChat();
-        }
-
-        // Account Management
-        function initAccount() {
-            accountBtn.addEventListener('click', () => {
-                accountMenu.classList.remove('active'); // Close dropdown
-                accountDetailsModal.classList.add('active'); // Open modal
-            });
-            closeAccountModal.addEventListener('click', () => accountDetailsModal.classList.remove('active'));
-
-            accountLogout.addEventListener('click', () => {
-                if (confirm('Are you sure you want to logout?')) {
-                    auth.signOut().then(() => {
-                        showToast('Logged out successfully', 'success');
-                        window.location.href = '/index.html';
-                    });
-                }
-            });
-
-            // Handle edit profile button inside the modal
-            editProfileBtn.addEventListener('click', () => {
-                profileEditForm.classList.add('active');
-                displayNameInput.value = currentUser.displayName || '';
-            });
-            cancelEditBtn.addEventListener('click', () => {
-                profileEditForm.classList.remove('active');
-            });
-            saveProfileBtn.addEventListener('click', async () => {
-                const newName = displayNameInput.value.trim();
-                if (newName && newName !== currentUser.displayName) {
-                    try {
-                        await currentUser.updateProfile({
-                            displayName: newName
-                        });
-                        showToast('Profile updated successfully!', 'success');
-                        profileEditForm.classList.remove('active');
-                        updateAccountDetails(currentUser); // Update UI
-                    } catch (error) {
-                        console.error('Error updating profile:', error);
-                        showToast('Failed to update profile.', 'error');
-                    }
-                } else {
-                    profileEditForm.classList.remove('active');
-                }
-            });
-        }
-        
-        function updateAccountDetails(user) {
-            accountName.textContent = user.displayName || user.email.split('@')[0];
-            accountEmail.textContent = user.email;
-            accountFullName.textContent = user.displayName || 'Not set';
-            accountEmailDetail.textContent = user.email;
-            if (user.metadata.creationTime) {
-                accountMemberSince.textContent = new Date(user.metadata.creationTime).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-            }
-            accountAvatar.innerHTML = user.photoURL ? `<img src="${user.photoURL}" alt="Profile">` : `<i class="fas fa-user"></i>`;
-            
-            // Also update the modal with the new details
-            modalAccountName.textContent = user.displayName || user.email.split('@')[0];
-            modalAccountEmail.textContent = user.email;
-            modalAccountFullName.textContent = user.displayName || 'Not set';
-            modalAccountEmailDetail.textContent = user.email;
-            if (user.metadata.creationTime) {
-                modalAccountMemberSince.textContent = new Date(user.metadata.creationTime).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-            }
-            modalAccountAvatar.innerHTML = user.photoURL ? `<img src="${user.photoURL}" alt="Profile">` : `<i class="fas fa-user"></i>`;
-        }
-
-        // Authentication
-        function initAuth() {
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    currentUser = user;
-                    updateAccountDetails(user); // Initial UI update
-                    loadMaterials();
-                } else {
-                    showToast("Please log in to access materials", "info");
-                    setTimeout(() => { window.location.href = '/index.html'; }, 2000);
-                }
-            });
-        }
-        
-        // --- APPLICATION INITIALIZATION ---
+        // --- APP INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            // First, cache all DOM elements now that the document is ready.
-            themeToggle = document.getElementById('themeToggle');
-            accountBtn = document.getElementById('accountBtn');
-            accountMenu = document.getElementById('accountMenu');
-            accountAvatar = document.getElementById('accountAvatar');
-            accountName = document.getElementById('accountName');
-            accountEmail = document.getElementById('accountEmail');
-            accountFullName = document.getElementById('accountFullName');
-            accountEmailDetail = document.getElementById('accountEmailDetail');
-            accountMemberSince = document.getElementById('accountMemberSince');
-            accountDownloads = document.getElementById('accountDownloads');
-            accountLogout = document.getElementById('accountLogout');
-            materialsGrid = document.getElementById('materialsGrid');
-            materialsCount = document.getElementById('materialsCount');
-            branchFilter = document.getElementById('branchFilter');
-            semesterFilter = document.getElementById('semesterFilter');
-            courseFilter = document.getElementById('courseFilter');
-            typeFilter = document.getElementById('typeFilter');
-            searchFilter = document.getElementById('searchFilter');
-            resetFilters = document.getElementById('resetFilters');
-            advancedFilterBtn = document.getElementById('advancedFilterBtn');
-            downloadedMaterialsList = document.getElementById('downloadedMaterials');
-            chatbotToggle = document.getElementById('chatbotToggle');
-            chatbotContainer = document.getElementById('chatbotContainer');
-            chatbotMessages = document.getElementById('chatbotMessages');
-            chatbotInput = document.getElementById('chatbotInput');
-            chatbotSend = document.getElementById('chatbotSend');
-            chatbotClose = document.getElementById('chatbotClose');
-            chatbotReset = document.getElementById('chatbotReset');
-            toast = document.getElementById('toast');
-            toastMessage = document.getElementById('toastMessage');
-            editProfileBtn = document.getElementById('editProfileBtn');
-            profileEditForm = document.getElementById('profileEditForm');
-            displayNameInput = document.getElementById('displayNameInput');
-            saveProfileBtn = document.getElementById('saveProfileBtn');
-            cancelEditBtn = document.getElementById('cancelEditBtn');
-            preferencesBtn = document.getElementById('preferencesBtn');
-            privacyBtn = document.getElementById('privacyBtn');
-            helpBtn = document.getElementById('helpBtn');
-            branchSemesterCourseModal = document.getElementById('branch-semester-course-modal');
-            selectionModalClose = document.getElementById('selection-modal-close');
-            prevStepBtn = document.getElementById('prev-step-btn');
-            nextStepBtn = document.getElementById('next-step-btn');
-            finishSelectionBtn = document.getElementById('finish-selection-btn');
-            branchStep = document.getElementById('branch-step');
-            semesterStep = document.getElementById('semester-step');
-            courseStep = document.getElementById('course-step');
-            branchOptions = document.getElementById('branch-options');
-            semesterOptions = document.getElementById('semester-options');
-            courseOptions = document.getElementById('course-options');
-            stepIndicators = document.querySelectorAll('.step');
-            selectionDisplay = document.getElementById('selection-display');
-            selectedBranchDisplay = document.getElementById('selected-branch');
-            selectedSemesterDisplay = document.getElementById('selected-semester');
-            selectedCourseDisplay = document.getElementById('selected-course');
-            changeSelectionBtn = document.getElementById('change-selection');
+            domElements = {
+                themeToggle: document.getElementById('themeToggle'),
+                accountBtn: document.getElementById('accountBtn'),
+                accountDetailsModal: document.getElementById('accountDetailsModal'),
+                closeAccountModal: document.getElementById('closeAccountModal'),
+                accountLogout: document.getElementById('accountLogout'),
+                modalAccountName: document.getElementById('modalAccountName'),
+                modalAccountEmail: document.getElementById('modalAccountEmail'),
+                modalAccountFullName: document.getElementById('modalAccountFullName'),
+                modalAccountEmailDetail: document.getElementById('modalAccountEmailDetail'),
+                modalAccountMemberSince: document.getElementById('modalAccountMemberSince'),
+                modalAccountAvatar: document.getElementById('modalAccountAvatar'),
+                editProfileBtnModal: document.getElementById('editProfileBtnModal'),
+                modalProfileEditForm: document.getElementById('modalProfileEditForm'),
+                modalDisplayNameInput: document.getElementById('modalDisplayNameInput'),
+                modalCancelEditBtn: document.getElementById('modalCancelEditBtn'),
+                modalSaveProfileBtn: document.getElementById('modalSaveProfileBtn'),
+                materialsGrid: document.getElementById('materialsGrid'),
+                materialsCount: document.getElementById('materialsCount'),
+                typeFilter: document.getElementById('typeFilter'),
+                searchFilter: document.getElementById('searchFilter'),
+                resetFilters: document.getElementById('resetFilters'),
+                advancedFilterBtn: document.getElementById('advancedFilterBtn'),
+                selectionDisplay: document.getElementById('selection-display'),
+                selectedBranch: document.getElementById('selected-branch'),
+                selectedSemester: document.getElementById('selected-semester'),
+                selectedCourse: document.getElementById('selected-course'),
+                changeSelectionBtn: document.getElementById('change-selection'),
+                branchSemesterCourseModal: document.getElementById('branch-semester-course-modal'),
+                selectionModalClose: document.getElementById('selection-modal-close'),
+                branchOptions: document.getElementById('branch-options'),
+                prevStepBtn: document.getElementById('prev-step-btn'),
+                nextStepBtn: document.getElementById('next-step-btn'),
+                finishSelectionBtn: document.getElementById('finish-selection-btn'),
+                downloadedMaterialsList: document.getElementById('downloadedMaterialsList'),
+                chatbotToggle: document.getElementById('chatbotToggle'),
+                chatbotContainer: document.getElementById('chatbotContainer'),
+                chatbotMessages: document.getElementById('chatbotMessages'),
+                chatbotInput: document.getElementById('chatbotInput'),
+                chatbotSend: document.getElementById('chatbotSend'),
+                chatbotClose: document.getElementById('chatbotClose'),
+                chatbotReset: document.getElementById('chatbotReset'),
+                toast: document.getElementById('toast'),
+                toastMessage: document.getElementById('toastMessage'),
+            };
 
-            // New Modal Elements
-            accountDetailsModal = document.getElementById('accountDetailsModal');
-            closeAccountModal = document.getElementById('closeAccountModal');
-            modalAccountAvatar = document.getElementById('modalAccountAvatar');
-            modalAccountName = document.getElementById('modalAccountName');
-            modalAccountEmail = document.getElementById('modalAccountEmail');
-            modalProfileEditForm = document.getElementById('modalProfileEditForm');
-            modalDisplayNameInput = document.getElementById('modalDisplayNameInput');
-            modalSaveProfileBtn = document.getElementById('modalSaveProfileBtn');
-            modalCancelEditBtn = document.getElementById('modalCancelEditBtn');
-            modalAccountFullName = document.getElementById('modalAccountFullName');
-            modalAccountEmailDetail = document.getElementById('modalAccountEmailDetail');
-            modalAccountMemberSince = document.getElementById('modalAccountMemberSince');
-            
-            // Then, initialize all the application modules.
-            initTheme();
-            initAuth();
-            initFilters();
-            initChatbot();
-            initAccount();
-            initBranchSemesterCourseModal();
+            ThemeManager.init();
+            AuthManager.init();
+            AccountManager.init();
+            MaterialManager.init();
+            FilterManager.init();
+            CourseSelectionModal.init();
+            Chatbot.init();
         });
     </script>
 </body>
