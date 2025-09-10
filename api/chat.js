@@ -1,6 +1,6 @@
 /**
- * Vercel Serverless Function to securely proxy requests to the Google Gemini API.
- * This file should be placed in the /api directory of your project.
+ * Vercel Serverless Function to proxy requests to Grok & Gemini APIs.
+ * Place this file in the /api directory.
  */
 export default async function handler(req, res) {
   // 1. Only allow POST requests
@@ -9,86 +9,125 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 2. Get the chat history from the request body
-    const { history } = req.body;
-    if (!history || !Array.isArray(history)) {
-      return res.status(400).json({ error: "Invalid 'history' array provided in payload" });
+    // 2. Get input from frontend
+    const { ai, history, messages } = req.body;
+    if (!ai) {
+      return res.status(400).json({ error: "Missing 'ai' field (grok or gemini)" });
     }
 
-    // 3. Securely get the Gemini API Key from Vercel Environment Variables
-    const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-    if (!GEMINI_API_KEY) {
-      console.error("GEMINI_API_KEY is not set in environment variables.");
-      return res.status(500).json({ error: "Server configuration error: API key not set" });
+    // Support both history[] and messages[]
+    const chatHistory = history || messages;
+    if (!chatHistory || !Array.isArray(chatHistory)) {
+      return res.status(400).json({ error: "Invalid chat history provided" });
     }
 
-    // 4. Define the Gemini API endpoint
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`;
+    let url = "";
+    let headers = { "Content-Type": "application/json" };
+    let body = {};
 
-    // 5. Transform the frontend history to the format Gemini API expects
-    let systemInstruction = null;
-    const contents = history
-      .map(turn => {
-        // Extract the system instruction to be sent separately
-        if (turn.role === 'system') {
-          systemInstruction = {
-            parts: [{ text: turn.content }],
+    // 3. GROK branch
+    if (ai === "grok") {
+      const GROQ_API_KEY = process.env.GROQ_API_KEY;
+      if (!GROQ_API_KEY) {
+        return res.status(500).json({ error: "GROQ_API_KEY not set" });
+      }
+
+      url = "https://api.groq.com/openai/v1/chat/completions";
+      headers.Authorization = `Bearer ${GROQ_API_KEY}`;
+
+      body = {
+        model: "llama-3.3-70b-versatile", // default Grok model
+        messages: chatHistory.map(m => ({
+          role: m.role || (m.sender === "ai" ? "assistant" : "user"),
+          content: m.content || m.text
+        }))
+      };
+    }
+
+    // 4. GEMINI branch
+    else if (ai === "gemini") {
+      const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+      if (!GEMINI_API_KEY) {
+        return res.status(500).json({ error: "GEMINI_API_KEY not set" });
+      }
+
+      url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`;
+
+      let systemInstruction = null;
+      const contents = chatHistory
+        .map(turn => {
+          if (turn.role === "system") {
+            systemInstruction = { parts: [{ text: turn.content || turn.text }] };
+            return null;
+          }
+          return {
+            role: turn.role === "assistant" ? "model" : "user",
+            parts: [{ text: turn.content || turn.text }]
           };
-          return null; // Remove it from the main 'contents' array
+        })
+        .filter(Boolean);
+
+      body = {
+        contents,
+        ...(systemInstruction && { systemInstruction }),
+        safetySettings: [
+          { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+          { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+          { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+          { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" }
+        ],
+        generationConfig: {
+          temperature: 0.7,
+          topK: 1,
+          topP: 1,
+          maxOutputTokens: 1024
         }
-        return {
-          role: turn.role === 'assistant' ? 'model' : 'user', // Map frontend roles to Gemini roles
-          parts: [{ text: turn.content }],
-        };
-      })
-      .filter(Boolean); // Filter out null entries (the system message)
+      };
+    }
 
-    // Construct the final payload for the Gemini API
-    const geminiPayload = {
-      contents,
-      ...(systemInstruction && { systemInstruction }), // Add system instruction if it exists
-      safetySettings: [
-        { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-        { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-        { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-        { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-      ],
-      generationConfig: {
-        temperature: 0.7,
-        topK: 1,
-        topP: 1,
-        maxOutputTokens: 2048,
-      },
-    };
+    // 5. Invalid AI
+    else {
+      return res.status(400).json({ error: "Unknown AI selected" });
+    }
 
-    // 6. Make the request to the Gemini API
+    // 6. Call the API
     const response = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(geminiPayload),
+      headers,
+      body: JSON.stringify(body)
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Gemini API Error:", errorText);
-      return res.status(response.status).json({ error: "Failed to get response from Gemini API.", details: errorText });
+      console.error("API Error:", errorText);
+      return res.status(response.status).json({
+        error: "Upstream API error",
+        details: errorText
+      });
     }
 
     const data = await response.json();
 
-    // 7. Extract the response text and send it back to the frontend
-    if (data.candidates && data.candidates.length > 0 && data.candidates[0].content) {
-      const botResponse = data.candidates[0].content.parts[0].text;
-      return res.status(200).json({ response: botResponse });
-    } else {
-       // Handle cases where the response is blocked by safety settings
-       const blockReason = data.promptFeedback?.blockReason || 'No content';
-       const responseText = `I am unable to provide a response. Reason: ${blockReason}. Please try rephrasing your question.`;
-       return res.status(200).json({ response: responseText });
+    // 7. Extract AI response
+    let botResponse = "No response";
+    if (ai === "grok") {
+      botResponse = data.choices?.[0]?.message?.content || "No response";
+    } else if (ai === "gemini") {
+      if (data.candidates?.[0]?.content?.parts) {
+        botResponse = data.candidates[0].content.parts.map(p => p.text).join("\n");
+      } else {
+        botResponse =
+          `I am unable to provide a response. Reason: ${data.promptFeedback?.blockReason || "Unknown"}`;
+      }
     }
 
+    return res.status(200).json({ response: botResponse });
+
   } catch (err) {
-    console.error("Server error in /api/chat:", err);
-    return res.status(500).json({ error: "An unexpected server error occurred.", details: err.message });
+    console.error("Server error:", err);
+    return res.status(500).json({
+      error: "Server error",
+      details: err.message
+    });
   }
 }
