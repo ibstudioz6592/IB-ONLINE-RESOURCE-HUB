@@ -274,24 +274,6 @@
             box-shadow: var(--shadow-lg);
         }
         
-        .theme-toggle {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .theme-toggle:hover {
-            background: var(--surface-hover);
-            border-color: var(--primary);
-        }
-        
         /* Account Dropdown */
         .account-dropdown {
             position: relative;
@@ -1431,6 +1413,63 @@
             color: var(--info);
         }
         
+        /* Modal for Account */
+        .account-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .account-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .account-modal .modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 600px;
+            padding: 0;
+            box-shadow: var(--shadow-xl);
+            transform: scale(0.9);
+            transition: var(--transition);
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .account-modal.active .modal {
+            transform: scale(1);
+        }
+
+        .account-modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .account-modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
         /* Responsive Styles */
         @media (max-width: 768px) {
             .header-content { padding: 1rem; }
@@ -1787,6 +1826,69 @@
             </div>
         </div>
     </div>
+
+    <div class="account-modal" id="accountDetailsModal">
+        <div class="modal">
+            <div class="account-modal-header">
+                <h2>Account Details</h2>
+                <button class="modal-close" id="closeAccountModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="account-content">
+                <div class="account-header" style="border-bottom: none;">
+                    <div class="account-avatar" id="modalAccountAvatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="account-info">
+                        <h3 id="modalAccountName">Loading...</h3>
+                        <p id="modalAccountEmail">Loading...</p>
+                    </div>
+                </div>
+                <div class="profile-edit-form" id="modalProfileEditForm">
+                    <div class="form-group">
+                        <label class="form-label" for="modalDisplayNameInput">Display Name</label>
+                        <input type="text" id="modalDisplayNameInput" class="form-input" placeholder="Enter your name">
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-outline" id="modalCancelEditBtn">Cancel</button>
+                        <button class="btn btn-primary" id="modalSaveProfileBtn">Save</button>
+                    </div>
+                </div>
+                <div class="account-section">
+                    <div class="account-list">
+                        <div class="account-item">
+                            <div class="account-item-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="account-item-info">
+                                <div class="account-item-title">Full Name</div>
+                                <div class="account-item-meta" id="modalAccountFullName">Not set</div>
+                            </div>
+                        </div>
+                        <div class="account-item">
+                            <div class="account-item-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="account-item-info">
+                                <div class="account-item-title">Email</div>
+                                <div class="account-item-meta" id="modalAccountEmailDetail">Loading...</div>
+                            </div>
+                        </div>
+                        <div class="account-item">
+                            <div class="account-item-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="account-item-info">
+                                <div class="account-item-title">Member Since</div>
+                                <div class="account-item-meta" id="modalAccountMemberSince">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <button class="chatbot-toggle" id="chatbotToggle">
         <div style="font-size: 1.2rem; font-weight: 700;">IB</div>
@@ -1884,7 +1986,10 @@
             preferencesBtn, privacyBtn, helpBtn, branchSemesterCourseModal, selectionModalClose, 
             prevStepBtn, nextStepBtn, finishSelectionBtn, branchStep, semesterStep, courseStep, 
             branchOptions, semesterOptions, courseOptions, stepIndicators, selectionDisplay, 
-            selectedBranchDisplay, selectedSemesterDisplay, selectedCourseDisplay, changeSelectionBtn;
+            selectedBranchDisplay, selectedSemesterDisplay, selectedCourseDisplay, changeSelectionBtn,
+            accountDetailsModal, closeAccountModal, modalAccountAvatar, modalAccountName, modalAccountEmail,
+            modalProfileEditForm, modalDisplayNameInput, modalSaveProfileBtn, modalCancelEditBtn,
+            modalAccountFullName, modalAccountEmailDetail, modalAccountMemberSince;
         
         // --- FUNCTIONS ---
         
@@ -2214,10 +2319,10 @@
         
         // Chatbot with Vercel Backend
         function initChatbot() {
-            // Replace with your Vercel backend URL
-            const API_URL = "YOUR_VERCEL_BACKEND_URL/api/chat"; 
+            const API_URL = "/api/chat"; // Use a relative path for the Vercel serverless function
             const MAX_HISTORY = 10;
             let chatHistory = [];
+            let isTyping = false;
         
             function addMessage(text, sender, isLoading = false) {
                 const messageRow = document.createElement('div');
@@ -2287,70 +2392,43 @@
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder();
                 let fullText = '';
-            
-                // Create a temporary span for the typewriter effect
-                const tempSpan = document.createElement('span');
-                element.appendChild(tempSpan);
-                tempSpan.classList.add('typing');
-            
-                // Function to type out a chunk of text
-                const typeChunk = (chunk) => {
-                    return new Promise(resolve => {
-                        let i = 0;
-                        const speed = 15;
-                        function type() {
-                            if (i < chunk.length) {
-                                tempSpan.textContent += chunk.charAt(i);
-                                i++;
-                                setTimeout(type, speed);
-                            } else {
-                                resolve();
-                            }
-                        }
-                        type();
-                    });
-                };
-            
+                isTyping = true;
+                
+                // Keep the typing cursor visible until done
+                const typingSpan = document.createElement('span');
+                typingSpan.classList.add('typing');
+                element.appendChild(typingSpan);
+
                 while (true) {
                     const { done, value } = await reader.read();
                     if (done) break;
                     
                     const chunk = decoder.decode(value, { stream: true });
-                    
-                    // Add the chunk to the full text
                     fullText += chunk;
                     
-                    // Remove the current content and typewriter span
-                    element.innerHTML = '';
-                    
-                    // Process the full text and add it back
+                    // Update the element's content with the new text and re-highlight
                     const parsed = parseResponseForCodeBlocks(fullText);
                     element.innerHTML = parsed;
-            
-                    // Re-append the typing span and apply effects
-                    element.querySelector('.code-block:last-child pre code:last-child')?.appendChild(tempSpan);
-                    if (!element.querySelector('.code-block:last-child')) {
-                        element.appendChild(tempSpan);
-                    }
-            
-                    // Re-highlight the code blocks
-                    element.querySelectorAll('pre code').forEach(block => {
+                    
+                    element.querySelectorAll('pre code').forEach((block) => {
                         hljs.highlightElement(block);
                     });
-                    
-                    await typeChunk(chunk); // Animate the typing for the new chunk
+
+                    // Re-add the typing cursor at the end of the last block or message
+                    const lastCodeBlock = element.querySelector('.code-block:last-of-type pre code');
+                    if (lastCodeBlock) {
+                        lastCodeBlock.appendChild(typingSpan);
+                    } else {
+                        element.appendChild(typingSpan);
+                    }
                     
                     chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
                 }
+                
+                isTyping = false;
+                typingSpan.remove(); // Remove the typing cursor
             
-                // Final clean up and highlight
-                tempSpan.classList.remove('typing');
-                element.innerHTML = parseResponseForCodeBlocks(fullText);
-                element.querySelectorAll('pre code').forEach(block => {
-                    hljs.highlightElement(block);
-                });
-
-                // Update chat history with the final, complete message
+                // Final update of chat history with the complete response
                 chatHistory.push({ role: "assistant", content: fullText.trim() });
                 if (chatHistory.length > MAX_HISTORY) {
                     chatHistory = chatHistory.slice(chatHistory.length - MAX_HISTORY);
@@ -2359,13 +2437,13 @@
 
             function initializeChat() {
                 chatbotMessages.innerHTML = '';
-                chatHistory = [{ role: "assistant", content: "Hello! I'm IB, your AI study assistant. I was created by AJ COMPANY. How can I help you today?" }];
-                addMessage(chatHistory[0].content, 'bot');
+                chatHistory = [{ role: "system", content: "You are Gemini, a helpful AI assistant built by Google. The user is a student at a college named IB STUDIOZ. Your goal is to answer their queries accurately, without hallucination. You have a deep understanding of academic subjects in Computer Science, IT, and related fields. When providing code, use markdown. Your responses should be accurate, concise, and helpful." }, { role: "assistant", content: "Hello! I'm IB, your AI study assistant. I was created by AJ COMPANY. How can I help you today?" }];
+                addMessage(chatHistory[1].content, 'bot');
             }
         
             async function sendMessage() {
                 const message = chatbotInput.value.trim();
-                if (!message) return;
+                if (!message || isTyping) return;
         
                 chatbotInput.disabled = true;
                 chatbotSend.disabled = true;
@@ -2419,7 +2497,12 @@
 
         // Account Management
         function initAccount() {
-            accountBtn.addEventListener('click', () => accountMenu.classList.toggle('active'));
+            accountBtn.addEventListener('click', () => {
+                accountMenu.classList.remove('active'); // Close dropdown
+                accountDetailsModal.classList.add('active'); // Open modal
+            });
+            closeAccountModal.addEventListener('click', () => accountDetailsModal.classList.remove('active'));
+
             accountLogout.addEventListener('click', () => {
                 if (confirm('Are you sure you want to logout?')) {
                     auth.signOut().then(() => {
@@ -2428,26 +2511,62 @@
                     });
                 }
             });
-            document.addEventListener('click', (e) => {
-                if (!accountBtn.contains(e.target) && !accountMenu.contains(e.target) && !e.target.closest('.account-menu')) {
-                    accountMenu.classList.remove('active');
+
+            // Handle edit profile button inside the modal
+            editProfileBtn.addEventListener('click', () => {
+                profileEditForm.classList.add('active');
+                displayNameInput.value = currentUser.displayName || '';
+            });
+            cancelEditBtn.addEventListener('click', () => {
+                profileEditForm.classList.remove('active');
+            });
+            saveProfileBtn.addEventListener('click', async () => {
+                const newName = displayNameInput.value.trim();
+                if (newName && newName !== currentUser.displayName) {
+                    try {
+                        await currentUser.updateProfile({
+                            displayName: newName
+                        });
+                        showToast('Profile updated successfully!', 'success');
+                        profileEditForm.classList.remove('active');
+                        updateAccountDetails(currentUser); // Update UI
+                    } catch (error) {
+                        console.error('Error updating profile:', error);
+                        showToast('Failed to update profile.', 'error');
+                    }
+                } else {
+                    profileEditForm.classList.remove('active');
                 }
             });
         }
         
+        function updateAccountDetails(user) {
+            accountName.textContent = user.displayName || user.email.split('@')[0];
+            accountEmail.textContent = user.email;
+            accountFullName.textContent = user.displayName || 'Not set';
+            accountEmailDetail.textContent = user.email;
+            if (user.metadata.creationTime) {
+                accountMemberSince.textContent = new Date(user.metadata.creationTime).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            }
+            accountAvatar.innerHTML = user.photoURL ? `<img src="${user.photoURL}" alt="Profile">` : `<i class="fas fa-user"></i>`;
+            
+            // Also update the modal with the new details
+            modalAccountName.textContent = user.displayName || user.email.split('@')[0];
+            modalAccountEmail.textContent = user.email;
+            modalAccountFullName.textContent = user.displayName || 'Not set';
+            modalAccountEmailDetail.textContent = user.email;
+            if (user.metadata.creationTime) {
+                modalAccountMemberSince.textContent = new Date(user.metadata.creationTime).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            }
+            modalAccountAvatar.innerHTML = user.photoURL ? `<img src="${user.photoURL}" alt="Profile">` : `<i class="fas fa-user"></i>`;
+        }
+
         // Authentication
         function initAuth() {
             auth.onAuthStateChanged(user => {
                 if (user) {
                     currentUser = user;
-                    accountName.textContent = user.displayName || user.email.split('@')[0];
-                    accountEmail.textContent = user.email;
-                    accountFullName.textContent = user.displayName || 'Not set';
-                    accountEmailDetail.textContent = user.email;
-                    if (user.metadata.creationTime) {
-                        accountMemberSince.textContent = new Date(user.metadata.creationTime).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-                    }
-                    accountAvatar.innerHTML = user.photoURL ? `<img src="${user.photoURL}" alt="Profile">` : `<i class="fas fa-user"></i>`;
+                    updateAccountDetails(user); // Initial UI update
                     loadMaterials();
                 } else {
                     showToast("Please log in to access materials", "info");
@@ -2516,6 +2635,20 @@
             selectedCourseDisplay = document.getElementById('selected-course');
             changeSelectionBtn = document.getElementById('change-selection');
 
+            // New Modal Elements
+            accountDetailsModal = document.getElementById('accountDetailsModal');
+            closeAccountModal = document.getElementById('closeAccountModal');
+            modalAccountAvatar = document.getElementById('modalAccountAvatar');
+            modalAccountName = document.getElementById('modalAccountName');
+            modalAccountEmail = document.getElementById('modalAccountEmail');
+            modalProfileEditForm = document.getElementById('modalProfileEditForm');
+            modalDisplayNameInput = document.getElementById('modalDisplayNameInput');
+            modalSaveProfileBtn = document.getElementById('modalSaveProfileBtn');
+            modalCancelEditBtn = document.getElementById('modalCancelEditBtn');
+            modalAccountFullName = document.getElementById('modalAccountFullName');
+            modalAccountEmailDetail = document.getElementById('modalAccountEmailDetail');
+            modalAccountMemberSince = document.getElementById('modalAccountMemberSince');
+            
             // Then, initialize all the application modules.
             initTheme();
             initAuth();
