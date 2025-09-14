@@ -9,7 +9,7 @@
     <meta name="theme-color" content="#1a73e8">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <title>IB STUDIOZ | An General Hub for Your Needs</title>
+    <title>IB STUDIOZ | Enterprise Learning Platform</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -790,6 +790,22 @@
             color: var(--primary);
         }
         
+        /* Debug Info */
+        .debug-info {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-family: monospace;
+            z-index: 9999;
+            max-width: 300px;
+            display: none;
+        }
+        
         /* Animations */
         @keyframes spin { 
             to { transform: rotate(360deg); } 
@@ -1177,6 +1193,9 @@
     <!-- Toast container -->
     <div class="toast-container" id="toast-container"></div>
     
+    <!-- Debug Info -->
+    <div id="debug-info" class="debug-info"></div>
+    
     <!-- Include Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     
@@ -1192,6 +1211,7 @@
         const messageArea = document.getElementById('message-area');
         const spinner = document.getElementById('spinner');
         const rememberMeCheckbox = document.getElementById('remember-me');
+        const debugInfo = document.getElementById('debug-info');
         
         // Profile modal elements
         const profileModal = document.getElementById('profile-modal');
@@ -1230,6 +1250,19 @@
         let currentUser = null;
         let termsAccepted = false;
         let privacyAccepted = false;
+        
+        // Debug function
+        function debug(message) {
+            console.log(message);
+            debugInfo.textContent += message + '\n';
+            debugInfo.style.display = 'block';
+        }
+        
+        // Clear debug info
+        function clearDebug() {
+            debugInfo.textContent = '';
+            debugInfo.style.display = 'none';
+        }
         
         // Toast notification function
         function showToast(message, type = 'info', duration = 5000) {
@@ -1287,8 +1320,21 @@
             spinner.style.display = 'none';
         }
         
+        // Check if dashboard file exists
+        async function checkDashboardExists(url) {
+            try {
+                const response = await fetch(url, { method: 'HEAD' });
+                return response.ok;
+            } catch (error) {
+                debug(`Dashboard check error: ${error.message}`);
+                return false;
+            }
+        }
+        
         // Redirect to dashboard based on role
-        function redirectToDashboard(role) {
+        async function redirectToDashboard(role) {
+            debug(`Attempting to redirect to dashboard for role: ${role}`);
+            
             // Store user data in localStorage for dashboard to use
             if (currentUser) {
                 const userData = {
@@ -1300,21 +1346,48 @@
                     semester: selectedSemester || '1'
                 };
                 localStorage.setItem('ibstudioz_user', JSON.stringify(userData));
+                debug(`User data stored in localStorage: ${JSON.stringify(userData)}`);
             }
             
-            // Redirect based on role
-            if (role === 'admin') {
-                window.location.href = 'admindashboard.html';
-            } else if (role === 'faculty') {
-                window.location.href = 'facultydashboard.html';
+            // Define the dashboard URLs
+            const dashboardUrls = {
+                admin: 'admindashboard.html',
+                faculty: 'facultydashboard.html',
+                student: 'studentdashboard.html'
+            };
+            
+            const url = dashboardUrls[role] || 'studentdashboard.html';
+            debug(`Redirect URL: ${url}`);
+            
+            // Check if dashboard file exists
+            const exists = await checkDashboardExists(url);
+            debug(`Dashboard exists: ${exists}`);
+            
+            if (exists) {
+                debug(`Redirecting to ${url}`);
+                window.location.href = url;
             } else {
-                window.location.href = 'studentdashboard.html';
+                debug(`Dashboard file not found: ${url}`);
+                showToast('Dashboard not found. Please contact administrator.', 'error');
+                
+                // Fallback: try to redirect to a generic dashboard
+                const fallbackUrl = 'dashboard.html';
+                const fallbackExists = await checkDashboardExists(fallbackUrl);
+                
+                if (fallbackExists) {
+                    debug(`Redirecting to fallback dashboard: ${fallbackUrl}`);
+                    window.location.href = fallbackUrl;
+                } else {
+                    debug('No dashboard found, staying on login page');
+                    showToast('No dashboard available. Please try again later.', 'error');
+                }
             }
         }
         
         // Create user record in Supabase
         async function createUserRecord(userData) {
             try {
+                debug(`Creating user record: ${JSON.stringify(userData)}`);
                 const { data, error } = await supabase
                     .from('users')
                     .insert([userData])
@@ -1324,9 +1397,10 @@
                     throw error;
                 }
                 
+                debug(`User record created successfully: ${JSON.stringify(data)}`);
                 return data;
             } catch (error) {
-                console.error('Error creating user record:', error);
+                debug(`Error creating user record: ${error.message}`);
                 throw error;
             }
         }
@@ -1334,6 +1408,7 @@
         // Update user record in Supabase
         async function updateUserRecord(userId, userData) {
             try {
+                debug(`Updating user record for ${userId}: ${JSON.stringify(userData)}`);
                 const { data, error } = await supabase
                     .from('users')
                     .update(userData)
@@ -1344,9 +1419,10 @@
                     throw error;
                 }
                 
+                debug(`User record updated successfully: ${JSON.stringify(data)}`);
                 return data;
             } catch (error) {
-                console.error('Error updating user record:', error);
+                debug(`Error updating user record: ${error.message}`);
                 throw error;
             }
         }
@@ -1354,6 +1430,7 @@
         // Get user record from Supabase
         async function getUserRecord(userId) {
             try {
+                debug(`Fetching user record for ${userId}`);
                 const { data, error } = await supabase
                     .from('users')
                     .select('*')
@@ -1364,9 +1441,10 @@
                     throw error;
                 }
                 
+                debug(`User record fetched: ${JSON.stringify(data)}`);
                 return data;
             } catch (error) {
-                console.error('Error fetching user record:', error);
+                debug(`Error fetching user record: ${error.message}`);
                 throw error;
             }
         }
@@ -1374,6 +1452,8 @@
         // Create or update user profile in Supabase
         async function saveUserProfile(userData) {
             try {
+                debug(`Saving user profile: ${JSON.stringify(userData)}`);
+                
                 // Check if user record exists
                 const existingUser = await getUserRecord(userData.id);
                 
@@ -1394,18 +1474,22 @@
                     return await createUserRecord(newData);
                 }
             } catch (error) {
-                console.error('Error saving user profile:', error);
+                debug(`Error saving user profile: ${error.message}`);
                 throw error;
             }
         }
         
         // Microsoft login
         microsoftLoginBtn.addEventListener('click', async () => {
+            clearDebug();
+            debug('Microsoft login button clicked');
+            
             // Show loading
             microsoftLoginBtn.classList.add('btn-loading');
             messageArea.style.display = 'none';
             
             try {
+                debug('Attempting Microsoft OAuth sign in');
                 // Sign in with Microsoft using OAuth
                 const { data, error } = await supabase.auth.signInWithOAuth({
                     provider: 'azure',
@@ -1418,8 +1502,10 @@
                     throw error;
                 }
                 
+                debug('Microsoft OAuth sign in initiated successfully');
                 // The redirect will happen automatically, so we don't need to do anything else here
             } catch (error) {
+                debug(`Login error: ${error.message}`);
                 console.error('Login error:', error);
                 messageArea.textContent = error.message || 'Login failed. Please try again.';
                 messageArea.className = 'message error';
@@ -1430,11 +1516,15 @@
         
         // Microsoft register
         registerBtn.addEventListener('click', async () => {
+            clearDebug();
+            debug('Microsoft register button clicked');
+            
             // Show loading
             registerBtn.classList.add('btn-loading');
             messageArea.style.display = 'none';
             
             try {
+                debug('Attempting Microsoft OAuth registration');
                 // Sign in with Microsoft using OAuth for registration
                 const { data, error } = await supabase.auth.signInWithOAuth({
                     provider: 'azure',
@@ -1447,8 +1537,10 @@
                     throw error;
                 }
                 
+                debug('Microsoft OAuth registration initiated successfully');
                 // The redirect will happen automatically, so we don't need to do anything else here
             } catch (error) {
+                debug(`Registration error: ${error.message}`);
                 console.error('Registration error:', error);
                 messageArea.textContent = error.message || 'Registration failed. Please try again.';
                 messageArea.className = 'message error';
@@ -1468,6 +1560,7 @@
                 // Add selected class to clicked option
                 option.classList.add('selected');
                 selectedRole = option.getAttribute('data-role');
+                debug(`Role selected: ${selectedRole}`);
             });
         });
         
@@ -1482,6 +1575,7 @@
                 // Add selected class to clicked item
                 item.classList.add('selected');
                 selectedBranch = item.getAttribute('data-branch');
+                debug(`Branch selected: ${selectedBranch}`);
             });
         });
         
@@ -1496,12 +1590,15 @@
                 // Add selected class to clicked item
                 item.classList.add('selected');
                 selectedSemester = item.getAttribute('data-semester');
+                debug(`Semester selected: ${selectedSemester}`);
             });
         });
         
         // Save profile
         profileForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            clearDebug();
+            debug('Profile form submitted');
             
             // Validate terms acceptance
             if (!termsAccepted || !privacyAccepted) {
@@ -1534,6 +1631,8 @@
                     semester: selectedSemester
                 };
                 
+                debug(`Saving user profile: ${JSON.stringify(userData)}`);
+                
                 // Save user profile to Supabase
                 await saveUserProfile(userData);
                 
@@ -1543,10 +1642,11 @@
                 profileMessage.style.display = 'block';
                 
                 // Redirect based on role
-                setTimeout(() => {
-                    redirectToDashboard(selectedRole);
+                setTimeout(async () => {
+                    await redirectToDashboard(selectedRole);
                 }, 1500);
             } catch (error) {
+                debug(`Profile save error: ${error.message}`);
                 console.error('Profile save error:', error);
                 profileMessage.textContent = error.message || 'Failed to save profile. Please try again.';
                 profileMessage.className = 'message error';
@@ -1557,6 +1657,9 @@
         
         // Skip profile completion
         skipProfileBtn.addEventListener('click', async () => {
+            clearDebug();
+            debug('Skip profile button clicked');
+            
             // Show loading
             skipProfileBtn.classList.add('btn-loading');
             
@@ -1571,12 +1674,15 @@
                     semester: '1'
                 };
                 
+                debug(`Saving default user profile: ${JSON.stringify(userData)}`);
+                
                 // Save user profile to Supabase
                 await saveUserProfile(userData);
                 
                 // Redirect to student dashboard
-                redirectToDashboard('student');
+                await redirectToDashboard('student');
             } catch (error) {
+                debug(`Skip profile error: ${error.message}`);
                 console.error('Profile save error:', error);
                 showToast('Failed to save profile. Please try again.', 'error');
                 skipProfileBtn.classList.remove('btn-loading');
@@ -1585,10 +1691,15 @@
         
         // Logout
         logoutBtn.addEventListener('click', async () => {
+            clearDebug();
+            debug('Logout button clicked');
+            
             try {
                 await supabase.auth.signOut();
+                debug('User logged out successfully');
                 window.location.reload();
             } catch (error) {
+                debug(`Logout error: ${error.message}`);
                 console.error('Logout error:', error);
                 showToast('Failed to logout. Please try again.', 'error');
             }
@@ -1661,6 +1772,9 @@
         
         // Check for existing session on page load
         async function checkSession() {
+            clearDebug();
+            debug('Checking for existing session');
+            
             try {
                 const { data: { session }, error } = await supabase.auth.getSession();
                 
@@ -1669,6 +1783,7 @@
                 }
                 
                 if (session) {
+                    debug(`Existing session found for user: ${session.user.email}`);
                     // User is logged in, get their role
                     const userId = session.user.id;
                     currentUser = session.user;
@@ -1681,23 +1796,30 @@
                     const action = urlParams.get('action');
                     
                     if (action === 'register' || !userData) {
+                        debug('New user or registration flow, showing profile modal');
                         // Show profile modal for new users
                         showProfileModal();
                     } else {
+                        debug(`Existing user with role: ${userData.role}, redirecting to dashboard`);
                         // Existing user, redirect based on role
                         selectedRole = userData.role;
                         selectedBranch = userData.branch;
                         selectedSemester = userData.semester;
-                        redirectToDashboard(userData.role);
+                        await redirectToDashboard(userData.role);
                     }
+                } else {
+                    debug('No existing session found');
                 }
             } catch (error) {
+                debug(`Session check error: ${error.message}`);
                 console.error('Session check error:', error);
             }
         }
         
         // Show profile modal
         function showProfileModal() {
+            debug('Showing profile modal');
+            
             // Set user info
             const name = currentUser.user_metadata.full_name || currentUser.email.split('@')[0];
             const initial = name.charAt(0).toUpperCase();
@@ -1735,7 +1857,11 @@
         
         // Handle auth state changes
         supabase.auth.onAuthStateChange(async (event, session) => {
+            clearDebug();
+            debug(`Auth state changed: ${event}`);
+            
             if (event === 'SIGNED_IN' && session) {
+                debug(`User signed in: ${session.user.email}`);
                 // User just signed in, get their role
                 const userId = session.user.id;
                 currentUser = session.user;
@@ -1749,16 +1875,19 @@
                     const action = urlParams.get('action');
                     
                     if (action === 'register' || !userData) {
+                        debug('New user or registration flow, showing profile modal');
                         // Show profile modal for new users
                         showProfileModal();
                     } else {
+                        debug(`Existing user with role: ${userData.role}, redirecting to dashboard`);
                         // User exists, redirect based on role
                         selectedRole = userData.role;
                         selectedBranch = userData.branch;
                         selectedSemester = userData.semester;
-                        redirectToDashboard(userData.role);
+                        await redirectToDashboard(userData.role);
                     }
                 } catch (error) {
+                    debug(`Error during auth state change: ${error.message}`);
                     console.error('Error during auth state change:', error);
                 }
             }
@@ -1766,6 +1895,13 @@
         
         // Check session on page load
         checkSession();
+        
+        // Add debug toggle
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+                debugInfo.style.display = debugInfo.style.display === 'none' ? 'block' : 'none';
+            }
+        });
     </script>
 </body>
 </html>
