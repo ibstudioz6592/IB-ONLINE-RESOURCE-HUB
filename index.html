@@ -9,7 +9,7 @@
     <meta name="theme-color" content="#1a73e8">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <title>IB STUDIOZ | Enterprise Learning Platform</title>
+    <title>IB STUDIOZ | An General Hub for Your Needs</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -790,15 +790,6 @@
             color: var(--primary);
         }
         
-        /* Forgot Password Form */
-        .forgot-password-form {
-            display: none;
-        }
-        
-        .forgot-password-form.active {
-            display: block;
-        }
-        
         /* Animations */
         @keyframes spin { 
             to { transform: rotate(360deg); } 
@@ -912,27 +903,6 @@
                 <label for="remember-me" class="checkbox-custom"></label>
                 <label for="remember-me" class="checkbox-label">Remember me</label>
             </div>
-            
-            <div class="forgot-password-form" id="forgot-password-form">
-                <div class="form-group">
-                    <label class="form-label" for="forgot-email">Enter your email address</label>
-                    <input type="email" id="forgot-email" class="form-control" placeholder="your.email@example.com">
-                </div>
-                <button type="button" class="btn btn-primary" id="reset-password-btn">
-                    <i class="fas fa-key"></i>
-                    <span class="btn-text">Reset Password</span>
-                    <div class="btn-spinner"></div>
-                </button>
-                <button type="button" class="btn btn-secondary" id="back-to-login-btn">
-                    <i class="fas fa-arrow-left"></i>
-                    <span class="btn-text">Back to Login</span>
-                </button>
-            </div>
-            
-            <button type="button" class="btn btn-secondary" id="forgot-password-btn">
-                <i class="fas fa-lock"></i>
-                <span class="btn-text">Forgot Password?</span>
-            </button>
         </div>
         
         <div class="footer">
@@ -1222,11 +1192,6 @@
         const messageArea = document.getElementById('message-area');
         const spinner = document.getElementById('spinner');
         const rememberMeCheckbox = document.getElementById('remember-me');
-        const forgotPasswordBtn = document.getElementById('forgot-password-btn');
-        const forgotPasswordForm = document.getElementById('forgot-password-form');
-        const backToLoginBtn = document.getElementById('back-to-login-btn');
-        const resetPasswordBtn = document.getElementById('reset-password-btn');
-        const forgotEmailInput = document.getElementById('forgot-email');
         
         // Profile modal elements
         const profileModal = document.getElementById('profile-modal');
@@ -1322,6 +1287,118 @@
             spinner.style.display = 'none';
         }
         
+        // Redirect to dashboard based on role
+        function redirectToDashboard(role) {
+            // Store user data in localStorage for dashboard to use
+            if (currentUser) {
+                const userData = {
+                    id: currentUser.id,
+                    email: currentUser.email,
+                    name: currentUser.user_metadata.full_name || currentUser.email.split('@')[0],
+                    role: role,
+                    branch: selectedBranch || 'CSE',
+                    semester: selectedSemester || '1'
+                };
+                localStorage.setItem('ibstudioz_user', JSON.stringify(userData));
+            }
+            
+            // Redirect based on role
+            if (role === 'admin') {
+                window.location.href = 'admindashboard.html';
+            } else if (role === 'faculty') {
+                window.location.href = 'facultydashboard.html';
+            } else {
+                window.location.href = 'studentdashboard.html';
+            }
+        }
+        
+        // Create user record in Supabase
+        async function createUserRecord(userData) {
+            try {
+                const { data, error } = await supabase
+                    .from('users')
+                    .insert([userData])
+                    .select();
+                
+                if (error) {
+                    throw error;
+                }
+                
+                return data;
+            } catch (error) {
+                console.error('Error creating user record:', error);
+                throw error;
+            }
+        }
+        
+        // Update user record in Supabase
+        async function updateUserRecord(userId, userData) {
+            try {
+                const { data, error } = await supabase
+                    .from('users')
+                    .update(userData)
+                    .eq('id', userId)
+                    .select();
+                
+                if (error) {
+                    throw error;
+                }
+                
+                return data;
+            } catch (error) {
+                console.error('Error updating user record:', error);
+                throw error;
+            }
+        }
+        
+        // Get user record from Supabase
+        async function getUserRecord(userId) {
+            try {
+                const { data, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('id', userId)
+                    .single();
+                
+                if (error && error.code !== 'PGRST116') { // PGRST116 is the error code for no rows returned
+                    throw error;
+                }
+                
+                return data;
+            } catch (error) {
+                console.error('Error fetching user record:', error);
+                throw error;
+            }
+        }
+        
+        // Create or update user profile in Supabase
+        async function saveUserProfile(userData) {
+            try {
+                // Check if user record exists
+                const existingUser = await getUserRecord(userData.id);
+                
+                if (existingUser) {
+                    // Update existing user record
+                    const updatedData = {
+                        ...userData,
+                        updated_at: new Date()
+                    };
+                    return await updateUserRecord(userData.id, updatedData);
+                } else {
+                    // Create new user record
+                    const newData = {
+                        ...userData,
+                        created_at: new Date(),
+                        updated_at: new Date()
+                    };
+                    return await createUserRecord(newData);
+                }
+            } catch (error) {
+                console.error('Error saving user profile:', error);
+                throw error;
+            }
+        }
+        
         // Microsoft login
         microsoftLoginBtn.addEventListener('click', async () => {
             // Show loading
@@ -1377,47 +1454,6 @@
                 messageArea.className = 'message error';
                 messageArea.style.display = 'block';
                 registerBtn.classList.remove('btn-loading');
-            }
-        });
-        
-        // Forgot password functionality
-        forgotPasswordBtn.addEventListener('click', () => {
-            forgotPasswordForm.classList.add('active');
-            forgotPasswordBtn.style.display = 'none';
-        });
-        
-        backToLoginBtn.addEventListener('click', () => {
-            forgotPasswordForm.classList.remove('active');
-            forgotPasswordBtn.style.display = 'block';
-        });
-        
-        resetPasswordBtn.addEventListener('click', async () => {
-            const email = forgotEmailInput.value.trim();
-            
-            if (!email) {
-                showToast('Please enter your email address', 'error');
-                return;
-            }
-            
-            resetPasswordBtn.classList.add('btn-loading');
-            
-            try {
-                const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                    redirectTo: window.location.origin
-                });
-                
-                if (error) {
-                    throw error;
-                }
-                
-                showToast('Password reset link sent to your email', 'success');
-                forgotPasswordForm.classList.remove('active');
-                forgotPasswordBtn.style.display = 'block';
-            } catch (error) {
-                console.error('Password reset error:', error);
-                showToast(error.message || 'Failed to send password reset email', 'error');
-            } finally {
-                resetPasswordBtn.classList.remove('btn-loading');
             }
         });
         
@@ -1488,23 +1524,18 @@
             profileMessage.style.display = 'none';
             
             try {
-                // Update user profile in Supabase
-                const { data, error } = await supabase
-                    .from('users')
-                    .upsert({
-                        id: currentUser.id,
-                        email: currentUser.email,
-                        name: currentUser.user_metadata.full_name || currentUser.email.split('@')[0],
-                        role: selectedRole,
-                        branch: selectedBranch,
-                        semester: selectedSemester,
-                        updated_at: new Date()
-                    })
-                    .select();
+                // Prepare user data
+                const userData = {
+                    id: currentUser.id,
+                    email: currentUser.email,
+                    name: currentUser.user_metadata.full_name || currentUser.email.split('@')[0],
+                    role: selectedRole,
+                    branch: selectedBranch,
+                    semester: selectedSemester
+                };
                 
-                if (error) {
-                    throw error;
-                }
+                // Save user profile to Supabase
+                await saveUserProfile(userData);
                 
                 // Show success message
                 profileMessage.textContent = 'Profile saved successfully! Redirecting...';
@@ -1513,11 +1544,7 @@
                 
                 // Redirect based on role
                 setTimeout(() => {
-                    if (selectedRole === 'admin') {
-                        window.location.href = 'admindashboard.html';
-                    } else {
-                        window.location.href = 'studentdashboard.html';
-                    }
+                    redirectToDashboard(selectedRole);
                 }, 1500);
             } catch (error) {
                 console.error('Profile save error:', error);
@@ -1534,26 +1561,21 @@
             skipProfileBtn.classList.add('btn-loading');
             
             try {
-                // Update user profile with default values in Supabase
-                const { data, error } = await supabase
-                    .from('users')
-                    .upsert({
-                        id: currentUser.id,
-                        email: currentUser.email,
-                        name: currentUser.user_metadata.full_name || currentUser.email.split('@')[0],
-                        role: 'student',
-                        branch: 'CSE',
-                        semester: '1',
-                        updated_at: new Date()
-                    })
-                    .select();
+                // Prepare user data with default values
+                const userData = {
+                    id: currentUser.id,
+                    email: currentUser.email,
+                    name: currentUser.user_metadata.full_name || currentUser.email.split('@')[0],
+                    role: 'student',
+                    branch: 'CSE',
+                    semester: '1'
+                };
                 
-                if (error) {
-                    throw error;
-                }
+                // Save user profile to Supabase
+                await saveUserProfile(userData);
                 
                 // Redirect to student dashboard
-                window.location.href = 'studentdashboard.html';
+                redirectToDashboard('student');
             } catch (error) {
                 console.error('Profile save error:', error);
                 showToast('Failed to save profile. Please try again.', 'error');
@@ -1649,18 +1671,10 @@
                 if (session) {
                     // User is logged in, get their role
                     const userId = session.user.id;
+                    currentUser = session.user;
                     
-                    // Fetch user data from the users table
-                    const { data: userData, error: userError } = await supabase
-                        .from('users')
-                        .select('*')
-                        .eq('id', userId)
-                        .single();
-                    
-                    if (userError && userError.code !== 'PGRST116') { // PGRST116 is the error code for no rows returned
-                        console.error('Error fetching user data:', userError);
-                        return;
-                    }
+                    // Fetch user data from Supabase
+                    const userData = await getUserRecord(userId);
                     
                     // Check if this is a registration flow
                     const urlParams = new URLSearchParams(window.location.search);
@@ -1668,15 +1682,13 @@
                     
                     if (action === 'register' || !userData) {
                         // Show profile modal for new users
-                        currentUser = session.user;
                         showProfileModal();
                     } else {
                         // Existing user, redirect based on role
-                        if (userData.role === 'admin') {
-                            window.location.href = 'admindashboard.html';
-                        } else {
-                            window.location.href = 'studentdashboard.html';
-                        }
+                        selectedRole = userData.role;
+                        selectedBranch = userData.branch;
+                        selectedSemester = userData.semester;
+                        redirectToDashboard(userData.role);
                     }
                 }
             } catch (error) {
@@ -1729,32 +1741,22 @@
                 currentUser = session.user;
                 
                 try {
-                    // Check if user exists in the users table
-                    const { data: existingUser, error: fetchError } = await supabase
-                        .from('users')
-                        .select('*')
-                        .eq('id', userId)
-                        .single();
-                    
-                    if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 is the error code for no rows returned
-                        console.error('Error fetching user data:', fetchError);
-                        return;
-                    }
+                    // Fetch user data from Supabase
+                    const userData = await getUserRecord(userId);
                     
                     // Check if this is a registration flow
                     const urlParams = new URLSearchParams(window.location.search);
                     const action = urlParams.get('action');
                     
-                    if (action === 'register' || !existingUser) {
+                    if (action === 'register' || !userData) {
                         // Show profile modal for new users
                         showProfileModal();
                     } else {
                         // User exists, redirect based on role
-                        if (existingUser.role === 'admin') {
-                            window.location.href = 'admindashboard.html';
-                        } else {
-                            window.location.href = 'studentdashboard.html';
-                        }
+                        selectedRole = userData.role;
+                        selectedBranch = userData.branch;
+                        selectedSemester = userData.semester;
+                        redirectToDashboard(userData.role);
                     }
                 } catch (error) {
                     console.error('Error during auth state change:', error);
