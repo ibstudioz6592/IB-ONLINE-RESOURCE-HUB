@@ -11,6 +11,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <title>IB STUDIOZ | Enterprise Learning Platform</title>
     
+    <!-- Favicon -->
+    <link rel="icon" href="https://z-cdn-media.chatglm.cn/files/8d0f360e-68b9-4451-a12f-69dc9ad9a45c_logo%28IB%29.png?auth_key=1789390851-98941ab4fb6c4a849b5519d882b089ab-0-ad6f09ddccd0c00065beaa2cd725a232" type="image/png">
+    <link rel="apple-touch-icon" href="https://z-cdn-media.chatglm.cn/files/8d0f360e-68b9-4451-a12f-69dc9ad9a45c_logo%28IB%29.png?auth_key=1789390851-98941ab4fb6c4a849b5519d882b089ab-0-ad6f09ddccd0c00065beaa2cd725a232">
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -394,11 +398,19 @@
             left: 0; 
             width: 100%; 
             height: 100%; 
-            background: rgba(255, 255, 255, 0.8); 
+            background: rgba(255, 255, 255, 0.9); 
             display: flex; 
+            flex-direction: column;
             justify-content: center; 
             align-items: center; 
             z-index: 1000; 
+        }
+        
+        .spinner-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 24px;
+            animation: pulse 2s infinite;
         }
         
         .spinner { 
@@ -408,6 +420,12 @@
             border-radius: 50%; 
             border-top-color: var(--primary); 
             animation: spin 1s ease-in-out infinite; 
+        }
+        
+        .spinner-text {
+            margin-top: 16px;
+            color: var(--text-secondary);
+            font-weight: 500;
         }
         
         /* Button loading state */
@@ -811,6 +829,12 @@
             to { transform: rotate(360deg); } 
         }
         
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -1188,7 +1212,12 @@
         </div>
     </div>
     
-    <div id="spinner" class="spinner-overlay" style="display: none;"><div class="spinner"></div></div>
+    <!-- Loading Spinner with Logo -->
+    <div id="spinner" class="spinner-overlay" style="display: none;">
+        <img src="https://z-cdn-media.chatglm.cn/files/8d0f360e-68b9-4451-a12f-69dc9ad9a45c_logo%28IB%29.png?auth_key=1789390851-98941ab4fb6c4a849b5519d882b089ab-0-ad6f09ddccd0c00065beaa2cd725a232" alt="IB STUDIOZ" class="spinner-logo">
+        <div class="spinner"></div>
+        <div class="spinner-text">Loading...</div>
+    </div>
     
     <!-- Toast container -->
     <div class="toast-container" id="toast-container"></div>
@@ -1320,17 +1349,6 @@
             spinner.style.display = 'none';
         }
         
-        // Check if dashboard file exists
-        async function checkDashboardExists(url) {
-            try {
-                const response = await fetch(url, { method: 'HEAD' });
-                return response.ok;
-            } catch (error) {
-                debug(`Dashboard check error: ${error.message}`);
-                return false;
-            }
-        }
-        
         // Redirect to dashboard based on role
         async function redirectToDashboard(role) {
             debug(`Attempting to redirect to dashboard for role: ${role}`);
@@ -1349,39 +1367,28 @@
                 debug(`User data stored in localStorage: ${JSON.stringify(userData)}`);
             }
             
-            // Define the dashboard URLs
+            // Define the dashboard URLs with absolute paths
             const dashboardUrls = {
-                admin: 'admindashboard.html',
-                faculty: 'facultydashboard.html',
-                student: 'studentdashboard.html'
+                admin: '/admindashboard.html',
+                faculty: '/facultydashboard.html',
+                student: '/studentdashboard.html'
             };
             
-            const url = dashboardUrls[role] || 'studentdashboard.html';
+            const url = dashboardUrls[role] || '/studentdashboard.html';
             debug(`Redirect URL: ${url}`);
             
-            // Check if dashboard file exists
-            const exists = await checkDashboardExists(url);
-            debug(`Dashboard exists: ${exists}`);
+            // Try to redirect to the specific dashboard
+            window.location.href = url;
             
-            if (exists) {
-                debug(`Redirecting to ${url}`);
-                window.location.href = url;
-            } else {
-                debug(`Dashboard file not found: ${url}`);
-                showToast('Dashboard not found. Please contact administrator.', 'error');
-                
-                // Fallback: try to redirect to a generic dashboard
-                const fallbackUrl = 'dashboard.html';
-                const fallbackExists = await checkDashboardExists(fallbackUrl);
-                
-                if (fallbackExists) {
-                    debug(`Redirecting to fallback dashboard: ${fallbackUrl}`);
-                    window.location.href = fallbackUrl;
-                } else {
-                    debug('No dashboard found, staying on login page');
-                    showToast('No dashboard available. Please try again later.', 'error');
+            // Fallback: if after 3 seconds we are still on the same page, redirect to a generic dashboard
+            setTimeout(() => {
+                // Check if we are still on the login page (index.html) or the root
+                if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+                    debug(`Specific dashboard not found, redirecting to fallback dashboard`);
+                    showToast('Dashboard not found. Redirecting to main dashboard...', 'info');
+                    window.location.href = '/dashboard.html';
                 }
-            }
+            }, 3000);
         }
         
         // Create user record in Supabase
