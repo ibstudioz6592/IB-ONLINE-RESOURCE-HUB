@@ -12,8 +12,8 @@
     <title>IB STUDIOZ | Enterprise Learning Platform</title>
     
     <!-- Favicon -->
-    <link rel="icon" href="https://z-cdn-media.chatglm.cn/files/8d0f360e-68b9-4451-a12f-69dc9ad9a45c_logo%28IB%29.png?auth_key=1789390851-98941ab4fb6c4a849b5519d882b089ab-0-ad6f09ddccd0c00065beaa2cd725a232" type="image/png">
-    <link rel="apple-touch-icon" href="https://z-cdn-media.chatglm.cn/files/8d0f360e-68b9-4451-a12f-69dc9ad9a45c_logo%28IB%29.png?auth_key=1789390851-98941ab4fb6c4a849b5519d882b089ab-0-ad6f09ddccd0c00065beaa2cd725a232">
+    <link rel="icon" href="https://z-cdn-media.chatglm.cn/files/fdef8460-72eb-426b-999a-55fb65f87dfc_logo%28IB%29.png?auth_key=1789393105-1daab6091e514364812f41e58f215ba1-0-b80b581e4e5006b158843423afacd0eb" type="image/png">
+    <link rel="apple-touch-icon" href="https://z-cdn-media.chatglm.cn/files/fdef8460-72eb-426b-999a-55fb65f87dfc_logo%28IB%29.png?auth_key=1789393105-1daab6091e514364812f41e58f215ba1-0-b80b581e4e5006b158843423afacd0eb">
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -122,17 +122,21 @@
         .logo-icon {
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 28px;
-            font-weight: 700;
             margin-right: 16px;
             box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
             transition: transform 0.3s ease;
+            background-color: #FFD700; /* Yellow background to match the logo */
+            padding: 8px;
+        }
+        
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
         
         .logo:hover .logo-icon {
@@ -911,7 +915,9 @@
     <div class="container">
         <div class="header-section">
             <div class="logo">
-                <div class="logo-icon">IB</div>
+                <div class="logo-icon">
+                    <img src="https://z-cdn-media.chatglm.cn/files/fdef8460-72eb-426b-999a-55fb65f87dfc_logo%28IB%29.png?auth_key=1789393105-1daab6091e514364812f41e58f215ba1-0-b80b581e4e5006b158843423afacd0eb" alt="IB">
+                </div>
                 <div class="logo-text">STUDIOZ</div>
             </div>
             <div class="tagline">Enterprise Learning Platform</div>
@@ -1214,7 +1220,7 @@
     
     <!-- Loading Spinner with Logo -->
     <div id="spinner" class="spinner-overlay" style="display: none;">
-        <img src="https://z-cdn-media.chatglm.cn/files/8d0f360e-68b9-4451-a12f-69dc9ad9a45c_logo%28IB%29.png?auth_key=1789390851-98941ab4fb6c4a849b5519d882b089ab-0-ad6f09ddccd0c00065beaa2cd725a232" alt="IB STUDIOZ" class="spinner-logo">
+        <img src="https://z-cdn-media.chatglm.cn/files/fdef8460-72eb-426b-999a-55fb65f87dfc_logo%28IB%29.png?auth_key=1789393105-1daab6091e514364812f41e58f215ba1-0-b80b581e4e5006b158843423afacd0eb" alt="IB STUDIOZ" class="spinner-logo">
         <div class="spinner"></div>
         <div class="spinner-text">Loading...</div>
     </div>
@@ -1369,9 +1375,9 @@
             
             // Define the dashboard URLs with absolute paths
             const dashboardUrls = {
-                admin: '/admindashboard.html',
+                admin: 'https://ib-online-resource-hub.vercel.app/admindashboard.html',
                 faculty: '/facultydashboard.html',
-                student: '/studentdashboard.html'
+                student: 'https://ib-online-resource-hub.vercel.app/studentdashboard.html'
             };
             
             const url = dashboardUrls[role] || '/studentdashboard.html';
