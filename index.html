@@ -116,21 +116,27 @@
         }
         
         .logo-icon {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 12px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
-            margin-right: 12px;
+            margin-right: 16px;
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover .logo-icon {
+            transform: translateY(-5px);
         }
         
         .logo-text {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 800;
             color: var(--dark);
             letter-spacing: -0.5px;
@@ -138,7 +144,7 @@
         
         .tagline {
             color: var(--text-secondary);
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 500;
             margin-top: 8px;
         }
@@ -146,31 +152,31 @@
         /* Card Styles */
         .auth-card { 
             width: 100%; 
-            max-width: 440px; 
+            max-width: 460px; 
             background: var(--card-bg); 
-            border-radius: 16px; 
+            border-radius: 20px; 
             border: 1px solid var(--border-color); 
-            padding: 40px; 
-            box-shadow: 0 4px 12px var(--shadow-color);
+            padding: 48px; 
+            box-shadow: 0 8px 24px var(--shadow-color);
             transition: all 0.3s ease;
             animation: slideUp 0.6s ease-out;
         }
         
         .auth-card:hover {
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
         }
         
         .card-title {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
             color: var(--dark);
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
         
         .card-subtitle {
             color: var(--text-secondary);
-            margin-bottom: 32px;
-            font-size: 16px;
+            margin-bottom: 36px;
+            font-size: 18px;
         }
         
         /* Button Styles */
@@ -178,19 +184,36 @@
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            padding: 12px 24px; 
-            border-radius: 8px; 
+            padding: 14px 24px; 
+            border-radius: 10px; 
             border: none; 
             font-size: 16px; 
             font-weight: 600; 
             cursor: pointer; 
             text-align: center; 
-            transition: all 0.2s ease; 
+            transition: all 0.3s ease; 
             text-decoration: none;
             width: 100%;
             position: relative;
             overflow: hidden;
-            min-height: 48px;
+            min-height: 52px;
+            margin-bottom: 16px;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .btn:hover::before {
+            transform: translateX(0);
         }
         
         .btn-primary { 
@@ -200,6 +223,8 @@
         
         .btn-primary:hover { 
             background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
         }
         
         .btn-secondary { 
@@ -210,6 +235,7 @@
         
         .btn-secondary:hover { 
             background: rgba(26, 115, 232, 0.04);
+            transform: translateY(-2px);
         }
         
         .btn-microsoft { 
@@ -218,22 +244,28 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 16px;
         }
         
         .btn-microsoft:hover { 
             background: #005a9e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 120, 215, 0.3);
         }
         
         .btn-microsoft i {
-            font-size: 20px;
+            font-size: 24px;
+        }
+        
+        .btn-icon {
+            margin-right: 12px;
         }
         
         /* Divider */
         .divider {
             display: flex;
             align-items: center;
-            margin: 24px 0;
+            margin: 32px 0;
             color: var(--text-secondary);
             font-size: 14px;
         }
@@ -250,12 +282,12 @@
         
         /* Form Styles */
         .form-group { 
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
         
         .form-label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 500;
             font-size: 14px;
             color: var(--text-primary);
@@ -263,13 +295,13 @@
         
         .form-control { 
             width: 100%; 
-            padding: 12px 16px; 
-            border-radius: 8px; 
+            padding: 14px 16px; 
+            border-radius: 10px; 
             border: 1px solid var(--border-color); 
             background-color: var(--card-bg); 
             color: var(--text-primary); 
             font-size: 16px; 
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             font-family: "Inter", sans-serif;
         }
         
@@ -279,14 +311,62 @@
             box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
         }
         
+        .form-control:hover {
+            border-color: var(--primary);
+        }
+        
+        /* Checkbox Styles */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .checkbox {
+            display: none;
+        }
+        
+        .checkbox-custom {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            margin-right: 12px;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .checkbox:checked + .checkbox-custom {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .checkbox:checked + .checkbox-custom::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+        }
+        
+        .checkbox-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
         /* Message Styles */
         .message { 
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin-bottom: 24px;
             font-size: 14px;
             font-weight: 500;
             display: none;
+            animation: fadeIn 0.3s ease;
         }
         
         .message.error { 
@@ -322,9 +402,9 @@
         }
         
         .spinner { 
-            width: 40px; 
-            height: 40px; 
-            border: 4px solid rgba(26, 115, 232, 0.2); 
+            width: 50px; 
+            height: 50px; 
+            border: 5px solid rgba(26, 115, 232, 0.2); 
             border-radius: 50%; 
             border-top-color: var(--primary); 
             animation: spin 1s ease-in-out infinite; 
@@ -351,8 +431,8 @@
         
         .btn-spinner {
             display: none;
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             border: 2px solid rgba(255,255,255,0.3);
             border-radius: 50%;
             border-top-color: white;
@@ -384,12 +464,12 @@
         
         .modal {
             background: var(--card-bg);
-            border-radius: 16px;
+            border-radius: 20px;
             width: 100%;
-            max-width: 500px;
-            padding: 32px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-            transform: translateY(-20px);
+            max-width: 540px;
+            padding: 40px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+            transform: translateY(-30px);
             transition: transform 0.3s ease;
             max-height: 90vh;
             overflow-y: auto;
@@ -403,11 +483,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
         
         .modal-title {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 700;
             color: var(--dark);
         }
@@ -416,10 +496,10 @@
             background: none;
             border: none;
             color: var(--text-secondary);
-            font-size: 20px;
+            font-size: 24px;
             cursor: pointer;
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -436,31 +516,33 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 16px;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
         
         .role-option {
-            padding: 20px 16px;
-            border-radius: 12px;
+            padding: 24px 16px;
+            border-radius: 16px;
             border: 1px solid var(--border-color);
             background: var(--card-bg);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             text-align: center;
         }
         
         .role-option:hover {
             border-color: var(--primary);
-            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.1);
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.1);
+            transform: translateY(-3px);
         }
         
         .role-option.selected {
             border-color: var(--primary);
             background: rgba(26, 115, 232, 0.05);
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.15);
         }
         
         .role-icon {
-            font-size: 28px;
+            font-size: 32px;
             margin-bottom: 12px;
         }
         
@@ -491,32 +573,34 @@
         .branch-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-bottom: 24px;
+            gap: 16px;
+            margin-bottom: 28px;
         }
         
         .branch-item {
-            padding: 16px 12px;
-            border-radius: 8px;
+            padding: 20px 12px;
+            border-radius: 12px;
             border: 1px solid var(--border-color);
             background: var(--card-bg);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             text-align: center;
         }
         
         .branch-item:hover {
             border-color: var(--primary);
-            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.1);
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.1);
+            transform: translateY(-3px);
         }
         
         .branch-item.selected {
             border-color: var(--primary);
             background: rgba(26, 115, 232, 0.05);
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.15);
         }
         
         .branch-icon {
-            font-size: 24px;
+            font-size: 28px;
             margin-bottom: 8px;
             color: var(--primary);
         }
@@ -530,32 +614,34 @@
         .semester-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-bottom: 24px;
+            gap: 16px;
+            margin-bottom: 28px;
         }
         
         .semester-item {
-            padding: 16px 12px;
-            border-radius: 8px;
+            padding: 20px 12px;
+            border-radius: 12px;
             border: 1px solid var(--border-color);
             background: var(--card-bg);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             text-align: center;
         }
         
         .semester-item:hover {
             border-color: var(--primary);
-            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.1);
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.1);
+            transform: translateY(-3px);
         }
         
         .semester-item.selected {
             border-color: var(--primary);
             background: rgba(26, 115, 232, 0.05);
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.15);
         }
         
         .semester-number {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 700;
             margin-bottom: 4px;
         }
@@ -569,37 +655,52 @@
         .user-profile {
             display: flex;
             align-items: center;
-            margin-bottom: 24px;
-            padding: 16px;
+            margin-bottom: 28px;
+            padding: 20px;
             background: rgba(26, 115, 232, 0.05);
-            border-radius: 12px;
+            border-radius: 16px;
             border: 1px solid rgba(26, 115, 232, 0.1);
         }
         
         .user-avatar {
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             background: var(--primary);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 600;
-            margin-right: 16px;
+            margin-right: 20px;
             flex-shrink: 0;
         }
         
         .user-info h3 {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 600;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
         
         .user-info p {
             font-size: 14px;
             color: var(--text-secondary);
+        }
+        
+        /* Terms Checkbox */
+        .terms-group {
+            margin-bottom: 24px;
+        }
+        
+        .terms-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .terms-link:hover {
+            text-decoration: underline;
         }
         
         /* Toast Notification */
@@ -612,14 +713,14 @@
         
         .toast {
             background: var(--card-bg);
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 16px 20px;
-            margin-bottom: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
             display: flex;
             align-items: center;
-            gap: 12px;
-            min-width: 300px;
+            gap: 16px;
+            min-width: 320px;
             transform: translateX(400px);
             transition: transform 0.3s ease;
         }
@@ -629,7 +730,7 @@
         }
         
         .toast i {
-            font-size: 20px;
+            font-size: 24px;
         }
         
         .toast.success i {
@@ -648,9 +749,24 @@
             flex: 1;
         }
         
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+        
+        .toast-close:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        
         /* Footer */
         .footer {
-            margin-top: 40px;
+            margin-top: 48px;
             text-align: center;
             color: var(--text-secondary);
             font-size: 14px;
@@ -659,18 +775,28 @@
         .footer-links {
             display: flex;
             justify-content: center;
-            gap: 24px;
-            margin-top: 12px;
+            gap: 28px;
+            margin-top: 16px;
         }
         
         .footer-links a {
             color: var(--text-secondary);
             text-decoration: none;
             transition: color 0.2s ease;
+            font-weight: 500;
         }
         
         .footer-links a:hover {
             color: var(--primary);
+        }
+        
+        /* Forgot Password Form */
+        .forgot-password-form {
+            display: none;
+        }
+        
+        .forgot-password-form.active {
+            display: block;
         }
         
         /* Animations */
@@ -741,6 +867,10 @@
             .branch-grid, .semester-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .modal {
+                padding: 24px;
+            }
         }
     </style>
 </head>
@@ -775,6 +905,33 @@
             <button type="button" class="btn btn-secondary" id="register-btn">
                 <i class="fas fa-user-plus"></i>
                 <span class="btn-text">Register with Microsoft</span>
+            </button>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="remember-me" class="checkbox">
+                <label for="remember-me" class="checkbox-custom"></label>
+                <label for="remember-me" class="checkbox-label">Remember me</label>
+            </div>
+            
+            <div class="forgot-password-form" id="forgot-password-form">
+                <div class="form-group">
+                    <label class="form-label" for="forgot-email">Enter your email address</label>
+                    <input type="email" id="forgot-email" class="form-control" placeholder="your.email@example.com">
+                </div>
+                <button type="button" class="btn btn-primary" id="reset-password-btn">
+                    <i class="fas fa-key"></i>
+                    <span class="btn-text">Reset Password</span>
+                    <div class="btn-spinner"></div>
+                </button>
+                <button type="button" class="btn btn-secondary" id="back-to-login-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span class="btn-text">Back to Login</span>
+                </button>
+            </div>
+            
+            <button type="button" class="btn btn-secondary" id="forgot-password-btn">
+                <i class="fas fa-lock"></i>
+                <span class="btn-text">Forgot Password?</span>
             </button>
         </div>
         
@@ -924,12 +1081,31 @@
                     </div>
                 </div>
                 
+                <div class="terms-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms-checkbox" class="checkbox">
+                        <label for="terms-checkbox" class="checkbox-custom"></label>
+                        <label for="terms-checkbox" class="checkbox-label">I agree to the <a href="#" class="terms-link" id="terms-link-modal">Terms of Service</a> and <a href="#" class="terms-link" id="privacy-link-modal">Privacy Policy</a></label>
+                    </div>
+                </div>
+                
                 <div id="profile-message" class="message" role="alert" aria-live="polite"></div>
                 
-                <button type="submit" class="btn btn-primary" id="save-profile-btn">
-                    <span class="btn-text">Save Profile</span>
-                    <div class="btn-spinner"></div>
-                </button>
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary" id="save-profile-btn">
+                        <i class="fas fa-save"></i>
+                        <span class="btn-text">Save Profile</span>
+                        <div class="btn-spinner"></div>
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="skip-profile-btn">
+                        <i class="fas fa-forward"></i>
+                        <span class="btn-text">Skip for Now</span>
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="btn-text">Back to Login</span>
+                    </button>
+                </div>
             </form>
         </div>
     </div>
@@ -955,7 +1131,7 @@
                 <h4>4. Limitations</h4>
                 <p>In no event shall IB STUDIOZ or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on IB STUDIOZ.</p>
                 
-                <button class="btn btn-secondary" id="accept-terms-btn">I Accept</button>
+                <button class="btn btn-primary" id="accept-terms-btn">I Accept</button>
             </div>
         </div>
     </div>
@@ -987,7 +1163,7 @@
                     <li>To detect, prevent and address technical issues</li>
                 </ul>
                 
-                <button class="btn btn-secondary" id="accept-privacy-btn">I Accept</button>
+                <button class="btn btn-primary" id="accept-privacy-btn">I Accept</button>
             </div>
         </div>
     </div>
@@ -1045,16 +1221,25 @@
         const registerBtn = document.getElementById('register-btn');
         const messageArea = document.getElementById('message-area');
         const spinner = document.getElementById('spinner');
+        const rememberMeCheckbox = document.getElementById('remember-me');
+        const forgotPasswordBtn = document.getElementById('forgot-password-btn');
+        const forgotPasswordForm = document.getElementById('forgot-password-form');
+        const backToLoginBtn = document.getElementById('back-to-login-btn');
+        const resetPasswordBtn = document.getElementById('reset-password-btn');
+        const forgotEmailInput = document.getElementById('forgot-email');
         
         // Profile modal elements
         const profileModal = document.getElementById('profile-modal');
         const profileModalClose = document.getElementById('profile-modal-close');
         const profileForm = document.getElementById('profile-form');
         const saveProfileBtn = document.getElementById('save-profile-btn');
+        const skipProfileBtn = document.getElementById('skip-profile-btn');
+        const logoutBtn = document.getElementById('logout-btn');
         const profileMessage = document.getElementById('profile-message');
         const userAvatar = document.getElementById('user-avatar');
         const userName = document.getElementById('user-name');
         const userEmail = document.getElementById('user-email');
+        const termsCheckbox = document.getElementById('terms-checkbox');
         
         // Modal elements
         const termsModal = document.getElementById('terms-modal');
@@ -1070,15 +1255,19 @@
         const termsLink = document.getElementById('terms-link');
         const privacyLink = document.getElementById('privacy-link');
         const helpLink = document.getElementById('help-link');
+        const termsLinkModal = document.getElementById('terms-link-modal');
+        const privacyLinkModal = document.getElementById('privacy-link-modal');
         
         // State variables
         let selectedRole = 'student';
         let selectedBranch = null;
         let selectedSemester = null;
         let currentUser = null;
+        let termsAccepted = false;
+        let privacyAccepted = false;
         
         // Toast notification function
-        function showToast(message, type = 'info') {
+        function showToast(message, type = 'info', duration = 5000) {
             // Remove existing toasts
             const existingToasts = document.querySelectorAll('.toast');
             existingToasts.forEach(toast => toast.remove());
@@ -1095,6 +1284,7 @@
             toast.innerHTML = `
                 <i class="fas ${icon}"></i>
                 <span class="toast-message">${message}</span>
+                <button class="toast-close" aria-label="Close notification">&times;</button>
             `;
             
             document.getElementById('toast-container').appendChild(toast);
@@ -1104,13 +1294,32 @@
                 toast.classList.add('show');
             }, 10);
             
-            // Remove toast after 3 seconds
+            // Add close button functionality
+            const closeBtn = toast.querySelector('.toast-close');
+            closeBtn.addEventListener('click', () => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            });
+            
+            // Remove toast after duration
             setTimeout(() => {
                 toast.classList.remove('show');
                 setTimeout(() => {
                     toast.remove();
                 }, 300);
-            }, 3000);
+            }, duration);
+        }
+        
+        // Show spinner
+        function showSpinner() {
+            spinner.style.display = 'flex';
+        }
+        
+        // Hide spinner
+        function hideSpinner() {
+            spinner.style.display = 'none';
         }
         
         // Microsoft login
@@ -1171,6 +1380,47 @@
             }
         });
         
+        // Forgot password functionality
+        forgotPasswordBtn.addEventListener('click', () => {
+            forgotPasswordForm.classList.add('active');
+            forgotPasswordBtn.style.display = 'none';
+        });
+        
+        backToLoginBtn.addEventListener('click', () => {
+            forgotPasswordForm.classList.remove('active');
+            forgotPasswordBtn.style.display = 'block';
+        });
+        
+        resetPasswordBtn.addEventListener('click', async () => {
+            const email = forgotEmailInput.value.trim();
+            
+            if (!email) {
+                showToast('Please enter your email address', 'error');
+                return;
+            }
+            
+            resetPasswordBtn.classList.add('btn-loading');
+            
+            try {
+                const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                    redirectTo: window.location.origin
+                });
+                
+                if (error) {
+                    throw error;
+                }
+                
+                showToast('Password reset link sent to your email', 'success');
+                forgotPasswordForm.classList.remove('active');
+                forgotPasswordBtn.style.display = 'block';
+            } catch (error) {
+                console.error('Password reset error:', error);
+                showToast(error.message || 'Failed to send password reset email', 'error');
+            } finally {
+                resetPasswordBtn.classList.remove('btn-loading');
+            }
+        });
+        
         // Role selection
         document.querySelectorAll('.role-option').forEach(option => {
             option.addEventListener('click', () => {
@@ -1216,6 +1466,14 @@
         // Save profile
         profileForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            // Validate terms acceptance
+            if (!termsAccepted || !privacyAccepted) {
+                profileMessage.textContent = 'Please accept the Terms of Service and Privacy Policy';
+                profileMessage.className = 'message error';
+                profileMessage.style.display = 'block';
+                return;
+            }
             
             // Validate form
             if (!selectedBranch || !selectedSemester) {
@@ -1270,6 +1528,50 @@
             }
         });
         
+        // Skip profile completion
+        skipProfileBtn.addEventListener('click', async () => {
+            // Show loading
+            skipProfileBtn.classList.add('btn-loading');
+            
+            try {
+                // Update user profile with default values in Supabase
+                const { data, error } = await supabase
+                    .from('users')
+                    .upsert({
+                        id: currentUser.id,
+                        email: currentUser.email,
+                        name: currentUser.user_metadata.full_name || currentUser.email.split('@')[0],
+                        role: 'student',
+                        branch: 'CSE',
+                        semester: '1',
+                        updated_at: new Date()
+                    })
+                    .select();
+                
+                if (error) {
+                    throw error;
+                }
+                
+                // Redirect to student dashboard
+                window.location.href = 'studentdashboard.html';
+            } catch (error) {
+                console.error('Profile save error:', error);
+                showToast('Failed to save profile. Please try again.', 'error');
+                skipProfileBtn.classList.remove('btn-loading');
+            }
+        });
+        
+        // Logout
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await supabase.auth.signOut();
+                window.location.reload();
+            } catch (error) {
+                console.error('Logout error:', error);
+                showToast('Failed to logout. Please try again.', 'error');
+            }
+        });
+        
         // Modal event listeners
         profileModalClose.addEventListener('click', () => {
             profileModal.classList.remove('active');
@@ -1290,6 +1592,16 @@
             helpModal.classList.add('active');
         });
         
+        termsLinkModal.addEventListener('click', (e) => {
+            e.preventDefault();
+            termsModal.classList.add('active');
+        });
+        
+        privacyLinkModal.addEventListener('click', (e) => {
+            e.preventDefault();
+            privacyModal.classList.add('active');
+        });
+        
         termsModalClose.addEventListener('click', () => {
             termsModal.classList.remove('active');
         });
@@ -1303,11 +1615,26 @@
         });
         
         acceptTermsBtn.addEventListener('click', () => {
+            termsAccepted = true;
+            termsCheckbox.checked = true;
             termsModal.classList.remove('active');
         });
         
         acceptPrivacyBtn.addEventListener('click', () => {
+            privacyAccepted = true;
+            termsCheckbox.checked = true;
             privacyModal.classList.remove('active');
+        });
+        
+        // Terms checkbox change
+        termsCheckbox.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                termsAccepted = true;
+                privacyAccepted = true;
+            } else {
+                termsAccepted = false;
+                privacyAccepted = false;
+            }
         });
         
         // Check for existing session on page load
@@ -1371,6 +1698,8 @@
             selectedRole = 'student';
             selectedBranch = null;
             selectedSemester = null;
+            termsAccepted = false;
+            privacyAccepted = false;
             
             // Reset UI
             document.querySelectorAll('.role-option').forEach(opt => {
@@ -1385,6 +1714,8 @@
             document.querySelectorAll('.semester-item').forEach(item => {
                 item.classList.remove('selected');
             });
+            
+            termsCheckbox.checked = false;
             
             // Show modal
             profileModal.classList.add('active');
