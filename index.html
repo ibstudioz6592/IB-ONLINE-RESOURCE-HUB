@@ -1459,7 +1459,7 @@ async function enrollInCourse(courseId) {
             }
             
             // Define the dashboard URLs with absolute paths
-            const baseUrl = 'https://ib-online-resource-hub.vercel.app';
+            const baseUrl = window.location.origin; // Use current domain as base
             const dashboardUrls = {
                 admin: `${baseUrl}/admindashboard.html`,
                 faculty: `${baseUrl}/facultydashboard.html`,
