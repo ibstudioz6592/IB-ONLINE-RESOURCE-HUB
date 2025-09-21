@@ -1235,10 +1235,94 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     
     <script>
-        // Initialize Supabase
-        const supabaseUrl = 'https://ibthoqjkcfgealypften.supabase.co';
-        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlidGhvcWprY2ZnZWFseXBmdGVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc4NDMzNjUsImV4cCI6MjA3MzQxOTM2NX0.Yd-AhgmOzQJEL0h_JndNFD_dF5GtrSA78mh3-ELynis';
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+        // Update your Supabase configuration
+const supabaseUrl = 'https://ibthoqjkcfgealypften.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlidGhvcWprY2ZnZWFseXBmdGVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc4NDMzNjUsImV4cCI6MjA3MzQxOTM2NX0.Yd-AhgmOzQJEL0h_JndNFD_dF5GtrSA78mh3-ELynis';
+const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+
+// Azure Functions base URL
+const azureFunctionsUrl = 'https://your-function-app.azurewebsites.net';
+
+// Update your authentication function
+async function signInWithMicrosoft() {
+    try {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'azure',
+            options: {
+                redirectTo: window.location.origin
+            }
+        });
+        
+        if (error) {
+            throw error;
+        }
+    } catch (error) {
+        console.error('Error signing in with Microsoft:', error);
+        showToast('Authentication failed. Please try again.', 'error');
+    }
+}
+
+// Function to upload files
+async function uploadFile(courseId, file, title, description) {
+    try {
+        const token = (await supabase.auth.getSession()).data.session?.access_token;
+        
+        if (!token) {
+            throw new Error('Not authenticated');
+        }
+        
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('title', title);
+        formData.append('description', description);
+        
+        const response = await fetch(`${azureFunctionsUrl}/api/file-upload?courseId=${courseId}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: formData
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to upload file');
+        }
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Error uploading file:', error);
+        showToast('Failed to upload file. Please try again.', 'error');
+        return null;
+    }
+}
+
+// Function to enroll in a course
+async function enrollInCourse(courseId) {
+    try {
+        const token = (await supabase.auth.getSession()).data.session?.access_token;
+        
+        if (!token) {
+            throw new Error('Not authenticated');
+        }
+        
+        const response = await fetch(`${azureFunctionsUrl}/api/enrollment?courseId=${courseId}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to enroll in course');
+        }
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Error enrolling in course:', error);
+        showToast('Failed to enroll in course. Please try again.', 'error');
+        return null;
+    }
+}
         
         // DOM elements
         const microsoftLoginBtn = document.getElementById('microsoft-login');
