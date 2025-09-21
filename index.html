@@ -1285,6 +1285,7 @@
         let currentUser = null;
         let termsAccepted = false;
         let privacyAccepted = false;
+        let isRegistration = false;
         
         // Debug function
         function debug(message) {
@@ -1356,7 +1357,7 @@
         }
         
         // Redirect to dashboard based on role
-        async function redirectToDashboard(role) {
+        function redirectToDashboard(role) {
             debug(`Attempting to redirect to dashboard for role: ${role}`);
             
             // Store user data in localStorage for dashboard to use
@@ -1374,27 +1375,36 @@
             }
             
             // Define the dashboard URLs with absolute paths
+            const baseUrl = 'https://ib-online-resource-hub.vercel.app';
             const dashboardUrls = {
-                admin: 'https://ib-online-resource-hub.vercel.app/admindashboard.html',
-                faculty: '/facultydashboard.html',
-                student: 'https://ib-online-resource-hub.vercel.app/studentdashboard.html'
+                admin: `${baseUrl}/admindashboard.html`,
+                faculty: `${baseUrl}/facultydashboard.html`,
+                student: `${baseUrl}/studentdashboard.html`
             };
             
-            const url = dashboardUrls[role] || '/studentdashboard.html';
+            const url = dashboardUrls[role] || dashboardUrls.student;
             debug(`Redirect URL: ${url}`);
             
-            // Try to redirect to the specific dashboard
-            window.location.href = url;
+            // Show a loading message
+            showToast(`Redirecting to ${role} dashboard...`, 'info');
             
-            // Fallback: if after 3 seconds we are still on the same page, redirect to a generic dashboard
-            setTimeout(() => {
-                // Check if we are still on the login page (index.html) or the root
-                if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
-                    debug(`Specific dashboard not found, redirecting to fallback dashboard`);
-                    showToast('Dashboard not found. Redirecting to main dashboard...', 'info');
-                    window.location.href = '/dashboard.html';
-                }
-            }, 3000);
+            // Try to redirect to the specific dashboard
+            try {
+                // Use replace instead of href to prevent back button issues
+                window.location.replace(url);
+                
+                // Fallback: if after 3 seconds we are still on the same page, show an error
+                setTimeout(() => {
+                    // Check if we're still on the login page by looking for a specific element
+                    if (document.getElementById('microsoft-login')) {
+                        debug(`Redirection failed, still on login page`);
+                        showToast('Failed to redirect to dashboard. Please try again.', 'error');
+                    }
+                }, 3000);
+            } catch (error) {
+                debug(`Redirect error: ${error.message}`);
+                showToast('Failed to redirect to dashboard. Please try again.', 'error');
+            }
         }
         
         // Create user record in Supabase
@@ -1507,7 +1517,7 @@
                 const { data, error } = await supabase.auth.signInWithOAuth({
                     provider: 'azure',
                     options: {
-                        redirectTo: window.location.origin
+                        redirectTo: window.location.origin + '?action=login'
                     }
                 });
                 
@@ -1655,8 +1665,8 @@
                 profileMessage.style.display = 'block';
                 
                 // Redirect based on role
-                setTimeout(async () => {
-                    await redirectToDashboard(selectedRole);
+                setTimeout(() => {
+                    redirectToDashboard(selectedRole);
                 }, 1500);
             } catch (error) {
                 debug(`Profile save error: ${error.message}`);
@@ -1693,7 +1703,7 @@
                 await saveUserProfile(userData);
                 
                 // Redirect to student dashboard
-                await redirectToDashboard('student');
+                redirectToDashboard('student');
             } catch (error) {
                 debug(`Skip profile error: ${error.message}`);
                 console.error('Profile save error:', error);
@@ -1818,7 +1828,7 @@
                         selectedRole = userData.role;
                         selectedBranch = userData.branch;
                         selectedSemester = userData.semester;
-                        await redirectToDashboard(userData.role);
+                        redirectToDashboard(userData.role);
                     }
                 } else {
                     debug('No existing session found');
@@ -1897,7 +1907,7 @@
                         selectedRole = userData.role;
                         selectedBranch = userData.branch;
                         selectedSemester = userData.semester;
-                        await redirectToDashboard(userData.role);
+                        redirectToDashboard(userData.role);
                     }
                 } catch (error) {
                     debug(`Error during auth state change: ${error.message}`);
